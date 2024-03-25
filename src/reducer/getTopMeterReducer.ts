@@ -1,7 +1,5 @@
 import { createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getTopMeter } from "../models/getTopMeter";
-import { RootState } from "../app/store";
-
 
 export interface getTopMeterState {
     list: getTopMeter[]
@@ -18,13 +16,6 @@ const getTopMeterSlice = createSlice({
         fetchGetTopMeterList(state, action: PayloadAction<any>) {
 
         },
-        fetchGetTopMeterListSuccess(state, action: PayloadAction<any>) {
-            state.list = action.payload.results
-
-        },
-        fetchGetTopMeterFailed(state, action: PayloadAction<any>) {
-
-        }
     }
 })
 
