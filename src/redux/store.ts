@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import getTopMeterReducer from '../reducer/getTopMeterReducer'
+import authModalSlice from './features/authModalSlice'
+
 
 export const store = configureStore({
-    reducer: { getTopMeterReducer: getTopMeterReducer },
+    reducer: {
+        authModal: authModalSlice,
+    }
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
