@@ -6,6 +6,8 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{ts,tsx}",
     "./public/**/*.html",
+    "./node_modules/flowbite/**/*.js"
+
   ],
   plugins: [
     require("flowbite/plugin")

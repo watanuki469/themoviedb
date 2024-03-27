@@ -1,10 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authModalSlice from './features/authModalSlice'
+import moviesReducer from './movies.reducer'
+import tvshowReducer from './tvshow.reducer'
+import globalLoadingSlice from './globalLoadingSlice'
 
 
 export const store = configureStore({
     reducer: {
-        authModal: authModalSlice,
+        movies: moviesReducer,
+        tvshow: tvshowReducer,
+        globalLoading: globalLoadingSlice,
+
     }
 })
 
