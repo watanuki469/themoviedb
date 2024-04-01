@@ -1,9 +1,6 @@
-import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import { ListMoviesPopular } from "../components/models/ListMoviesPopular";
 
 export interface SwiperRowProps {
     searchItemList: any
@@ -13,7 +10,7 @@ export default function SwiperRow({
     searchItemList,
 }: SwiperRowProps) {
 
-    let navigate = useNavigate()
+    // let navigate = useNavigate()
     const [activeSlider, setActiveSlider] = useState(5);
     useEffect(() => {
         const handleResize = () => {

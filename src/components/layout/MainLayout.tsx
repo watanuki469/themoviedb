@@ -1,15 +1,12 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import TopBar from "../common/TopBar";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import Slider from "../common/Slider";
+// import { useNavigate } from "react-router-dom";
 import SwiperRow from "../../modules/SwiperRow";
-import { useNavigate } from "react-router-dom";
+import {  useAppSelector } from "../../redux/hooks";
 import Footer from "../common/Footer";
+import Slider from "../common/Slider";
 
 export default function MainLayout() {
-    const dispatch = useAppDispatch();
-    let navigate = useNavigate()
+    // const dispatch = useAppDispatch();
+    // let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)

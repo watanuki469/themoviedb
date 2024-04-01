@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { useAppDispatch } from "../../redux/hooks";
 interface MenuItem {
     id: number;
     label: string;
@@ -12,7 +11,6 @@ export default function SearchBar() {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const mediaTypes = ["movie", "tv", "people"];
 
     const menuItems = [
         { id: 1, label: 'All', icon: 'fa-magnifying-glass' },
@@ -31,14 +29,9 @@ export default function SearchBar() {
     const filteredItems = menuItems.filter(item =>
         item.label.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    const dispatch = useAppDispatch();
-    let navigate = useNavigate();
+    // const dispatch = useAppDispatch();
+    // let navigate = useNavigate();
 
-    const search = useAppSelector((state) => state.movies.search)
-    useEffect(() => {
-        dispatch(fetchMovies());
-        // console.log("is fetch?: " + isFetched);
-    }, []);
     return (
         <div className="relative flex text-left z-40 w-full">
             <div className="relative  text-left flex-grow-0 ">

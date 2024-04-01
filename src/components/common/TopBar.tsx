@@ -1,30 +1,28 @@
-import { Navbar } from "flowbite-react";
-import "flowbite";
-import { Fragment, useEffect, useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
-import { useNavigate } from "react-router-dom";
-import * as Dialog from "@radix-ui/react-dialog";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import StarsIcon from "@mui/icons-material/Stars";
-import { Box, Button, Divider, FormControl, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import LaunchIcon from '@mui/icons-material/Launch';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PublicIcon from '@mui/icons-material/Public';
+import StarsIcon from "@mui/icons-material/Stars";
 import TvIcon from '@mui/icons-material/Tv';
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import { Box, Button, Divider, FormControl, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, } from "@mui/material";
+import * as Dialog from "@radix-ui/react-dialog";
+import "flowbite";
+import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+// import { useAppDispatch } from "../../redux/hooks";
 import SearchBar from "./SearchBar";
 
 export default function TopBar() {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const handleOpenDialogClick = () => {
-    setOpen(true);
-  };
+  // const handleOpenDialogClick = () => {
+  //   setOpen(true);
+  // };
   const handleCloseDialogClick = () => {
     setOpen(false);
   };

@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
 import { Box } from "@mui/material";
+import React from "react";
+// import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { RootState } from "../redux/store";
 import GlobalLoading from "../components/common/GlobalLoading";
 import TopBar from "../components/common/TopBar";
 
 const HomePage: React.FC = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
     <>

@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
-import { Paper, Box, LinearProgress, Toolbar, Typography, useTheme } from "@mui/material";
+import { Box, LinearProgress, Paper, Toolbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 export default function GlobalLoading() {
@@ -17,7 +17,6 @@ export default function GlobalLoading() {
             }, 1000);
         }
     }, [globalLoading]);
-    const theme = useTheme();
 
 
 

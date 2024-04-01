@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppDispatch } from "../store";
-import axiosClient from '../axiosClient';
 import { ListMoviesPopular } from '../../components/models/ListMoviesPopular';
-import { setGlobalLoading } from './globalLoading.reducer';
+import axiosClient from '../axiosClient';
+import { AppDispatch } from "../store";
 
 const apiRequests = {
     netflixOriginal() {
