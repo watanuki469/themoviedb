@@ -1,6 +1,6 @@
 // import { useNavigate } from "react-router-dom";
 import SwiperRow from "../../modules/SwiperRow";
-import {  useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
 import Footer from "../common/Footer";
 import Slider from "../common/Slider";
 
@@ -15,7 +15,6 @@ export default function MainLayout() {
     return (
         <div className="">
             <div className="">
-                
                 {/* <TopBar /> */}
 
                 <div className="mt-8 ">
@@ -43,7 +42,7 @@ export default function MainLayout() {
                     <h3 className="text-sm font-semibold">Top rated movies just for you</h3>
                 </div>
 
-                <div className="mt-10">
+                <div className="mt-10 overflow-hidden">
                     <SwiperRow searchItemList={topRatedMovies} />
 
                 </div>
@@ -54,7 +53,7 @@ export default function MainLayout() {
                     <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-8 overflow-hidden">
                     <SwiperRow searchItemList={mostPopularTv} />
 
                 </div>
@@ -68,28 +67,30 @@ export default function MainLayout() {
                 <div className="text-gray-300 mt-3">
                     <h3 className="text-sm font-semibold">Top rated TV shows just for you</h3>
                 </div>
-                <div className="mt-6">
+                <div className="mt-8 overflow-hidden">
                     <SwiperRow searchItemList={topRatedTv} />
                 </div>
-                <div className="flex items-center mt-12">
-                    <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                    <h2 className="text-xl font-bold text-white ">More to watch</h2>
-                </div>
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                    <div className="text-gray-300 items-center">
-                        <h3 className="text-sm font-semibold mr-4">IMDb helps you select the perfect next show or movie to watch.</h3>
-                        <div className="flex w-full mt-5 bg-black ">
-                            <button className="text-white font-semibold px-4 py-2 rounded-md mr-2 w-full border-2 border-white">Watch Guide</button>
-                            <button className="text-white font-semibold px-4 py-2 rounded-md w-full  border-2 border-white">Most Popular</button>
+                <div className=" overflow-hidden">
+                    <div className="flex items-center mt-12">
+                        <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                        <h2 className="text-xl font-bold text-white ">More to watch</h2>
+                    </div>
+                    <div className="gap-4 mb-8">
+                        <div className="text-gray-300 items-center">
+                            <h3 className="text-sm font-semibold mr-4">IMDb helps you select the perfect next show or movie to watch.</h3>
+                            <div className="flex w-full mt-5 bg-black ">
+                                <button className="text-white font-semibold px-4 py-2 rounded-md mr-2 w-full border-2 border-white">Watch Guide</button>
+                                <button className="text-white font-semibold px-4 py-2 rounded-md w-full  border-2 border-white">Most Popular</button>
+                            </div>
                         </div>
                     </div>
-                    <div></div>
                 </div>
 
 
-                <div>
+
+                {/* <div className=" overflow-hidden">
                     <Footer />
-                </div>
+                </div> */}
 
             </div>
         </div>

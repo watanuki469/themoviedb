@@ -4,6 +4,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import GlobalLoading from "../components/common/GlobalLoading";
 import TopBar from "../components/common/TopBar";
+import Footer from "../components/common/Footer";
 
 const HomePage: React.FC = () => {
   // const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const HomePage: React.FC = () => {
           >
             <Outlet />
           </Box>
+          <Footer/>
         </div>
       </div>
     </>

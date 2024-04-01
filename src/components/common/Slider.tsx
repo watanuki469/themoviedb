@@ -19,7 +19,7 @@ export default function Slider() {
         dispatch(fetchMovies());
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
-        }, 4000);
+        }, 1000);
 
     }, []);
 
@@ -54,6 +54,18 @@ export default function Slider() {
             }
         };
     }, [activeStep, popularMovies]);
+    const cutNum = (e: any) => {
+        // Lấy 2 ký tự đầu tiên của chuỗi số
+        const firstTwoDigits = e.substring(0, 1)
+
+        // Lấy 2 ký tự tiếp theo của chuỗi số
+        const nextTwoDigits = e.substring(2, 4)
+
+        // Hiển thị dạng "2:47"
+        const formattedTime = `${firstTwoDigits}:${nextTwoDigits}`
+        return formattedTime
+
+    }
 
     return (
         <div>
@@ -86,7 +98,7 @@ export default function Slider() {
                                     <div className='justify-end'>
                                         <IconButton
                                             onClick={handleNext}
-                                            disabled={activeStep === popularMovies.length - 3 || popularMovies.length === 0} // Disable khi activeStep = popularMovies.length hoặc popularMovies.length = 0
+                                            disabled={activeStep === popularMovies.length - 5 || popularMovies.length === 0} // Disable khi activeStep = popularMovies.length hoặc popularMovies.length = 0
                                             size="medium"
                                             sx={{
                                                 justifyContent: 'flex-end', alignItems: 'center', right: '0', top: '200%',
@@ -105,7 +117,7 @@ export default function Slider() {
 
                                 </div>
                                 <div className="flex items-end justify-start w-full h-96 "
-                                    onClick={() => navigate(`/movie/id/${popularMovies[activeStep]?.id}`)}
+                                    onClick={() => navigate(`/movie/${popularMovies[activeStep]?.id}`)}
                                 >
                                     <div className=' object-contain items-end justify-end '>
                                         <img
@@ -125,7 +137,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="p-2 text-red ">
-                                                {popularMovies[activeStep]?.id} min
+                                                {popularMovies[activeStep]?.vote_count} min
                                             </div>
                                         </div>
                                         <div className='flex bg-black bg-opacity-60 w-full ' >
@@ -146,7 +158,7 @@ export default function Slider() {
 
                                             </div>
                                             <div className="hidden md:block mt-auto mb-auto ml-auto text-center p-2 text-white">
-                                                {popularMovies[activeStep]?.id} min
+                                                {cutNum(`${popularMovies[activeStep]?.id}`)}
                                             </div>
                                         </div>
                                     </div>
@@ -185,7 +197,8 @@ export default function Slider() {
                                             }} />
 
                                             <div className="text-red ">
-                                                {popularMovies[activeStep + 1]?.id} min
+                                                {cutNum(`${popularMovies[activeStep + 1]?.id}`)}
+
                                             </div>
                                         </div>
                                         <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
@@ -221,7 +234,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="text-red ">
-                                                {popularMovies[activeStep + 2]?.id} min
+                                                {cutNum(`${popularMovies[activeStep + 2]?.id}`)}
                                             </div>
                                         </div>
                                         <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
@@ -258,7 +271,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="text-red ">
-                                                {popularMovies[activeStep + 3]?.id} min
+                                                {cutNum(`${popularMovies[activeStep + 3]?.id}`)}
                                             </div>
                                         </div>
                                         <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">

@@ -48,7 +48,7 @@ export default function SwiperRow({
                 // }}
                 navigation={true}
                 modules={[Autoplay, Pagination, Navigation]}
-                className="mySwiper text-red-500"
+                className="mySwiper text-white"
             >
                 {searchItemList.map((item: any, index: any) => {
                     return (

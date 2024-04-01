@@ -2,13 +2,15 @@ import { configureStore } from '@reduxjs/toolkit'
 import moviesReducer from './reducers/movies.reducer'
 import globalLoadingReducer from './reducers/globalLoading.reducer'
 import appStateSlice from './reducers/appStateSlice'
+import singleMovieReducer from './reducers/singleMovie.reducer'
 
 
 export const store = configureStore({
     reducer: {
         movies: moviesReducer,
         globalLoading: globalLoadingReducer,
-        appState: appStateSlice
+        appState: appStateSlice,
+        singleMovies:singleMovieReducer
 
 
     }

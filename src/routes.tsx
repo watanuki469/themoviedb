@@ -7,10 +7,11 @@
 // import ReviewList from "../pages/ReviewList";
 
 import MainLayout from "./components/layout/MainLayout";
+import MovieLayout from "./components/layout/MovieLayout";
 
 export const routesGen = {
   home: "/",
-  mediaList: (type:any) => `/${type}`,
+  movie: (id:any) => `/${id}`,
   mediaDetail: (type:any, id:any) => `/${type}/${id}`,
   mediaSearch: "/search",
   person: (id:any) => `/person/${id}`,
@@ -26,9 +27,9 @@ const routes = [
     state: "home"
   },
   {
-    path: "/person/:personId",
-    element: <MainLayout />,
-    state: "person.detail"
+    path: "/movie/:id",
+    element: <MovieLayout />,
+    state: "movie"
   },
   // {
   //   path: "/search",
