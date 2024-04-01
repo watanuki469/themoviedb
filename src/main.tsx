@@ -9,10 +9,9 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import 'flowbite';
 
-
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <div>
     <Provider store={store}>
       <BrowserRouter>
         <App />
@@ -29,5 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       draggable
       pauseOnHover
     />
-  </React.StrictMode>,
+  </div>
+
+  // </React.StrictMode>,
 )

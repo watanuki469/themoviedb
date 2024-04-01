@@ -1,36 +1,27 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchMovies } from "../../redux/movies.reducer";
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { Avatar, Box, Grid, IconButton, Stack, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import MobileStepper from '@mui/material/MobileStepper';
-import { useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import { IconButton } from '@mui/material';
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 export default function Slider() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
-    // const isFetched = useAppSelector((state) => state.movies.isFetched)
 
     useEffect(() => {
+        dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        // console.log("is fetch?: " + isFetched);
-    }, []);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 4000);
 
-    // if (!isFetched) {
-    //     return (
-    //         <div>Meow Meow Loading...</div>
-    //     )
-    // }
+    }, []);
 
     const [activeStep, setActiveStep] = useState(0);
     const handleNext = () => {
@@ -53,7 +44,7 @@ export default function Slider() {
     useEffect(() => {
         const boxElement = document.getElementById('1234567');
         if (boxElement) {
-            boxElement.style.backgroundImage = `url(${popularMovies[activeStep]?.banner})`;
+            boxElement.style.backgroundImage = `url(${popularMovies[activeStep]?.backdrop_path})`;
             boxElement.addEventListener('error', handleBackgroundImageError);
         }
 
@@ -66,23 +57,24 @@ export default function Slider() {
 
     return (
         <div>
-            <section className='relative'>
-                <div className="md:grid md:grid-cols-12 text-white gap-3  items-end cursor-pointer w-full overflow-hidden ">
+            <section className='relative overflow-hidden'>
+                <div className="md:grid md:grid-cols-12 text-white gap-3  items-end cursor-pointer w-full ">
                     <div className="lg:col-span-8 md:col-span-12 flex items-stretch">
                         <div id='1' className=" bg-cover bg-top relative w-screen"
                             style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${popularMovies[activeStep]?.backdrop_path})` }}>
                             <div className="flex flex-col h-full "  >
-                                <div className='flex absolute w-full'>
+                                <div className='flex absolute w-full '>
                                     <div className='grow text-left' >
                                         <IconButton
                                             onClick={handleBack}
+                                            disabled={activeStep === 0 || popularMovies.length === 0}
                                             size="medium"
 
                                             sx={{
                                                 top: '200%',
-                                                overflow: "visible", left: "0px",
+                                                left: "0px",
                                                 background: "rgba(0, 0, 0, 0.35)",
-                                                border: '1px solid white', zIndex: 998,
+                                                border: '1px solid white',
                                                 "&:hover": {
                                                     background: "rgba(0, 0, 0, 0.35)",
                                                 },
@@ -94,6 +86,7 @@ export default function Slider() {
                                     <div className='justify-end'>
                                         <IconButton
                                             onClick={handleNext}
+                                            disabled={activeStep === popularMovies.length - 3 || popularMovies.length === 0} // Disable khi activeStep = popularMovies.length hoặc popularMovies.length = 0
                                             size="medium"
                                             sx={{
                                                 justifyContent: 'flex-end', alignItems: 'center', right: '0', top: '200%',
@@ -111,8 +104,8 @@ export default function Slider() {
 
 
                                 </div>
-                                <div className="flex items-end justify-start w-full h-96"
-                                    onClick={() => navigate(`/movie/id/${popularMovies[activeStep]?.imdb_id}`)}
+                                <div className="flex items-end justify-start w-full h-96 "
+                                    onClick={() => navigate(`/movie/id/${popularMovies[activeStep]?.id}`)}
                                 >
                                     <div className=' object-contain items-end justify-end '>
                                         <img
@@ -132,7 +125,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="p-2 text-red ">
-                                                {popularMovies[activeStep]?.movie_length} min
+                                                {popularMovies[activeStep]?.id} min
                                             </div>
                                         </div>
                                         <div className='flex bg-black bg-opacity-60 w-full ' >
@@ -153,19 +146,13 @@ export default function Slider() {
 
                                             </div>
                                             <div className="hidden md:block mt-auto mb-auto ml-auto text-center p-2 text-white">
-                                                {popularMovies[activeStep]?.movie_length} min
+                                                {popularMovies[activeStep]?.id} min
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                     <div className="lg:col-span-4 w-screen flex">
                         <div className='hidden lg:block relative h-96 w-screen'>
@@ -177,7 +164,7 @@ export default function Slider() {
                                 </div>
                             </div>
                             <div id='2' className="h-24 mb-3 "
-                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 1]?.imdb_id}`)}
+                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 1]?.id}`)}
                             >
                                 <div className='flex flex-row w-full'>
                                     <div >
@@ -198,7 +185,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="text-red ">
-                                                {popularMovies[activeStep + 1]?.movie_length} min
+                                                {popularMovies[activeStep + 1]?.id} min
                                             </div>
                                         </div>
                                         <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
@@ -214,7 +201,7 @@ export default function Slider() {
 
                             </div>
                             <div id='3' className="h-24 mb-4 "
-                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 2]?.imdb_id}`)}>
+                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 2]?.id}`)}>
                                 <div className='flex flex-row w-full'>
                                     <div >
                                         <img
@@ -234,7 +221,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="text-red ">
-                                                {popularMovies[activeStep + 2]?.movie_length} min
+                                                {popularMovies[activeStep + 2]?.id} min
                                             </div>
                                         </div>
                                         <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
@@ -251,7 +238,7 @@ export default function Slider() {
 
                             </div>
                             <div id='4' className="h-24 mb-4 "
-                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 3]?.imdb_id}`)}>
+                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 3]?.id}`)}>
                                 <div className='flex flex-row w-full'>
                                     <div >
                                         <img
@@ -271,7 +258,7 @@ export default function Slider() {
                                             }} />
 
                                             <div className="text-red ">
-                                                {popularMovies[activeStep + 3]?.movie_length} min
+                                                {popularMovies[activeStep + 3]?.id} min
                                             </div>
                                         </div>
                                         <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
@@ -287,7 +274,7 @@ export default function Slider() {
                                 <div className='flex flex-row md-flex items-center'
                                     onClick={() => navigate(`/Popular`)}
                                 >
-                                    <div className="text-red-500 font-semibold text-sm text-left  whitespace-nowrap  overflow-ellipsis ">
+                                    <div className="text-white font-semibold text-lg text-left  whitespace-nowrap  overflow-ellipsis ">
                                         Browse Trailer
                                     </div>
                                     <ArrowForwardIosIcon sx={{

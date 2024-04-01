@@ -1,31 +1,32 @@
-import React from 'react';
-import { Box, Container } from '@mui/material';
-import uiConfigs from "../configs/ui.configs";
-import tmdbConfigs from '../configs/tmdb.configs';
-import HeroSlide from '../components/common/HeroSlide';
+import React, { useEffect } from "react";
+import { Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { RootState } from "../redux/store";
+import GlobalLoading from "../components/common/GlobalLoading";
+import TopBar from "../components/common/TopBar";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
+  const dispatch = useDispatch();
+
   return (
     <>
-      <HeroSlide mediaType={tmdbConfigs.mediaType.movie} mediaCategory={tmdbConfigs.mediaCategory.popular} />
+      {/* global loading */}
+      <GlobalLoading />
+      {/* global loading */}
 
-      {/* <Box marginTop="-4rem" sx={{ ...uiConfigs.style.mainContent }}>
-        <Container header="popular movies">
-          <MediaSlide mediaType={tmdbConfigs.mediaType.movie} mediaCategory={tmdbConfigs.mediaCategory.popular} />
-        </Container>
-
-        <Container header="popular series">
-          <MediaSlide mediaType={tmdbConfigs.mediaType.tv} mediaCategory={tmdbConfigs.mediaCategory.popular} />
-        </Container>
-
-        <Container header="top rated movies">
-          <MediaSlide mediaType={tmdbConfigs.mediaType.movie} mediaCategory={tmdbConfigs.mediaCategory.top_rated} />
-        </Container>
-
-        <Container header="top rated series">
-          <MediaSlide mediaType={tmdbConfigs.mediaType.tv} mediaCategory={tmdbConfigs.mediaCategory.top_rated} />
-        </Container>
-      </Box> */}
+      <div className="bg-black min-h-screen">
+        <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
+          <TopBar />
+          <Box
+            component="main"
+          // flexGrow={1}
+          >
+            <Outlet />
+          </Box>
+        </div>
+      </div>
     </>
   );
 };

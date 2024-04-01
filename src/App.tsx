@@ -1,21 +1,35 @@
-import MainLayout from "./components/layout/MainLayout";
 import { Route, Routes } from 'react-router-dom';
+import routes from "./routes";
+import PageWrapper from "./components/common/PageWrapper";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
     <div>
-        <Routes>
-          <Route path="/" element={<MainLayout />} />
-          {/* <Route path="/popurarity" element={<PopurarityDashBoard />} />
-            <Route path="/movie/byGen/:genre" element={<MovieLayout />} />
-            <Route path="/movie/id/:imdb_id" element={<SingleMovie />} />
-            <Route path='*' element={<NotFound />} />
-            <Route path='IMDbPro' element={<Pro />} />
-            <Route path='WatchList' element={<WatchList />} />
-            <Route path='Popular' element={<PopularDashBoard />} />
-            <Route path='/actor/id/:imdb_id' element={<StarLayout />} /> */}
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} >
+          {routes.map((route, index) => (
+            route.index ? (
+              <Route
+                index
+                key={index}
+                element={route.state ? (
+                  <PageWrapper state={route.state}>{route.element}</PageWrapper>
+                ) : route.element}
+              />
+            ) : (
+              <Route
+                path={route.path}
+                key={index}
+                element={route.state ? (
+                  <PageWrapper state={route.state}>{route.element}</PageWrapper>
+                ) : route.element}
+              />
+            )
+          ))}
+        </Route>
+      </Routes>
+    </div>
 
   )
 }

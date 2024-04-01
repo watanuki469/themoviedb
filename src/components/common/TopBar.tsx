@@ -1,6 +1,6 @@
 import { Navbar } from "flowbite-react";
 import "flowbite";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -14,6 +14,7 @@ import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PublicIcon from '@mui/icons-material/Public';
 import TvIcon from '@mui/icons-material/Tv';
+import SearchBar from "./SearchBar";
 
 export default function TopBar() {
   const dispatch = useAppDispatch();
@@ -50,6 +51,27 @@ export default function TopBar() {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+  useEffect(() => {
+    function handleResize() {
+      const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
+      if (isLargeScreen && isDrawerOpen ) {
+        setOpen(!open);
+        setIsDrawerOpen(!isDrawerOpen);
+      }
+       else if(!isLargeScreen && open) {
+        setOpen(!open);
+        setIsDrawerOpen(!isDrawerOpen);
+      }
+    }
+
+    // Thêm event listener cho sự kiện resize
+    window.addEventListener('resize', handleResize);
+
+    // Xóa event listener khi component bị unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [open,isDrawerOpen]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('');
 
@@ -182,9 +204,6 @@ export default function TopBar() {
     setMenuOpen(false);
   };
 
-
-
-
   return (
     <section className="static cursor-pointer w-full bg-black mx-auto h-12 ">
       <div className="flex gap-x-3 items-center  justify-center ">
@@ -194,13 +213,13 @@ export default function TopBar() {
         <button
           onClick={() => navigate("/")}
           className=" bg-yellow-400 text-black text-center 
-                                        border-none font-extrabold text-2xl font-sans
-                                         whitespace-nowrap hover:bg-black hover:text-blue-500
-                                          hover:border-red-500  rounded-md"
+            border-none font-extrabold text-2xl font-sans
+            whitespace-nowrap hover:bg-black hover:text-blue-500
+             hover:border-red-500  rounded-md"
         >
           IMDb
         </button>
-        <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Root open={open} onOpenChange={setOpen} >
           <Dialog.Trigger>
             <div className="hidden lg:flex items-center content-center justify-center self-center text-white gap-2 text-lg hover:bg-black hover:opacity-95">
               <i className="fa-sharp fa-solid fa-bars"></i>
@@ -210,8 +229,7 @@ export default function TopBar() {
           <Dialog.Portal>
             <Dialog.Content
               className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                            rounded-md bg-black  p-8 shadow w-full  items-center justify-center aligns-center
-                             "
+               rounded-md bg-black  p-8 shadow w-full  items-center justify-center aligns-center  "
             >
               <div className="max-w-4xl ml-auto mr-auto ">
                 <div className="flex items-center">
@@ -219,7 +237,7 @@ export default function TopBar() {
                     onClick={() => navigate("/")}
                     className="bg-yellow-400 text-black text-center border-none font-extrabold text-2xl font-sans whitespace-nowrap hover:opacity-80 rounded-md"
                   >
-                    IMDb
+                    IMDb dialog
                   </button>
                   <div className="flex-grow"></div>
                   <button
@@ -395,18 +413,11 @@ export default function TopBar() {
               </div>
             </Dialog.Content>
           </Dialog.Portal>
+
         </Dialog.Root>
         <div className="grow">
-          <div className="mt-2 hidden lg:flex">
-            <button
-              id="dropdownDefault"
-              data-dropdown-toggle="dropdown"
-              className="text-white  w-full bg-gradient-to-br from-pink-500 to-violet-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 text-center inline-flex items-center shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
-              type="button"
-            >
-              Dropdown
-            </button>
-
+          <div className="mt-2 hidden lg:flex bg-red-300 w-full">
+            <SearchBar />
           </div>
         </div>
 
@@ -495,17 +506,15 @@ export default function TopBar() {
 
 
       {/* drawer */}
-
       <div
-        className={`drawer fixed top-0 left-0 h-screen w-72 bg-black shadow-lg ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed  top-0 left-0 h-screen w-96 bg-black shadow z-40   rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Toolbar />
         <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif' }}>X</Button>
         <List>
           {['Movies', 'TV Shows', 'Watch', 'Awards & Events', 'Celebs', 'Community'].map((text, index) => (
-            <Fragment key={text}>
-              <ListItem disablePadding>
+            <Fragment key={text} >
+              <ListItem >
                 <ListItemButton onClick={() => toggleMenu(text)}>
                   <ListItemIcon sx={{ color: 'white' }}>
                     {index === 0 && <LocalMoviesIcon />}   {index === 1 && <TvIcon />}
@@ -514,9 +523,9 @@ export default function TopBar() {
                   </ListItemIcon>
                   <ListItemText primary={text} sx={{ color: 'white' }} />
                   {menuOpen && selectedMenu === text ? <ArrowDropUpIcon
-                    sx={{ padding: '10px', cursor: 'pointer', color: 'white', fontSize: '60px' }}
+                    sx={{ cursor: 'pointer', color: 'white', fontSize: '30px' }}
                     onClick={() => toggleMenu(text)} /> : <ArrowDropDownIcon
-                    sx={{ padding: '10px', cursor: 'pointer', color: 'white', fontSize: '60px' }} onClick={() => toggleMenu(text)}
+                    sx={{ cursor: 'pointer', color: 'white', fontSize: '30px' }} onClick={() => toggleMenu(text)}
                   />}
                 </ListItemButton>
 
@@ -532,15 +541,22 @@ export default function TopBar() {
             </Fragment>
           ))}
         </List>
-        <List sx={{ display: 'flex', alignItems: 'center', color: "white" }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography sx={{ fontSize: "large", fontWeight: 'bold' }}>IMDbPro</Typography>
-            <Typography>For industry Professionals</Typography>
-          </Box>
-          <LaunchIcon sx={{ padding: '10px' }} />
+        <List sx={{ color: "white", display: 'flex' }}>
+          <Fragment>
+            <Box sx={{ ml: 5 }}>
+              <Typography sx={{ fontSize: "large", fontWeight: 'bold' }}>IMDbPro</Typography>
+              <Typography>For industry Professionals</Typography>
+            </Box>
+            <Box sx={{ flexGrow: 1 }}>
+
+            </Box>
+            <LaunchIcon sx={{ padding: '10px', fontSize: '40px' }} />
+          </Fragment>
+
         </List>
 
       </div>
+
       {/* drawer */}
 
 

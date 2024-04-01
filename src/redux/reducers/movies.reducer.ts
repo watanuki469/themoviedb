@@ -1,0 +1,178 @@
+import { createSlice } from '@reduxjs/toolkit';
+import { AppDispatch } from "../store";
+import axiosClient from '../axiosClient';
+import { ListMoviesPopular } from '../../components/models/ListMoviesPopular';
+import { setGlobalLoading } from './globalLoading.reducer';
+
+const apiRequests = {
+    netflixOriginal() {
+        const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`
+        return axiosClient.get(url)
+    },
+    discoverMovies() {
+        const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`
+        return axiosClient.get(url)
+    },
+    discoverTv() {
+        const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&page=1&timezone=America%2FNew_York&include_null_first_air_dates=false&with_watch_monetization_types=flatrate&with_status=0&with_type=0`
+        return axiosClient.get(url)
+    },
+
+    mostPopularMoviesReq() {
+        const url = `movie/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        return axiosClient.get(url)
+    },
+    topRatedMoviesReq() {
+        const url = `movie/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        return axiosClient.get(url)
+    },
+    mostPopularTvReq() {
+        const url = `tv/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        return axiosClient.get(url)
+    },
+    topRatedTvReq() {
+        const url = `tv/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        return axiosClient.get(url)
+    },
+
+
+    // search({ mediaType, query }: any) {
+    //     const url = `search/${mediaType}?query=${query}&language=en-US&page=1`
+    //     return axiosClient.get(url)
+    // }
+
+}
+
+interface IMoviesState {
+    isFetched: boolean,
+    listNetflixOriginal: any[],
+    discoverMovies: any[],
+    discoverTv: any[],
+    listMoviesPopular: ListMoviesPopular[],
+    listMoviesTopRated: any[],
+    listMostPopularTvReq: any[],
+    listTopRatedTvReq: any[],
+    // search: any[]
+}
+
+const initialState: IMoviesState = {
+    isFetched: false,
+    listNetflixOriginal: [],
+    discoverMovies: [],
+    discoverTv: [],
+    listMoviesPopular: [],
+    listMoviesTopRated: [],
+    listMostPopularTvReq: [],
+    listTopRatedTvReq: [],
+    // search: []
+}
+
+const setListNetflixOriginalState = (state: IMoviesState, action: any) => {
+    state.listNetflixOriginal = action.payload
+}
+
+const setListDiscoverMoviesState = (state: IMoviesState, action: any) => {
+    state.discoverMovies = action.payload
+}
+
+const setListDiscoverTvState = (state: IMoviesState, action: any) => {
+    state.discoverTv = action.payload
+}
+
+const setListPopularState = (state: IMoviesState, action: any) => {
+    state.listMoviesPopular = action.payload
+}
+
+const setListTopRatedState = (state: IMoviesState, action: any) => {
+    state.listMoviesTopRated = action.payload
+}
+
+const setMostPopularTvState = (state: IMoviesState, action: any) => {
+    state.listMostPopularTvReq = action.payload
+}
+
+const setTopRatedTvState = (state: IMoviesState, action: any) => {
+    state.listTopRatedTvReq = action.payload
+}
+
+const setIsFetchedState = (state: IMoviesState, action: any) => {
+    state.isFetched = action.payload
+}
+
+
+
+// const setListSearchState = (state: IMoviesState, action: any) => {
+//     state.search = action.payload
+// }
+
+
+export const moviesSlice = createSlice({
+    name: 'movies',
+    initialState,
+    reducers: {
+        setListOriginal: (state, action) => setListNetflixOriginalState(state, action),
+        setDiscoverMovies: (state, action) => setListDiscoverMoviesState(state, action),
+        setDiscoverTv: (state, action) => setListDiscoverTvState(state, action),
+        setListPopular: (state, action) => setListPopularState(state, action),
+        setListTopRated: (state, action) => setListTopRatedState(state, action),
+        setMostPopularTv: (state, action) => setMostPopularTvState(state, action),
+        setTopRatedTv: (state, action) => setTopRatedTvState(state, action),
+        setIsFetched: (state, action) => setIsFetchedState(state, action),
+        // setSearch: (state, action) => setListSearchState(state, action),
+    }
+})
+
+export const {
+    setListOriginal,
+    setDiscoverMovies,
+    setDiscoverTv,
+    setListPopular,
+    setListTopRated,
+    setMostPopularTv,
+    setTopRatedTv,
+    setIsFetched,
+    // setSearch
+} = moviesSlice.actions;
+
+export const fetchMovies = () => (dispatch: AppDispatch) => {
+    Promise.all([
+        apiRequests.netflixOriginal(),
+        apiRequests.discoverMovies(),
+        apiRequests.discoverTv(),
+        apiRequests.mostPopularMoviesReq(),
+        apiRequests.topRatedMoviesReq(),
+        apiRequests.mostPopularTvReq(),
+        apiRequests.topRatedTvReq(),
+        // apiRequests.search({ mediaType: 'movie', query: 'harry' }), // Example query
+    ])
+        .then((data: any) => {
+            if (data[0] && data[0].results) {
+                dispatch(setListOriginal(data[0].results));
+                dispatch(setDiscoverMovies(data[1].results));
+                dispatch(setDiscoverTv(data[2].results));
+                dispatch(setListPopular(data[3].results));
+                dispatch(setListTopRated(data[4].results));
+                dispatch(setMostPopularTv(data[5].results));
+                dispatch(setTopRatedTv(data[6].results));
+
+            } else {
+                console.error("API response structure is not as expected.", data);
+            }
+
+        })
+        .then(() => {
+            setTimeout(() => {
+                dispatch(setIsFetched(true))
+            }, 2000);
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+}
+
+
+export default moviesSlice.reducer
+
+
+
+
