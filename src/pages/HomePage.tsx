@@ -15,18 +15,18 @@ const HomePage: React.FC = () => {
       <GlobalLoading />
       {/* global loading */}
 
-      <div className="bg-black min-h-screen">
-        <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-          <TopBar />
+      {/* <div className="bg-black min-h-screen">
+        <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center "> */}
+          {/* <TopBar /> */}
           <Box
             component="main"
           // flexGrow={1}
           >
             <Outlet />
           </Box>
-          <Footer/>
-        </div>
-      </div>
+          {/* <Footer /> */}
+        {/* </div>
+      </div> */}
     </>
   );
 };

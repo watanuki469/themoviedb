@@ -203,7 +203,7 @@ export default function TopBar() {
   };
 
   return (
-    <section className="static cursor-pointer w-full bg-black mx-auto h-12 ">
+    <section className="static cursor-pointer w-full bg-black mx-auto h-12 overflow-auto ">
       <div className="flex gap-x-3 items-center  justify-center ">
         <div onClick={toggleDrawer} className=" lg:hidden font-extrabold text-xl text-white m-3">
           <i className="fa-sharp fa-solid fa-bars"></i>

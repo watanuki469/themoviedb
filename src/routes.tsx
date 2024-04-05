@@ -11,10 +11,10 @@ import MovieLayout from "./components/layout/MovieLayout";
 
 export const routesGen = {
   home: "/",
-  movie: (id:any) => `/${id}`,
-  mediaDetail: (type:any, id:any) => `/${type}/${id}`,
+  movie: (id: any) => `/${id}`,
+  mediaDetail: (type: any, id: any) => `/${type}/${id}`,
   mediaSearch: "/search",
-  person: (id:any) => `/person/${id}`,
+  person: (id: any) => `/person/${id}`,
   favoriteList: "/favorites",
   reviewList: "/reviews",
   passwordUpdate: "password-update"

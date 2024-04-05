@@ -34,12 +34,6 @@ const apiRequests = {
         return axiosClient.get(url)
     },
 
-
-    // search({ mediaType, query }: any) {
-    //     const url = `search/${mediaType}?query=${query}&language=en-US&page=1`
-    //     return axiosClient.get(url)
-    // }
-
 }
 
 interface IMoviesState {
@@ -51,7 +45,6 @@ interface IMoviesState {
     listMoviesTopRated: any[],
     listMostPopularTvReq: any[],
     listTopRatedTvReq: any[],
-    // search: any[]
 }
 
 const initialState: IMoviesState = {
@@ -63,7 +56,6 @@ const initialState: IMoviesState = {
     listMoviesTopRated: [],
     listMostPopularTvReq: [],
     listTopRatedTvReq: [],
-    // search: []
 }
 
 const setListNetflixOriginalState = (state: IMoviesState, action: any) => {
@@ -98,13 +90,6 @@ const setIsFetchedState = (state: IMoviesState, action: any) => {
     state.isFetched = action.payload
 }
 
-
-
-// const setListSearchState = (state: IMoviesState, action: any) => {
-//     state.search = action.payload
-// }
-
-
 export const moviesSlice = createSlice({
     name: 'movies',
     initialState,
@@ -117,7 +102,6 @@ export const moviesSlice = createSlice({
         setMostPopularTv: (state, action) => setMostPopularTvState(state, action),
         setTopRatedTv: (state, action) => setTopRatedTvState(state, action),
         setIsFetched: (state, action) => setIsFetchedState(state, action),
-        // setSearch: (state, action) => setListSearchState(state, action),
     }
 })
 
@@ -130,7 +114,6 @@ export const {
     setMostPopularTv,
     setTopRatedTv,
     setIsFetched,
-    // setSearch
 } = moviesSlice.actions;
 
 export const fetchMovies = () => (dispatch: AppDispatch) => {
@@ -142,7 +125,6 @@ export const fetchMovies = () => (dispatch: AppDispatch) => {
         apiRequests.topRatedMoviesReq(),
         apiRequests.mostPopularTvReq(),
         apiRequests.topRatedTvReq(),
-        // apiRequests.search({ mediaType: 'movie', query: 'harry' }), // Example query
     ])
         .then((data: any) => {
             if (data[0] && data[0].results) {
@@ -153,11 +135,9 @@ export const fetchMovies = () => (dispatch: AppDispatch) => {
                 dispatch(setListTopRated(data[4].results));
                 dispatch(setMostPopularTv(data[5].results));
                 dispatch(setTopRatedTv(data[6].results));
-
             } else {
                 console.error("API response structure is not as expected.", data);
             }
-
         })
         .then(() => {
             setTimeout(() => {
@@ -168,7 +148,6 @@ export const fetchMovies = () => (dispatch: AppDispatch) => {
             console.log(e);
         })
 }
-
 
 export default moviesSlice.reducer
 

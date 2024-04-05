@@ -1,30 +1,41 @@
-// import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import SwiperRow from "../../modules/SwiperRow";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import Footer from "../common/Footer";
-import Slider from "../common/Slider";
-import TopBar from "../common/TopBar";
-import { AppDispatch } from "../../redux/store";
-import apiController from "../../redux/client/api.Controller.";
-import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
 import { useEffect } from "react";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { useNavigate, useParams } from "react-router-dom";
+import TwoMovieRow from "../../modules/TwoMovieRow";
+import apiController from "../../redux/client/api.Controller.";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setListMovieCredit } from "../../redux/reducers/movieCredit.reducer";
+import { setListMovieImage } from "../../redux/reducers/movieImage.reducer";
+import { setListMovieVideo } from "../../redux/reducers/movieVideo.reducer";
+import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
+import { AppDispatch } from "../../redux/store";
+import SingleMovieDetail from "../common/SingleMovieDetail";
+import SingleMoviePerson from "../common/SingleMoviePerson";
+import TopBar from "../common/TopBar";
+import SwiperRow from "../../modules/SwiperRow";
+import Footer from "../common/Footer";
+import { setListMovieSimilar } from "../../redux/reducers/movieSimilar.reducer";
+import FourSwiperRow from "../../modules/FourSwiperRow";
+import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
+import SingleMovieReview from "../common/SingleMovieReview";
+import ListRow from "../../modules/ListRow";
+import { fetchMovies } from "../../redux/reducers/movies.reducer";
 
 export default function MovieLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
+    let navigate = useNavigate()
+    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
+    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
+    const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
 
-    const fetchcSingleMovies = () => (dispatch: AppDispatch) => {
+
+    const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
-
             apiController.apiSingleMovieRequests.singleMovie(id),
         ])
             .then((data: any) => {
-                console.log(data + 'meomeo');
-
-                if (data[0]) {
-                    dispatch(setListSingleMovie(data[0]));
+                if (data) {
+                    dispatch(setListSingleMovie(data));
                 } else {
                     console.error("API response structure is not as expected.", data);
                 }
@@ -34,24 +45,185 @@ export default function MovieLayout() {
                 console.log(e);
             })
     }
-    useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        dispatch(fetchcSingleMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
-
-    }, []);
+    const fetchMovieVideos = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiMovieVideo.movieVideo(id),
+        ])
+            .then((data: any) => {
+                if (data[0] && data[0]?.results) {
+                    dispatch(setListMovieVideo(data[0].results));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const fetchMovieImage = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiMovieImage.movieImage(id),
+        ])
+            .then((data: any) => {
+                if (data[0] && data[0]?.backdrops) {
+                    dispatch(setListMovieImage(data[0]?.backdrops));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const fetchMovieCredit = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiMovieCredits.movieCredit(id),
+        ])
+            .then((data: any) => {
+                if (data[0] && data[0]?.cast) {
+                    dispatch(setListMovieCredit(data[0]?.cast));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const fetchMovieSimilar = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiMovieSimilar.movieSimilar(id),
+        ])
+            .then((data: any) => {
+                if (data[0] && data[0]?.results) {
+                    dispatch(setListMovieSimilar(data[0]?.results));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
 
     const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
+    const movieVideoList = useAppSelector((state) => state.movieVideo.listMovieVideo)
+    const movieImageList = useAppSelector((state) => state.movieImage.listMovieImage)
+    const movieCreditList = useAppSelector((state) => state.movieCredit.listMovieCredit)
+    const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
+
+    useEffect(() => {
+        // dispatch(setGlobalLoading(true));
+        dispatch(fetchSingleMovies());
+        dispatch(fetchMovieVideos());
+        dispatch(fetchMovieImage());
+        dispatch(fetchMovieCredit());
+        dispatch(fetchMovieSimilar());
+        dispatch(fetchMovies());
+
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
+    }, [id]);
+    console.log(topRatedTv);
+
 
     return (
-        <div className="">
-            <div className="">
+        <div className=" min-h-screen">
+            <div className="bg-black">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+                    <TopBar />
+                    <SingleMovieDetail singleMovieList={singleMovieList} movieVideoList={movieVideoList}
+                        movieCreditList={movieCreditList} movieImageList={movieImageList} />
+                </div>
+            </div>
+            <div className="bg-white">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+                    <div className="md:grid grid-cols-12 gap-2 w-full">
+                        <div className="lg:col-span-8 md-col-span-12  w-full ">
+                            <div className="flex items-center py-4">
+                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                <h2 className="text-2xl font-bold text-black ">Videos</h2>
+                                <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList.length}</p>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                            </div>
+                            <TwoMovieRow twoMovieRowList={movieVideoList} />
+                            <div className="text-white flex py-4 ">
+                                <div className="flex items-center ">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">Top Cast</h2>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList.length}</p>
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                </div>
+                                <div className="flex items-center ml-auto gap-2" >
+                                    <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
+                                    <p className="flex items-center text-2xl font-bold text-black ">
+                                        Edit
+                                    </p>
+                                </div>
+                            </div>
+
+                            <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
+                            <div className="text-white flex py-4 mt-4">
+                                <div className="flex items-center ">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">More Like This</h2>
+                                </div>
+                                <div className="flex items-center ml-auto gap-2" >
+                                    <i className="fa-regular fa-circle-question text-black text-2xl ml-2"></i>
+                                </div>
+                            </div>
+                            <FourSwiperRow fourSwiperRowList={movieSimilarList} />
+                            <div className="text-white flex py-4 ">
+                                <div className="flex items-center ">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">Story Line</h2>
+                                </div>
+                                <div className="flex items-center ml-auto gap-2" >
+                                    <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
+                                    <p className="flex items-center text-2xl font-bold text-black ">
+                                        Edit
+                                    </p>
+                                </div>
+                            </div>
+                            <SingleMovieStoryLine singleMovieList={singleMovieList} />
+                            <div className="text-white flex py-4 ">
+                                <div className="flex items-center ">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">User Reviews</h2>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews.results.length}</p>
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                </div>
+                                <div className="flex items-center ml-auto gap-2" >
+                                    <i className="fa-solid fa-plus text-blue-500 text-sm ml-2"></i>
+                                    <p className="flex items-center text-sm text-blue-500 ">
+                                        Review
+                                    </p>
+                                </div>
+                            </div>
+                            <SingleMovieReview singleMovieList={singleMovieList} />
 
 
+
+                        </div>
+                        <div className="hidden lg:block col-span-4  h-full px-2 py-2">
+                            <div className="flex items-center py-3">
+                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                            </div>
+                            <ListRow listRowList={topRatedMovies} />
+                            <p className="text-red w-full text-black"> Staff Picks: What to Watch in April</p>
+                            <p className="text-red w-full text-blue-500"> See out picks</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div className="bg-black">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                    <Footer />
+                </div>
             </div>
         </div>
-
     )
 }

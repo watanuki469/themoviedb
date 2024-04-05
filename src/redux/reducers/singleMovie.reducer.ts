@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axiosClient from '../axiosClient';
-import { AppDispatch } from "../store";
-import apiController from '../client/api.Controller.';
+import { SingleMovie } from '../../components/models/SingleMovie';
 
 interface ISingleMovieState {
     listSingleMovie: any[],
@@ -16,7 +14,7 @@ const setListSingleMovieState = (state: ISingleMovieState, action: any) => {
 }
 
 export const moviesSlice = createSlice({
-    name: 'movies',
+    name: 'singleMovies',
     initialState,
     reducers: {
         setListSingleMovie: (state, action) => setListSingleMovieState(state, action),

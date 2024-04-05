@@ -3,15 +3,23 @@ import moviesReducer from './reducers/movies.reducer'
 import globalLoadingReducer from './reducers/globalLoading.reducer'
 import appStateSlice from './reducers/appStateSlice'
 import singleMovieReducer from './reducers/singleMovie.reducer'
+import movieVideoReducer from './reducers/movieVideo.reducer'
+import movieImageReducer from './reducers/movieImage.reducer'
+import movieCreditReducer from './reducers/movieCredit.reducer'
+import movieSimilarReducer from './reducers/movieSimilar.reducer'
 
 
 export const store = configureStore({
     reducer: {
-        movies: moviesReducer,
         globalLoading: globalLoadingReducer,
         appState: appStateSlice,
-        singleMovies:singleMovieReducer
-
+        movies: moviesReducer,
+        singleMovies:singleMovieReducer,
+        movieVideo:movieVideoReducer,
+        movieImage:movieImageReducer,
+        movieCredit:movieCreditReducer,
+        movieSimilar:movieSimilarReducer,
+        
 
     }
 })
