@@ -14,15 +14,17 @@ import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { useAppDispatch } from "../../redux/hooks";
 import SearchBar from "./SearchBar";
+import { useAppDispatch } from '../../redux/hooks';
+import { AppDispatch } from '../../redux/store';
+import apiController from '../../redux/client/api.Controller.';
+import { setListSearch } from '../../redux/reducers/search.reducer';
 
 export default function TopBar() {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // const handleOpenDialogClick = () => {
-  //   setOpen(true);
-  // };
   const handleCloseDialogClick = () => {
     setOpen(false);
   };
@@ -52,24 +54,36 @@ export default function TopBar() {
   useEffect(() => {
     function handleResize() {
       const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
-      if (isLargeScreen && isDrawerOpen ) {
+      if (isLargeScreen && isDrawerOpen) {
         setOpen(!open);
         setIsDrawerOpen(!isDrawerOpen);
       }
-       else if(!isLargeScreen && open) {
+      else if (!isLargeScreen && open) {
         setOpen(!open);
         setIsDrawerOpen(!isDrawerOpen);
       }
     }
-
-    // Thêm event listener cho sự kiện resize
     window.addEventListener('resize', handleResize);
-
-    // Xóa event listener khi component bị unmount
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [open,isDrawerOpen]);
+  }, [open, isDrawerOpen]);
+  useEffect(() => {
+    function handleResize() {
+      const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
+      if (isLargeScreen && isSearchOpen) {
+        setIsSearchOpen(false);
+      }
+      else if (!isLargeScreen && isSearchOpen) {
+        setIsSearchOpen(false);
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isSearchOpen]);
+  
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('');
 
@@ -202,305 +216,314 @@ export default function TopBar() {
     setMenuOpen(false);
   };
 
+
+
+
   return (
-    <section className="static cursor-pointer w-full bg-black mx-auto h-12 overflow-auto ">
-      <div className="flex gap-x-3 items-center  justify-center ">
-        <div onClick={toggleDrawer} className=" lg:hidden font-extrabold text-xl text-white m-3">
-          <i className="fa-sharp fa-solid fa-bars"></i>
+    <section className="static w-full bg-black mx-auto h-12">
+      {isSearchOpen ? (
+        <div className='items-center h-full w-full flex '>
+          <SearchBar />
+          <i className="fa-regular fa-circle-xmark text-white text-3xl" onClick={() => setIsSearchOpen(false)}></i>
         </div>
-        <button
-          onClick={() => navigate("/")}
-          className=" bg-yellow-400 text-black text-center 
+
+      ) : (
+        <div className="flex gap-x-3 items-center  justify-center ">
+          <div onClick={toggleDrawer} className=" lg:hidden font-extrabold text-xl text-white m-3">
+            <i className="fa-sharp fa-solid fa-bars"></i>
+          </div >
+          <button
+            onClick={() => navigate("/")}
+            className=" bg-yellow-400 text-black text-center 
             border-none font-extrabold text-2xl font-sans
             whitespace-nowrap hover:bg-black hover:text-blue-500
              hover:border-red-500  rounded-md"
-        >
-          IMDb
-        </button>
-        <Dialog.Root open={open} onOpenChange={setOpen} >
-          <Dialog.Trigger>
-            <div className="hidden lg:flex items-center content-center justify-center self-center text-white gap-2 text-lg hover:bg-black hover:opacity-95">
-              <i className="fa-sharp fa-solid fa-bars"></i>
-              <p> Menu </p>
-            </div>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Content
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-               rounded-md bg-black  p-8 shadow w-full  items-center justify-center aligns-center  "
-            >
-              <div className="max-w-4xl ml-auto mr-auto ">
-                <div className="flex items-center">
-                  <button
-                    onClick={() => navigate("/")}
-                    className="bg-yellow-400 text-black text-center border-none font-extrabold text-2xl font-sans whitespace-nowrap hover:opacity-80 rounded-md"
-                  >
-                    IMDb dialog
-                  </button>
-                  <div className="flex-grow"></div>
-                  <button
-                    onClick={handleCloseDialogClick}
-                    className="bg-yellow-400 border-4 rounded-full h-12 w-12 aligns-center justify-center
-                                         text-black text-center border-yellow-400 font-extrabold text-2xl font-sans whitespace-nowrap  hover:opacity-80  "
-                  >
-                    X
-                  </button>
-                </div>
-                <div className="grid grid-cols-3 gap-4 text-white mt-10">
-                  <div className=" items-center">
-                    <div className="flex  items-center gap-3">
-                      <div className="aligns-start">
-                        <i className="fa-solid fa-film text-yellow-400"></i>
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                          Movies
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="aligns-start text-black">
-                        <i className="fa-solid fa-film "></i>
-                      </div>
-                      <div className="">
-                        <p className="mt-2 hover:underline">Release Calendar</p>
-                        <p className="mt-2 hover:underline">
-                          Most Popular Movies
-                        </p>
-                        <p className="mt-2 hover:underline">Top Box Office</p>
-                        <p className="mt-2 hover:underline">
-                          Showtime & Ticked
-                        </p>
-                        <p className="mt-2 hover:underline">Movies News</p>
-                        <p className="mt-2 hover:underline">
-                          India Movie Spotlight
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="items-center">
-                    <div className="flex  items-center gap-3">
-                      <div className="aligns-start text-yellow-400">
-                        <i className="fa-solid fa-tv"></i>
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                          TV Shows
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="aligns-start text-black">
-                        <i className="fa-solid fa-film "></i>
-                      </div>
-                      <div className="">
-                        <p className="mt-2 hover:underline">
-                          Whats on TV & Streaming
-                        </p>
-                        <p className="mt-2 hover:underline">Top 250 TV Shows</p>
-                        <p className="mt-2 hover:underline">
-                          Most Popular TV Shows
-                        </p>
-                        <p className="mt-2 hover:underline">TV News</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="items-center">
-                    <div className="flex  items-center gap-3">
-                      <div className="aligns-center text-yellow-400 ">
-                        <StarsIcon />
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                          {" "}
-                          Award & Event
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="aligns-start text-black">
-                        <i className="fa-solid fa-film "></i>
-                      </div>
-                      <div className="">
-                        <p className="mt-2 hover:underline">Oscars</p>
-                        <p className="mt-2 hover:underline">Emmys</p>
-                        <p className="mt-2 hover:underline">Best Of 2023</p>
-                        <p className="mt-2 hover:underline">Holiday Picks</p>
-                        <p className="mt-2 hover:underline">Starmeter Awards</p>
-                        <p className="mt-2 hover:underline">Awards Central</p>
-                        <p className="mt-2 hover:underline">Festival Central</p>
-                        <p className="mt-2 hover:underline">All Event</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="items-center">
-                    <div className="flex  items-center gap-3">
-                      <div className="aligns-start text-yellow-400">
-                        <i className="fa-solid fa-user-group"></i>
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                          {" "}
-                          Celebs
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="aligns-start text-black">
-                        <i className="fa-solid fa-film "></i>
-                      </div>
-                      <div className="">
-                        <p className="mt-2 hover:underline">Born Today</p>
-                        <p className="mt-2 hover:underline">
-                          Most Popular Celebs
-                        </p>
-                        <p className="mt-2 hover:underline">Celebrity News</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="items-center">
-                    <div className="flex  items-center gap-3">
-                      <div className="aligns-start text-yellow-400">
-                        <VideoLibraryIcon />
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                          {" "}
-                          Watch
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="aligns-start text-black">
-                        <i className="fa-solid fa-film "></i>
-                      </div>
-                      <div className="">
-                        <p className="mt-2 hover:underline">What to Watch</p>
-                        <p className="mt-2 hover:underline">Latest Trailers</p>
-                        <p className="mt-2 hover:underline">IMDb Originals</p>
-                        <p className="mt-2 hover:underline">IMDb Picks</p>
-                        <p className="mt-2 hover:underline">IMDb Podcasts'</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="items-center">
-                    <div className="flex  items-center gap-3">
-                      <div className="aligns-start text-yellow-400">
-                        <i className="fa-solid fa-earth-americas"></i>
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                          {" "}
-                          Community
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="aligns-start text-black">
-                        <i className="fa-solid fa-film "></i>
-                      </div>
-                      <div className="">
-                        <p className="mt-2 hover:underline">Help Center</p>
-                        <p className="mt-2 hover:underline">Contributor Zone</p>
-                        <p className="mt-2 hover:underline">Polls</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Dialog.Content>
-          </Dialog.Portal>
-
-        </Dialog.Root>
-        <div className="grow">
-          <div className="mt-2 hidden lg:flex bg-red-300 w-full">
-            <SearchBar />
-          </div>
-        </div>
-
-        <button
-          onClick={() => navigate("/IMDbPro")}
-          className=" hidden lg:flex bg-black text-white text-center 
-           font-extrabold text-lg font-sans 
-                                         whitespace-nowrap  hover:bg-opacity-90  rounded-md"
-        >
-          IMDb<span className="text-blue-600">Pro</span>
-        </button>
-        <Divider className=" hidden lg:flex" orientation="vertical" sx={{ bgcolor: "red", color: 'white', border: "1px solid gray", height: '20px' }} />
-        <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
-          <button
-            onClick={() => navigate("/WatchList")}
-            className="flex items-center"
           >
-            <i className="fa-regular fa-bookmark fa-flip text-white"></i>
-            <p className="text-white text-xl font-extrabold border-none ">
-              Watch List
-            </p>
+            IMDb
           </button>
-        </div>
+          <Dialog.Root open={open} onOpenChange={setOpen} >
+            <Dialog.Trigger>
+              <div className="hidden lg:flex items-center content-center justify-center self-center text-white gap-2 text-lg hover:bg-black hover:opacity-95">
+                <i className="fa-sharp fa-solid fa-bars"></i>
+                <p> Menu </p>
+              </div>
+            </Dialog.Trigger>
+            <Dialog.Portal >
+              <Dialog.Content
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+               rounded-md bg-black  p-8 shadow w-full  items-center justify-center aligns-center z-30 "
+              >
+                <div className="max-w-4xl ml-auto mr-auto ">
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => navigate("/")}
+                      className="bg-yellow-400 text-black text-center border-none font-extrabold text-2xl font-sans whitespace-nowrap hover:opacity-80 rounded-md"
+                    >
+                      IMDb
+                    </button>
+                    <div className="flex-grow"></div>
+                    <button
+                      onClick={handleCloseDialogClick}
+                      className="bg-yellow-400 border-4 rounded-full h-12 w-12 aligns-center justify-center
+                                         text-black text-center border-yellow-400 font-extrabold text-2xl font-sans whitespace-nowrap  hover:opacity-80  "
+                    >
+                      X
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 text-white mt-10">
+                    <div className=" items-center">
+                      <div className="flex  items-center gap-3">
+                        <div className="aligns-start">
+                          <i className="fa-solid fa-film text-yellow-400"></i>
+                        </div>
+                        <div>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
+                            Movies
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-start text-black">
+                          <i className="fa-solid fa-film "></i>
+                        </div>
+                        <div className="">
+                          <p className="mt-2 hover:underline">Release Calendar</p>
+                          <p className="mt-2 hover:underline">
+                            Most Popular Movies
+                          </p>
+                          <p className="mt-2 hover:underline">Top Box Office</p>
+                          <p className="mt-2 hover:underline">
+                            Showtime & Ticked
+                          </p>
+                          <p className="mt-2 hover:underline">Movies News</p>
+                          <p className="mt-2 hover:underline">
+                            India Movie Spotlight
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="items-center">
+                      <div className="flex  items-center gap-3">
+                        <div className="aligns-start text-yellow-400">
+                          <i className="fa-solid fa-tv"></i>
+                        </div>
+                        <div>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
+                            TV Shows
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-start text-black">
+                          <i className="fa-solid fa-film "></i>
+                        </div>
+                        <div className="">
+                          <p className="mt-2 hover:underline">
+                            Whats on TV & Streaming
+                          </p>
+                          <p className="mt-2 hover:underline">Top 250 TV Shows</p>
+                          <p className="mt-2 hover:underline">
+                            Most Popular TV Shows
+                          </p>
+                          <p className="mt-2 hover:underline">TV News</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="items-center">
+                      <div className="flex  items-center gap-3">
+                        <div className="aligns-center text-yellow-400 ">
+                          <StarsIcon />
+                        </div>
+                        <div>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
+                            {" "}
+                            Award & Event
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-start text-black">
+                          <i className="fa-solid fa-film "></i>
+                        </div>
+                        <div className="">
+                          <p className="mt-2 hover:underline">Oscars</p>
+                          <p className="mt-2 hover:underline">Emmys</p>
+                          <p className="mt-2 hover:underline">Best Of 2023</p>
+                          <p className="mt-2 hover:underline">Holiday Picks</p>
+                          <p className="mt-2 hover:underline">Starmeter Awards</p>
+                          <p className="mt-2 hover:underline">Awards Central</p>
+                          <p className="mt-2 hover:underline">Festival Central</p>
+                          <p className="mt-2 hover:underline">All Event</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="items-center">
+                      <div className="flex  items-center gap-3">
+                        <div className="aligns-start text-yellow-400">
+                          <i className="fa-solid fa-user-group"></i>
+                        </div>
+                        <div>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
+                            {" "}
+                            Celebs
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-start text-black">
+                          <i className="fa-solid fa-film "></i>
+                        </div>
+                        <div className="">
+                          <p className="mt-2 hover:underline">Born Today</p>
+                          <p className="mt-2 hover:underline">
+                            Most Popular Celebs
+                          </p>
+                          <p className="mt-2 hover:underline">Celebrity News</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="items-center">
+                      <div className="flex  items-center gap-3">
+                        <div className="aligns-start text-yellow-400">
+                          <VideoLibraryIcon />
+                        </div>
+                        <div>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
+                            {" "}
+                            Watch
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-start text-black">
+                          <i className="fa-solid fa-film "></i>
+                        </div>
+                        <div className="">
+                          <p className="mt-2 hover:underline">What to Watch</p>
+                          <p className="mt-2 hover:underline">Latest Trailers</p>
+                          <p className="mt-2 hover:underline">IMDb Originals</p>
+                          <p className="mt-2 hover:underline">IMDb Picks</p>
+                          <p className="mt-2 hover:underline">IMDb Podcasts'</p>
+                        </div>
+                      </div>
+                    </div>
 
-        {/* <Navbar.Toggle /> */}
-        <Button sx={{ display: { xs: "none", md: "flex" } }}>
-          <FormControl
-            sx={{
-              bgcolor: "black",
-              color: "red",
-              fontWeight: "extrabold",
-              textAlign: "center",
-              alignContent: "center",
-              alignItems: "center",
-            }}
+                    <div className="items-center">
+                      <div className="flex  items-center gap-3">
+                        <div className="aligns-start text-yellow-400">
+                          <i className="fa-solid fa-earth-americas"></i>
+                        </div>
+                        <div>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
+                            {" "}
+                            Community
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-start text-black">
+                          <i className="fa-solid fa-film "></i>
+                        </div>
+                        <div className="">
+                          <p className="mt-2 hover:underline">Help Center</p>
+                          <p className="mt-2 hover:underline">Contributor Zone</p>
+                          <p className="mt-2 hover:underline">Polls</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+
+          </Dialog.Root>
+          <div className="grow ">
+            <div className="mt-2 hidden lg:flex bg-red-300 w-full z-20">
+              <SearchBar />
+            </div>
+          </div>
+
+          <button
+            onClick={() => navigate("/IMDbPro")}
+            className=" hidden lg:flex bg-black text-white text-center 
+           font-extrabold text-lg font-sans whitespace-nowrap  hover:bg-opacity-90  rounded-md"
           >
-            <Select
-              label="Agel"
-              value={personName}
-              onChange={handleChange}
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={MenuProps}
-              variant="standard"
+            IMDb<span className="text-blue-600">Pro</span>
+          </button>
+          <Divider className=" hidden lg:flex" orientation="vertical" sx={{ bgcolor: "red", color: 'white', border: "1px solid gray", height: '20px' }} />
+          <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
+            <button
+              onClick={() => navigate("/WatchList")}
+              className="flex items-center"
+            >
+              <i className="fa-regular fa-bookmark fa-flip text-white"></i>
+              <p className="text-white text-xl font-extrabold border-none ">
+                Watch List
+              </p>
+            </button>
+          </div>
+          <Button sx={{ display: { xs: "none", md: "flex" } }}>
+            <FormControl
               sx={{
-                "& .MuiSelect-icon": {
-                  color: "white", // Thay đổi màu của mũi tên hướng xuống thành màu đỏ
-                },
-                "& .MuiSelect-select.MuiSelect-select": {
-                  color: "white", // Thay đổi màu của mục đã chọn thành màu xanh
-                  fontWeight: "bold",
-                },
-                mt: "3px",
+                bgcolor: "black",
+                color: "red",
+                fontWeight: "extrabold",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
               }}
             >
-              <MenuItem value="language" disabled>
-                Language
-              </MenuItem>
-              <MenuItem value="en">English</MenuItem>
-              <MenuItem value="vn">Vietnamese</MenuItem>
-              <MenuItem value="jp">Japanese</MenuItem>
-            </Select>
-          </FormControl>
-        </Button>
-        <div className="lg:hidden text-white">
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </div>
-        <button
-          onClick={() => navigate("/")}
-          className="text-white text-center 
+              <Select
+                label="Agel"
+                value={personName}
+                onChange={handleChange}
+                renderValue={(selected) => selected.join(", ")}
+                MenuProps={MenuProps}
+                variant="standard"
+                sx={{
+                  "& .MuiSelect-icon": {
+                    color: "white", // Thay đổi màu của mũi tên hướng xuống thành màu đỏ
+                  },
+                  "& .MuiSelect-select.MuiSelect-select": {
+                    color: "white", // Thay đổi màu của mục đã chọn thành màu xanh
+                    fontWeight: "bold",
+                  },
+                  mt: "3px",
+                }}
+              >
+                <MenuItem value="language" disabled>
+                  Language
+                </MenuItem>
+                <MenuItem value="en">English</MenuItem>
+                <MenuItem value="vn">Vietnamese</MenuItem>
+                <MenuItem value="jp">Japanese</MenuItem>
+              </Select>
+            </FormControl>
+          </Button>
+          <div className="lg:hidden text-white" >
+            <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
+          </div>
+          <button
+            onClick={() => navigate("/")}
+            className="text-white text-center 
         border-none font-bold text-sm font-sans
               whitespace-nowrap hover:bg-black hover:text-blue-500
        hover:border-red-500  rounded-md"
-        >
-          Sign In
-        </button>
-        <button
-          onClick={() => navigate("/")}
-          className=" bg-yellow-400 text-black text-center 
+          >
+            Sign In
+          </button>
+          <button
+            onClick={() => navigate("/")}
+            className=" bg-yellow-400 text-black text-center 
           border-none font-bold text-sm h-10 rounded-lg font-sans
             whitespace-nowrap hover:bg-black hover:text-blue-500
              lg:hidden hover:border-red-500 "
-        >
-          Use App
-        </button>
-      </div>
+          >
+            Use App
+          </button>
+        </div >
+      )
+      }
 
 
       {/* drawer */}
@@ -558,6 +581,6 @@ export default function TopBar() {
       {/* drawer */}
 
 
-    </section>
+    </section >
   );
 }

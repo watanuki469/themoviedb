@@ -54,7 +54,8 @@ export default function SingleMoviePerson({
                             <div className="h-24 w-24 rounded-full bg-cover mr-4"
                                 style={{
                                     backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
-                                }}>
+                                }}
+                                onClick={() => navigate(`/person/${item?.id}`)}>
                             </div>
 
                             <div className="">
@@ -86,7 +87,8 @@ export default function SingleMoviePerson({
                                         <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center"
                                             style={{
                                                 backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
-                                            }}>
+                                            }}
+                                            onClick={() => navigate(`/person/${item?.id}`)}>
                                         </div>
 
                                         <div className="">

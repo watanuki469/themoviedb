@@ -7,7 +7,8 @@ import movieVideoReducer from './reducers/movieVideo.reducer'
 import movieImageReducer from './reducers/movieImage.reducer'
 import movieCreditReducer from './reducers/movieCredit.reducer'
 import movieSimilarReducer from './reducers/movieSimilar.reducer'
-
+import personReducer from './reducers/person.reducer.'
+import searchReducer from './reducers/search.reducer'
 
 export const store = configureStore({
     reducer: {
@@ -19,7 +20,8 @@ export const store = configureStore({
         movieImage:movieImageReducer,
         movieCredit:movieCreditReducer,
         movieSimilar:movieSimilarReducer,
-        
+        person:personReducer,        
+        search:searchReducer
 
     }
 })

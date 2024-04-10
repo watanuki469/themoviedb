@@ -19,6 +19,8 @@ import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import SingleMovieReview from "../common/SingleMovieReview";
 import ListRow from "../../modules/ListRow";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import FourPhotos from "../../modules/FourPhotos";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function MovieLayout() {
     const { id } = useParams()
@@ -27,7 +29,6 @@ export default function MovieLayout() {
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
-
 
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -113,20 +114,17 @@ export default function MovieLayout() {
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchSingleMovies());
         dispatch(fetchMovieVideos());
         dispatch(fetchMovieImage());
         dispatch(fetchMovieCredit());
         dispatch(fetchMovieSimilar());
         dispatch(fetchMovies());
-
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
-    console.log(topRatedTv);
-
 
     return (
         <div className=" min-h-screen">
@@ -147,7 +145,18 @@ export default function MovieLayout() {
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                             </div>
-                            <TwoMovieRow twoMovieRowList={movieVideoList} />
+                            <div className="lg:max-w-full md:w-screen">
+                                <TwoMovieRow twoMovieRowList={movieVideoList} />
+                            </div>
+                            <div className="flex items-center py-4">
+                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                <h2 className="text-2xl font-bold text-black ">Photos</h2>
+                                <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.images?.backdrops?.length}</p>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                            </div>
+                            <div className="lg:max-w-full md:w-screen">
+                                <FourPhotos fourPhotosList={movieImageList} />
+                            </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -162,8 +171,9 @@ export default function MovieLayout() {
                                     </p>
                                 </div>
                             </div>
-
-                            <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
+                            <div className="lg:max-w-full md:w-screen">
+                                <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
+                            </div>
                             <div className="text-white flex py-4 mt-4">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -173,7 +183,9 @@ export default function MovieLayout() {
                                     <i className="fa-regular fa-circle-question text-black text-2xl ml-2"></i>
                                 </div>
                             </div>
-                            <FourSwiperRow fourSwiperRowList={movieSimilarList} />
+                            <div className="lg:max-w-full md:w-screen">
+                                <FourSwiperRow fourSwiperRowList={movieSimilarList} />
+                            </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -186,7 +198,9 @@ export default function MovieLayout() {
                                     </p>
                                 </div>
                             </div>
-                            <SingleMovieStoryLine singleMovieList={singleMovieList} />
+                            <div className="lg:max-w-full md:w-screen">
+                                <SingleMovieStoryLine singleMovieList={singleMovieList} />
+                            </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -201,19 +215,23 @@ export default function MovieLayout() {
                                     </p>
                                 </div>
                             </div>
-                            <SingleMovieReview singleMovieList={singleMovieList} />
+                            <div className="lg:max-w-full md:w-screen">
+                                <SingleMovieReview singleMovieList={singleMovieList} />
+                            </div>
 
 
 
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2">
+                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 ">
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                             </div>
-                            <ListRow listRowList={topRatedMovies} />
+                            <div className="lg:max-w-full md:w-screen">
+                                <ListRow listRowList={topRatedMovies} />
+                            </div>
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in April</p>
-                            <p className="text-red w-full text-blue-500"> See out picks</p>
+                            <p className="text-red w-full text-blue-500"> See our picks</p>
                         </div>
                     </div>
 

@@ -28,7 +28,10 @@ export default function SingleMovieDetail({
                 const directors = movie.credits.crew.filter((item: any) => item.job === 'Director');
                 setDirector(directors);
                 const writers = movie.credits.crew.filter((item: any) => item.job === 'Story');
-                setWriter(writers);
+                const screenplayWriters = movie.credits.crew.filter((item: any) => item.job === 'Screenplay');
+
+                const writerses = writers.length > 0 ? writers : screenplayWriters;
+                setWriter(writerses);
             }
         }
     }, [singleMovieList[0]]);
@@ -160,7 +163,7 @@ export default function SingleMovieDetail({
                                         <PhotoLibraryIcon />
                                     </div>
                                     <div className="text-center">
-                                        {movieImageList?.length} Photos
+                                        {movieImageList?.length} Photos 
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +186,7 @@ export default function SingleMovieDetail({
                                         <div>Director</div>
                                         <div>
                                             {director.slice(0, 3).map((item: any, index: number) => (
-                                                <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
+                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
                                                     <span>{index < Math.min(director.length) - 1 ? '•' : ''}</span>
                                                 </p>
@@ -195,7 +198,7 @@ export default function SingleMovieDetail({
                                         <div className="">Writers</div>
                                         <div className="flex gap-3 justify-center text-center aligns-center">
                                             {writer.slice(0, 3).map((item: any, index: number) => (
-                                                <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
+                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
                                                     <span>{index < Math.min(writer.length) - 1 ? '•' : ''}</span>
                                                 </p>
@@ -206,7 +209,7 @@ export default function SingleMovieDetail({
                                         <div className="">Star</div>
                                         <div className="flex gap-3">
                                             {movieCreditList.slice(0, 3).map((item: any, index: number) => (
-                                                <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
+                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
                                                     <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
                                                 </p>

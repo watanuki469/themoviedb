@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MovieImage } from '../../components/models/MovieImage';
 
 interface IMovieImagetate {
-    listMovieImage: MovieImage[],
+    listMovieImage: any[],
 }
 
 const initialState: IMovieImagetate = {

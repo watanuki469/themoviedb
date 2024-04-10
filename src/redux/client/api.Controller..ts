@@ -36,4 +36,17 @@ const apiMovieSimilar = {
     },
 }
 
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits ,apiMovieSimilar}
+const apiPerson = {
+    person(query: any) {
+        const url = `person/${query}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&append_to_response=combined_credits%2Cexternal_ids%2Cimages&language=en-US`
+        return axiosClient.get(url)
+    },
+}
+const apiSearch = {
+    search(mediaType:any,query: any) {
+        const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=true&language=en-US&page=1`;
+        return axiosClient.get(url)
+    },
+}
+
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits ,apiMovieSimilar,apiPerson,apiSearch}

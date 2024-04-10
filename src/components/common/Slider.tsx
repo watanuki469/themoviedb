@@ -176,7 +176,7 @@ export default function Slider() {
                                 </div>
                             </div>
                             <div id='2' className="h-24 mb-3 "
-                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 1]?.id}`)}
+                                onClick={() => navigate(`/movie/${popularMovies[activeStep + 1]?.id}`)}
                             >
                                 <div className='flex flex-row w-full'>
                                     <div >
@@ -184,7 +184,7 @@ export default function Slider() {
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 1]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className='w-24 object-cover self-start h-24'
+                                            className='w-20 object-cover self-start h-24'
                                         />
                                     </div>
                                     <div className='flex flex-col w-full '>
@@ -214,14 +214,14 @@ export default function Slider() {
 
                             </div>
                             <div id='3' className="h-24 mb-4 "
-                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 2]?.id}`)}>
+                                onClick={() => navigate(`/movie/${popularMovies[activeStep + 2]?.id}`)}>
                                 <div className='flex flex-row w-full'>
                                     <div >
                                         <img
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 2]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className='w-24 object-cover self-start h-24'
+                                            className='w-20 object-cover self-start h-24'
                                         />
                                     </div>
                                     <div className='flex flex-col w-full '>
@@ -251,14 +251,14 @@ export default function Slider() {
 
                             </div>
                             <div id='4' className="h-24 mb-4 "
-                                onClick={() => navigate(`/movie/id/${popularMovies[activeStep + 3]?.id}`)}>
+                                onClick={() => navigate(`/movie/${popularMovies[activeStep + 3]?.id}`)}>
                                 <div className='flex flex-row w-full'>
                                     <div >
                                         <img
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 3]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className='w-24 object-cover self-start h-24'
+                                            className='w-20 object-cover self-start h-24'
                                         />
                                     </div>
                                     <div className='flex flex-col w-full '>
@@ -299,23 +299,7 @@ export default function Slider() {
                                 </div>
 
                             </div>
-                            {/* <div id='5' className="col-span-1 h-12 mb-3    ">
-                                <div className="text-sm text-white text-left transition duration-300 ease-in-out lg:col-span-6">
-                                    <div className='flex flex-row md-flex items-center'
-                                        onClick={() => navigate(`/Popular`)}
-                                    >
-                                        <div className="text-red-500 font-semibold text-sm text-left  whitespace-nowrap  overflow-ellipsis ">
-                                            Browse Trailer
-                                        </div>
-                                        <ArrowForwardIosIcon sx={{
-                                            height: '20px', color: 'white', width: '20px', margin: '6px', alignSelf: 'center'
-                                            , ':hover': {
-                                                color: 'yellow', borderColor: 'red'
-                                            },
-                                        }} />
-                                    </div>
-                                </div>
-                            </div> */}
+                            
                         </div>
                     </div>
                 </div>

@@ -8,12 +8,14 @@
 
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
+import PersonLayout from "./components/layout/PersonLayout";
+import VideoLayout from "./components/layout/VideoLayout";
 
 export const routesGen = {
   home: "/",
   movie: (id: any) => `/${id}`,
+  video: (id: any) => `/video/${id}`,
   mediaDetail: (type: any, id: any) => `/${type}/${id}`,
-  mediaSearch: "/search",
   person: (id: any) => `/person/${id}`,
   favoriteList: "/favorites",
   reviewList: "/reviews",
@@ -31,11 +33,17 @@ const routes = [
     element: <MovieLayout />,
     state: "movie"
   },
-  // {
-  //   path: "/search",
-  //   element: <MediaSearch />,
-  //   state: "search"
-  // },
+  {
+    path: "/person/:id",
+    element: <PersonLayout />,
+    state: "person"
+  },
+  {
+    path: "/video/:id",
+    element: <VideoLayout/>,
+    state: "video"
+  },
+
   // {
   //   path: "/password-update",
   //   element: (

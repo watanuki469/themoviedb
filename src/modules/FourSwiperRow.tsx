@@ -26,7 +26,10 @@ export default function FourSwiperRow({
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-
+    const handleImageError = (e: any) => {
+        const imgElement = e.currentTarget as HTMLImageElement;
+        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+    };
     return (
         <div className="px-2 pt-2">
             <Swiper
@@ -38,13 +41,14 @@ export default function FourSwiperRow({
                 }}
                 navigation={true}
                 modules={[Pagination, Navigation]}
-                className="mySwiper text-white"
+                className="mySwiper text-white h-full "
             >
-                {fourSwiperRowList.map((item: any, index: any) => {
+                {fourSwiperRowList?.map((item: any, index: any) => {
                     return (
-                        <SwiperSlide key={index}>
-                            <div className="w-full">
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60" />
+                        <SwiperSlide key={index} >
+                            <div className=" object-cover">
+                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full"
+                                 onError={handleImageError} />
                             </div>
                             <div className="bg-white shadow-xl text-black">
                                 <div className="mx-3 ">

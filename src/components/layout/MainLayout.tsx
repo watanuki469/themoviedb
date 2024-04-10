@@ -11,14 +11,13 @@ export default function MainLayout() {
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
-    console.log(topRatedTv);
-
 
     return (
         <div className=" min-h-screen">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
+                  
                     <div className="mt-8 ">
                         <Slider />
                     </div>

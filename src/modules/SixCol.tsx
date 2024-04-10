@@ -7,7 +7,7 @@ export interface FourSwiperRowProps {
     listRowList: any
 }
 
-export default function ListRow({
+export default function SixCol({
     listRowList,
 }: FourSwiperRowProps) {
 

@@ -28,10 +28,10 @@ export default function SingleMovieReview({
                                 <i className="fa-solid fa-star text-yellow-300 text-sm ml-2"></i>
                                 <div>
                                     <span className="">
-                                        {typeof singleMovieList[0]?.reviews.results[0].author_details.rating === 'number' ?
-                                            (singleMovieList[0]?.reviews.results[0].author_details.rating % 1 === 0 ?
-                                                singleMovieList[0]?.reviews.results[0].author_details.rating.toFixed(0) :
-                                                singleMovieList[0]?.reviews.results[0].author_details.rating.toFixed(1)
+                                        {typeof singleMovieList[0]?.reviews.results[0]?.author_details?.rating === 'number' ?
+                                            (singleMovieList[0]?.reviews.results[0]?.author_details?.rating % 1 === 0 ?
+                                                singleMovieList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(0) :
+                                                singleMovieList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(1)
                                             )
                                             :
                                             'N/A'
@@ -73,9 +73,9 @@ export default function SingleMovieReview({
                         </div>
                     </div>
                     <div className='flex gap-2 px-2 py-2'>
-                        <p className='text-blue-500'>{singleMovieList[0]?.reviews.results[0].author}</p>
+                        <p className='text-blue-500'>{singleMovieList[0]?.reviews?.results[0]?.author}</p>
                         <p>•</p>
-                        <p>{singleMovieList[0]?.reviews.results[0].created_at.slice(0, 10)}</p>
+                        <p>{singleMovieList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
 
                     </div>
 
