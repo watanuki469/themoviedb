@@ -1,27 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TwoMovieRow from "../../modules/TwoMovieRow";
 import apiController from "../../redux/client/api.Controller.";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListMovieCredit } from "../../redux/reducers/movieCredit.reducer";
-import { setListMovieImage } from "../../redux/reducers/movieImage.reducer";
-import { setListMovieVideo } from "../../redux/reducers/movieVideo.reducer";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
 import { AppDispatch } from "../../redux/store";
-import SingleMovieDetail from "../common/SingleMovieDetail";
-import SingleMoviePerson from "../common/SingleMoviePerson";
-import TopBar from "../common/TopBar";
-import SwiperRow from "../../modules/SwiperRow";
 import Footer from "../common/Footer";
-import { setListMovieSimilar } from "../../redux/reducers/movieSimilar.reducer";
-import FourSwiperRow from "../../modules/FourSwiperRow";
-import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
-import SingleMovieReview from "../common/SingleMovieReview";
-import ListRow from "../../modules/ListRow";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import FourPhotos from "../../modules/FourPhotos";
+import TopBar from "../common/TopBar";
 import VideoDetail from "../common/VideoDetail";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function VideoLayout() {
     const { id } = useParams()

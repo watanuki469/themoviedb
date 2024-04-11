@@ -1,15 +1,17 @@
 import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface SwiperRowProps {
     searchItemList: any
+    mediaType:any
 }
 
 export default function SwiperRow({
     searchItemList,
+    mediaType
 }: SwiperRowProps) {
    
 
@@ -109,7 +111,7 @@ export default function SwiperRow({
                     return (
                         <SwiperSlide key={index}>
 
-                            <div className="w-full h-auto"  onClick={() => navigate(`/movie/${item?.id}`)}>
+                            <div className="w-full h-auto"  onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images " className="h-60" />
                             </div>
                             <div className="bg-gray-900">

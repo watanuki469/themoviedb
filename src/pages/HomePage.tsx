@@ -3,8 +3,6 @@ import React from "react";
 // import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import GlobalLoading from "../components/common/GlobalLoading";
-import TopBar from "../components/common/TopBar";
-import Footer from "../components/common/Footer";
 
 const HomePage: React.FC = () => {
   // const dispatch = useDispatch();

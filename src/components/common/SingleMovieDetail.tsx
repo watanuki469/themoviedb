@@ -1,5 +1,6 @@
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import { Rating } from '@mui/material';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +21,12 @@ export default function SingleMovieDetail({
 
     const [director, setDirector] = useState<any[]>([])
     const [writer, setWriter] = useState<any[]>([])
+
+    const [isRating, setIsRating] = useState(false);
+    const handleClick = () => {
+        setIsRating(true);
+    };
+    const [value, setValue] = useState<number | null>(0);
 
     useEffect(() => {
         if (singleMovieList && singleMovieList.length > 0) {
@@ -49,6 +56,46 @@ export default function SingleMovieDetail({
             backgroundSize: "cover",
             backgroundPosition: "center",
         }}>
+            {isRating && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
+                    <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
+                        <div className="flex items-center justify-end">
+                            <div className="flex justify-end">
+                                <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                    <i className="fa-solid fa-times text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="bg-black px-4 py-4">
+                            <div className="aligns-center justify-center items-center text-center gap-2">
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
+                                    <i className="fa-solid fa-star text-9xl text-blue-500"></i>
+                                    <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
+                                </div>
+                                <p className="text-yellow-300 font-bold">Rate this</p>
+                                <p className="text-2xl ">{singleMovieList[0]?.original_title}</p>
+                                <div className="gap-2 px-2 py-2">
+                                    <Rating name="customized-10" value={value} size="large"
+                                        onChange={(event, newValue) => {
+                                            setValue(newValue);
+                                        }}
+                                        max={10} sx={{
+                                            color: 'blue', mt: 1,
+                                            '& .MuiRating-iconEmpty': {
+                                                borderColor: 'red',
+                                                color: 'gray'
+                                            },
+                                        }} />
+                                    <br />
+                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`} onClick={() => setIsRating(false)}>
+                                        Rate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="text-white font-sans font-medium hue-rotate-15" >
                 <div style={{
                     backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleMovieList[0]?.backdrop_path}')`,
@@ -62,19 +109,19 @@ export default function SingleMovieDetail({
 
                 <div style={{ position: "relative", zIndex: "1" }}>
                     <div className="flex flex-row justify-end gap-2 items-center ">
-                        <div className=" py-2 hidden lg:block">Cast & Crew</div>
-                        <div className=" py-2 hidden lg:block">•</div>
-                        <div className=" py-2 hidden lg:block">User Reviews</div>
-                        <div className=" py-2 hidden lg:block">•</div>
-                        <div className=" py-2 hidden lg:block">Trivia</div>
-                        <div className=" py-2 hidden lg:block">•</div>
-                        <div className=" py-2 hidden lg:block">FAQ</div>
-                        <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block">IMDbPro</button>
-                        <button className="py-2 px-3 border-r border-gray-400 flex items-center gap-2">
+                        <div className=" py-2 hidden lg:block hover:underline">Cast & Crew</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline">User Reviews</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline">Trivia</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline">FAQ</div>
+                        <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block hover:underline">IMDbPro</button>
+                        <button className="py-2 px-3 border-r border-gray-400 flex items-center gap-2 hover:bg-opacity-80 hover:bg-gray-500">
                             <i className="fa-solid fa-icons"></i>
                             <p>All Topic</p>
                         </button>
-                        <i className="fa-solid fa-share-nodes py-2 px-3"></i>
+                        <i className="fa-solid fa-share-nodes py-2 px-3 hover:bg-opacity-80 hover:bg-gray-500 rounded-lg"></i>
                     </div>
                     <div className="flex justify-between">
                         <div className="items-center">
@@ -91,7 +138,7 @@ export default function SingleMovieDetail({
                             <div className="flex">
                                 <div className="items-center justify-center">
                                     <div className="mr-4 text-stone-400" >IMDb Rating</div>
-                                    <div className="flex space-x-4">
+                                    <div className="flex space-x-4 hover:bg-opacity-80 hover:bg-gray-500">
                                         <div className="flex justify-center aligns-center items-center h-full gap-2">
                                             <i className="fa-solid fa-star h-full items-center text-2xl text-yellow-300"></i>
                                             <div className="">
@@ -115,9 +162,9 @@ export default function SingleMovieDetail({
 
                                     </div>
                                 </div>
-                                <div className="items-center text-center justify-center m-auto mr-4 aligns-center">
+                                <div className="items-center text-center justify-center m-auto mr-4 aligns-center ">
                                     <div className="    text-stone-400">Your Rating</div>
-                                    <div className="flex ">
+                                    <div className="flex hover:bg-opacity-80 hover:bg-gray-500" onClick={() => handleClick()}>
                                         <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
                                             <i className="fa-regular fa-star "></i>
                                             <p>Rate</p>
@@ -129,10 +176,10 @@ export default function SingleMovieDetail({
                         </div>
                     </div>
                     <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
-                        <div className="hidden lg:block col-span-3 bg-gray-200  h-full">
+                        <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-90 ">
                             <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" />
                         </div>
-                        <div className=" lg:col-span-7 md:col-span-12   lg:ml-2 bg-black">
+                        <div className=" lg:col-span-7 md:col-span-12   lg:ml-2 bg-black hover:opacity-90">
                             <iframe
                                 key={movieVideoList[0]?.name}
                                 src={`https://www.youtube.com/embed/${movieVideoList[0]?.key}?controls=0&&autoplay=1`}
@@ -146,7 +193,7 @@ export default function SingleMovieDetail({
 
                         </div>
 
-                        <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden">
+                        <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden ">
                             <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
@@ -163,7 +210,7 @@ export default function SingleMovieDetail({
                                         <PhotoLibraryIcon />
                                     </div>
                                     <div className="text-center">
-                                        {movieImageList?.length} Photos 
+                                        {movieImageList?.length} Photos
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +298,7 @@ export default function SingleMovieDetail({
                                                 </button>
                                             </div>
                                             <div className="w-full">
-                                                <button className="py-2 px-3 flex items-center gap-2">
+                                                <button className="py-2 px-3 flex items-center gap-2 whitespace-nowrap">
                                                     {isNaN(singleMovieList[0]?.vote_count) ? 'N/A' : Math.floor(singleMovieList[0]?.vote_count / 20) * 2 + 12}
                                                     <p>Critic Review</p>
                                                 </button>

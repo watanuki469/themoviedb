@@ -9,6 +9,7 @@
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import PersonLayout from "./components/layout/PersonLayout";
+import TvLayout from "./components/layout/TvLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 
 export const routesGen = {
@@ -41,6 +42,11 @@ const routes = [
   {
     path: "/video/:id",
     element: <VideoLayout/>,
+    state: "video"
+  },
+  {
+    path: "/tv/:id",
+    element: <TvLayout/>,
     state: "video"
   },
 

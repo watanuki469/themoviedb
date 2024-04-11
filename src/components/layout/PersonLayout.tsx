@@ -47,6 +47,19 @@ export default function PersonLayout() {
         //     dispatch(setGlobalLoading(false));
         // }, 1000);
     }, [id]);
+    const currentDate = new Date();
+
+    // Mảng các tên tháng
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
+    const currentMonth = currentDate.getMonth();
+
+    // Lấy tên của tháng hiện tại từ mảng monthNames
+    const currentMonthName = monthNames[currentMonth];
 
     return (
         <div className=" min-h-screen">
@@ -78,7 +91,7 @@ export default function PersonLayout() {
                                 <PersonCredit personCreditList={personList[0]?.combined_credits?.cast} />
                             </div>
                             <div className="lg:max-w-full md:w-screen ">
-                                <div className="flex items-center py-4">
+                                <div className="flex items-center py-4"  >
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Videos</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{personList[0]?.combined_credits?.cast?.length}</p>
@@ -108,7 +121,7 @@ export default function PersonLayout() {
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                             </div>
                             <ListRow listRowList={topRatedMovies} />
-                            <p className="text-red w-full text-black"> Staff Picks: What to Watch in April</p>
+                            <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p className="text-red w-full text-blue-500"> See our picks</p>
                         </div>
                     </div>

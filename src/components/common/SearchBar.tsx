@@ -1,15 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Divider, Fade, MenuItem, Popper } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { styled, alpha } from '@mui/material/styles';
-import Menu, { MenuProps } from '@mui/material/Menu';
-import { AppDispatch } from "../../redux/store";
+import { Box, Button, Fade, MenuItem, Popper } from "@mui/material";
+import Menu from '@mui/material/Menu';
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import apiController from "../../redux/client/api.Controller.";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setListSearch } from "../../redux/reducers/search.reducer";
-import { useDebounce } from "../../useDebounce";
-import { toast } from "react-toastify";
+import { AppDispatch } from "../../redux/store";
 
 
 
@@ -96,7 +93,7 @@ export default function SearchBar() {
         //     dispatch(setGlobalLoading(false));
         // }, 1000);
 
-    }, [mediatype, query,open]);
+    }, [mediatype, query, open]);
 
     const onQueryChange = (e: any) => {
         const newQuery = e.target.value;
@@ -203,8 +200,11 @@ export default function SearchBar() {
                                         onClick={() => {
                                             if (item?.media_type === 'person') {
                                                 navigate(`/person/${item.id}`);
-                                            } else {
+                                            } else if(item?.media_type==="movie") {
                                                 navigate(`/movie/${item.id}`);
+                                            }
+                                            else{
+                                                navigate(`/tv/${item.id}`);
                                             }
                                         }}>
                                         <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
@@ -215,11 +215,15 @@ export default function SearchBar() {
                                             {item?.media_type !== 'person' && (
                                                 <p> {item?.first_air_date ? item.first_air_date?.slice(0, 4) : item.release_date?.slice(0, 4)}</p>
                                             )}
-                                            {item?.media_type === 'person' && (
-                                                <div className="items-center flex flex-wrap ">
-                                                    <p> {item?.known_for_department}, {item?.known_for[0]?.title} ({item?.known_for[0]?.release_date?.slice(0, 4)})</p>
-                                                </div>
-                                            )}
+                                            {/* {item?.media_type === 'person' && ( */}
+                                            <div className="items-center flex flex-wrap  ">
+                                                {/* <p> {item?.known_for_department}, {item?.known_for[0]?.title} ({item?.known_for[0]?.release_date?.slice(0, 4)})</p> */}
+                                                <p>
+                                                    {item?.known_for_department}, {item?.known_for?.[0]?.title} (
+                                                    {item?.known_for?.[0]?.release_date?.slice(0, 4)})
+                                                </p>
+                                            </div>
+                                            {/* )} */}
                                         </div>
                                     </div>
                                 </div>

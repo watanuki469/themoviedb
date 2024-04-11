@@ -33,14 +33,6 @@ export default function VideoDetail({
                 <div className="md:grid md:grid-cols-12 gap-y-4 h-full gap-2">
                     <div className="lg:col-span-8 md:col-span-12 lg:ml-2 bg-black relative">
                         <div className='min-h-60 w-full h-full bg-black bg-cover'                            >
-                            {/* <iframe
-                                src={`https://www.youtube.com/embed/${singleMovieList[numberIndex]?.videos?.results[numberIndex]?.key}?controls=${numberIndex}&&autoplay=1`}
-                                width="100%"
-                                height={"100%"}
-                                title={singleMovieList[numberIndex]?.name}
-                                style={{ border: numberIndex, minHeight: '350px' }}
-                            >
-                            </iframe> */}
                             <iframe
                                 src={"https://www.youtube.com/embed/" +
                                     (singleMovieList[0]?.videos?.results[numberIndex]?.key || "") +
@@ -156,7 +148,7 @@ export default function VideoDetail({
                         return (
                             <div key={index}>
                                 <SwiperSlide key={index}>
-                                    <div className="w-full h-42"  onClick={() => { setNumberIndex(index) }}  >
+                                    <div className="w-full h-42" onClick={() => { setNumberIndex(index) }}  >
                                         <div className=''  >
                                             <iframe
                                                 src={`https://www.youtube.com/embed/${item?.key}?controls=0&&autoplay=0`}

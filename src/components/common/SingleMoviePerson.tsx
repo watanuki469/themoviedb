@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface TwoMovieRowProps {
@@ -104,12 +104,12 @@ export default function SingleMoviePerson({
 
             </div>
 
-            <div className="text-black">
+            <div className="text-black mt-5">
                 <div className="py-2 border-b border-gray-300 flex gap-2">
                     <div className="font-bold">Director</div>
                     <div className='items-center flex flex-wrap gap-1 justify-start '>
                         {director.slice(0, 3).map((item: any, index: number) => (
-                            <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
+                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
                                 <span>{index < Math.min(director.length) - 1 ? '•' : ''}</span>
                             </p>
@@ -121,7 +121,7 @@ export default function SingleMoviePerson({
                     <div className="font-bold">Writers</div>
                     <div className="flex flex-wrap gap-1 justify-left text-center aligns-center items-center">
                         {writer.slice(0, 3).map((item: any, index: number) => (
-                            <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
+                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
                                 <span>{index < Math.min(writer.length) - 1 ? '•' : ''}</span>
                             </p>
@@ -132,7 +132,7 @@ export default function SingleMoviePerson({
                     <div className="font-bold">Star</div>
                     <div className="flex gap-1  items-center flex-wrap">
                         {movieCreditList.slice(0, 3).map((item: any, index: number) => (
-                            <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
+                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
                                 <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
                             </p>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { useNavigate } from "react-router-dom";
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface PersonMovieProps {
@@ -23,6 +24,7 @@ export default function PersonMovie({
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+    let navigate=useNavigate()
 
     return (
         <div className=" ">
@@ -40,7 +42,7 @@ export default function PersonMovie({
                 {personMovieList?.map((item: any, index: any) => {
                     return (
                         <SwiperSlide key={index} >
-                            <div className="w-full h-42">
+                            <div className="w-full h-42" onClick={()=>navigate(`/video/${item.id}`)}>
                                 <div className='min-h-60'
                                     style={{
                                         backgroundImage: `url('https://image.tmdb.org/t/p/w300/${item?.poster_path}')`,

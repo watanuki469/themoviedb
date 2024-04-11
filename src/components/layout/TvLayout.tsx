@@ -1,129 +1,72 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import FourSwiperRow from "../../modules/FourSwiperRow";
 import ListRow from "../../modules/ListRow";
-import TwoMovieRow from "../../modules/TwoMovieRow";
 import apiController from "../../redux/client/api.Controller.";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { setListMovieCredit } from "../../redux/reducers/movieCredit.reducer";
-import { setListMovieImage } from "../../redux/reducers/movieImage.reducer";
-import { setListMovieSimilar } from "../../redux/reducers/movieSimilar.reducer";
-import { setListMovieVideo } from "../../redux/reducers/movieVideo.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
+import { setListTv } from "../../redux/reducers/tv.reducer";
+import { setListTvImage } from "../../redux/reducers/tvImage.reducer";
 import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
-import SingleMovieDetail from "../common/SingleMovieDetail";
-import SingleMoviePerson from "../common/SingleMoviePerson";
-import SingleMovieReview from "../common/SingleMovieReview";
-import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import TopBar from "../common/TopBar";
+import TvDetail from "../common/TvDetail";
+import TvEpisode from "../common/TvEpisode";
+import TvPerson from "../common/TvPerson";
+import TvStoryLine from "../common/TvStoryLine";
+import TwoMovieRow from "../../modules/TwoMovieRow";
+import TvReview from "../common/TvReview";
+import TvDetailExternal from "../common/TvDetailExternal";
 
-export default function MovieLayout() {
+export default function TvLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
-    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
-    const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
 
-    const fetchSingleMovies = () => (dispatch: AppDispatch) => {
+
+    const fetchTv = () => (dispatch: AppDispatch) => {
         Promise.all([
-            apiController.apiSingleMovieRequests.singleMovie(id),
+            apiController.apiTv.tv(id),
         ])
             .then((data: any) => {
                 if (data) {
-                    dispatch(setListSingleMovie(data));
+                    dispatch(setListTv(data));
                 } else {
                     console.error("API response structure is not as expected.", data);
                 }
             })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const fetchTvImages = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiTvImages.tvImage(id),
+        ])
+            .then((data: any) => {
+                if (data) {
+                    dispatch(setListTvImage(data));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const tvList = useAppSelector((state) => state.tv.listTv)
+    const tvImageList = useAppSelector((state) => state.tvImages.listTvImage)
+    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
 
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieVideos = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieVideo.movieVideo(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.results) {
-                    dispatch(setListMovieVideo(data[0].results));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieImage = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieImage.movieImage(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.backdrops) {
-                    dispatch(setListMovieImage(data[0]?.backdrops));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieCredit = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieCredits.movieCredit(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.cast) {
-                    dispatch(setListMovieCredit(data[0]?.cast));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieSimilar = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieSimilar.movieSimilar(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.results) {
-                    dispatch(setListMovieSimilar(data[0]?.results));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-
-    const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
-    const movieVideoList = useAppSelector((state) => state.movieVideo.listMovieVideo)
-    const movieImageList = useAppSelector((state) => state.movieImage.listMovieImage)
-    const movieCreditList = useAppSelector((state) => state.movieCredit.listMovieCredit)
-    const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
-    console.log(movieSimilarList);
-    
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        dispatch(fetchSingleMovies());
-        dispatch(fetchMovieVideos());
-        dispatch(fetchMovieImage());
-        dispatch(fetchMovieCredit());
-        dispatch(fetchMovieSimilar());
+        // dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        dispatch(fetchTv());
+        dispatch(fetchTvImages());
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
     }, [id]);
     const currentDate = new Date();
 
@@ -138,43 +81,67 @@ export default function MovieLayout() {
 
     // Lấy tên của tháng hiện tại từ mảng monthNames
     const currentMonthName = monthNames[currentMonth];
+    const totalImages = tvImageList[0]?.backdrops?.length + tvImageList[0]?.logos?.length + tvImageList[0]?.posters?.length;
+    const [totalEpisodes, setTotalEpisodes] = useState(0);
+    useEffect(() => {
+        let sum = 0;
+        if (tvList && tvList.length > 0) {
+            tvList[0]?.seasons?.forEach((item: any) => {
+                sum += item?.episode_count || 0;
+            });
+            setTotalEpisodes(sum);
+        }
+    }, [tvList]);
+
 
     return (
-        <div className=" min-h-screen cursor-pointer">
+        <div className=" min-h-screen">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
-                    <SingleMovieDetail singleMovieList={singleMovieList} movieVideoList={movieVideoList}
-                        movieCreditList={movieCreditList} movieImageList={movieImageList} />
+                    <TvDetail singleTvList={tvList} singleTvImageList={tvImageList} />
                 </div>
             </div>
             <div className="bg-white">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
-                            <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
-                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">Videos</h2>
-                                <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList.length}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
+                    <div className="md:grid grid-cols-12 gap-2 ">
+                        <div className="lg:col-span-8 md-col-span-12  max-w-full ">
+                            <div className="lg:max-w-full md:w-screen">
+                                <div className="text-white py-4 ">
+                                    <div className="flex items-center ">
+                                        <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                        <h2 className="text-2xl font-bold text-black ">Episodes</h2>
+                                        <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p>
+                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                    </div>
+                                </div>
+                                <TvEpisode singleTvList={tvList} />
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <TwoMovieRow twoMovieRowList={movieVideoList} />
+                                <div className="text-white py-4 ">
+                                    <div className="flex items-center ">
+                                        <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                        <h2 className="text-2xl font-bold text-black ">Videos</h2>
+                                        <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.videos?.results?.length}</p>
+                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                    </div>
+                                </div>
+                                <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results}/>
                             </div>
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
-                                <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.images?.backdrops?.length}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <FourPhotos fourPhotosList={movieImageList} />
+                                <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
                             </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Top Cast</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList.length}</p>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
                                 <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
@@ -185,7 +152,7 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
+                                <TvPerson singleMovieList={tvList} />
                             </div>
                             <div className="text-white flex py-4 mt-4">
                                 <div className="flex items-center ">
@@ -197,28 +164,29 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <FourSwiperRow fourSwiperRowList={movieSimilarList} />
+                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} />
                             </div>
-                            <div className="text-white flex py-4 ">
+
+                            <div className="text-white flex py-2 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Story Line</h2>
                                 </div>
-                                <div className="flex items-center ml-auto gap-2" >
-                                    <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
-                                    <p className="flex items-center text-2xl font-bold text-black ">
+                                <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
+                                    <i className="fa-solid fa-pencil text-black text-xl ml-2"></i>
+                                    <p className="flex items-center text-xl font-bold text-black ">
                                         Edit
                                     </p>
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <SingleMovieStoryLine singleMovieList={singleMovieList} />
+                                <TvStoryLine tvList={tvList} />
                             </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">User Reviews</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews.results.length}</p>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.reviews.results.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
                                 <div className="flex items-center ml-auto gap-2" >
@@ -229,9 +197,25 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <SingleMovieReview singleMovieList={singleMovieList} />
+                                <TvReview singleTvList={tvList} />
                             </div>
-
+                            <div className="text-white flex py-4 ">
+                                <div className="flex items-center ">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">Detail</h2>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                </div>
+                                <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
+                                    <i className="fa-solid fa-pencil text-black text-xl ml-2"></i>
+                                    <p className="flex items-center text-xl font-bold text-black ">
+                                        Edit
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="lg:max-w-full md:w-screen">
+                                <TvDetailExternal tvDetailExList={tvList} />
+                            </div>
 
 
                         </div>
@@ -240,14 +224,13 @@ export default function MovieLayout() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
-                                <ListRow listRowList={topRatedMovies} />
-                            </div>
+                            <ListRow listRowList={topRatedMovies} />
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p className="text-red w-full text-blue-500"> See our picks</p>
                         </div>
-                    </div>
 
+
+                    </div>
                 </div>
             </div>
             <div className="bg-black">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface TwoMovieRowProps {
@@ -37,7 +37,7 @@ export default function TwoMovieRow({
                 modules={[Pagination, Navigation]}
                 className="mySwiper text-white"
             >
-                {twoMovieRowList.map((item: any, index: any) => {
+                {twoMovieRowList?.map((item: any, index: any) => {
                     return (
                         <SwiperSlide key={index} >
                             <div className="w-full h-42">

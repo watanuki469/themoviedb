@@ -49,4 +49,17 @@ const apiSearch = {
     },
 }
 
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits ,apiMovieSimilar,apiPerson,apiSearch}
+const apiTv = {
+    tv(query: any) {
+        const url = `tv/${query}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&append_to_response=account_states%2Caggregate_credits%2Calternative_titles%2Ccredits%2Cepisode_groups%2Cexternal_ids%2Cimages%2Ckeywords%2Crecommendations%2Creviews%2Cscreened_theatrically%2Ccontent_ratings%2Csimilar%2Cvideos&language=en-US`;
+        return axiosClient.get(url)
+    },
+}
+const apiTvImages = {
+    tvImage(query: any) {
+        const url = `tv/${query}/images?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}`;
+        return axiosClient.get(url)
+    },
+}
+
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits ,apiMovieSimilar,apiPerson,apiSearch,apiTv,apiTvImages}

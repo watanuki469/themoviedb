@@ -1,7 +1,7 @@
 import { Box, Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface FourSwiperRowProps {
@@ -36,7 +36,13 @@ export default function PersonCredit({
         setNumberIndex(index);
     };
     const [value, setValue] = useState<number | null>(0);
+    
     let navigate = useNavigate()
+    const handleImageError = (e: any) => {
+        const imgElement = e.currentTarget as HTMLImageElement;
+        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+    };
+
 
 
     return (
@@ -68,7 +74,7 @@ export default function PersonCredit({
                                 <div className="bg-black px-4 py-4">
                                     <div className="flex gap-2 ">
                                         <img src={`https://image.tmdb.org/t/p/w500/${personCreditList[numberIndex]?.poster_path}`} alt="product images"
-                                            className="w-20 h-28" />
+                                            className="w-20 h-28"  onError={handleImageError} />
                                         <div className="gap-2">
                                             <div className="flex items-center text-white gap-2"
                                                 onClick={() => navigate(`/movie/${personCreditList[numberIndex]?.id}`)}>
@@ -181,7 +187,7 @@ export default function PersonCredit({
                                             <div className="flex-1" style={{ maxWidth: "100px" }}
                                                 onClick={() => navigate(`/movie/${item?.id}`)}> {/* Đặt kích thước tối đa cho ảnh */}
                                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images"
-                                                    className="object-cover h-full w-full bg-gray-500" style={{ maxWidth: "100%" }} /> {/* Đặt kích thước tối đa cho ảnh */}
+                                                    className="object-cover h-full w-full bg-gray-500" style={{ maxWidth: "100%",height:'100%' }} onError={handleImageError} /> {/* Đặt kích thước tối đa cho ảnh */}
                                             </div>
                                             <div className=" text-black flex-1  flex-col"  onClick={()=>navigate(`/movie/${item?.id}`)}>
                                                 <div className=" py-2">
@@ -233,8 +239,8 @@ export default function PersonCredit({
                                             <div className="flex items-stretch gap-2 shadow-sm shadow-black  h-full mt-3 mb-3 mr-3">
                                                 <div className="flex-1" style={{ maxWidth: "100px" }}
                                                     onClick={() => navigate(`/movie/${item?.id}`)}>
-                                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images"
-                                                        className="object-cover h-full w-full bg-gray-500" />
+                                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" onError={handleImageError}
+                                                        className="object-cover h-full w-full bg-gray-500 " style={{minHeight:'150px'}} />
                                                 </div>
                                                 <div className="bg-white text-black px-2  flex-1 flex-col " 
                                                   onClick={()=>navigate(`/movie/${item?.id}`)}>

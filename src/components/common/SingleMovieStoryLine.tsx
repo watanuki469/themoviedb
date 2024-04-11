@@ -1,6 +1,3 @@
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface TwoMovieRowProps {

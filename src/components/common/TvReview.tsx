@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export interface TwoMovieRowProps {
-    singleMovieList: any
+export interface TwoTvRowProps {
+    singleTvList: any
 }
 
-export default function SingleMovieReview({
-    singleMovieList,
-}: TwoMovieRowProps) {
+export default function TvReview({
+    singleTvList,
+}: TwoTvRowProps) {
     let navigate = useNavigate()
 
     return (
@@ -28,10 +28,10 @@ export default function SingleMovieReview({
                                 <i className="fa-solid fa-star text-yellow-300 text-sm ml-2"></i>
                                 <div>
                                     <span className="">
-                                        {typeof singleMovieList[0]?.reviews.results[0]?.author_details?.rating === 'number' ?
-                                            (singleMovieList[0]?.reviews.results[0]?.author_details?.rating % 1 === 0 ?
-                                                singleMovieList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(0) :
-                                                singleMovieList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(1)
+                                        {typeof singleTvList[0]?.reviews.results[0]?.author_details?.rating === 'number' ?
+                                            (singleTvList[0]?.reviews.results[0]?.author_details?.rating % 1 === 0 ?
+                                                singleTvList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(0) :
+                                                singleTvList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(1)
                                             )
                                             :
                                             'N/A'
@@ -43,7 +43,7 @@ export default function SingleMovieReview({
                             </div>
                         </div>
                         <div>
-                            {singleMovieList[0]?.reviews.results.slice(0, 1).map((item: any, index: any) => (
+                            {singleTvList[0]?.reviews.results.slice(0, 1).map((item: any, index: any) => (
                                 <div className='flex text-black' key={index}>
                                     <div>
                                         <div className='font-bold text-xl'>A review by {item.author}</div>
@@ -73,9 +73,9 @@ export default function SingleMovieReview({
                         </div>
                     </div>
                     <div className='flex gap-2 px-2 py-2'>
-                        <p className='text-blue-500'>{singleMovieList[0]?.reviews?.results[0]?.author}</p>
+                        <p className='text-blue-500'>{singleTvList[0]?.reviews?.results[0]?.author}</p>
                         <p>•</p>
-                        <p>{singleMovieList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
+                        <p>{singleTvList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
 
                     </div>
 

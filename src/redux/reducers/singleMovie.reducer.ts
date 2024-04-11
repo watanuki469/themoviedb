@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SingleMovie } from '../../components/models/SingleMovie';
 
 interface ISingleMovieState {
     listSingleMovie: any[],
