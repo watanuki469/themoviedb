@@ -12,12 +12,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import "flowbite";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { useAppDispatch } from "../../redux/hooks";
-import SearchBar from "./SearchBar";
 import { useAppDispatch } from '../../redux/hooks';
-import { AppDispatch } from '../../redux/store';
-import apiController from '../../redux/client/api.Controller.';
-import { setListSearch } from '../../redux/reducers/search.reducer';
+import SearchBar from "./SearchBar";
 
 export default function TopBar() {
   const dispatch = useAppDispatch();
@@ -115,11 +111,13 @@ export default function TopBar() {
         return [];
     }
   };
-  const handleItemClick = (item: any) => {
+  const handleItemClick = (item: string) => {
+    console.log(item);
+    
     switch (selectedMenu) {
       case 'Movies':
-        if (item === 'Release Calendar') {
-          navigate('/NotFound');
+        if (item === 'Release Calendar') {          
+         navigate(`/upComing`);
         } else if (item === 'Most Popular Movies') {
           navigate('/Popular');
         } else if (item === 'Top Box Office') {
@@ -270,7 +268,7 @@ export default function TopBar() {
                       X
                     </button>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 text-white mt-10">
+                  <div className="grid grid-cols-3 gap-4 text-white mt-10 cursor-pointer">
                     <div className=" items-center">
                       <div className="flex  items-center gap-3">
                         <div className="aligns-start">
@@ -287,8 +285,8 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p className="mt-2 hover:underline">Release Calendar</p>
-                          <p className="mt-2 hover:underline">
+                          <p className="mt-2 hover:underline"  onClick={()=>(navigate('/upComing'))}>Release Calendar</p>
+                          <p className="mt-2 hover:underline "  onClick={()=>(navigate('/top250Movie'))}>
                             Most Popular Movies
                           </p>
                           <p className="mt-2 hover:underline">Top Box Office</p>

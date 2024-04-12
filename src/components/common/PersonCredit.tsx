@@ -43,8 +43,6 @@ export default function PersonCredit({
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
 
-
-
     return (
         <section className="relative w-full cursor-pointer">
             <div className="px-2 pt-2  w-full">

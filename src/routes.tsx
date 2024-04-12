@@ -9,13 +9,16 @@
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import PersonLayout from "./components/layout/PersonLayout";
+import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import TvLayout from "./components/layout/TvLayout";
+import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 
 export const routesGen = {
   home: "/",
   movie: (id: any) => `/${id}`,
   video: (id: any) => `/video/${id}`,
+  upComing: "/upComing",
   mediaDetail: (type: any, id: any) => `/${type}/${id}`,
   person: (id: any) => `/person/${id}`,
   favoriteList: "/favorites",
@@ -48,6 +51,16 @@ const routes = [
     path: "/tv/:id",
     element: <TvLayout/>,
     state: "video"
+  },
+  {
+    path: "/upComing",
+    element: <UpComingMovieLayout/>,
+    state: "upComing"
+  },
+  {
+    path: "/top250Movie",
+    element: <Top250MovieLayout/>,
+    state: "top250Movie"
   },
 
   // {

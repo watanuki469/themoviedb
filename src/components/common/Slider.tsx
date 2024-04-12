@@ -13,6 +13,7 @@ export default function Slider() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
+    console.log(popularMovies);      
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));

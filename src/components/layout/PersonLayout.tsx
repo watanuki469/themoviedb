@@ -3,7 +3,7 @@ import TopBar from "../common/TopBar";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { AppDispatch } from "../../redux/store";
 import apiController from "../../redux/client/api.Controller.";
-import { setListPerson } from "../../redux/reducers/person.reducer.";
+import { setListPerson } from "../../redux/reducers/person.reducer";
 import { useEffect } from "react";
 import PersonDetail from "../common/PersonDetail";
 import ListRow from "../../modules/ListRow";
