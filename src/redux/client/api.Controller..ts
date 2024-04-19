@@ -62,8 +62,6 @@ const apiTvImages = {
     },
 }
 
-const url = 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1';
-
 const apiUpComing = {
     upComing(mediaType:any) {
         const url = `${mediaType}/upcoming?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`;

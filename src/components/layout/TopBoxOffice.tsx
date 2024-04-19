@@ -18,18 +18,18 @@ import ShareIcon from '@mui/icons-material/Share';
 import { toast } from "react-toastify";
 
 
-export default function Top250MovieLayout() {
+export default function TopBoxOffice() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
-    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
+    const topRatedMovies = useAppSelector((state) => state.movies.discoverMovies)
     console.log(topRatedMovies);
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
     }, []);
     const currentDate = new Date();
     const monthNames = [
@@ -38,7 +38,12 @@ export default function Top250MovieLayout() {
 
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
+    const currenDateToday = currentDate.getDate();
     const currentMonthName = monthNames[currentMonth];
+    // Lấy ngày 5 ngày trước
+    const currentDatePre = new Date(currentDate);
+    currentDatePre.setDate(currentDatePre.getDate() - 5);
+    const currenDatePre = currentDatePre.getDate();
 
     const [isChecked, setIsChecked] = useState(false);
     const handleChecked = () => {
@@ -80,10 +85,6 @@ export default function Top250MovieLayout() {
         return genreCounting;
     }
 
-    const sortedTopRatedMovies = [...topRatedMovies].sort((a: any, b: any) => {
-        const sortOrderFactor = sortOrder === 'asc' ? 1 : -1;
-        return sortOrderFactor * (a.movieIndex - b.movieIndex);
-    });
     useEffect(() => {
         const genreCount = countGenres(topRatedMovies);
         setGenreCount(genreCount);
@@ -108,12 +109,10 @@ export default function Top250MovieLayout() {
         if (selectedGenres.includes(selectedGenre)) {
             // If already selected, remove it
             setSelectedGenres(selectedGenres.filter((genre) => genre !== selectedGenre));
-
         } else {
             // If not selected, add it
             setSelectedGenres([...selectedGenres, selectedGenre]);
         }
-
     };
 
     const handleRemoveGenreFilter = (removedGenre: any) => {
@@ -205,7 +204,8 @@ export default function Top250MovieLayout() {
                                             onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
-                                            <p>{movie?.release_date?.slice(0, 4)}</p>
+                                            <p>Weaken Gross: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                            <p>Total Gross: <span className="font-semibold">${movie?.popularity?.toFixed(1)}M</span> </p>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
@@ -298,6 +298,21 @@ export default function Top250MovieLayout() {
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title}</p>
                                                 </div>
+                                                <div>
+                                                    <p>Weaken : <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                                    <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(1)}M</span> </p>
+                                                    <div className="items-center gap-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fa-solid fa-star text-yellow-300"></i>
+                                                            <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                        </div>
+                                                        <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500" onClick={() => handleClick(movie)}>
+                                                            <i className="fa-regular fa-star "></i>
+                                                            <p>Rate</p>
+                                                        </button>
+
+                                                    </div>
+                                                </div>
                                                 <div className="flex flex-wrap">
                                                     {movie?.release_date?.slice(0, 4)}
                                                 </div>
@@ -372,7 +387,11 @@ export default function Top250MovieLayout() {
                                             onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
-                                            <p>{movie?.release_date?.slice(0, 4)}</p>
+                                            <div>
+                                                <p>Weaken : <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                                <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(1)}M</span> </p>
+
+                                            </div>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
@@ -409,49 +428,8 @@ export default function Top250MovieLayout() {
         setFilterType(option);
         setSelectedOption(option === selectedOption ? null : option);
     };
-    const handleRankingClose = () => {
-        setAnchorRankingEl(null);
-    };
-    const [selectedRankingOption, setSelectedRankingOption] = useState(null);
 
-    const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
 
-    function compareReleaseDates(a: any, b: any) {
-        const releaseDateA = new Date(a.release_date);
-        const releaseDateB = new Date(b.release_date);
-        return releaseDateA.getTime() - releaseDateB.getTime();
-    }
-    const handleMenuItemClick = (option: any) => {
-        setSelectedRankingOption(option);
-        let menuItemNum = '';
-        switch (option) {
-            case 'Ranking':
-                menuItemNum = '1';
-                break;
-            case 'IMDb Rating':
-                menuItemNum = '2';
-                break;
-            case 'Release Day':
-                menuItemNum = '3';
-                break;
-            case 'Number Of Rating':
-                menuItemNum = '4';
-                break;
-            case 'Alphabetical':
-                menuItemNum = '5';
-                break;
-            case 'Popularity':
-                menuItemNum = '6';
-                break;
-            case 'Runtime':
-                menuItemNum = '7';
-                break;
-            default:
-                break;
-        }
-        setMenuItemNum(menuItemNum);
-        handleRankingClose();
-    };
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
     const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -476,7 +454,6 @@ export default function Top250MovieLayout() {
                 console.error('Error copying link:', error);
             });
     };
-
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -622,9 +599,9 @@ export default function Top250MovieLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">IMDb Top 250 Movies</h2>
+                                <h2 className="text-2xl font-bold text-black ">IMDb Top Box Office</h2>
                             </div>
-                            <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
+                            <p className="text-gray-500 py-2">Weekend of {currentMonthName} {currenDatePre}-{currenDateToday}</p>
                         </div>
 
                     </div>
@@ -634,29 +611,9 @@ export default function Top250MovieLayout() {
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">
                                         {topRatedMovies
-                                            .filter((movie: any) => {
-                                                if (selectedGenres?.length === 0) return true; // No genre filter
-                                                const hasAllGenres = selectedGenres.every((genre) =>
-                                                    movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                                );
-
-
-                                                return hasAllGenres;
-                                            })
-                                            .filter((movie: any) => {
-                                                if (!applyFilter) return true; // No filter
-                                                if (filterType === 'none') return true; // No filter
-                                                if (filterType === 'inTheaters') {
-                                                    return null;
-                                                }
-                                                if (filterType === 'In theaters with online ticketing') {
-                                                    return null;
-                                                }
-                                                return true;
-                                            })
-
+                                            .slice(0, 10)
                                             .map((m, index) => renderMovieItem(m, index, currentView, sortOrder)).length}
-                                        /{topRatedMovies.length} Titles</h2>
+                                        /10 Titles</h2>
 
                                 </div>
 
@@ -672,100 +629,7 @@ export default function Top250MovieLayout() {
                                     </Tooltip>
                                 </div>
                             </div>
-                            {/* filter icon */}
-                            <div className=" flex flex-wrap items-center gap-2">
-                                <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
-                                    onClick={handleDiaGenlogOpen}>
-                                    <FilterListIcon />
-                                </button>
-                                {selectedGenres.map((genre, index) => (
-                                    <div key={index} className="flex items-center gap-2">
-                                        <p className="font-bold">
-                                            {genre}
-                                        </p>
-                                        <i className="fa-solid fa-xmark" onClick={() => handleRemoveGenreFilter(genre)}></i>
-                                        {/* <IconButton
-                                            size="small" onClick={() => handleRemoveGenreFilter(genre)}
-                                            sx={{ color: 'red', padding: 0 }}
-                                        >
-                                            <CloseIcon />
-                                        </IconButton> */}
-                                    </div>
-                                ))
-                                }
-                            </div>
-                            <div className="flex  px-2 py-2">
-                                <div></div>
-                                <div className="ml-auto flex items-center gap-4">
-                                    <p className="text-gray-500">Sort by</p>
-                                    <Button
-                                        id="demo-customized-button"
-                                        aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
-                                        aria-haspopup="true"
-                                        variant="contained"
-                                        disableElevation
-                                        onClick={handleRankingClick}
-                                        endIcon={<i className="fa-solid fa-caret-down"></i>}
-                                        sx={{
-                                            bgcolor: anchorRankingEl ? 'blue' : 'white',
-                                            color: anchorRankingEl ? 'white' : 'blue',
-                                            border: anchorRankingEl ? '2px dashed' : '',
-                                            ":hover": {
-                                                border: '2px dashed',
-                                                backgroundColor: 'blue'
-                                                , color: 'white'
-                                            },
-                                        }}
-                                    >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
-                                    </Button>
-                                    <Menu
-                                        id="demo-customized-menu"
-                                        anchorEl={anchorRankingEl}
-                                        open={Boolean(anchorRankingEl)}
-                                        onClose={handleRankingClose}
-                                    >
-                                        <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                            Ranking
-                                        </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                            IMDb Rating
-                                        </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                            Release Day
-                                        </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                            Number Of Rating
-                                        </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                            Alphabetical
-                                        </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                            Popularity
-                                        </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                            Runtime
-                                        </MenuItem>
-                                    </Menu>
-                                    <SwapVertIcon className="hover:text-blue-500" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
-                            <p className="text-2xl font-bold" >You have rated</p>
-                            <p className="mt-3"><span className="text-green-500">0</span>/250 (0%)</p>
-                            <div className="flex items-center gap-3 mt-3 ">
-                                {isChecked ? (
-                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
-                                ) : (
-                                    <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
-                                )}
-                                <p>Hide titles you have rated</p>
-
-                            </div>
-                        </div>
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full md:w-screen lg:px-2 lg:py-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
@@ -780,72 +644,25 @@ export default function Top250MovieLayout() {
                                         </div>
                                     )}
                                     {topRatedMovies
-                                        .filter((movie: any) => {
-                                            if (selectedGenres?.length === 0) return true; // No genre filter
-                                            // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres.every((genre) =>
-                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                            );
-
-
-                                            return hasAllGenres;
-                                        })
-                                        // .filter((movie) => {
-                                        //     if (selectedKeys.length === 0) return true; // No key filter
-
-                                        //     // Check if every selected genre is present in the movie's genres
-                                        //     const hasAllGenres = selectedKeys.every((keyword) =>
-                                        //         movie.keywords.some((mGenre) => mGenre.keyword === keyword)
-                                        //     );
-
-                                        //     return hasAllGenres;
-                                        // })
-                                        .filter(() => {
-                                            if (applyFilter === true) return true; // No filter
-                                            return null
-                                        })
-                                        .sort((a, b) => {
-                                            if (menuItemNum === '5') {
-                                                // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
-                                                if (titleA < titleB) {
-                                                    return -1;
-                                                }
-                                                if (titleA > titleB) {
-                                                    return 1;
-                                                }
-                                                return 0;
-                                            }
-                                            else if (menuItemNum === '1') {
-                                                return b?.vote_average - a?.vote_average;
-                                            }
-                                            else if (menuItemNum === '2') {
-                                                return a?.id - b?.id;
-                                            }
-                                            else if (menuItemNum === '3') {
-                                                return compareReleaseDates(a, b);
-
-                                            }
-                                            else if (menuItemNum === '4') {
-                                                return b?.vote_count - a?.vote_count;
-
-                                            }
-                                            else if (menuItemNum === '7') {
-                                                return compareReleaseDates(b, a);
-                                            }
-                                            else if (menuItemNum === '6') {
-                                                return b?.popularity - a?.popularity;
-                                            }
-                                            else {
-                                                return 0
-                                            }
-                                        })
+                                        .slice(0, 10) // Tạo một bản sao của mảng topRatedMovies
+                                        .sort((a, b) => b?.popularity - a?.popularity) // Sắp xếp các đối tượng trong bản sao mảng
                                         .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))}
                                 </div>
                             </div>
+
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 ">
+                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
+                            <p className="text-2xl font-bold" >You have rated</p>
+                            <p className="mt-3"><span className="text-green-500">0</span>/250 (0%)</p>
+                            <div className="flex items-center gap-3 mt-3 ">
+                                {isChecked ? (
+                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
+                                ) : (
+                                    <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
+                                )}
+                                <p>Hide titles you have rated</p>
+
+                            </div>
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

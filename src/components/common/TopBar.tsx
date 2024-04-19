@@ -121,7 +121,7 @@ export default function TopBar() {
         } else if (item === 'Most Popular Movies') {
           navigate('/Popular');
         } else if (item === 'Top Box Office') {
-          navigate('/NotFound');
+          navigate('/topBoxOffice');
         } else if (item === 'Showtimes & Ticked') {
           navigate('/NotFound');
         } else if (item === 'Movies News') {
@@ -289,7 +289,7 @@ export default function TopBar() {
                           <p className="mt-2 hover:underline "  onClick={()=>(navigate('/top250Movie'))}>
                             Most Popular Movies
                           </p>
-                          <p className="mt-2 hover:underline">Top Box Office</p>
+                          <p className="mt-2 hover:underline" onClick={()=>(navigate('/topBoxOffice'))}>Top Box Office</p>
                           <p className="mt-2 hover:underline">
                             Showtime & Ticked
                           </p>

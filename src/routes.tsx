@@ -10,6 +10,7 @@ import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
+import TopBoxOffice from "./components/layout/TopBoxOffice";
 import TvLayout from "./components/layout/TvLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
 import VideoLayout from "./components/layout/VideoLayout";
@@ -61,6 +62,11 @@ const routes = [
     path: "/top250Movie",
     element: <Top250MovieLayout/>,
     state: "top250Movie"
+  },
+  {
+    path: "/topBoxOffice",
+    element: <TopBoxOffice/>,
+    state: "topBoxOffice"
   },
 
   // {

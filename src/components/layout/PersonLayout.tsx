@@ -14,6 +14,7 @@ import TwoMovieRow from "../../modules/TwoMovieRow";
 import PersonMovie from "../common/PersonMovie";
 import PersonDetailExternal from "../common/PersonDetailExternal";
 import Footer from "../common/Footer";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function PersonLayout() {
     const { id } = useParams()
@@ -40,12 +41,12 @@ export default function PersonLayout() {
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchPerson());
         dispatch(fetchMovies());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
     const currentDate = new Date();
 
