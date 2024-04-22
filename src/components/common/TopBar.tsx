@@ -96,7 +96,7 @@ export default function TopBar() {
     switch (menu) {
       case 'Movies':
         return ['Release Calendar', 'Most Popular Movies', 'Top Box Office'
-          , 'Showtimes & Ticked', 'Movies News', 'India Movie Spotlight'];
+          , 'Showtimes & Ticked', 'Movies News', 'Browse Movie By Genre'];
       case 'TV Shows':
         return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows', 'TV News'];
       case 'Watch':
@@ -126,7 +126,7 @@ export default function TopBar() {
           navigate('/NotFound');
         } else if (item === 'Movies News') {
           navigate('/NotFound');
-        } else if (item === 'India Movie Spotlight') {
+        } else if (item === 'Browse Movie By Genre') {
           navigate('/IndiaMovieSpotlight');
         } else {
           navigate('/NotFound');
@@ -295,7 +295,7 @@ export default function TopBar() {
                           </p>
                           <p className="mt-2 hover:underline">Movies News</p>
                           <p className="mt-2 hover:underline">
-                            India Movie Spotlight
+                            Browse Movie By Genre
                           </p>
                         </div>
                       </div>

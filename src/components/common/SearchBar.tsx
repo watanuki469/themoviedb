@@ -103,10 +103,10 @@ export default function SearchBar() {
                 aria-controls={openUser ? 'demo-customized-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={openUser ? 'true' : undefined}
-                sx={{ bgcolor: 'white', color: 'black',borderRadius:'0' }}
+                sx={{ bgcolor: 'white', color: 'black', borderRadius: '0' }}
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
-                
+
             >
                 {mediatype.toString()}
             </Button>
@@ -126,10 +126,10 @@ export default function SearchBar() {
                 }}
                 anchorEl={anchorUserEl}
                 open={openUser}
-                onClose={handleClose}
+                onClose={()=>setAnchorUserEl(null)}
             >
                 {menuItems.map((item: any, index: any) => (
-                    <MenuItem disableRipple key={index}  onClick={() => handleClose(item.label)}>
+                    <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
                         <div className='items-start '>
                             <a key={item.id} href="#" className="text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center" role="menuitem">
                                 <i className={`mr-2 fas ${item.icon}`}></i>
@@ -138,8 +138,8 @@ export default function SearchBar() {
                         </div>
                     </MenuItem>
                 ))}
-                <Divider/>
-                <MenuItem onClick={()=>navigate(`/search?title=meowmeow`)}>
+                <Divider />
+                <MenuItem onClick={() => navigate(`/search`)}>
                     <div className='flex items-center gap-2'>
                         <i className="fa-solid fa-file-circle-question"></i>
                         <p>  Advanced Search</p>
@@ -207,15 +207,12 @@ export default function SearchBar() {
                                             {item?.media_type !== 'person' && (
                                                 <p> {item?.first_air_date ? item.first_air_date?.slice(0, 4) : item.release_date?.slice(0, 4)}</p>
                                             )}
-                                            {/* {item?.media_type === 'person' && ( */}
                                             <div className="items-center flex flex-wrap  ">
-                                                {/* <p> {item?.known_for_department}, {item?.known_for[0]?.title} ({item?.known_for[0]?.release_date?.slice(0, 4)})</p> */}
                                                 <p>
                                                     {item?.known_for_department}, {item?.known_for?.[0]?.title} (
                                                     {item?.known_for?.[0]?.release_date?.slice(0, 4)})
                                                 </p>
                                             </div>
-                                            {/* )} */}
                                         </div>
                                     </div>
                                 </div>

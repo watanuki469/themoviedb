@@ -1,4 +1,5 @@
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
+import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import PersonLayout from "./components/layout/PersonLayout";
@@ -13,6 +14,7 @@ export const routesGen = {
   movie: (id: any) => `/${id}`,
   video: (id: any) => `/video/${id}`,
   upComing: "/upComing",
+  genre: "/features/genre",
   mediaDetail: (type: any, id: any) => `/${type}/${id}`,
   search: (title: any, votes: any,rating:any,genre:any) => `/${title}&${votes}&`,
   person: (id: any) => `/person/${id}`,
@@ -66,6 +68,11 @@ const routes = [
     path: "/search",
     element: <AdvancedSearchLayout/>,
     state: "search"
+  },
+  {
+    path: "/features/genre",
+    element: <BrowseGenreLayout/>,
+    state: "genre"
   },
 
   // {
