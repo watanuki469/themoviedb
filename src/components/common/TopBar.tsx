@@ -235,7 +235,7 @@ export default function TopBar() {
             className=" bg-yellow-400 text-black text-center 
             border-none font-extrabold text-2xl font-sans
             whitespace-nowrap hover:bg-black hover:text-blue-500
-             hover:border-red-500  rounded-md"
+             hover:border-red-500  rounded-md px-1 py-1"
           >
             IMDb
           </button>

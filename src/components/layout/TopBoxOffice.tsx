@@ -25,11 +25,11 @@ export default function TopBoxOffice() {
     console.log(topRatedMovies);
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, []);
     const currentDate = new Date();
     const monthNames = [
@@ -50,11 +50,6 @@ export default function TopBoxOffice() {
         setIsChecked(!isChecked);
     }
 
-    const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
-    const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorRankingEl(event.currentTarget);
-    };
-
     const [currentView, setCurrentView] = useState('Detail'); // Default view is 'detail'
 
     const switchView = (view: any) => {
@@ -62,63 +57,12 @@ export default function TopBoxOffice() {
     };
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-    type GenreID = number;
-    type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
-    };
-    type Genre = | ' ';
-    const [genreCount, setGenreCount] = useState<Record<string, number>>({});
-    const [numberGen, setNumberGen] = useState(0);
-    const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
-
-    function countGenres(topRatedMovies: any): Record<GenreName, number> {
-        const genreCounting: Record<GenreName, number> = {};
-        topRatedMovies?.forEach((movie: any) => {
-            movie?.genre_ids?.forEach((id: GenreID) => {
-                // Lấy tên thể loại từ đối tượng ánh xạ
-                const genreName: GenreName = genreMapping[id];
-                // Nếu thể loại đã tồn tại, tăng giá trị đếm lên 1; ngược lại, tạo mới với giá trị 1.
-                genreCounting[genreName] = (genreCounting[genreName] || 0) + 1;
-            });
-        });
-        return genreCounting;
-    }
-
-    useEffect(() => {
-        const genreCount = countGenres(topRatedMovies);
-        setGenreCount(genreCount);
-        const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
-        setNumberGen(totalGenreCount);
-
-    }, [topRatedMovies]);
-
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
-    const [openGenDialog, setOpenGenDialog] = useState(false);
-    const handleDiaGenlogOpen = () => {
-        setOpenGenDialog(true);
-    };
 
-    const handleDiaGenlogClose = () => {
-        setOpenGenDialog(false);
-    };
-    const handleGenreClick = (selectedGenre: Genre) => {
-        if (selectedGenres.includes(selectedGenre)) {
-            // If already selected, remove it
-            setSelectedGenres(selectedGenres.filter((genre) => genre !== selectedGenre));
-        } else {
-            // If not selected, add it
-            setSelectedGenres([...selectedGenres, selectedGenre]);
-        }
-    };
 
-    const handleRemoveGenreFilter = (removedGenre: any) => {
-        setSelectedGenres(selectedGenres.filter((genre) => genre !== removedGenre));
-
-    };
     function shortenNumber(number: any) {
         if (number >= 1000000000) {
             return (number / 1000000000).toFixed(1) + 'b';
@@ -417,18 +361,6 @@ export default function TopBoxOffice() {
                 )
         }
     }
-    const [applyFilter, setApplyFilter] = useState(true);
-    const [filterType, setFilterType] = useState('none');
-
-
-    const [selectedOption, setSelectedOption] = useState<string | null>('none');
-
-    const handleOptionClick = (option: any) => {
-        setApplyFilter(option === 'none' ? (true) : (false));
-        setFilterType(option);
-        setSelectedOption(option === selectedOption ? null : option);
-    };
-
 
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
@@ -457,53 +389,7 @@ export default function TopBoxOffice() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-            <Dialog open={openGenDialog} onClose={handleDiaGenlogClose} maxWidth={'sm'}
-                keepMounted={true}
-                PaperProps={{
-                    style: {
-                        background: 'black', color: 'white'
-                    },
-                }}
-            >
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Genres and Counts</DialogTitle>
-                <DialogContent>
-                    <div className="flex flex-wrap gap-2">
-                        {Object.entries(genreCount).map(([genre, count], index) => (
-                            <button key={`genre-${genre}-${index}`}
-                                className="uppercase hover:bg-opacity-90 text-sm hover:bg-gray-500 rounded-full px-2 py-2 border-2 border-white "
-                                onClick={() => handleGenreClick(genre as Genre)}
-                            >
-                                <p>{`${genre}: (${count})`}</p>
-                            </button>
-                        ))}
-
-                    </div>
-                    <Divider sx={{
-                        marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
-                    }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>IN THEATERS</DialogTitle>
-                    <div className="flex gap-4 flex-wrap items-center">
-                        <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
-                            <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>None</p>
-                        </div>
-                        <div onClick={() => handleOptionClick('near')} className="flex gap-2 items-center">
-                            <i className={`fa-regular ${selectedOption === 'near' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p> In Theaters Near You</p>
-                        </div>
-                        <div onClick={() => handleOptionClick('online')} className="flex gap-2 items-center">
-                            <i className={`fa-regular ${selectedOption === 'online' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>In Theaters With Online Ticketing</p>
-                        </div>
-                    </div>
-
-                    <Divider sx={{
-                        marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2,
-                        border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
-                    }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle>
-                </DialogContent>
-            </Dialog>
+          
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />

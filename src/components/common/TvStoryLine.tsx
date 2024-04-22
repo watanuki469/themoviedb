@@ -45,9 +45,9 @@ export default function TvStoryLine({
                                     {item.name}
                                 </button>
                             ))}
-                            {tvList[0]?.keywords?.results[0].length > 5 ? (
+                            {tvList[0]?.keywords?.results[0]?.length > 5 ? (
                                 <button className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
-                                    {tvList[0]?.keywords.keywords.length - 5} More
+                                    {tvList[0]?.keywords?.keywords?.length - 5} More
 
                                 </button>
                             ) : (

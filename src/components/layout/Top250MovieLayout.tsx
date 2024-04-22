@@ -219,7 +219,7 @@ export default function Top250MovieLayout() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="mt-1 line-clamp-2">
+                                    <div className="mt-1 lg:line-clamp-none line-clamp-4">
                                         <p>{movie?.overview}</p>
                                     </div>
                                 </div>
@@ -493,7 +493,7 @@ export default function Top250MovieLayout() {
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
                             <button key={`genre-${genre}-${index}`}
-                                className="uppercase hover:bg-opacity-90 text-sm hover:bg-gray-500 rounded-full px-2 py-2 border-2 border-white "
+                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:bg-opacity-90'}`}
                                 onClick={() => handleGenreClick(genre as Genre)}
                             >
                                 <p>{`${genre}: (${count})`}</p>
@@ -684,12 +684,6 @@ export default function Top250MovieLayout() {
                                             {genre}
                                         </p>
                                         <i className="fa-solid fa-xmark" onClick={() => handleRemoveGenreFilter(genre)}></i>
-                                        {/* <IconButton
-                                            size="small" onClick={() => handleRemoveGenreFilter(genre)}
-                                            sx={{ color: 'red', padding: 0 }}
-                                        >
-                                            <CloseIcon />
-                                        </IconButton> */}
                                     </div>
                                 ))
                                 }

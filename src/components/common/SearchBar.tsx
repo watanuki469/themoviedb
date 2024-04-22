@@ -1,5 +1,5 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Box, Button, Fade, MenuItem, Popper } from "@mui/material";
+import { Box, Button, Divider, Fade, MenuItem, Popper } from "@mui/material";
 import Menu from '@mui/material/Menu';
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,25 +23,18 @@ export default function SearchBar() {
     const [query, setQuery] = useState('');
     const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
     const openUser = Boolean(anchorUserEl);
-    const timeout = 500;
-    let timer: any
-
 
     const menuItems = [
         { id: 1, label: 'multi', icon: 'fa-magnifying-glass' },
         { id: 2, label: 'movie', icon: 'fa-sharp fa-solid fa-film' },
         { id: 3, label: 'tv', icon: ' fa-tv  ' },
         { id: 4, label: 'person', icon: ' fa-user-group' },
-        // { id: 5, label: 'Companies', icon: ' fa-city' },
-        // { id: 6, label: 'Keywords', icon: 'fa-delete-left fa-rotate-180' },
     ];
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const anchorRef = useRef(null);
 
     const [open, setOpen] = useState(false);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorUserEl(event.currentTarget);
-
     };
     const handleClose = (index: any) => {
         setAnchorUserEl(null);
@@ -60,13 +53,11 @@ export default function SearchBar() {
                     console.error("API response structure is not as expected.", data);
                 }
             })
-
             .catch((e) => {
                 console.log(e);
             })
     }
     const searchList = useAppSelector((state) => state.search.listSearch)
-
 
     useEffect(() => {
         // dispatch(setGlobalLoading(true));
@@ -99,11 +90,6 @@ export default function SearchBar() {
         const newQuery = e.target.value;
         setOpen(!!newQuery);
         setQuery(newQuery);
-
-        // clearTimeout(timer);
-        // timer = setTimeout(() => {
-        //     setQuery(newQuery);
-        // }, timeout);
     };
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
@@ -117,12 +103,12 @@ export default function SearchBar() {
                 aria-controls={openUser ? 'demo-customized-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={openUser ? 'true' : undefined}
-                sx={{ bgcolor: 'white', color: 'black' }}
-                disableElevation
+                sx={{ bgcolor: 'white', color: 'black',borderRadius:'0' }}
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
+                
             >
-                {mediatype}
+                {mediatype.toString()}
             </Button>
             <Menu
                 elevation={0}
@@ -142,17 +128,23 @@ export default function SearchBar() {
                 open={openUser}
                 onClose={handleClose}
             >
-                {menuItems.map((item, index) => (
-                    <MenuItem disableRipple key={index}>
-                        <div onClick={() => handleClose(item.label)}>
-                            <a key={item.id} href="#" className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center" role="menuitem">
+                {menuItems.map((item: any, index: any) => (
+                    <MenuItem disableRipple key={index}  onClick={() => handleClose(item.label)}>
+                        <div className='items-start '>
+                            <a key={item.id} href="#" className="text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center" role="menuitem">
                                 <i className={`mr-2 fas ${item.icon}`}></i>
                                 {item.label}
                             </a>
                         </div>
                     </MenuItem>
                 ))}
-
+                <Divider/>
+                <MenuItem onClick={()=>navigate(`/search?title=meowmeow`)}>
+                    <div className='flex items-center gap-2'>
+                        <i className="fa-solid fa-file-circle-question"></i>
+                        <p>  Advanced Search</p>
+                    </div>
+                </MenuItem>
 
             </Menu>
 
@@ -200,10 +192,10 @@ export default function SearchBar() {
                                         onClick={() => {
                                             if (item?.media_type === 'person') {
                                                 navigate(`/person/${item.id}`);
-                                            } else if(item?.media_type==="movie") {
+                                            } else if (item?.media_type === "movie") {
                                                 navigate(`/movie/${item.id}`);
                                             }
-                                            else{
+                                            else {
                                                 navigate(`/tv/${item.id}`);
                                             }
                                         }}>
