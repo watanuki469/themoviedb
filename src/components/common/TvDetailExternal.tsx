@@ -19,7 +19,7 @@ export default function TvDetailExternal({
                             <div className="py-2 border-b border-t border-gray-300 flex gap-3">
                                 <div>Official sites</div>
                                 <div className='flex flex-wrap items-center gap-2 text-blue-500'>
-                                    <div className='flex flex-wrap items-center gap-2'
+                                    <div className='flex flex-wrap items-center gap-2 hover:underline'
                                         onClick={() => window.location.href = `https://www.facebook.com/${tvDetailExList[0]?.external_ids?.facebook_id}`}
                                     >
                                         <p>Facebook</p>
@@ -27,7 +27,7 @@ export default function TvDetailExternal({
                                     </div>
 
                                     <p>•</p>
-                                    <div className='flex flex-wrap items-center gap-2'
+                                    <div className='flex flex-wrap items-center gap-2  hover:underline'
                                         onClick={() => window.location.href = `https://twitter.com/${tvDetailExList[0]?.external_ids?.twitter_id}`}
                                     >
                                         <p> Twitter</p>
@@ -35,7 +35,7 @@ export default function TvDetailExternal({
                                     </div>
                                     <p>•</p>
 
-                                    <div className='flex flex-wrap items-center gap-2'
+                                    <div className='flex flex-wrap items-center gap-2  hover:underline'
                                         onClick={() => window.location.href = `https://www.instagram.com/${tvDetailExList[0]?.external_ids?.instagram_id}`}
                                     >
                                         <p>Instagram</p>

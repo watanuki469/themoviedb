@@ -27,7 +27,7 @@ export default function PersonDetailExternal({
                                     <div className='flex flex-wrap items-center gap-2'
                                         onClick={() => window.location.href = `https://www.facebook.com/${personDetailExList[0]?.external_ids?.facebook_id}`}
                                     >
-                                        <p>Facebook</p>
+                                        <p className="hover:underline">Facebook</p>
                                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
                                     </div>
 
@@ -35,7 +35,7 @@ export default function PersonDetailExternal({
                                     <div className='flex flex-wrap items-center gap-2'
                                         onClick={() => window.location.href = `https://twitter.com/${personDetailExList[0]?.external_ids?.twitter_id}`}
                                     >
-                                        <p> Twitter</p>
+                                        <p className="hover:underline"> Twitter</p>
                                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
                                     </div>
                                     <p>•</p>
@@ -43,7 +43,7 @@ export default function PersonDetailExternal({
                                     <div className='flex flex-wrap items-center gap-2'
                                         onClick={() => window.location.href = `https://www.instagram.com/${personDetailExList[0]?.external_ids?.instagram_id}`}
                                     >
-                                        <p>Instagram</p>
+                                        <p className="hover:underline">Instagram</p>
                                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
                                     </div>
                                     {/* {personDetailExList.slice(0, 3).map((item: any, index: number) => (

@@ -1,26 +1,24 @@
-import { useNavigate, useParams } from "react-router-dom";
-import TopBar from "../common/TopBar";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { AppDispatch } from "../../redux/store";
-import apiController from "../../redux/client/api.Controller.";
-import { setListPerson } from "../../redux/reducers/person.reducer";
 import { useEffect } from "react";
-import PersonDetail from "../common/PersonDetail";
-import ListRow from "../../modules/ListRow";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
-import PersonCredit from "../common/PersonCredit";
-import TwoMovieRow from "../../modules/TwoMovieRow";
-import PersonMovie from "../common/PersonMovie";
-import PersonDetailExternal from "../common/PersonDetailExternal";
-import Footer from "../common/Footer";
+import ListRow from "../../modules/ListRow";
+import apiController from "../../redux/client/api.Controller.";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { setListPerson } from "../../redux/reducers/person.reducer";
+import { AppDispatch } from "../../redux/store";
+import Footer from "../common/Footer";
+import PersonCredit from "../common/PersonCredit";
+import PersonDetail from "../common/PersonDetail";
+import PersonDetailExternal from "../common/PersonDetailExternal";
+import PersonMovie from "../common/PersonMovie";
+import TopBar from "../common/TopBar";
 
 export default function PersonLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
-
 
     const fetchPerson = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -63,7 +61,7 @@ export default function PersonLayout() {
     const currentMonthName = monthNames[currentMonth];
 
     return (
-        <div className=" min-h-screen">
+        <div className=" min-h-screen cursor-pointer">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -79,7 +77,9 @@ export default function PersonLayout() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{personList[0]?.images?.profiles?.length}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                <i
+                                 onClick={()=>navigate(`/image/person/${personList[0]?.id}`)}
+                                className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={personList[0]?.images?.profiles}></FourPhotos>
@@ -96,7 +96,9 @@ export default function PersonLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Videos</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{personList[0]?.combined_credits?.cast?.length}</p>
-                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                    <i 
+                                     onClick={()=>navigate(`/video/${personList[0]?.combined_credits?.cast[0]?.id}`)}
+                                    className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
                                 <PersonMovie personMovieList={personList[0]?.combined_credits?.cast} />
                             </div>
@@ -106,7 +108,7 @@ export default function PersonLayout() {
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-black ">Personal details</h2>
                                     </div>
-                                    <div className="flex items-center ml-auto gap-2" >
+                                    <div className="flex items-center ml-auto gap-2 hover:bg-gray-300 px-2 py-2" >
                                         <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
                                         <p className="flex items-center text-2xl font-bold text-black ">
                                             Edit

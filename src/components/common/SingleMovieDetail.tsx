@@ -194,7 +194,8 @@ export default function SingleMovieDetail({
                         </div>
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden ">
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 ">
+                            <div onClick={()=>navigate(`/video/${singleMovieList[0]?.id}`)}
+                             className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -204,7 +205,8 @@ export default function SingleMovieDetail({
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1">
+                            <div onClick={()=>navigate(`/image/movie/${singleMovieList[0]?.id}`)}
+                            className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -221,9 +223,11 @@ export default function SingleMovieDetail({
                         <div className=" grid-cols-12 hidden md:grid gap-6 h-full">
                             <div className=" col-span-8  bg-black  ">
                                 <div className="flex gap-2 mb-1">
-                                    {singleMovieList[0]?.genres.map((item: any) => (
-                                        <button key={item.id} className="bg-none text-white py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
-                                            {item.name}
+                                    {singleMovieList[0]?.genres?.map((item: any) => (
+                                        <button
+                                            onClick={() => navigate(`/search?genre=${item?.name}`)}
+                                            key={item?.id} className="bg-none text-white py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
+                                            {item?.name}
                                         </button>
                                     ))}
                                 </div>
@@ -321,13 +325,13 @@ export default function SingleMovieDetail({
                     <div className='bg-black relative  lg:hidden'>
                         <div className='grid grid-cols-2 gap-1' >
                             <div className='col-span-1'>
-                                <div className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center flex'>
+                                <div  onClick={()=>navigate(`/video/${singleMovieList[0]?.id}`)} className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center flex'>
                                     <div>   <VideoLibraryIcon />   </div>
                                     <div>  {movieVideoList?.length} Videos </div>
                                 </div>
                             </div>
-                            <div className='col-span-1'>
-                                <div className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center'>
+                            <div className='col-span-1' >
+                                <div onClick={()=>navigate(`/image/movie/${singleMovieList[0]?.id}`)} className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center'>
                                     <div>   <PhotoLibraryIcon /></div>
                                     <div> {movieImageList?.length} Photos</div>
                                 </div>

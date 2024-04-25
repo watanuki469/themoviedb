@@ -17,7 +17,7 @@ export default function PersonDetail({
             backgroundSize: "cover",
             backgroundPosition: "center",
         }}>
-            <div className="text-white font-sans font-medium " >
+            <div className="text-white font-sans font-medium cursor-pointer" >
                 <div style={{
                     backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}')`,
                     position: "absolute", width: "100%", height: "100%", opacity: "0.5",
@@ -80,7 +80,8 @@ export default function PersonDetail({
                                                         {singleMovieList[0]?.combined_credits?.cast[0]?.vote_count.toString().slice(1, 3)}
                                                     </>
                                                 }
-                                            </div>                                        </div>
+                                            </div>
+                                        </div>
                                         <div>{singleMovieList[0]?.combined_credits?.cast[0]?.title}</div>
                                     </div>
                                 </div>
@@ -88,7 +89,8 @@ export default function PersonDetail({
                         </div>
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden">
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 ">
+                            <div onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}
+                                className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -98,7 +100,8 @@ export default function PersonDetail({
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1">
+                            <div onClick={() => navigate(`/image/person/${singleMovieList[0]?.id}`)}
+                                className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -171,13 +174,17 @@ export default function PersonDetail({
                     <div className='bg-black relative  lg:hidden'>
                         <div className='grid grid-cols-2 gap-1' >
                             <div className='col-span-1'>
-                                <div className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center flex'>
+                                <div
+                                 onClick={()=>navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}
+                                className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center flex'>
                                     <div>   <VideoLibraryIcon />   </div>
                                     {singleMovieList[0]?.combined_credits?.cast?.length > 99 ? "99+" : singleMovieList[0]?.combined_credits?.cast?.length} Videos
                                 </div>
                             </div>
                             <div className='col-span-1'>
-                                <div className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center'>
+                                <div
+                                 onClick={()=>navigate(`/image/person/${singleMovieList[0]?.id}`)}
+                                className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center'>
                                     <div>   <PhotoLibraryIcon /></div>
                                     {singleMovieList[0]?.images?.profiles?.length > 99 ? "99+" : singleMovieList[0]?.images?.profiles?.length} Photos
                                 </div>

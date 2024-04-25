@@ -18,12 +18,12 @@ import TvStoryLine from "../common/TvStoryLine";
 import TwoMovieRow from "../../modules/TwoMovieRow";
 import TvReview from "../common/TvReview";
 import TvDetailExternal from "../common/TvDetailExternal";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function TvLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
-
 
     const fetchTv = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -60,13 +60,13 @@ export default function TvLayout() {
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
         dispatch(fetchTv());
         dispatch(fetchTvImages());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
     const currentDate = new Date();
 
@@ -92,7 +92,6 @@ export default function TvLayout() {
             setTotalEpisodes(sum);
         }
     }, [tvList]);
-
 
     return (
         <div className=" min-h-screen">
@@ -123,16 +122,18 @@ export default function TvLayout() {
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-black ">Videos</h2>
                                         <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.videos?.results?.length}</p>
-                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"
+                                            onClick={() => navigate(`/videoTv/${id}`)} ></i>
                                     </div>
                                 </div>
-                                <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results}/>
+                                <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results} />
                             </div>
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2  hover:text-yellow-300"
+                                onClick={()=>navigate(`/image/tv/${id}`)}></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>

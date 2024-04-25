@@ -127,7 +127,7 @@ export default function TopBar() {
         } else if (item === 'Movies News') {
           navigate('/NotFound');
         } else if (item === 'Browse Movie By Genre') {
-          navigate('/IndiaMovieSpotlight');
+          navigate('/features/genre');
         } else {
           navigate('/NotFound');
         }
@@ -294,7 +294,7 @@ export default function TopBar() {
                             Showtime & Ticked
                           </p>
                           <p className="mt-2 hover:underline">Movies News</p>
-                          <p className="mt-2 hover:underline">
+                          <p className="mt-2 hover:underline" onClick={()=>(navigate('/features/genre'))}>
                             Browse Movie By Genre
                           </p>
                         </div>
@@ -436,7 +436,7 @@ export default function TopBar() {
 
           </Dialog.Root>
           <div className="grow ">
-            <div className="mt-2 hidden lg:flex bg-red-300 w-full z-20">
+            <div className=" hidden lg:flex bg-red-300 w-full z-20">
               <SearchBar />
             </div>
           </div>

@@ -16,7 +16,6 @@ export default function BrowseGenreLayout() {
         setAnchorRankingEl(null);
     };
 
-
     const genreMapping = {
         12: 'Adventure',
         16: 'Animation',
@@ -37,7 +36,6 @@ export default function BrowseGenreLayout() {
         10752: 'War',
         37: 'Western',
     };
-    const pupularTVShowAndMovieGenreRef = useRef<HTMLHeadingElement | null>(null); // Khởi tạo tham chiếu đến phần tử h2
 
     const scrollToElement = (elementId: any) => {
         const element = document.getElementById(elementId);
@@ -262,9 +260,9 @@ export default function BrowseGenreLayout() {
                             <div>
                                 <p className="text-gray-500">Create a more specific search using a variety of options and filters</p>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-black items-center text-center mt-2">
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:underline hover:bg-gray-500 min-w-20 px-2 py-2 mt-1  border-2 border-gray-500 rounded-full">Movie</li>
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:underline hover:bg-gray-500 min-w-20 px-2 py-2 mt-1  border-2 border-gray-500 rounded-full">TV</li> 
-                                    <li onClick={() => navigate('/topBoxOffice')} className="hover:underline hover:bg-gray-500 min-w-20 px-2 py-2 mt-1  border-2 border-gray-500 rounded-full">Person</li>
+                                    <li onClick={() => navigate('/top250Movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
+                                    <li onClick={() => navigate('/top250Movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li> 
+                                    <li onClick={() => navigate('/topBoxOffice')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Person</li>
                                 </ul>
                             </div>
                         </div>

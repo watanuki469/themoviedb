@@ -12,9 +12,6 @@ export interface TwoMovieRowProps {
 export default function VideoDetail({
     singleMovieList
 }: TwoMovieRowProps) {
-    let navigate = useNavigate()
-    const { id } = useParams()
-
     const [numberIndex, setNumberIndex] = useState(0);
 
     useEffect(() => {
@@ -144,7 +141,7 @@ export default function VideoDetail({
                     modules={[Pagination, Navigation]}
                     className="mySwiper text-white mt-3"
                 >
-                    {singleMovieList[0]?.videos?.results.map((item: any, index: any) => {
+                    {singleMovieList[0]?.videos?.results?.map((item: any, index: any) => {
                         return (
                             <div key={index}>
                                 <SwiperSlide key={index}>

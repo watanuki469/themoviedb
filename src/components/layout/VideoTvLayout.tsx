@@ -8,10 +8,55 @@ import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import VideoDetail from "../common/VideoDetail";
+import { setListTv } from "../../redux/reducers/tv.reducer";
+import { setListTvImage } from "../../redux/reducers/tvImage.reducer";
 
-export default function VideoLayout() {
+export default function VideoTvLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
+
+    const fetchTv = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiTv.tv(id),
+        ])
+            .then((data: any) => {
+                if (data) {
+                    dispatch(setListTv(data));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const fetchTvImages = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiTvImages.tvImage(id),
+        ])
+            .then((data: any) => {
+                if (data) {
+                    dispatch(setListTvImage(data));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const tvList = useAppSelector((state) => state.tv.listTv)
+    const tvImageList = useAppSelector((state) => state.tvImages.listTvImage)
+    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
+
+    useEffect(() => {
+        // dispatch(setGlobalLoading(true));
+        dispatch(fetchTv());
+        dispatch(fetchTvImages());
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
+    }, [id]);
 
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -30,7 +75,6 @@ export default function VideoLayout() {
     }
 
     const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
-    
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
@@ -46,7 +90,7 @@ export default function VideoLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                     <div className="lg:max-w-full md:w-screen mt-2">
-                        <VideoDetail singleMovieList={singleMovieList} />
+                        <VideoDetail singleMovieList={tvList} />
                     </div>
                     <Footer />
                 </div>

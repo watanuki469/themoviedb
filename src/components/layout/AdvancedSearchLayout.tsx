@@ -1,25 +1,17 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import ListRow from "../../modules/ListRow";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import Footer from "../common/Footer";
-import TopBar from "../common/TopBar";
 import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import Charts from "../../modules/Charts";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import ShareIcon from '@mui/icons-material/Share';
+import { Button, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import apiController from "../../redux/client/api.Controller.";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setListSearch } from "../../redux/reducers/search.reducer";
 import { AppDispatch } from "../../redux/store";
-import apiController from "../../redux/client/api.Controller.";
-
+import Footer from "../common/Footer";
+import TopBar from "../common/TopBar";
+import { ListMoviesPopular } from "../models/ListMoviesPopular";
 
 export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
@@ -62,6 +54,8 @@ export default function AdvancedSearchLayout() {
         }
     }, [mediatype, query]);
 
+
+
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorRankingEl(event.currentTarget);
@@ -93,9 +87,12 @@ export default function AdvancedSearchLayout() {
         if (selectedGenres.includes(selectedGenre)) {
             // If already selected, remove it
             setSelectedGenres(selectedGenres.filter((genre) => genre !== selectedGenre));
+            setSearchParams('')
+
         } else {
             // If not selected, add it
             setSelectedGenres([...selectedGenres, selectedGenre]);
+            setSearchParams('genre=' + selectedGenre)
         }
     };
 
@@ -117,7 +114,7 @@ export default function AdvancedSearchLayout() {
     }
     const [isRating, setIsRating] = useState(false);
 
-    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular>();
+    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular|any>();
     const handleClick = (index: any) => {
         setIsRating(true)
         setSelectedStudent(index);
@@ -156,7 +153,7 @@ export default function AdvancedSearchLayout() {
                                                 <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                             </div>
                                             <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title}</p>
+                                            <p className="text-2xl ">{selectedStudent?.title?selectedStudent?.title:selectedStudent?.name}</p>
                                             <div className="gap-2 px-2 py-2">
                                                 <Rating name="customized-10" value={value} size="large"
                                                     onChange={(event, newValue) => {
@@ -254,7 +251,7 @@ export default function AdvancedSearchLayout() {
                                                 <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                             </div>
                                             <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title}</p>
+                                            <p className="text-2xl ">{selectedStudent?.title?selectedStudent?.title:selectedStudent?.name}</p>
                                             <div className="gap-2 px-2 py-2">
                                                 <Rating name="customized-10" value={value} size="large"
                                                     onChange={(event, newValue) => {
@@ -324,7 +321,7 @@ export default function AdvancedSearchLayout() {
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-2"onClick={() => navigate(`/${mediatype !== 'person' ? (mediatype === 'tv' ? 'tv' : 'movie') : 'person'}/${movie?.id}`)}   >
+                                <div className="px-2 py-2" onClick={() => navigate(`/${mediatype !== 'person' ? (mediatype === 'tv' ? 'tv' : 'movie') : 'person'}/${movie?.id}`)}   >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
                                         Details
                                     </button>
@@ -357,7 +354,7 @@ export default function AdvancedSearchLayout() {
                                                 <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                             </div>
                                             <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title}</p>
+                                            <p className="text-2xl ">{selectedStudent?.title?selectedStudent?.title:selectedStudent?.name}</p>
                                             <div className="gap-2 px-2 py-2">
                                                 <Rating name="customized-10" value={value} size="large"
                                                     onChange={(event, newValue) => {
@@ -636,6 +633,29 @@ export default function AdvancedSearchLayout() {
         setFromDate('')
         setToDate('')
     }
+    useEffect(() => {
+        let params = [];
+        if (query.trim().length > 0) {
+            params.push('title=' + query.trim());
+        }
+        if (selectedGenres.length > 0) {
+            params.push('genres=' + selectedGenres.join(','));
+        }
+        if (fromDate && toDate) {
+            params.push('releaseday=' + fromDate.trim() + '->' + toDate.trim());
+            // params.push('+'+toDate.trim());
+        }
+        if (imdbImdbRatingFrom && imdbImdbRatingTo) {
+            params.push('IM=' + fromDate.trim() + '->' + toDate.trim());
+            // params.push('+'+toDate.trim());
+        }
+        if (fromDate && toDate) {
+            params.push('releaseday=' + fromDate.trim() + '->' + toDate.trim());
+            // params.push('+'+toDate.trim());
+        }
+
+        setSearchParams(params.join('&'));
+    }, [mediatype, query, selectedGenres, fromDate, toDate]);
 
 
     return (
@@ -863,145 +883,153 @@ export default function AdvancedSearchLayout() {
                                         </div>
                                     ) : (<div></div>)}
                                 </div>
+                                {mediatype != 'person' ? (
+                                    <div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <p className="font-bold">Release Day </p>
+                                            <i onClick={toggleRleaseExpand} className={`fa-solid ${releaseExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
+                                        </div>
+                                        <div className="border-b-2 px-1 py-1">
+                                            {releaseExpanded ? (
+                                                <div className="relative mt-2 mb-1">
+                                                    <label htmlFor="startDate" className="block mb-1">From:</label>
+                                                    <input
+                                                        type="date"
+                                                        id="startDate"
+                                                        name="startDate"
+                                                        className="border border-gray-300 px-2 py-1 mb-2 w-full"
+                                                        value={fromDate} // Đặt giá trị của "From" từ state
+                                                        onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
+                                                    />
 
-                                <div className="flex items-center gap-2 mt-1">
-                                    <p className="font-bold">Release Day </p>
-                                    <i onClick={toggleRleaseExpand} className={`fa-solid ${releaseExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
-                                </div>
-                                <div className="border-b-2 px-1 py-1">
-                                    {releaseExpanded ? (
-                                        <div className="relative mt-2 mb-1">
-                                            <label htmlFor="startDate" className="block mb-1">From:</label>
-                                            <input
-                                                type="date"
-                                                id="startDate"
-                                                name="startDate"
-                                                className="border border-gray-300 px-2 py-1 mb-2 w-full"
-                                                value={fromDate} // Đặt giá trị của "From" từ state
-                                                onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
-                                            />
+                                                    <label htmlFor="endDate" className="block mb-2">To:</label>
+                                                    <input
+                                                        type="date"
+                                                        id="endDate"
+                                                        name="endDate"
+                                                        className="border border-gray-300 px-2 py-1 mb-1 w-full"
+                                                        value={toDate} // Đặt giá trị của "To" từ state
+                                                        onChange={handleToDateChange} // Xử lý sự kiện thay đổi của "To"
+                                                    />
+                                                    <label htmlFor="endDate" className="block mb-2">Or just enter:</label>
+                                                    <div className="flex items-center gap-2">
+                                                        <input
+                                                            id="startDate"
+                                                            name="startDate"
+                                                            className="border border-gray-300 px-2 py-1 w-full"
+                                                            value={fromDate} // Đặt giá trị của "From" từ state
+                                                            onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
+                                                        />
+                                                        <p className="px-1">To</p>
+                                                        <input
+                                                            id="endDate"
+                                                            name="endDate"
+                                                            className="border border-gray-300 px-2 py-1 w-full"
+                                                            value={toDate} // Đặt giá trị của "To" từ state
+                                                            onChange={handleToDateChange} // Xử lý sự kiện thay đổi của "To"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ) : (<div></div>)}
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <p className="font-bold">IMDb Rating </p>
+                                            <i onClick={toggleImdbExpand} className={`fa-solid ${imdbExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
+                                        </div>
+                                        <div className="border-b-2 px-1 py-1">
+                                            {imdbExpanded ? (
+                                                <div className="relative mt-2 mb-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <input
+                                                            className="border border-gray-300 px-2 py-1 w-full"
+                                                            value={imdbImdbRatingFrom} // Đặt giá trị của "From" từ state
+                                                            onChange={handleFromImdbChange} // Xử lý sự kiện thay đổi của "From"
+                                                            placeholder="e.g. 0"
+                                                        />
+                                                        <p className="px-1">To</p>
+                                                        <input
+                                                            className="border border-gray-300 px-2 py-1 w-full"
+                                                            value={imdbImdbRatingTo} // Đặt giá trị của "To" từ state
+                                                            onChange={handleToImdbChange} // Xử lý sự kiện thay đổi của "To"
+                                                            placeholder="e.g. 10"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ) : (<div></div>)}
+                                        </div>
 
-                                            <label htmlFor="endDate" className="block mb-2">To:</label>
-                                            <input
-                                                type="date"
-                                                id="endDate"
-                                                name="endDate"
-                                                className="border border-gray-300 px-2 py-1 mb-1 w-full"
-                                                value={toDate} // Đặt giá trị của "To" từ state
-                                                onChange={handleToDateChange} // Xử lý sự kiện thay đổi của "To"
-                                            />
-                                            <label htmlFor="endDate" className="block mb-2">Or just enter:</label>
-                                            <div className="flex items-center gap-2">
-                                                <input
-                                                    id="startDate"
-                                                    name="startDate"
-                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                    value={fromDate} // Đặt giá trị của "From" từ state
-                                                    onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
-                                                />
-                                                <p className="px-1">To</p>
-                                                <input
-                                                    id="endDate"
-                                                    name="endDate"
-                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                    value={toDate} // Đặt giá trị của "To" từ state
-                                                    onChange={handleToDateChange} // Xử lý sự kiện thay đổi của "To"
-                                                />
-                                            </div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <p className="font-bold">Number of votes </p>
+                                            <i onClick={toggleVotesExpand} className={`fa-solid ${votesExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
-                                    ) : (<div></div>)}
-                                </div>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <p className="font-bold">IMDb Rating </p>
-                                    <i onClick={toggleImdbExpand} className={`fa-solid ${imdbExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
-                                </div>
-                                <div className="border-b-2 px-1 py-1">
-                                    {imdbExpanded ? (
-                                        <div className="relative mt-2 mb-1">
-                                            <div className="flex items-center gap-2">
-                                                <input
-                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                    value={imdbImdbRatingFrom} // Đặt giá trị của "From" từ state
-                                                    onChange={handleFromImdbChange} // Xử lý sự kiện thay đổi của "From"
-                                                    placeholder="e.g. 0"
-                                                />
-                                                <p className="px-1">To</p>
-                                                <input
-                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                    value={imdbImdbRatingTo} // Đặt giá trị của "To" từ state
-                                                    onChange={handleToImdbChange} // Xử lý sự kiện thay đổi của "To"
-                                                    placeholder="e.g. 10"
-                                                />
-                                            </div>
+                                        <div className="border-b-2 px-1 py-1">
+                                            {votesExpanded ? (
+                                                <div className="relative mt-2 mb-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <input
+                                                            className="border border-gray-300 px-2 py-1 w-full"
+                                                            value={votesFrom} // Đặt giá trị của "From" từ state
+                                                            onChange={handleFromVotesChange} // Xử lý sự kiện thay đổi của "From"
+                                                            placeholder="e.g. 0"
+                                                        />
+                                                        <p className="px-1">to</p>
+                                                        <input
+                                                            className="border border-gray-300 px-2 py-1 w-full"
+                                                            value={votesTo} // Đặt giá trị của "To" từ state
+                                                            onChange={handleToVotesChange} // Xử lý sự kiện thay đổi của "To"
+                                                            placeholder="e.g. 10000"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ) : (<div></div>)}
                                         </div>
-                                    ) : (<div></div>)}
-                                </div>
 
-                                <div className="flex items-center gap-2 mt-1">
-                                    <p className="font-bold">Number of votes </p>
-                                    <i onClick={toggleVotesExpand} className={`fa-solid ${votesExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
-                                </div>
-                                <div className="border-b-2 px-1 py-1">
-                                    {votesExpanded ? (
-                                        <div className="relative mt-2 mb-1">
-                                            <div className="flex items-center gap-2">
-                                                <input
-                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                    value={votesFrom} // Đặt giá trị của "From" từ state
-                                                    onChange={handleFromVotesChange} // Xử lý sự kiện thay đổi của "From"
-                                                    placeholder="e.g. 0"
-                                                />
-                                                <p className="px-1">to</p>
-                                                <input
-                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                    value={votesTo} // Đặt giá trị của "To" từ state
-                                                    onChange={handleToVotesChange} // Xử lý sự kiện thay đổi của "To"
-                                                    placeholder="e.g. 10000"
-                                                />
-                                            </div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <p className="font-bold">Genre </p>
+                                            <i onClick={toggleGenreExpand} className={`fa-solid ${genreExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
-                                    ) : (<div></div>)}
-                                </div>
+                                        <div className="border-b-2 px-1 py-1">
+                                            {genreExpanded ? (
+                                                <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
+                                                    {
+                                                        Object.values(genreMapping).map(genre => (
+                                                            <div onClick={() => handleGenreClick(genre as Genre)}
+                                                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-gray-200 ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:bg-opacity-90'}`}
+                                                                key={genre}>{genre}</div>
+                                                        ))
+                                                    }
+                                                </div>
+                                            ) : (<div></div>)}
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <p className="font-bold">In Theaters </p>
+                                            <i onClick={toggleTheaterExpand} className={`fa-solid ${theaterExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
+                                        </div>
+                                        <div className="border-b-2 px-1 py-1">
+                                            {theaterExpanded ? (
+                                                <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
+                                                    <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p>None</p>
+                                                    </div>
+                                                    <div onClick={() => handleOptionClick(' In Theaters Near You')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${selectedOption === ' In Theaters Near You' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p> In Theaters Near You</p>
+                                                    </div>
+                                                    <div onClick={() => handleOptionClick('In Theaters With Online Ticketing')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${selectedOption === 'In Theaters With Online Ticketing' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p>In Theaters With Online Ticketing</p>
+                                                    </div>
+                                                </div>
+                                            ) : (<div></div>)}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
 
-                                <div className="flex items-center gap-2 mt-1">
-                                    <p className="font-bold">Genre </p>
-                                    <i onClick={toggleGenreExpand} className={`fa-solid ${genreExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
-                                </div>
-                                <div className="border-b-2 px-1 py-1">
-                                    {genreExpanded ? (
-                                        <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
-                                            {
-                                                Object.values(genreMapping).map(genre => (
-                                                    <div onClick={() => handleGenreClick(genre as Genre)}
-                                                        className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-gray-200 ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:bg-opacity-90'}`}
-                                                        key={genre}>{genre}</div>
-                                                ))
-                                            }
-                                        </div>
-                                    ) : (<div></div>)}
-                                </div>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <p className="font-bold">In Theaters </p>
-                                    <i onClick={toggleTheaterExpand} className={`fa-solid ${theaterExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
-                                </div>
-                                <div className="border-b-2 px-1 py-1">
-                                    {theaterExpanded ? (
-                                        <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
-                                            <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
-                                                <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                <p>None</p>
-                                            </div>
-                                            <div onClick={() => handleOptionClick(' In Theaters Near You')} className="flex gap-2 items-center">
-                                                <i className={`fa-regular ${selectedOption === ' In Theaters Near You' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                <p> In Theaters Near You</p>
-                                            </div>
-                                            <div onClick={() => handleOptionClick('In Theaters With Online Ticketing')} className="flex gap-2 items-center">
-                                                <i className={`fa-regular ${selectedOption === 'In Theaters With Online Ticketing' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                <p>In Theaters With Online Ticketing</p>
-                                            </div>
-                                        </div>
-                                    ) : (<div></div>)}
-                                </div>
+                                    </div>
+                                )}
+
                             </div>
                         </div>
                         <div className="lg:col-span-8 md-col-span-12  w-full ">

@@ -112,7 +112,7 @@ export default function MovieLayout() {
     const movieCreditList = useAppSelector((state) => state.movieCredit.listMovieCredit)
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
     console.log(movieSimilarList);
-    
+
     useEffect(() => {
         dispatch(setGlobalLoading(true));
         dispatch(fetchSingleMovies());
@@ -165,7 +165,8 @@ export default function MovieLayout() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.images?.backdrops?.length}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"
+                                onClick={()=>navigate(`/image/movie/${id}`)}></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={movieImageList} />
