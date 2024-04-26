@@ -195,7 +195,7 @@ export default function SingleMovieDetail({
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden ">
                             <div onClick={()=>navigate(`/video/${singleMovieList[0]?.id}`)}
-                             className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 ">
+                             className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -206,7 +206,7 @@ export default function SingleMovieDetail({
                                 </div>
                             </div>
                             <div onClick={()=>navigate(`/image/movie/${singleMovieList[0]?.id}`)}
-                            className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1">
+                            className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />

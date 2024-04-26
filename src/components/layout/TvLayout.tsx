@@ -94,7 +94,7 @@ export default function TvLayout() {
     }, [tvList]);
 
     return (
-        <div className=" min-h-screen">
+        <div className=" min-h-screen cursor-pointer">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -120,7 +120,7 @@ export default function TvLayout() {
                                 <div className="text-white py-4 ">
                                     <div className="flex items-center ">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                        <h2 className="text-2xl font-bold text-black ">Videos</h2>
+                                        <h2 id="tvVideo" className="text-2xl font-bold text-black ">Videos</h2>
                                         <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.videos?.results?.length}</p>
                                         <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"
                                             onClick={() => navigate(`/videoTv/${id}`)} ></i>
@@ -133,7 +133,7 @@ export default function TvLayout() {
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2  hover:text-yellow-300"
-                                onClick={()=>navigate(`/image/tv/${id}`)}></i>
+                                    onClick={() => navigate(`/image/tv/${id}`)}></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
@@ -141,7 +141,7 @@ export default function TvLayout() {
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">Top Cast</h2>
+                                    <h2 id="tvCast" className="text-2xl font-bold text-black ">Top Cast</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
@@ -186,7 +186,7 @@ export default function TvLayout() {
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">User Reviews</h2>
+                                    <h2 id="tvReview" className="text-2xl font-bold text-black ">User Reviews</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.reviews.results.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
@@ -203,7 +203,7 @@ export default function TvLayout() {
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">Detail</h2>
+                                    <h2 id="tvTrvia" className="text-2xl font-bold text-black ">Detail</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
@@ -220,7 +220,7 @@ export default function TvLayout() {
 
 
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 ">
+                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 " onClick={() => navigate('/top250Movie')} >
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
@@ -229,8 +229,6 @@ export default function TvLayout() {
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p className="text-red w-full text-blue-500"> See our picks</p>
                         </div>
-
-
                     </div>
                 </div>
             </div>

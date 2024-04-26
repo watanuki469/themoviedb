@@ -14,6 +14,7 @@ import { setListTvImage } from "../../redux/reducers/tvImage.reducer";
 import { AppDispatch } from "../../redux/store";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 export default function ImageLayout() {
     const { mediaType, id } = useParams();
@@ -101,7 +102,7 @@ export default function ImageLayout() {
             })
     }
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (mediaType === 'tv') {
             dispatch(fetchTv());
             dispatch(fetchTvImages());
@@ -114,9 +115,9 @@ export default function ImageLayout() {
             dispatch(fetchMovies());
             dispatch(fetchMovieImage());
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
 
     let mediaList = [];
@@ -168,11 +169,9 @@ export default function ImageLayout() {
         // Thử copy địa chỉ URL vào clipboard
         navigator.clipboard.writeText(currentUrl)
             .then(() => {
-                // Nếu thành công, hiển thị thông báo
                 toast.success('Link copied');
             })
             .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
                 toast.error('Failed to copy link');
                 console.error('Error copying link:', error);
             });

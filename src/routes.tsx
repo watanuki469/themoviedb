@@ -1,11 +1,13 @@
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import ImageLayout from "./components/layout/ImageLayout";
+import LoginLayout from "./components/layout/LoginLayout";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import ProLayout from "./components/layout/ProLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
+import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
 import TvLayout from "./components/layout/TvLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
@@ -69,6 +71,11 @@ const routes = [
     state: "top250Movie"
   },
   {
+    path: "/top250Tv",
+    element: <Top250TvLayout/>,
+    state: "top250Tv"
+  },
+  {
     path: "/topBoxOffice",
     element: <TopBoxOffice/>,
     state: "topBoxOffice"
@@ -93,6 +100,7 @@ const routes = [
     element: <ImageLayout/>,
     state: "image"
   },
+
 
   // {
   //   path: "/:mediaType/:mediaId",

@@ -29,7 +29,7 @@ export default function MainLayout() {
     const currentMonthName = monthNames[currentMonth];
 
     return (
-        <div className=" min-h-screen">
+        <div className=" min-h-screen cursor-pointer">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -44,7 +44,9 @@ export default function MainLayout() {
                     </div>
 
                     <div className="lg:max-w-full md:w-screen mt-2 ">
-                        <div className="lg:grid lg:grid-cols-3 gap-2 text-white ">
+                        <div 
+                        onClick={()=>navigate('/top250Movie')}
+                        className="lg:grid lg:grid-cols-3 gap-2 text-white ">
                             <div>
                                 <ListRow listRowList={topRatedMovies} />
                                 <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>
@@ -63,7 +65,7 @@ export default function MainLayout() {
                             What to watch
                         </p>
                         <div className="flex items-center ml-auto flex-wrap" >
-                            <p className="mr-2 text-blue-500">
+                            <p className="mr-2 text-blue-500" onClick={()=>navigate('/top250Movie')}>
                                 Get more recommendations
                             </p>
                             <i className="fa-solid fa-angle-right text-blue-500"></i>
@@ -116,8 +118,8 @@ export default function MainLayout() {
                             <div className="text-gray-300 items-center">
                                 <h3 className="text-sm font-semibold mr-4">IMDb helps you select the perfect next show or movie to watch.</h3>
                                 <div className="flex w-full mt-5 bg-black ">
-                                    <button className="text-white font-semibold px-4 py-2 rounded-md mr-2 w-full border-2 border-white">Watch Guide</button>
-                                    <button className="text-white font-semibold px-4 py-2 rounded-md w-full  border-2 border-white">Most Popular</button>
+                                    <button  onClick={()=>navigate('/top250Tv')}  className="text-white font-semibold px-4 py-2 rounded-md mr-2 w-full border-2 border-white hover:opacity-80">Watch Guide</button>
+                                    <button onClick={()=>navigate('/top250Movie')} className="text-white font-semibold px-4 py-2 rounded-md w-full  border-2 border-white  hover:opacity-80">Most Popular</button>
                                 </div>
                             </div>
                         </div>

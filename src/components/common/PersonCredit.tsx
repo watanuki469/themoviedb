@@ -77,7 +77,9 @@ export default function PersonCredit({
                                             <div className="flex items-center text-white gap-2"
                                                 onClick={() => navigate(`/movie/${personCreditList[numberIndex]?.id}`)}>
                                                 <p className="text-xl font-bold"> {personCreditList[numberIndex]?.title}</p>
-                                                <i className="fa-solid fa-chevron-right text-2xl text-white hover:text-yellow-300"></i>
+                                                <i
+                                                  onClick={()=>navigate(`/movie/${personCreditList[numberIndex]?.id}`)}
+                                                className="fa-solid fa-chevron-right text-2xl text-white hover:text-yellow-300"></i>
 
                                             </div>
                                             <div className="flex flex-row gap-3 mt-1">
@@ -113,7 +115,9 @@ export default function PersonCredit({
                                             <p><i className="fa-solid fa-play"></i></p>
                                             <p>Watchlist</p>
                                         </button>
-                                        <button className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-90 px-2 py-2 gap-2 ">
+                                        <button
+                                        onClick={()=>navigate(`/movie/${personCreditList[numberIndex]?.id}`)}
+                                        className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-90 px-2 py-2 gap-2 ">
                                             <p><i className="fa-solid fa-plus"></i></p>
                                             <p>Trailer</p>
                                         </button>

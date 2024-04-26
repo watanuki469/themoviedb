@@ -2,35 +2,35 @@ import { createSlice } from '@reduxjs/toolkit';
 import { ListMoviesPopular } from '../../components/models/ListMoviesPopular';
 import axiosClient from '../axiosClient';
 import { AppDispatch } from "../store";
-
+const language = localStorage.getItem('language')
 const apiRequests = {
     netflixOriginal() {
-        const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`
+        const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`
         return axiosClient.get(url)
     },
     discoverMovies() {
-        const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`
+        const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`
         return axiosClient.get(url)
     },
     discoverTv() {
-        const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&page=1&timezone=America%2FNew_York&include_null_first_air_dates=false&with_watch_monetization_types=flatrate&with_status=0&with_type=0`
+        const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&page=1&timezone=America%2FNew_York&include_null_first_air_dates=false&with_watch_monetization_types=flatrate&with_status=0&with_type=0`
         return axiosClient.get(url)
     },
 
     mostPopularMoviesReq() {
-        const url = `movie/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        const url = `movie/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`
         return axiosClient.get(url)
     },
     topRatedMoviesReq() {
-        const url = `movie/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        const url = `movie/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`
         return axiosClient.get(url)
     },
     mostPopularTvReq() {
-        const url = `tv/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        const url = `tv/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`
         return axiosClient.get(url)
     },
     topRatedTvReq() {
-        const url = `tv/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=en-US&page=1`
+        const url = `tv/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`
         return axiosClient.get(url)
     },
 

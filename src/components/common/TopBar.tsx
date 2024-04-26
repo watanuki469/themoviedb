@@ -7,11 +7,12 @@ import PublicIcon from '@mui/icons-material/Public';
 import StarsIcon from "@mui/icons-material/Stars";
 import TvIcon from '@mui/icons-material/Tv';
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import { Box, Button, Divider, FormControl, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, } from "@mui/material";
+import { Avatar, Box, Button, Divider, FormControl, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, } from "@mui/material";
 import * as Dialog from "@radix-ui/react-dialog";
 import "flowbite";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import { useAppDispatch } from '../../redux/hooks';
 import SearchBar from "./SearchBar";
 
@@ -24,13 +25,32 @@ export default function TopBar() {
   const handleCloseDialogClick = () => {
     setOpen(false);
   };
-  const [personName, setPersonName] = useState<string[]>(["en"]);
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+
+  const languageString = localStorage.getItem('language');
+  const initialLanguage: string[] = languageString ? languageString.split(",") : [];
+  const [language, setLanguage] = useState<string[]>(initialLanguage);
+
+  // const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+  //   const {
+  //     target: { value },
+  //   } = event;
+  //   setPersonName(typeof value === "string" ? value.split(",") : value);
+  //   localStorage.setItem("language", personName.join(","));
+  //   setLanguage(personName)
+  // };
+  const handleChange = (event: SelectChangeEvent<string | string[]>) => {
     const {
       target: { value },
     } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
+    if (typeof value === "string") {
+      localStorage.setItem("language", value);
+      setLanguage([value]);
+    } else {
+      localStorage.setItem("language", value.join(","));
+      setLanguage(value);
+    }
   };
+
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -79,7 +99,7 @@ export default function TopBar() {
       window.removeEventListener('resize', handleResize);
     };
   }, [isSearchOpen]);
-  
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('');
 
@@ -113,11 +133,11 @@ export default function TopBar() {
   };
   const handleItemClick = (item: string) => {
     console.log(item);
-    
+
     switch (selectedMenu) {
       case 'Movies':
-        if (item === 'Release Calendar') {          
-         navigate(`/upComing`);
+        if (item === 'Release Calendar') {
+          navigate(`/upComing`);
         } else if (item === 'Most Popular Movies') {
           navigate('/Popular');
         } else if (item === 'Top Box Office') {
@@ -137,9 +157,9 @@ export default function TopBar() {
         if (item === 'Whats on TV & Streaming') {
           navigate('/TVStreaming');
         } else if (item === 'Top 250 TV Shows') {
-          navigate('/Top250TVShows');
+          navigate('/Top250Tv');
         } else if (item === 'Most Popular TV Shows') {
-          navigate('/PopularTVShows');
+          navigate('/Top250Tv');
         } else if (item === 'TV News') {
           navigate('/TVNews');
         } else {
@@ -214,11 +234,42 @@ export default function TopBar() {
     setMenuOpen(false);
   };
 
+  const email = localStorage.getItem('email')
+  const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
+  const openShare = Boolean(anchorShareEl);
+  const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorShareEl(event.currentTarget);
+  };
+  const handleShareClose = () => {
+    setAnchorShareEl(null);
+  };
+  const handleCopyLink = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    navigate('/login')
+  };
 
+  const stringToColor = (str: any) => {
+    let hash = 0;
+    let i;
+
+    for (i = 0; i < str.length; i += 1) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+
+    return color;
+  };
 
 
   return (
-    <section className="static w-full bg-black mx-auto h-12">
+    <section className="static w-full bg-black mx-auto h-12 py-2 mb-4">
       {isSearchOpen ? (
         <div className='items-center h-full w-full flex '>
           <SearchBar />
@@ -285,16 +336,16 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p className="mt-2 hover:underline"  onClick={()=>(navigate('/upComing'))}>Release Calendar</p>
-                          <p className="mt-2 hover:underline "  onClick={()=>(navigate('/top250Movie'))}>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/upComing'))}>Release Calendar</p>
+                          <p className="mt-2 hover:underline " onClick={() => (navigate('/top250Movie'))}>
                             Most Popular Movies
                           </p>
-                          <p className="mt-2 hover:underline" onClick={()=>(navigate('/topBoxOffice'))}>Top Box Office</p>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/topBoxOffice'))}>Top Box Office</p>
                           <p className="mt-2 hover:underline">
                             Showtime & Ticked
                           </p>
                           <p className="mt-2 hover:underline">Movies News</p>
-                          <p className="mt-2 hover:underline" onClick={()=>(navigate('/features/genre'))}>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/features/genre'))}>
                             Browse Movie By Genre
                           </p>
                         </div>
@@ -319,8 +370,8 @@ export default function TopBar() {
                           <p className="mt-2 hover:underline">
                             Whats on TV & Streaming
                           </p>
-                          <p className="mt-2 hover:underline">Top 250 TV Shows</p>
-                          <p className="mt-2 hover:underline">
+                          <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">Top 250 TV Shows</p>
+                          <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">
                             Most Popular TV Shows
                           </p>
                           <p className="mt-2 hover:underline">TV News</p>
@@ -452,28 +503,24 @@ export default function TopBar() {
           <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
             <button
               onClick={() => navigate("/WatchList")}
-              className="flex items-center"
+              className="flex items-center gap-2"
             >
-              <i className="fa-regular fa-bookmark fa-flip text-white"></i>
+              <i className="fa-regular fa-bookmark  text-white"></i>
               <p className="text-white text-xl font-extrabold border-none ">
                 Watch List
               </p>
             </button>
           </div>
+          {/*change language  */}
           <Button sx={{ display: { xs: "none", md: "flex" } }}>
             <FormControl
               sx={{
-                bgcolor: "black",
-                color: "red",
-                fontWeight: "extrabold",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
+                bgcolor: "black", color: "red", fontWeight: "extrabold", textAlign: "center", alignContent: "center", alignItems: "center",
               }}
             >
               <Select
                 label="Agel"
-                value={personName}
+                value={language}
                 onChange={handleChange}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
@@ -492,24 +539,99 @@ export default function TopBar() {
                 <MenuItem value="language" disabled>
                   Language
                 </MenuItem>
-                <MenuItem value="en">English</MenuItem>
-                <MenuItem value="vn">Vietnamese</MenuItem>
-                <MenuItem value="jp">Japanese</MenuItem>
+                <MenuItem value="en-US">English </MenuItem>
+                <MenuItem value="vn-VI">Vietnamese</MenuItem>
+                <MenuItem value="ja-JP">Japanese</MenuItem>
+                <MenuItem value="fr-FR">French </MenuItem>
+                <MenuItem value="de-DE">German</MenuItem>
+                <MenuItem value="hi-IN">Hindi</MenuItem>
+                <MenuItem value="id-ID">Indonesian </MenuItem>
+                <MenuItem value="it-IT">Italian</MenuItem>
+                <MenuItem value="ko-KR">Korean</MenuItem>
               </Select>
             </FormControl>
           </Button>
-          <div className="lg:hidden text-white" >
+          <div className="lg:hidden text-white " >
             <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
           </div>
-          <button
+          {/* <button
             onClick={() => navigate("/")}
-            className="text-white text-center 
-        border-none font-bold text-sm font-sans
+            className="text-white text-center border-none 
               whitespace-nowrap hover:bg-black hover:text-blue-500
-       hover:border-red-500  rounded-md"
+              text-xl font-extrabold px-2 py-2 hover:border-red-500  rounded-md"
           >
-            Sign In
-          </button>
+           {email}
+          </button> */}
+          <IconButton
+            onClick={handleShareClick}
+            size="small"
+            aria-controls={openShare ? 'account-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={openShare ? 'true' : undefined}
+          >
+            <div className="rounded-full bg-blue-500 p-2 w-10 h-10 flex justify-center items-center">
+              <i className="fa-solid fa-id-badge text-white fa-flip"></i>
+            </div>
+          </IconButton>
+          <Menu
+            anchorEl={anchorShareEl}
+            id="account-menu"
+            open={openShare}
+            onClose={handleShareClose}
+            onClick={handleShareClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: 'visible',
+                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                mt: 1.5,
+                '& .MuiAvatar-root': {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                '&::before': {
+                  content: '""',
+                  display: 'block',
+                  position: 'absolute',
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: 'background.paper',
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            <MenuItem onClick={() => toast.success('meow meow')}>
+              <Avatar
+                sx={{
+                  backgroundColor: stringToColor(email),
+                  width: 40,
+                  height: 40
+                }}
+                children={`${email?.split(" ")[0][0]}`}
+              />
+              {email}
+            </MenuItem>
+
+            <div className='hover:text-yellow-300'>
+              <MenuItem onClick={handleCopyLink}>
+                <ListItemIcon>
+                  {/* <i className="fa-solid fa-link text-2xl text-white"></i> */}
+                  <i className="fa-solid fa-cat text-2xl "></i>
+                </ListItemIcon>
+                <p>Logout</p>
+              </MenuItem>
+            </div>
+
+
+          </Menu>
           <button
             onClick={() => navigate("/")}
             className=" bg-yellow-400 text-black text-center 

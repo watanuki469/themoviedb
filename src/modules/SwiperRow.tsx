@@ -14,7 +14,6 @@ export default function SwiperRow({
     mediaType
 }: SwiperRowProps) {
    
-
     let navigate = useNavigate()
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
@@ -29,7 +28,6 @@ export default function SwiperRow({
         };
 
         window.addEventListener('resize', handleResize);
-
         // Call handleResize at initial load
         handleResize();
 
@@ -93,16 +91,7 @@ export default function SwiperRow({
             )}
             <Swiper
                 spaceBetween={10}
-                // centeredSlides={true}
                 slidesPerView={activeSlider}
-
-                // autoplay={{
-                //     delay: 3500,
-                //     disableOnInteraction: false,
-                // }}
-                // pagination={{
-                //     clickable: true,
-                // }}
                 navigation={true}
                 modules={[Pagination, Navigation]}
                 className="mySwiper text-white"
@@ -110,8 +99,7 @@ export default function SwiperRow({
                 {searchItemList.map((item: any, index: any) => {
                     return (
                         <SwiperSlide key={index}>
-
-                            <div className="w-full h-auto"  onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
+                            <div className="w-full h-auto hover:opacity-80"  onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images " className="h-60" />
                             </div>
                             <div className="bg-gray-900">
@@ -132,21 +120,18 @@ export default function SwiperRow({
                                         <i className="fas fa-plus mr-2"></i>
                                         <p>Watchlists</p>
                                     </button>
-                                    <button className="flex items-center px-4 py-2 border rounded-lg w-full justify-center border-none text-white">
+                                    <button 
+                                    onClick={()=>navigate(`/${mediaType=='movie'?'video':'videoTv'}/${item?.id}`)}
+                                    className="flex items-center px-4 py-2 border rounded-lg w-full justify-center border-none text-white">
                                         <i className="fa-solid fa-play mr-2"></i>
                                         <p>Trailer</p>
                                     </button>
                                 </div>
-
                             </div>
                         </SwiperSlide>
                     )
-
                 })}
-
-
             </Swiper>
-
         </div >
     );
 }

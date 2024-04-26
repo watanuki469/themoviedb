@@ -8,6 +8,8 @@ export default function TvDetailExternal({
     tvDetailExList
 }: TwoMovieRowProps) {
     let navigate = useNavigate()
+    console.log(tvDetailExList);
+    
     return (
         <section className="" style={{
             position: "relative",
@@ -56,13 +58,13 @@ export default function TvDetailExternal({
                                     }
                                     </p>
                                     {/* <p>•</p> */}
-                                    <p>({tvDetailExList[0]?.production_countries[0]?.name})</p>
+                                    <p>({tvDetailExList[0]?.production_countries[0]? tvDetailExList[0]?.production_countries[0]?.name:tvDetailExList[0]?.origin_country[0]})</p>
                                 </div>
                             </div>
                             <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                 <div className="">Country of origin</div>
                                 <div className="text-blue-500">
-                                    <p>({tvDetailExList[0]?.production_countries[0]?.name})</p>
+                                    <p>{tvDetailExList[0]?.production_countries[0]?.name?tvDetailExList[0]?.production_countries[0]?.name:tvDetailExList[0]?.origin_country[0]}</p>
                                 </div>
                             </div>
                             <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">

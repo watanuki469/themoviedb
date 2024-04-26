@@ -2,6 +2,11 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+
+
 
 export interface TwoMovieRowProps {
     singleTvList: any
@@ -16,7 +21,37 @@ export default function TvDetail({
     console.log(singleTvImageList);
 
     const totalImages = singleTvImageList[0]?.backdrops?.length + singleTvImageList[0]?.logos?.length + singleTvImageList[0]?.posters?.length;
-
+    const scrollToElement = (elementId: any) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.scrollIntoView({
+                behavior: "smooth",
+                block: "start", // Cuộn trang để phần tử hiển thị ở đầu trang
+                inline: "nearest" // Cuộn trang để phần tử hiển thị ở phía trên cửa sổ trình duyệt
+            });
+        }
+    };
+    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
+    const openShare = Boolean(anchorShareEl);
+    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorShareEl(event.currentTarget);
+    };
+    const handleShareClose = () => {
+        setAnchorShareEl(null);
+    };
+    const handleCopyLink = () => {
+        // Lấy địa chỉ URL hiện tại
+        const currentUrl = window.location.href;
+        // Thử copy địa chỉ URL vào clipboard
+        navigator.clipboard.writeText(currentUrl)
+            .then(() => {
+                toast.success('Link copied');
+            })
+            .catch((error) => {
+                toast.error('Failed to copy link');
+                console.error('Error copying link:', error);
+            });
+    };
     return (
         <section className="" style={{
             position: "relative",
@@ -35,19 +70,94 @@ export default function TvDetail({
 
                 <div style={{ position: "relative", zIndex: "1" }}>
                     <div className="flex flex-row justify-end gap-2 items-center ">
-                        <div className=" py-2 hidden lg:block">Cast & Crew</div>
-                        <div className=" py-2 hidden lg:block">•</div>
-                        <div className=" py-2 hidden lg:block">User Reviews</div>
-                        <div className=" py-2 hidden lg:block">•</div>
-                        <div className=" py-2 hidden lg:block">Trivia</div>
-                        <div className=" py-2 hidden lg:block">•</div>
-                        <div className=" py-2 hidden lg:block">FAQ</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('tvCast')}>Cast & Crew</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('tvReview')}>User Reviews</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('tvVideo')}>Videos</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('tvTrvia')}>Trivia</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block">IMDbPro</button>
-                        <button className="py-2 px-3 border-r border-gray-400 flex items-center gap-2">
+                        {/* <button className="py-2 px-3 border-r border-gray-400 flex items-center gap-2">
                             <i className="fa-solid fa-icons"></i>
                             <p>All Topic</p>
-                        </button>
-                        <i className="fa-solid fa-share-nodes py-2 px-3"></i>
+                        </button> */}
+                        <IconButton
+                            onClick={handleShareClick}
+                            size="small"
+                            aria-controls={openShare ? 'account-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={openShare ? 'true' : undefined}
+                        >
+                            {/* <Avatar sx={{
+                                bgcolor: 'none', color: 'white', ":hover": {
+                                    bgcolor: 'gray', opacity: '50%'
+                                }
+                            }}> */}
+                            <ShareIcon sx={{ color: 'white', mr: '10px' }} />
+                            {/* </Avatar> */}
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorShareEl}
+                            id="account-menu"
+                            open={openShare}
+                            onClose={handleShareClose}
+                            onClick={handleShareClose}
+                            PaperProps={{
+                                elevation: 0,
+                                sx: {
+                                    overflow: 'visible',
+                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                    mt: 1.5,
+                                    '& .MuiAvatar-root': {
+                                        width: 32,
+                                        height: 32,
+                                        ml: -0.5,
+                                        mr: 1,
+                                    },
+                                    '&::before': {
+                                        content: '""',
+                                        display: 'block',
+                                        position: 'absolute',
+                                        top: 0,
+                                        right: 14,
+                                        width: 10,
+                                        height: 10,
+                                        bgcolor: 'background.paper',
+                                        transform: 'translateY(-50%) rotate(45deg)',
+                                        zIndex: 0,
+                                    },
+                                },
+                            }}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                        >
+                            <MenuItem onClick={() => toast.success('meow meow')}>
+                                <ListItemIcon>
+                                    <i className="fa-brands fa-facebook text-2xl"></i>
+                                </ListItemIcon>
+                                Facebook
+                            </MenuItem>
+                            <MenuItem onClick={() => toast.success('meow meow')}>
+                                <ListItemIcon>
+                                    <i className="fa-brands fa-twitter text-2xl"></i>
+                                </ListItemIcon>
+                                Twitter
+                            </MenuItem>
+
+                            <MenuItem onClick={() => toast.success('meow meow')}>
+                                <ListItemIcon>
+                                    <i className="fa-regular fa-envelope text-2xl"></i>
+                                </ListItemIcon>
+                                Email Link
+                            </MenuItem>
+                            <MenuItem onClick={handleCopyLink}>
+                                <ListItemIcon>
+                                    <i className="fa-solid fa-link text-2xl"></i>
+                                </ListItemIcon>
+                                Copy Link
+                            </MenuItem>
+                        </Menu>
                     </div>
                     <div className="justify-between">
                         <div className="items-center">
@@ -61,7 +171,7 @@ export default function TvDetail({
                         <div className="hidden lg:block col-span-3 bg-gray-200  h-full">
                             <img src={`https://image.tmdb.org/t/p/w500${singleTvList[0]?.poster_path}`} alt="product images" />
                         </div>
-                        <div className="lg:col-span-7 md:col-span-12 lg:ml-2 bg-black relative">
+                        <div className="lg:col-span-7 md:col-span-12 lg:ml-2 bg-black relative hover:opacity-90">
                             <iframe
                                 key={singleTvList[0]?.name}
                                 src={`https://www.youtube.com/embed/${singleTvList[0]?.videos?.results[0]?.key}?controls=0&&autoplay=1`}
@@ -87,7 +197,8 @@ export default function TvDetail({
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
+                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90"
+                                onClick={() => navigate(`/image/tv/${singleTvList[0]?.id}`)}>
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -230,6 +341,7 @@ export default function TvDetail({
                             </div>
                             <div className='col-span-1'>
                                 <div
+                                    onClick={() => navigate(`/image/tv/${singleTvList[0]?.id}`)}
                                     className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center'>
                                     <div>   <PhotoLibraryIcon /></div>
                                     {totalImages > 99 ? "99+" : totalImages} Photos

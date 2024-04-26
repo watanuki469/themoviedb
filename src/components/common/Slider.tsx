@@ -65,7 +65,6 @@ export default function Slider() {
         // Hiển thị dạng "2:47"
         const formattedTime = `${firstTwoDigits}:${nextTwoDigits}`
         return formattedTime
-
     }
 
     return (
@@ -73,7 +72,7 @@ export default function Slider() {
             <section className='relative overflow-hidden'>
                 <div className="md:grid md:grid-cols-12 text-white gap-3  items-end cursor-pointer w-full ">
                     <div className="lg:col-span-8 md:col-span-12 flex items-stretch">
-                        <div id='1' className=" bg-cover bg-top relative w-screen"
+                        <div id='1' className=" bg-cover bg-top relative w-screen hover:opacity-90"
                             style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${popularMovies[activeStep]?.backdrop_path})` }}>
                             <div className="flex flex-col h-full "  >
                                 <div className='flex absolute w-full '>
@@ -169,14 +168,14 @@ export default function Slider() {
                     </div>
                     <div className="lg:col-span-4 w-screen flex">
                         <div className='hidden lg:block relative h-96 w-screen'>
-                            <div id='6' className="h-8 text-red-500 ">
+                            <div id='6' className="h-8 text-red-500 hover:opacity-90">
                                 <div className="text-xl text-white text-left  duration-300 ease-in-out ">
                                     <p className="text-yellow-400 font-bold text-left  whitespace-nowrap  ">
                                         Up next
                                     </p>
                                 </div>
                             </div>
-                            <div id='2' className="h-24 mb-3 "
+                            <div id='2' className="h-24 mb-3 hover:opacity-90"
                                 onClick={() => navigate(`/movie/${popularMovies[activeStep + 1]?.id}`)}
                             >
                                 <div className='flex flex-row w-full'>
@@ -214,7 +213,7 @@ export default function Slider() {
                                 </div>
 
                             </div>
-                            <div id='3' className="h-24 mb-4 "
+                            <div id='3' className="h-24 mb-4 hover:opacity-90"
                                 onClick={() => navigate(`/movie/${popularMovies[activeStep + 2]?.id}`)}>
                                 <div className='flex flex-row w-full'>
                                     <div >

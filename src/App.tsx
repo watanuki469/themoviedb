@@ -2,12 +2,16 @@ import { Route, Routes } from 'react-router-dom';
 import routes from "./routes";
 import PageWrapper from "./components/common/PageWrapper";
 import HomePage from "./pages/HomePage";
+import LoginLayout from './components/layout/LoginLayout';
+import { PrivateRoute } from './PrivateRoute';
 
 function App() {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<HomePage />} >
+        <Route path="/login" element={<LoginLayout />}></Route>
+        <Route path="/" element={<PrivateRoute />} >
+          <Route path="/" element={<HomePage />} />
           {routes.map((route, index) => (
             route.index ? (
               <Route
