@@ -8,6 +8,7 @@ import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import MovieNewLayout from "./components/layout/MovieNewLayout";
 import PersonLayout from "./components/layout/PersonLayout";
+import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
@@ -125,6 +126,11 @@ const routes = [
     path: "/news/celeb",
     element: <CelebNewLayout/>,
     state: "celebNew"
+  },
+  {
+    path: "/popularCeleb",
+    element: <PopularCelebLayout/>,
+    state: "popularCeleb"
   },
   
 

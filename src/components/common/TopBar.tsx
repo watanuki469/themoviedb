@@ -122,7 +122,7 @@ export default function TopBar() {
       case 'Awards & Events':
         return ['Oscars', 'Emmys', 'Best Of 2023', 'Holiday Picks', 'Starmeter Awards', 'Awards Central', 'Festival Central', 'All Event'];
       case 'Celebs':
-        return ['Born Today', 'Most Popular Celebs', 'Celebrity News'];
+        return ['Most Popular Celebs', 'Celebrity News'];
       case 'Community':
         return ['Help Center', 'Contributor Zone', 'Polls'];
       default:
@@ -202,9 +202,7 @@ export default function TopBar() {
         break;
 
       case 'Celebs':
-        if (item === 'Born Today') {
-          navigate('/BornToday');
-        } else if (item === 'Most Popular Celebs') {
+        if (item === 'Most Popular Celebs') {
           navigate('/PopularCelebs');
         } else if (item === 'Celebrity News') {
           navigate('/news/celeb');
@@ -416,7 +414,7 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p className="mt-2 hover:underline">Born Today</p>
+
                           <p className="mt-2 hover:underline">
                             Most Popular Celebs
                           </p>
