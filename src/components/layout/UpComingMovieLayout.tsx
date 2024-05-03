@@ -52,7 +52,7 @@ export default function UpComingMovieLayout() {
     return (
         <div className=" min-h-screen cursor-pointer px-2 py-2">
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center py-1 ">
                     <TopBar />
                 </div>
             </div>

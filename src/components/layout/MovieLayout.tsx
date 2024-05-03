@@ -198,7 +198,7 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <FourSwiperRow fourSwiperRowList={movieSimilarList} />
+                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'movie'} />
                             </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">

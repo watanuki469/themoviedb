@@ -1,14 +1,17 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function Charts() {
-
+    let navigate=useNavigate()
     return (
         <div className="pt-2">
             <div>
-                <div className="flex items-center flex-wrap gap-2 font-bold text-xl hover:text-yellow-300">
+                <div
+                onClick={()=>navigate('/')}
+                className="flex items-center flex-wrap gap-2 font-bold text-xl hover:text-yellow-300">
                     <p className="hover:text-black">Top Box Office (US)</p>
                     <i className="fa-solid fa-chevron-right "></i>
                 </div>

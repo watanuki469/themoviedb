@@ -102,13 +102,15 @@ export default function TvPerson({
 
             <div className="text-black mt-5">
 
-                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center">
+                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
                     <div className="font-bold">All Cast & Crew</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 
                 </div>
 
-                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center">
+                <div
+                onClick={()=>navigate('/IMDbPro')}
+                className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
                     <div className="font-bold">Production, box office & more at IMDbPro</div>
                     <i className="fa-solid fa-chevron-right"></i>
                 </div>

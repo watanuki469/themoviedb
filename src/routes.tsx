@@ -1,9 +1,11 @@
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
+import CastCrewLayout from "./components/layout/CastCrewLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import LoginLayout from "./components/layout/LoginLayout";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
+import MovieNewLayout from "./components/layout/MovieNewLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import ProLayout from "./components/layout/ProLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
@@ -100,6 +102,18 @@ const routes = [
     element: <ImageLayout/>,
     state: "image"
   },
+  {
+    path: "/fullcredits/:mediaType/:id",
+    element: <CastCrewLayout/>,
+    state: "fullcredits"
+  },
+  {
+    path: "/movie/news",
+    element: <MovieNewLayout/>,
+    state: "movieNew"
+  },
+  
+  
 
 
   // {

@@ -168,10 +168,10 @@ export default function TvDetail({
                         </div>
                     </div>
                     <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
-                        <div className="hidden lg:block col-span-3 bg-gray-200  h-full">
+                        <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-80">
                             <img src={`https://image.tmdb.org/t/p/w500${singleTvList[0]?.poster_path}`} alt="product images" />
                         </div>
-                        <div className="lg:col-span-7 md:col-span-12 lg:ml-2 bg-black relative hover:opacity-90">
+                        <div className="lg:col-span-7 md:col-span-12 lg:ml-2 bg-black relative hover:opacity-80">
                             <iframe
                                 key={singleTvList[0]?.name}
                                 src={`https://www.youtube.com/embed/${singleTvList[0]?.videos?.results[0]?.key}?controls=0&&autoplay=1`}

@@ -49,7 +49,7 @@ export default function BrowseGenreLayout() {
     };
     return (
         <div className=" min-h-screen cursor-pointer">
-            <div className="bg-black">
+            <div className="bg-black py-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                 </div>
@@ -260,9 +260,9 @@ export default function BrowseGenreLayout() {
                             <div>
                                 <p className="text-gray-500">Create a more specific search using a variety of options and filters</p>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-black items-center text-center mt-2">
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li> 
-                                    <li onClick={() => navigate('/topBoxOffice')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Person</li>
+                                    <li onClick={() => navigate('/search')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
+                                    <li onClick={() => navigate('/search')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li> 
+                                    <li onClick={() => navigate('/search')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Person</li>
                                 </ul>
                             </div>
                         </div>

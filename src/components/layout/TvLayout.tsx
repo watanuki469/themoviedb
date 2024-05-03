@@ -165,7 +165,7 @@ export default function TvLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} />
+                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'tv'} />
                             </div>
 
                             <div className="text-white flex py-2 ">

@@ -527,12 +527,12 @@ export default function Top250MovieLayout() {
                     <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle>
                 </DialogContent>
             </Dialog>
-            <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+            <div className="bg-black pb-1">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white">
+            <div className="bg-white ">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full md:w-screen ">
                         <div className="flex mt-3 ">

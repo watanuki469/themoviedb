@@ -1,13 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import SwiperRow from "../../modules/SwiperRow";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import Footer from "../common/Footer";
-import Slider from "../common/Slider";
-import TopBar from "../common/TopBar";
-import ListRow from "../../modules/ListRow";
-import { toast } from "react-toastify";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { loginApi } from "../../redux/client/api.Login";
+import { useAppDispatch } from "../../redux/hooks";
+import { TextField } from "@mui/material";
 
 export default function LoginLayout() {
     const dispatch = useAppDispatch();
@@ -23,7 +19,6 @@ export default function LoginLayout() {
             toast.error("Email/Password is required!");
             return;
         }
-
         setLoadingAPI(true);
 
         try {
@@ -32,6 +27,7 @@ export default function LoginLayout() {
                 localStorage.setItem("token", (res as any).token);
                 localStorage.setItem("email", email); // Assuming email is defined elsewhere
                 navigate("/");
+                toast.success(`Welcome to Vasiliev movie web, `)
             } else {
                 // Handle unexpected response format
                 toast.error("Unexpected response from server");
@@ -54,47 +50,39 @@ export default function LoginLayout() {
     }
 
     return (
-        <div className=" min-h-screen cursor-pointer py-16">
-            {/* <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
-                    <TopBar />
-                </div>
-            </div> */}
-            <div className="bg-white flex justify-center items-center">
-                <div className="w-full max-w-lg mx-auto ">
-                    <h2 className="text-3xl font-bold mb-4 text-center">Log in</h2>
-                    <div className="mb-4">Email or Username (eve.holt@reqres.in)</div>
-                    <input
+        <div className=" min-h-screen cursor-pointer py-16 px-2 ">
+            <div className="bg-white flex justify-center items-center ">
+                <div className="w-full max-w-lg mx-auto">
+                    <h2 className="text-3xl font-bold mb-4 text-center text-blue-500">Log in</h2>
+                    <div className="mb-4 ">Email or Username (eve.holt@reqres.in)</div>
+                    <TextField
                         type="text"
                         placeholder="Email or Username"
+                        name="email"
+                        fullWidth
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        className="border border-gray-300 rounded-md py-3 px-3 w-full mb-4"
+                        sx={{border:4,borderColor:'blue',borderRadius:2}}
+                        // color="success"
                     />
-
+                    <div className="py-4">Password (12345678)</div>
                     <div className="relative flex-grow input-password mb-4">
-                        <input
-                            type={isShowPassword ? "text" : "password"}
+                        <TextField
+                            type="password"
+                            placeholder="password"
+                            name="password"
+                            fullWidth
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
-                            onKeyDown={(event) => handlePressEnter(event)}
-                            className="w-full py-3 rounded-md  px-3 border-0 pl-3 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            placeholder="Password..."
+                            sx={{border:4,borderColor:'blue',borderRadius:2}}
+                            // color="success"
                         />
-                        <div className="absolute inset-y-0 right-0 flex items-center">
-                            <div className="flex items-center mr-3">
-                                <i
-                                    className={isShowPassword ? "fas fa-eye text-gray-300" : "fas fa-eye-slash text-gray-300"}
-                                    onClick={() => setIsShowPassword(!isShowPassword)}
-                                    style={{ cursor: "pointer" }}
-                                ></i>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div className="flex justify-center">
                         <button
-                            className={`w-full text-center  py-2 px-4 mb-4 rounded-md ${email && password ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+                            className={`w-full text-center font-bold  py-2 px-4 mb-4 rounded-md ${email && password ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
                             disabled={!email || !password}
                             onClick={handleLogin}
                         >
@@ -103,7 +91,7 @@ export default function LoginLayout() {
                     </div>
 
                     <div
-                        className={`w-full py-2 px-4 mb-4 text-center rounded-md bg-gray-300 text-gray-500 hover:bg-gray-200 cursor-not-allowed`}
+                        className={`w-full py-2 px-4 mb-4 text-center rounded-md bg-gray-300 text-gray-500 hover:bg-gray-200 font-bold cursor-not-allowed`}
                     >
                         <span className="mr-1">
                             <i className="fas fa-angle-left"></i>

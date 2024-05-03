@@ -6,14 +6,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface SwiperRowProps {
     searchItemList: any
-    mediaType:any
+    mediaType: any
 }
 
 export default function SwiperRow({
     searchItemList,
     mediaType
 }: SwiperRowProps) {
-   
+
     let navigate = useNavigate()
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
@@ -66,7 +66,7 @@ export default function SwiperRow({
                                     <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                 </div>
                                 <p className="text-yellow-300 font-bold">Rate this</p>
-                                <p className="text-2xl ">{searchItemList[numberIndex]?.original_title ? (searchItemList[numberIndex]?.original_title):(searchItemList[numberIndex]?.title?(searchItemList[numberIndex]?.title):(searchItemList[numberIndex]?.name))}</p>
+                                <p className="text-2xl ">{searchItemList[numberIndex]?.original_title ? (searchItemList[numberIndex]?.original_title) : (searchItemList[numberIndex]?.title ? (searchItemList[numberIndex]?.title) : (searchItemList[numberIndex]?.name))}</p>
                                 <div className="gap-2 px-2 py-2">
                                     <Rating name="customized-10" value={value} size="large"
                                         onChange={(event, newValue) => {
@@ -93,21 +93,22 @@ export default function SwiperRow({
                 spaceBetween={10}
                 slidesPerView={activeSlider}
                 navigation={true}
+                direction="horizontal"
                 modules={[Pagination, Navigation]}
-                className="mySwiper text-white"
+                className="mySwiper flex text-white"
             >
-                {searchItemList.map((item: any, index: any) => {
+                {searchItemList?.map((item: any, index: any) => {
                     return (
-                        <SwiperSlide key={index}>
-                            <div className="w-full h-auto hover:opacity-80"  onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images " className="h-60" />
+                        <SwiperSlide key={index} className="bg-gray-200">
+                            <div className="w-full h-auto hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
+                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images " className="h-60 w-full" />
                             </div>
                             <div className="bg-gray-900">
                                 <div className="mx-3 ">
                                     <div className="flex gap-x-4 items-center ">
                                         <div className="flex items-center space-x-2">
                                             <i className="fas fa-star text-yellow-300"></i>
-                                            <p className="leading-relaxed text-gray-500">{item?.vote_average.toFixed(1)}</p>
+                                            <p className="leading-relaxed text-gray-500">{item?.vote_average?.toFixed(1)}</p>
                                         </div>
                                         <div className="grow ml-auto" onClick={() => handleClick(index)}>
                                             <i className="fa-regular fa-star text-blue-500"></i>
@@ -120,15 +121,15 @@ export default function SwiperRow({
                                         <i className="fas fa-plus mr-2"></i>
                                         <p>Watchlists</p>
                                     </button>
-                                    <button 
-                                    onClick={()=>navigate(`/${mediaType=='movie'?'video':'videoTv'}/${item?.id}`)}
-                                    className="flex items-center px-4 py-2 border rounded-lg w-full justify-center border-none text-white">
+                                    <button
+                                        onClick={() => navigate(`/${mediaType == 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
+                                        className="flex items-center px-4 py-2 border rounded-lg w-full justify-center border-none text-white">
                                         <i className="fa-solid fa-play mr-2"></i>
                                         <p>Trailer</p>
                                     </button>
                                 </div>
                             </div>
-                        </SwiperSlide>
+                        </SwiperSlide>                      
                     )
                 })}
             </Swiper>

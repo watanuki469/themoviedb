@@ -40,14 +40,14 @@ export default function TvStoryLine({
                             <div className="">{tvList[0]?.overview}</div>
                         </div>
                         <div className="flex gap-2 mb-1 flex-wrap">
-                            {tvList[0]?.keywords?.results.slice(0, 5).map((item: any) => (
+                            {tvList[0]?.keywords?.results?.slice(0, 4).map((item: any) => (
                                 <button key={item.id} className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
                                     {item.name}
                                 </button>
                             ))}
-                            {tvList[0]?.keywords?.results[0]?.length > 5 ? (
+                            {tvList[0]?.keywords?.results?.length > 5 ? (
                                 <button className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
-                                    {tvList[0]?.keywords?.keywords?.length - 5} More
+                                    {tvList[0]?.keywords?.results?.length - 5} More
 
                                 </button>
                             ) : (

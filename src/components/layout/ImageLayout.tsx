@@ -143,6 +143,8 @@ export default function ImageLayout() {
     } else if (mediaType === 'tv') {
         mediaImageList = tvImageList;
     }
+    console.log(mediaImageList);
+    
 
     let mediaLength = 0;
     // Xác định danh sách dựa trên mediaType

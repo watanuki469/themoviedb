@@ -45,11 +45,17 @@ export default function TopBar() {
     if (typeof value === "string") {
       localStorage.setItem("language", value);
       setLanguage([value]);
+      window.location.reload();
+      // toast.success('Please reload page to reflect the change')
+
     } else {
       localStorage.setItem("language", value.join(","));
       setLanguage(value);
+      window.location.reload();
+      // toast.success('Please reload page to reflect the change')
     }
   };
+
 
 
   const ITEM_HEIGHT = 48;

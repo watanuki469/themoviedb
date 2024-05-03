@@ -12,6 +12,7 @@ import searchReducer from './reducers/search.reducer'
 import tvReducer from './reducers/tv.reducer'
 import tvImageReducer from './reducers/tvImage.reducer'
 import upComingReducer from './reducers/upComing.reducer'
+import movieNewReducer from './reducers/movieNew.reducer'
 
 export const store = configureStore({
     reducer: {
@@ -27,7 +28,8 @@ export const store = configureStore({
         search: searchReducer,
         tv: tvReducer,
         tvImages: tvImageReducer,
-        upComing: upComingReducer
+        upComing: upComingReducer,
+        movieNew:movieNewReducer
 
     }
 })

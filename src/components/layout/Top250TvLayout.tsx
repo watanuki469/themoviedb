@@ -22,7 +22,8 @@ export default function Top250TvLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
-    console.log(mostPopularTv);
+    const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
+
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
@@ -80,7 +81,7 @@ export default function Top250TvLayout() {
         return genreCounting;
     }
 
-    
+
     useEffect(() => {
         const genreCount = countGenres(mostPopularTv);
         setGenreCount(genreCount);
@@ -131,7 +132,7 @@ export default function Top250TvLayout() {
     }
     const [isRating, setIsRating] = useState(false);
 
-    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular|any>();
+    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular | any>();
     const handleClick = (index: any) => {
         setIsRating(true)
         setSelectedStudent(index);
@@ -524,7 +525,7 @@ export default function Top250TvLayout() {
                     <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle>
                 </DialogContent>
             </Dialog>
-            <div className="bg-black">
+            <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                 </div>
@@ -752,7 +753,6 @@ export default function Top250TvLayout() {
                                     <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
                                 )}
                                 <p>Hide titles you have rated</p>
-
                             </div>
                         </div>
                         <div className="lg:col-span-8 md-col-span-12  w-full ">
@@ -781,16 +781,6 @@ export default function Top250TvLayout() {
 
                                             return hasAllGenres;
                                         })
-                                        // .filter((movie) => {
-                                        //     if (selectedKeys.length === 0) return true; // No key filter
-
-                                        //     // Check if every selected genre is present in the movie's genres
-                                        //     const hasAllGenres = selectedKeys.every((keyword) =>
-                                        //         movie.keywords.some((mGenre) => mGenre.keyword === keyword)
-                                        //     );
-
-                                        //     return hasAllGenres;
-                                        // })
                                         .filter(() => {
                                             if (applyFilter === true) return true; // No filter
                                             return null
@@ -843,7 +833,10 @@ export default function Top250TvLayout() {
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
                                 <div className="lg:max-w-full md:w-screen">
-                                    <ListRow listRowList={mostPopularTv} />
+                                    <a href="/top250Movie">
+                                        <ListRow listRowList={popularMovies} />
+
+                                    </a>
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>

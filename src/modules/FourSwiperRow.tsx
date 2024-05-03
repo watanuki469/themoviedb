@@ -6,10 +6,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface FourSwiperRowProps {
     fourSwiperRowList: any
+    mediaType:any
 }
 
 export default function FourSwiperRow({
     fourSwiperRowList,
+    mediaType
 }: FourSwiperRowProps) {
 
     const [activeSlider, setActiveSlider] = useState(6);
@@ -47,6 +49,10 @@ export default function FourSwiperRow({
         setIsRating(false)
         setNumberIndex(0);
         setValue(0)
+    };
+    const handleClickImg = (id:any) => {
+       window.scrollTo(0,0)
+       navigate(`/${mediaType}/${id}`)
     };
     let navigate=useNavigate()
 
@@ -108,8 +114,10 @@ export default function FourSwiperRow({
                     return (
                         <SwiperSlide key={index} >
                             <div className=" object-cover">
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full"
-                                    onError={handleImageError} />
+                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full hover:opacity-80"
+                                    onError={handleImageError}
+                                    
+                                    onClick={()=>handleClickImg(`${item?.id}`)} />
                             </div>
                             <div className="bg-white shadow-xl text-black">
                                 <div className="mx-3 ">

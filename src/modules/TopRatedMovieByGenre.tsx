@@ -1,8 +1,4 @@
-import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function TopRatedMovieByGenre() {
     const genreMapping = {
@@ -35,7 +31,7 @@ export default function TopRatedMovieByGenre() {
                         Object.values(genreMapping).map(genre => (
                             <div
                             onClick={()=>navigate(`/search?genre=${genre}`)}
-                            className="px-2 py-2 border-2 border-gray-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}</div>
+                            className="px-2 py-2 border-2 border-gray-500 bg-white text-sm rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}</div>
                         ))
                     }
                 </div>

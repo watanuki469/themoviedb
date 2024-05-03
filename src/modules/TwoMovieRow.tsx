@@ -40,7 +40,7 @@ export default function TwoMovieRow({
                 {twoMovieRowList?.map((item: any, index: any) => {
                     return (
                         <SwiperSlide key={index} >
-                            <div className="w-full h-42">
+                            <div className="w-full h-42 hover:opacity-80">
                                 <iframe
                                     key={item.key}
                                     src={`https://www.youtube.com/embed/${item.key}?controls=0&&autoplay=1`}

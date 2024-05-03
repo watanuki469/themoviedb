@@ -51,7 +51,7 @@ export default function SingleMoviePerson({
                 <div className="grid grid-cols-2 gap-4 ">
                     {movieCreditList?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
-                            <div className="h-24 w-24 rounded-full bg-cover mr-4"
+                            <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80"
                                 style={{
                                     backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                 }}
@@ -84,7 +84,7 @@ export default function SingleMoviePerson({
                             <SwiperSlide key={index}>
                                 <div className="w-full h-auto ">
                                     <div key={index} className="items-center justify-center text-center">
-                                        <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center"
+                                        <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center hover:opacity-80"
                                             style={{
                                                 backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                             }}
@@ -139,13 +139,15 @@ export default function SingleMoviePerson({
                         ))}
                     </div>
                 </div>
-                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center">
+                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
                     <div className="font-bold">All Cast & Crew</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 
                 </div>
 
-                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center">
+                <div
+                onClick={()=>navigate('/IMDbPro')}
+                className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
                     <div className="font-bold">Production, box office & more at IMDbPro</div>
                     <i className="fa-solid fa-chevron-right"></i>
                 </div>

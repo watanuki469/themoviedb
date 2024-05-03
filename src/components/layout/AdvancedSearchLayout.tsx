@@ -660,7 +660,7 @@ export default function AdvancedSearchLayout() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-            <div className="bg-black">
+            <div className="bg-black py-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                 </div>

@@ -31,7 +31,8 @@ export default function ListRow({
             <Swiper
                 spaceBetween={2}
                 slidesPerView={activeSlider}
-                className="mySwiper text-white w-full h-auto"
+                direction="horizontal"
+                className="mySwiper text-white w-full h-auto flex"
             >
                 {listRowList?.slice(3).map((item: any, index: any) => (
                     <SwiperSlide key={index} className="w-full h-auto">

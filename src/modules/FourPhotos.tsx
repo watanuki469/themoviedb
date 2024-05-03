@@ -59,7 +59,7 @@ export default function FourPhotos({
                 >
                     {fourPhotosList && Array.isArray(fourPhotosList) && fourPhotosList.map((item: any, index: any) => (
                         <SwiperSlide key={index}>
-                            <div className="w-40 h-40 mx-auto bg-cover items-center justify-center"
+                            <div className="w-40 h-40 mx-auto bg-cover items-center justify-center hover:opacity-80"
                                 style={{
                                     backgroundImage: `url(${item.file_path ? `https://image.tmdb.org/t/p/w200/${item.file_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                 }}>
