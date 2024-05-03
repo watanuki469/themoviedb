@@ -1,5 +1,9 @@
 project using
-api:https://developer.themoviedb.org/
+- api:
++https://developer.themoviedb.org/
++https://reqres.in/
+
+
 
 +vite
 +tailwind

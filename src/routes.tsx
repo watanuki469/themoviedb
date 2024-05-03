@@ -108,7 +108,7 @@ const routes = [
     state: "fullcredits"
   },
   {
-    path: "/movie/news",
+    path: "/news/movie",
     element: <MovieNewLayout/>,
     state: "movieNew"
   },

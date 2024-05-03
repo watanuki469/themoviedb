@@ -1,21 +1,22 @@
+import AppsIcon from '@mui/icons-material/Apps';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import MenuIcon from '@mui/icons-material/Menu';
+import ShareIcon from '@mui/icons-material/Share';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
+import TopNew from "../../modules/TopNew";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import AppsIcon from '@mui/icons-material/Apps';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import Charts from "../../modules/Charts";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import ShareIcon from '@mui/icons-material/Share';
-import { toast } from "react-toastify";
 
 
 export default function Top250MovieLayout() {
@@ -858,6 +859,9 @@ export default function Top250MovieLayout() {
                                 <div className="lg:max-w-full md:w-screen">
                                     <Charts />
                                 </div>
+                            </div>
+                            <div className='py-3'>
+                                <TopNew/>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
