@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axiosTvNew from "../redux/axiosTVNew";
+import axiosTvNew from "../redux/axios/axiosTVNew";
 
 export default function TvNew() {
 

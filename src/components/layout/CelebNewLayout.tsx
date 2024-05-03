@@ -8,20 +8,25 @@ import { fetchAllMovieNew } from "../../redux/client/api.MovieNew";
 import TopBar from "../common/TopBar";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { useAppDispatch } from "../../redux/hooks";
+import axiosTvNew from "../../redux/axios/axiosTVNew";
 
-export default function MovieNewLayout() {
+export default function CelebNewLayout() {
     const [movieNews, setMovieNews] = useState<any[]>([]);
     let navigate = useNavigate()
     const dispatch = useAppDispatch();
-
     useEffect(() => {
         dispatch(setGlobalLoading(true));
-        fetchAllMovieNew()
-            .then((res) => {
-                setMovieNews(res?.data?.news?.edges);
+        axiosTvNew.get('', {
+            params: {
+                category: 'CELEBRITY',
+                first: '20'
+            }
+        })
+            .then((response) => {
+                setMovieNews(response?.data?.news?.edges || []);
             })
             .catch((error) => {
-                console.error("Error fetching data:", error);
+                console.error('Error fetching Tv news:', error);
             });
         setTimeout(() => {
             dispatch(setGlobalLoading(false));

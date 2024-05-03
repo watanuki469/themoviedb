@@ -1,4 +1,4 @@
-import axiosUser from "../axiosUser"
+import axiosUser from "../axios/axiosUser"
 
 const fetchAllUser = (page:any) => {
     return axiosUser.get(`/api/users?page=${page}`)

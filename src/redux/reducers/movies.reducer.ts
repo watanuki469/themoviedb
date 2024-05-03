@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ListMoviesPopular } from '../../components/models/ListMoviesPopular';
-import axiosClient from '../axiosClient';
+import axiosClient from '../axios/axiosClient';
 import { AppDispatch } from "../store";
 const language = localStorage.getItem('language')
 const apiRequests = {

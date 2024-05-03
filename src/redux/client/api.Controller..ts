@@ -1,4 +1,4 @@
-import axiosClient from "../axiosClient"
+import axiosClient from "../axios/axiosClient"
 
 const language = localStorage.getItem('language')
 
@@ -45,7 +45,7 @@ const apiPerson = {
     },
 }
 const apiSearch = {
-    search(mediaType:any,query: any) {
+    search(mediaType: any, query: any) {
         const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=true&language=${language}&page=1`;
         return axiosClient.get(url)
     },
@@ -65,10 +65,10 @@ const apiTvImages = {
 }
 
 const apiUpComing = {
-    upComing(mediaType:any) {
+    upComing(mediaType: any) {
         const url = `${mediaType}/upcoming?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`;
         return axiosClient.get(url)
     },
 }
 
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits ,apiMovieSimilar,apiPerson,apiSearch,apiTv,apiTvImages,apiUpComing}
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing }

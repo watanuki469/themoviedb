@@ -27,8 +27,8 @@ export default function SearchBar() {
     const menuItems = [
         { id: 1, label: 'multi', icon: 'fa-magnifying-glass' },
         { id: 2, label: 'movie', icon: 'fa-sharp fa-solid fa-film' },
-        { id: 3, label: 'tv', icon: ' fa-tv  ' },
-        { id: 4, label: 'person', icon: ' fa-user-group' },
+        { id: 3, label: 'tv', icon: 'fa-tv' },
+        { id: 4, label: 'person', icon: 'fa-user-group' },
     ];
     const anchorRef = useRef(null);
 
@@ -106,7 +106,6 @@ export default function SearchBar() {
                 sx={{ bgcolor: 'white', color: 'black', borderRadius: '0' }}
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
-
             >
                 {mediatype.toString()}
             </Button>
@@ -130,8 +129,8 @@ export default function SearchBar() {
             >
                 {menuItems.map((item: any, index: any) => (
                     <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
-                        <div className='items-start '>
-                            <a key={item.id} href="#" className="text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center" role="menuitem">
+                        <div className='items-start'>
+                            <a key={item.id} href="#" className=" text-gray-700 capitalize hover:bg-gray-100 hover:text-gray-900 flex items-center" role="menuitem">
                                 <i className={`mr-2 fas ${item.icon}`}></i>
                                 {item.label}
                             </a>
@@ -190,15 +189,16 @@ export default function SearchBar() {
                                 >
                                     <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2 "
                                         onClick={() => {
-                                            if (item?.media_type === 'person') {
+                                            if (mediatype === 'person') {
                                                 navigate(`/person/${item.id}`);
-                                            } else if (item?.media_type === "movie") {
+                                            } else if (mediatype=== "movie") {
                                                 navigate(`/movie/${item.id}`);
                                             }
                                             else {
                                                 navigate(`/tv/${item.id}`);
                                             }
                                         }}>
+                                          
                                         <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
                                             className="w-20 h-28"
                                             onError={handleImageError} />

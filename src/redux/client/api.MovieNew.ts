@@ -1,4 +1,4 @@
-import axiosMovieNew from "../axiosMovieNew"
+import axiosMovieNew from "../axios/axiosMovieNew"
 
 const fetchAllMovieNew = () => {
     return axiosMovieNew.get(`get-by-category`)

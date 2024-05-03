@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import FilterIcon from '@mui/icons-material/Filter';
-import axiosTopNew from "../redux/axiosTopNew";
+import axiosTopNew from "../redux/axios/axiosTopNew";
 
 export default function TopNew() {
 

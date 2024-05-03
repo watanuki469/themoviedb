@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import ListRow from "../../modules/ListRow";
 import SwiperRow from "../../modules/SwiperRow";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import Footer from "../common/Footer";
 import Slider from "../common/Slider";
 import TopBar from "../common/TopBar";
-import ListRow from "../../modules/ListRow";
-import { Swiper, SwiperSlide } from "swiper/react";
-import TestLayout from "../common/test";
+import BornToday from "../common/BornToday";
 
 export default function MainLayout() {
     const dispatch = useAppDispatch();
@@ -113,6 +112,15 @@ export default function MainLayout() {
                     <div className="mt-8 overflow-hidden " >
                         <SwiperRow searchItemList={topRatedTv} mediaType={'tv'} />
                     </div>
+
+                    <div className="flex items-center mt-8">
+                        <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                        <h2 className="text-xl font-bold text-white ">Born Today</h2>
+                        <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
+                    </div>
+
+                    <BornToday/>
+                    
                     <div className=" overflow-hidden">
                         <div className="flex items-center mt-12">
                             <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>

@@ -1,6 +1,7 @@
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import CastCrewLayout from "./components/layout/CastCrewLayout";
+import CelebNewLayout from "./components/layout/CelebNewLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import LoginLayout from "./components/layout/LoginLayout";
 import MainLayout from "./components/layout/MainLayout";
@@ -12,6 +13,7 @@ import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
 import TvLayout from "./components/layout/TvLayout";
+import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
@@ -113,6 +115,17 @@ const routes = [
     state: "movieNew"
   },
   
+  {
+    path: "/news/tv",
+    element: <TvNewLayout/>,
+    state: "tvNew"
+  },
+  
+  {
+    path: "/news/celeb",
+    element: <CelebNewLayout/>,
+    state: "celebNew"
+  },
   
 
 

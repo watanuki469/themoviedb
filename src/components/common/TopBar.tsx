@@ -30,14 +30,6 @@ export default function TopBar() {
   const initialLanguage: string[] = languageString ? languageString.split(",") : [];
   const [language, setLanguage] = useState<string[]>(initialLanguage);
 
-  // const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setPersonName(typeof value === "string" ? value.split(",") : value);
-  //   localStorage.setItem("language", personName.join(","));
-  //   setLanguage(personName)
-  // };
   const handleChange = (event: SelectChangeEvent<string | string[]>) => {
     const {
       target: { value },
@@ -122,7 +114,7 @@ export default function TopBar() {
     switch (menu) {
       case 'Movies':
         return ['Release Calendar', 'Most Popular Movies', 'Top Box Office'
-          , 'Showtimes & Ticked', 'Movies News', 'Browse Movie By Genre'];
+          , 'Movies News', 'Browse Movie By Genre'];
       case 'TV Shows':
         return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows', 'TV News'];
       case 'Watch':
@@ -148,10 +140,8 @@ export default function TopBar() {
           navigate('/Popular');
         } else if (item === 'Top Box Office') {
           navigate('/topBoxOffice');
-        } else if (item === 'Showtimes & Ticked') {
-          navigate('/NotFound');
         } else if (item === 'Movies News') {
-          navigate('/NotFound');
+          navigate('/news/movie');
         } else if (item === 'Browse Movie By Genre') {
           navigate('/features/genre');
         } else {
@@ -167,7 +157,7 @@ export default function TopBar() {
         } else if (item === 'Most Popular TV Shows') {
           navigate('/Top250Tv');
         } else if (item === 'TV News') {
-          navigate('/TVNews');
+          navigate('/news/tv');
         } else {
           navigate('/NotFound');
         }
@@ -217,7 +207,7 @@ export default function TopBar() {
         } else if (item === 'Most Popular Celebs') {
           navigate('/PopularCelebs');
         } else if (item === 'Celebrity News') {
-          navigate('/CelebrityNews');
+          navigate('/news/celeb');
         } else {
           navigate('/NotFound');
         }
@@ -347,10 +337,7 @@ export default function TopBar() {
                             Most Popular Movies
                           </p>
                           <p className="mt-2 hover:underline" onClick={() => (navigate('/topBoxOffice'))}>Top Box Office</p>
-                          <p className="mt-2 hover:underline">
-                            Showtime & Ticked
-                          </p>
-                          <p className="mt-2 hover:underline">Movies News</p>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/news/movie'))}>Movies News</p>
                           <p className="mt-2 hover:underline" onClick={() => (navigate('/features/genre'))}>
                             Browse Movie By Genre
                           </p>
@@ -380,7 +367,7 @@ export default function TopBar() {
                           <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">
                             Most Popular TV Shows
                           </p>
-                          <p className="mt-2 hover:underline">TV News</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV News</p>
                         </div>
                       </div>
                     </div>
@@ -433,7 +420,7 @@ export default function TopBar() {
                           <p className="mt-2 hover:underline">
                             Most Popular Celebs
                           </p>
-                          <p className="mt-2 hover:underline">Celebrity News</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/celeb')}>Celebrity News</p>
                         </div>
                       </div>
                     </div>

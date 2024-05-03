@@ -4,10 +4,12 @@ import PageWrapper from "./components/common/PageWrapper";
 import HomePage from "./pages/HomePage";
 import LoginLayout from './components/layout/LoginLayout';
 import { PrivateRoute } from './PrivateRoute';
+import GlobalLoading from './components/common/GlobalLoading';
 
 function App() {
   return (
     <div>
+      <GlobalLoading />
       <Routes>
         <Route path="/login" element={<LoginLayout />}></Route>
         <Route path="/" element={<PrivateRoute />} >
@@ -34,7 +36,6 @@ function App() {
         </Route>
       </Routes>
     </div>
-
   )
 }
 
