@@ -48,8 +48,6 @@ export default function TopBar() {
     }
   };
 
-
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -120,7 +118,7 @@ export default function TopBar() {
       case 'Watch':
         return ['What to Watch', 'Latest Trailers', 'IMDb Originals', 'IMDb Picks', 'IMDb Podcasts'];
       case 'Awards & Events':
-        return ['Oscars', 'Emmys', 'Best Of 2023', 'Holiday Picks', 'Starmeter Awards', 'Awards Central', 'Festival Central', 'All Event'];
+        return ['Oscars', 'Emmys', 'Best Of 2024', 'Holiday Picks', 'Starmeter Awards', 'All Event'];
       case 'Celebs':
         return ['Most Popular Celebs', 'Celebrity News'];
       case 'Community':
@@ -130,8 +128,6 @@ export default function TopBar() {
     }
   };
   const handleItemClick = (item: string) => {
-    console.log(item);
-
     switch (selectedMenu) {
       case 'Movies':
         if (item === 'Release Calendar') {
@@ -184,16 +180,12 @@ export default function TopBar() {
           navigate('/Oscars');
         } else if (item === 'Emmys') {
           navigate('/Emmys');
-        } else if (item === 'Best Of 2023') {
+        } else if (item === 'Best Of 2024') {
           navigate('/BestOf2023');
         } else if (item === 'Holiday Picks') {
           navigate('/HolidayPicks');
         } else if (item === 'Starmeter Awards') {
           navigate('/StarmeterAwards');
-        } else if (item === 'Awards Central') {
-          navigate('/AwardsCentral');
-        } else if (item === 'Festival Central') {
-          navigate('/FestivalCentral');
         } else if (item === 'All Event') {
           navigate('/AllEvent');
         } else {
@@ -203,7 +195,7 @@ export default function TopBar() {
 
       case 'Celebs':
         if (item === 'Most Popular Celebs') {
-          navigate('/PopularCelebs');
+          navigate('/popularCeleb');
         } else if (item === 'Celebrity News') {
           navigate('/news/celeb');
         } else {
@@ -388,11 +380,9 @@ export default function TopBar() {
                         <div className="">
                           <p className="mt-2 hover:underline">Oscars</p>
                           <p className="mt-2 hover:underline">Emmys</p>
-                          <p className="mt-2 hover:underline">Best Of 2023</p>
+                          <p className="mt-2 hover:underline">Best Of 2024</p>
                           <p className="mt-2 hover:underline">Holiday Picks</p>
                           <p className="mt-2 hover:underline">Starmeter Awards</p>
-                          <p className="mt-2 hover:underline">Awards Central</p>
-                          <p className="mt-2 hover:underline">Festival Central</p>
                           <p className="mt-2 hover:underline">All Event</p>
                         </div>
                       </div>
@@ -415,7 +405,7 @@ export default function TopBar() {
                         </div>
                         <div className="">
 
-                          <p className="mt-2 hover:underline">
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/popularCeleb')}>
                             Most Popular Celebs
                           </p>
                           <p className="mt-2 hover:underline" onClick={() => navigate('/news/celeb')}>Celebrity News</p>
@@ -493,7 +483,7 @@ export default function TopBar() {
           <Divider className=" hidden lg:flex" orientation="vertical" sx={{ bgcolor: "red", color: 'white', border: "1px solid gray", height: '20px' }} />
           <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
             <button
-              onClick={() => navigate("/WatchList")}
+              onClick={() => navigate("/IMDbPro")}
               className="flex items-center gap-2"
             >
               <i className="fa-regular fa-bookmark  text-white"></i>

@@ -174,7 +174,7 @@ export default function MovieLayout() {
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">Top Cast</h2>
+                                    <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
@@ -203,7 +203,7 @@ export default function MovieLayout() {
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">Story Line</h2>
+                                    <h2 className="text-2xl font-bold text-black" id="movieTrivia">Story Line</h2>
                                 </div>
                                 <div className="flex items-center ml-auto gap-2" >
                                     <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
@@ -218,7 +218,7 @@ export default function MovieLayout() {
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">User Reviews</h2>
+                                    <h2 className="text-2xl font-bold text-black" id="movieReview">User Reviews</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews.results.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>

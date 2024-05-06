@@ -132,25 +132,37 @@ export default function TvDetail({
                             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         >
-                            <MenuItem onClick={() => toast.success('meow meow')}>
-                                <ListItemIcon>
-                                    <i className="fa-brands fa-facebook text-2xl"></i>
-                                </ListItemIcon>
-                                Facebook
-                            </MenuItem>
-                            <MenuItem onClick={() => toast.success('meow meow')}>
-                                <ListItemIcon>
-                                    <i className="fa-brands fa-twitter text-2xl"></i>
-                                </ListItemIcon>
-                                Twitter
+                            <MenuItem>
+                                <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
+                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
+                                        <ListItemIcon>
+                                            <i className="fa-brands fa-facebook text-2xl"></i>
+                                        </ListItemIcon>
+                                        Facebook
+                                    </a>
+                                </div>
                             </MenuItem>
 
-                            <MenuItem onClick={() => toast.success('meow meow')}>
-                                <ListItemIcon>
-                                    <i className="fa-regular fa-envelope text-2xl"></i>
-                                </ListItemIcon>
-                                Email Link
+                            <MenuItem>
+                                <blockquote className="twitter-tweet items-center">
+                                    <ListItemIcon>
+                                        <i className="fa-brands fa-twitter text-2xl"></i>
+                                    </ListItemIcon>
+                                    <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
+                                        Twitter
+                                    </a>
+                                </blockquote>
                             </MenuItem>
+                            <MenuItem>
+                                <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
+                                    title="Share by Email">
+                                    <ListItemIcon>
+                                        <i className="fa-regular fa-envelope text-2xl"></i>
+                                    </ListItemIcon>
+                                    Email Link
+                                </a>
+                            </MenuItem>
+
                             <MenuItem onClick={handleCopyLink}>
                                 <ListItemIcon>
                                     <i className="fa-solid fa-link text-2xl"></i>

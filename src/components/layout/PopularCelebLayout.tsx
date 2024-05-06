@@ -1,9 +1,8 @@
 import AppsIcon from '@mui/icons-material/Apps';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
+import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -11,17 +10,15 @@ import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
 import TopNew from "../../modules/TopNew";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import axiosBornToday from '../../redux/axios/axiosBornToday';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import axiosBornToday from '../../redux/axios/axiosBornToday';
 
 
 export default function PopularCelebLayout() {
     const dispatch = useAppDispatch();
+    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     let navigate = useNavigate()
     const [movieNews, setMovieNews] = useState<any[]>([]);
     const currentDate = new Date();
@@ -34,6 +31,7 @@ export default function PopularCelebLayout() {
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
     const currentMonthName = monthNames[currentMonth];
+    
 
     useEffect(() => {
         // dispatch(setGlobalLoading(true));        
@@ -488,7 +486,7 @@ export default function PopularCelebLayout() {
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
                                 <div className="lg:max-w-full md:w-screen">
-                                    <ListRow listRowList={movieNews} />
+                                    <ListRow listRowList={topRatedMovies} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>

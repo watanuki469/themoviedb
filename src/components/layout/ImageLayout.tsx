@@ -144,7 +144,7 @@ export default function ImageLayout() {
         mediaImageList = tvImageList;
     }
     console.log(mediaImageList);
-    
+
 
     let mediaLength = 0;
     // Xác định danh sách dựa trên mediaType
@@ -214,6 +214,8 @@ export default function ImageLayout() {
                                     "&:hover": {
                                         background: "rgba(0, 0, 0, 0.35)",
                                     },
+                                    display: activeStep === 0 || mediaLength === 0 ? 'none' : 'inline-flex', // Ẩn khi disabled
+
                                 }}
                             >
                                 <KeyboardArrowLeftIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
@@ -231,6 +233,8 @@ export default function ImageLayout() {
                                     "&:hover": {
                                         background: "rgba(0, 0, 0, 0.35)",
                                     },
+                                    display: activeStep === mediaLength - 1 ? 'none' : 'inline-flex', // Ẩn khi disabled
+
                                 }}
                             >
                                 <KeyboardArrowRightIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
@@ -313,25 +317,37 @@ export default function ImageLayout() {
                                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                     >
-                                        <MenuItem onClick={() => toast.success('meow meow')}>
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-facebook text-2xl"></i>
-                                            </ListItemIcon>
-                                            Facebook
-                                        </MenuItem>
-                                        <MenuItem onClick={() => toast.success('meow meow')}>
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-twitter text-2xl"></i>
-                                            </ListItemIcon>
-                                            Twitter
+                                        <MenuItem>
+                                            <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
+                                                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
+                                                    <ListItemIcon>
+                                                        <i className="fa-brands fa-facebook text-2xl"></i>
+                                                    </ListItemIcon>
+                                                    Facebook
+                                                </a>
+                                            </div>
                                         </MenuItem>
 
-                                        <MenuItem onClick={() => toast.success('meow meow')}>
-                                            <ListItemIcon>
-                                                <i className="fa-regular fa-envelope text-2xl"></i>
-                                            </ListItemIcon>
-                                            Email Link
+                                        <MenuItem>
+                                            <blockquote className="twitter-tweet items-center">
+                                                <ListItemIcon>
+                                                    <i className="fa-brands fa-twitter text-2xl"></i>
+                                                </ListItemIcon>
+                                                <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
+                                                    Twitter
+                                                </a>
+                                            </blockquote>
                                         </MenuItem>
+                                        <MenuItem>
+                                            <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
+                                                title="Share by Email">
+                                                <ListItemIcon>
+                                                    <i className="fa-regular fa-envelope text-2xl"></i>
+                                                </ListItemIcon>
+                                                Email Link
+                                            </a>
+                                        </MenuItem>
+
                                         <MenuItem onClick={handleCopyLink}>
                                             <ListItemIcon>
                                                 <i className="fa-solid fa-link text-2xl"></i>
@@ -365,10 +381,10 @@ export default function ImageLayout() {
                                                 />
                                             </div>
                                         )}
-                                    <button onClick={toggleContentVisibility} className={`absolute top-96 right-20 p-2 mt-6 border-2 border-white px-2 py-2 rounded-full h-12 w-12 text-white bg-black z-20 ${isContentVisible ? 'hidden' : ''}`}>
+                                    <button onClick={toggleContentVisibility} className={`absolute top-96 right-20 p-2 mt-6 border-2 border-white px-2 py-2 rounded-full h-12 w-12 text-white bg-black z-20 hover:text-yellow-300 ${isContentVisible ? 'hidden' : ''}`}>
                                         <i className="fa-solid fa-circle-info"></i>
                                     </button>
-                                    <button onClick={toggleContentVisibility} className={`absolute top-96 right-20 mt-6 p-2 border-2 border-white px-2 py-2 rounded-full  h-12 w-12 bg-black text-white z-20 ${isContentVisible ? '' : 'hidden'}`}>
+                                    <button onClick={toggleContentVisibility} className={`absolute top-96 right-20 mt-6 p-2 border-2 border-white px-2 py-2 rounded-full  h-12 w-12 bg-black hover:text-yellow-300  text-white z-20 ${isContentVisible ? '' : 'hidden'}`}>
                                         <i className="fa-solid fa-xmark"></i>
                                     </button>
 
@@ -381,13 +397,19 @@ export default function ImageLayout() {
                                                     <div className='text-blue-500 flex gap-2 flex-wrap'>
                                                         <p className=''>
                                                             {mediaType != 'person' ? (
-                                                                <div>
-                                                                    {mediaList[0]?.credits?.cast[activeStep]?.original_name}  < span className='text-white'>as</span> {mediaList[0]?.credits?.cast[activeStep]?.character}
+                                                                <div >
+                                                                    <span className='hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.credits?.cast[activeStep]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.original_name} </span>
+                                                                    < span className='text-white'>as</span>
+                                                                    <span className=''>  {mediaList[0]?.credits?.cast[activeStep]?.character}</span>
 
                                                                 </div>
                                                             ) : (
-                                                                <div>
-                                                                    {mediaList[0]?.name} < span className='text-white'>in</span> {mediaList[0]?.combined_credits?.cast[activeStep]?.original_title} ({mediaList[0]?.combined_credits?.cast[activeStep]?.release_date?.slice(0, 4)})
+                                                                <div >
+                                                                    <span className='hover:underline'>  {mediaList[0]?.name}</span>
+                                                                    <span className='text-white p-2'>in</span>
+                                                                    <span className='hover:underline' onClick={() => navigate(`/${mediaList[0]?.combined_credits?.cast[activeStep]?.media_type}/${mediaList[0]?.combined_credits?.cast[activeStep]?.id}`)}>
+                                                                        {mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}
+                                                                    </span> ({mediaList[0]?.combined_credits?.cast[activeStep]?.release_date?.slice(0, 4)})
                                                                 </div>
                                                             )}
                                                         </p>
@@ -401,13 +423,13 @@ export default function ImageLayout() {
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>People
-                                                                        <span className='text-blue-500'> {mediaList[0]?.credits?.cast[activeStep]?.original_name}</span>
+                                                                        <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.original_name}</span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
                                                                 <div className=''>
                                                                     <p>People
-                                                                        <span className='text-blue-500'>{mediaList[0]?.combined_credits?.cast[activeStep]?.character}</span>
+                                                                        <span className='text-blue-500 ml-3 hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.character}</span>
                                                                     </p>
                                                                 </div>
                                                             )}
@@ -417,14 +439,14 @@ export default function ImageLayout() {
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}> {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}> {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}
                                                                         </span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}</span>
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}</span>
                                                                     </p>
                                                                 </div>
                                                             )}
@@ -437,13 +459,13 @@ export default function ImageLayout() {
                                                                 {mediaType != 'person' ? (
                                                                     <div className=''>
                                                                         <div>People
-                                                                            <span className='text-blue-500'>  {mediaList[0]?.credits?.cast[activeStep]?.original_name} </span>
+                                                                            <span className='text-blue-500 ml-3 hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>  {mediaList[0]?.credits?.cast[activeStep]?.original_name} </span>
                                                                         </div>
                                                                     </div>
                                                                 ) : (
                                                                     <div className=''>
                                                                         <div>People
-                                                                            <span className='text-blue-500'>{mediaList[0]?.combined_credits?.cast[activeStep]?.character}</span>
+                                                                            <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.character}</span>
                                                                         </div>
                                                                     </div>
                                                                 )}
@@ -455,13 +477,13 @@ export default function ImageLayout() {
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}> {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</span>
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}> {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}</span>
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaList[0]?.combined_credits?.cast[activeStep]?.media_type}/${mediaList[0]?.combined_credits?.cast[activeStep]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}</span>
                                                                     </p>
                                                                 </div>
                                                             )}
@@ -495,7 +517,7 @@ export default function ImageLayout() {
                                                     <div className='w-full px-2'>
                                                         <div className='flex items-center '
                                                             onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id} `)}>
-                                                            <p className='py-2 flex-grow hover:text-blue-500'>{mediaList[0]?.original_title?mediaList[0]?.original_title:mediaList[0]?.original_name} ({mediaList[0]?.release_date?mediaList[0]?.release_date?.slice(0, 4):mediaList[0]?.first_air_date?.slice(0,4)})</p>
+                                                            <p className='py-2 flex-grow hover:text-blue-500'>{mediaList[0]?.original_title ? mediaList[0]?.original_title : mediaList[0]?.original_name} ({mediaList[0]?.release_date ? mediaList[0]?.release_date?.slice(0, 4) : mediaList[0]?.first_air_date?.slice(0, 4)})</p>
                                                             <i className="fa-solid fa-chevron-right ml-auto text-gray-200 hover:text-yellow-300"></i>
                                                         </div>
                                                         <div className='border-t-2 border-gray py-2'>
