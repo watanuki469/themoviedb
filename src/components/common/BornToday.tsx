@@ -81,12 +81,19 @@ export default function BornToday() {
                                             backgroundImage: `url(${item?.primaryImage?.imageUrl})`
                                         }}
                                         onClick={() => navigate(`/search?title=${item?.nameText?.text}`)}
-                                        >
+                                    >
                                     </div>
 
                                     <div className="">
                                         <p className="text-white">{item?.nameText?.text}</p>
-                                        <p className="">Age: {currentYear-item?.birthDateComponents?.dateComponents?.year}</p>
+                                        {item?.birthDateComponents?.dateComponents?.year ? (
+                                            <p className="">Age: {currentYear - item?.birthDateComponents?.dateComponents?.year}</p>
+
+                                        ) : (
+                                            <div>
+                                            </div>
+                                        )
+                                        }
                                     </div>
                                 </div>
                             </div>

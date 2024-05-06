@@ -104,7 +104,9 @@ export default function PopularCelebLayout() {
 
                                                 ))}
                                             </div>
-                                            <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'>
+                                            <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'
+                                             onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
+                                            >
                                                 <p> {movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}</p>
                                                 <p>({movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.releaseYear?.year})</p>
                                             </div>
@@ -137,10 +139,14 @@ export default function PopularCelebLayout() {
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
 
-                                                <div className="h-12 w-full ">
+                                                <div className="h-12 w-full"
+                                                
+                                                >
                                                     <p className="hover:opacity-50 line-clamp-2">  {movie?.nameText?.text}</p>
                                                 </div>
-                                                <div className='text-blue-500'>
+                                                <div className='text-blue-500'
+                                                 onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
+                                                >
                                                     <p className='h-12 hover:underline'> {movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}</p>
                                                     <p className='h-12 hover:underline py-2'>({movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.releaseYear?.year})</p>
                                                 </div>
@@ -178,7 +184,9 @@ export default function PopularCelebLayout() {
 
                                                 ))}
                                             </div>
-                                            <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'>
+                                            <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'
+                                             onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
+                                            >
                                                 <p> {movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}</p>
                                                 <p>({movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.releaseYear?.year})</p>
                                             </div>

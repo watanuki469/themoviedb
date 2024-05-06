@@ -111,7 +111,9 @@ export default function PersonCredit({
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4 px-2 py-2 text-center items-center">
-                                        <button className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-80 px-2 py-2 gap-2">
+                                        <button
+                                         onClick={()=>navigate(`/IMDbPro`)}
+                                        className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-80 px-2 py-2 gap-2">
                                             <p><i className="fa-solid fa-play"></i></p>
                                             <p>Watchlist</p>
                                         </button>

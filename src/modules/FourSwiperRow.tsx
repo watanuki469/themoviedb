@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface FourSwiperRowProps {
     fourSwiperRowList: any
-    mediaType:any
+    mediaType: any
 }
 
 export default function FourSwiperRow({
@@ -32,7 +32,7 @@ export default function FourSwiperRow({
     }, []);
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
@@ -50,11 +50,11 @@ export default function FourSwiperRow({
         setNumberIndex(0);
         setValue(0)
     };
-    const handleClickImg = (id:any) => {
-       window.scrollTo(0,0)
-       navigate(`/${mediaType}/${id}`)
+    const handleClickImg = (id: any) => {
+        window.scrollTo(0, 0)
+        navigate(`/${mediaType}/${id}`)
     };
-    let navigate=useNavigate()
+    let navigate = useNavigate()
 
 
     return (
@@ -116,8 +116,8 @@ export default function FourSwiperRow({
                             <div className=" object-cover">
                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full hover:opacity-80"
                                     onError={handleImageError}
-                                    
-                                    onClick={()=>handleClickImg(`${item?.id}`)} />
+
+                                    onClick={() => handleClickImg(`${item?.id}`)} />
                             </div>
                             <div className="bg-white shadow-xl text-black">
                                 <div className="mx-3 ">
@@ -133,7 +133,9 @@ export default function FourSwiperRow({
                                     <div className="h-12 mt-2">
                                         <p className="line-clamp-2"> {item.title ? item.title : item.name}</p>
                                     </div>
-                                    <button className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
+                                    <button
+                                        onClick={() => navigate(`/IMDbPro`)}
+                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
                                         <i className="fas fa-plus mr-2"></i>
                                         <p>Watchlists</p>
                                     </button>

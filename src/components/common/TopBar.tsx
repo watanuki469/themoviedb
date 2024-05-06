@@ -177,19 +177,19 @@ export default function TopBar() {
 
       case 'Awards & Events':
         if (item === 'Oscars') {
-          navigate('/Oscars');
+          navigate('/');
         } else if (item === 'Emmys') {
-          navigate('/Emmys');
+          navigate('/');
         } else if (item === 'Best Of 2024') {
-          navigate('/BestOf2023');
+          navigate('/');
         } else if (item === 'Holiday Picks') {
-          navigate('/HolidayPicks');
+          navigate('/');
         } else if (item === 'Starmeter Awards') {
-          navigate('/StarmeterAwards');
+          navigate('/');
         } else if (item === 'All Event') {
-          navigate('/AllEvent');
+          navigate('/');
         } else {
-          navigate('/NotFound');
+          navigate('/');
         }
         break;
 
@@ -205,13 +205,13 @@ export default function TopBar() {
 
       case 'Community':
         if (item === 'Help Center') {
-          navigate('/HelpCenter');
+          navigate('/');
         } else if (item === 'Contributor Zone') {
-          navigate('/ContributorZone');
+          navigate('/');
         } else if (item === 'Polls') {
-          navigate('/Polls');
+          navigate('/');
         } else {
-          navigate('/NotFound');
+          navigate('/');
         }
         break;
       default:
@@ -377,7 +377,7 @@ export default function TopBar() {
                         <div className="aligns-start text-black">
                           <i className="fa-solid fa-film "></i>
                         </div>
-                        <div className="">
+                        <div className="cursor-not-allowed ">
                           <p className="mt-2 hover:underline">Oscars</p>
                           <p className="mt-2 hover:underline">Emmys</p>
                           <p className="mt-2 hover:underline">Best Of 2024</p>
@@ -428,7 +428,7 @@ export default function TopBar() {
                         <div className="aligns-start text-black">
                           <i className="fa-solid fa-film "></i>
                         </div>
-                        <div className="">
+                        <div className="cursor-not-allowed">
                           <p className="mt-2 hover:underline">What to Watch</p>
                           <p className="mt-2 hover:underline">Latest Trailers</p>
                           <p className="mt-2 hover:underline">IMDb Originals</p>
@@ -454,7 +454,7 @@ export default function TopBar() {
                         <div className="aligns-start text-black">
                           <i className="fa-solid fa-film "></i>
                         </div>
-                        <div className="">
+                        <div className="cursor-not-allowed">
                           <p className="mt-2 hover:underline">Help Center</p>
                           <p className="mt-2 hover:underline">Contributor Zone</p>
                           <p className="mt-2 hover:underline">Polls</p>

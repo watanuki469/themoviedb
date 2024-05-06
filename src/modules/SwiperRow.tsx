@@ -117,7 +117,9 @@ export default function SwiperRow({
                                     <div className="h-12 mt-2">
                                         <p className="line-clamp-2">{index}. {item.title ? item.title : item.name}</p>
                                     </div>
-                                    <button className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
+                                    <button 
+                                     onClick={()=>navigate(`/IMDbPro`)}
+                                    className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
                                         <i className="fas fa-plus mr-2"></i>
                                         <p>Watchlists</p>
                                     </button>
