@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '../../redux/hooks';
 import SearchBar from "./SearchBar";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 
 export default function TopBar() {
   const dispatch = useAppDispatch();
@@ -24,39 +26,6 @@ export default function TopBar() {
 
   const handleCloseDialogClick = () => {
     setOpen(false);
-  };
-
-  const languageString = localStorage.getItem('language');
-  const initialLanguage: string[] = languageString ? languageString.split(",") : [];
-  const [language, setLanguage] = useState<string[]>(initialLanguage);
-
-  const handleChange = (event: SelectChangeEvent<string | string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    if (typeof value === "string") {
-      localStorage.setItem("language", value);
-      setLanguage([value]);
-      window.location.reload();
-      // toast.success('Please reload page to reflect the change')
-
-    } else {
-      localStorage.setItem("language", value.join(","));
-      setLanguage(value);
-      window.location.reload();
-      // toast.success('Please reload page to reflect the change')
-    }
-  };
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
   };
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -251,6 +220,43 @@ export default function TopBar() {
     }
 
     return color;
+  };
+  const menuItems = [
+    { id: 1, label: 'en-US', name: 'English' },
+    { id: 2, label: 'vn-VI', name: 'Vietnamese' },
+    { id: 3, label: 'ja-JP', name: 'Japanese' },
+    { id: 4, label: 'fr-FR', name: 'French' },
+    { id: 4, label: 'de-DE', name: 'German' },
+    { id: 4, label: 'hi-IN', name: 'Hindi' },
+    { id: 4, label: 'id-ID', name: 'Indonesian' },
+    { id: 4, label: 'it-IT', name: 'Italian' },
+    { id: 4, label: 'ko-KR', name: 'Korean' },
+  ];
+
+  const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
+  const [mediatype, setMediaType] = useState('multi');
+  useEffect(() => {
+    const languageString = localStorage.getItem('language');
+    if (languageString) {
+      setMediaType(languageString);
+    }
+  }, []);;
+
+  const openUser = Boolean(anchorUserEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorUserEl(event.currentTarget);
+  };
+  const handleClose = (index: any) => {
+    setAnchorUserEl(null);
+    setMediaType(index)
+    if (typeof index === "string") {
+      localStorage.setItem("language", index);
+      window.location.reload();
+
+    } else {
+      localStorage.setItem("language", index.join(","));
+      window.location.reload();
+    }
   };
 
 
@@ -467,7 +473,7 @@ export default function TopBar() {
 
           </Dialog.Root>
           <div className="grow ">
-            <div className=" hidden lg:flex w-full z-20">
+            <div className=" hidden lg:flex bg-white w-full z-20">
               <SearchBar />
             </div>
           </div>
@@ -491,57 +497,56 @@ export default function TopBar() {
               </p>
             </button>
           </div>
-          {/*change language  */}
-          <Button sx={{ display: { xs: "none", md: "flex" } }}>
-            <FormControl
-              sx={{
-                bgcolor: "black", color: "red", fontWeight: "extrabold", textAlign: "center", alignContent: "center", alignItems: "center",
-              }}
-            >
-              <Select
-                label="Agel"
-                value={language}
-                onChange={handleChange}
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
-                variant="standard"
-                sx={{
-                  "& .MuiSelect-icon": {
-                    color: "white", // Thay đổi màu của mũi tên hướng xuống thành màu đỏ
-                  },
-                  "& .MuiSelect-select.MuiSelect-select": {
-                    color: "white", // Thay đổi màu của mục đã chọn thành màu xanh
-                    fontWeight: "bold",
-                  },
-                  mt: "3px",
-                }}
-              >
-                <MenuItem value="language" disabled>
-                  Language
-                </MenuItem>
-                <MenuItem value="en-US">English </MenuItem>
-                <MenuItem value="vn-VI">Vietnamese</MenuItem>
-                <MenuItem value="ja-JP">Japanese</MenuItem>
-                <MenuItem value="fr-FR">French </MenuItem>
-                <MenuItem value="de-DE">German</MenuItem>
-                <MenuItem value="hi-IN">Hindi</MenuItem>
-                <MenuItem value="id-ID">Indonesian </MenuItem>
-                <MenuItem value="it-IT">Italian</MenuItem>
-                <MenuItem value="ko-KR">Korean</MenuItem>
-              </Select>
-            </FormControl>
-          </Button>
+
           <div className="lg:hidden text-white " >
             <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
           </div>
-          {/* <button
-            onClick={() => navigate("/")}
-            className="text-white text-center border-none 
-              whitespace-nowrap hover:bg-black hover:text-blue-500
-              text-xl font-extrabold px-2 py-2 hover:border-red-500  rounded-md"
+          {/*change language */}
+          <Button
+            id="demo-customized-button"
+            aria-controls={openUser ? 'demo-customized-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={openUser ? 'true' : undefined}
+            sx={{
+              bgcolor: 'black',fontWeight:'extrabold', color: 'white', borderRadius: '0', display: { xs: "none", md: "flex" },
+              '&:hover': {
+                opacity: '80%'
+              }
+            }}
+            onClick={handleClick}
+            endIcon={<KeyboardArrowDownIcon />}
           >
-           {email}
-          </button> */}
+            {mediatype.toString().slice(0, 2)}
+          </Button>
+          <Menu
+            elevation={0}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            id="demo-customized-menu"
+            MenuListProps={{
+              'aria-labelledby': 'demo-customized-button',
+            }}
+            anchorEl={anchorUserEl}
+            open={openUser}
+            onClose={() => setAnchorUserEl(null)}
+          >
+            {menuItems.map((item: any, index: any) => (
+              <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
+                <div className='items-start'>
+                  <a key={item.id} href="#" className=" text-gray-700 capitalize flex items-center" role="menuitem">
+                    {item.name}
+                  </a>
+                </div>
+              </MenuItem>
+            ))}
+          </Menu>
+
           <IconButton
             onClick={handleShareClick}
             size="small"
@@ -603,7 +608,6 @@ export default function TopBar() {
             <div className='hover:text-yellow-300'>
               <MenuItem onClick={handleCopyLink}>
                 <ListItemIcon>
-                  {/* <i className="fa-solid fa-link text-2xl text-white"></i> */}
                   <i className="fa-solid fa-cat text-2xl "></i>
                 </ListItemIcon>
                 <p>Logout</p>
@@ -612,19 +616,15 @@ export default function TopBar() {
 
 
           </Menu>
-          <button
-            onClick={() => navigate("/")}
-            className=" bg-yellow-400 text-black text-center 
-          border-none font-bold text-sm h-10 rounded-lg font-sans
-            whitespace-nowrap hover:bg-black hover:text-blue-500
-             lg:hidden hover:border-red-500 "
+          <button onClick={() => navigate("/")}
+            className=" bg-yellow-400 text-black text-center border-none font-bold text-sm h-10 rounded-lg font-sans
+            whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2"
           >
             Use App
           </button>
         </div >
       )
       }
-
 
       {/* drawer */}
       <div

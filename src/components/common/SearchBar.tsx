@@ -30,6 +30,8 @@ export default function SearchBar() {
         { id: 3, label: 'tv', icon: 'fa-tv' },
         { id: 4, label: 'person', icon: 'fa-user-group' },
     ];
+  
+
     const anchorRef = useRef(null);
 
     const [open, setOpen] = useState(false);
@@ -39,7 +41,6 @@ export default function SearchBar() {
     const handleClose = (index: any) => {
         setAnchorUserEl(null);
         setMediaType(index)
-
     };
 
     const fetchSearch = () => (dispatch: AppDispatch) => {
@@ -121,7 +122,7 @@ export default function SearchBar() {
                 }}
                 anchorEl={anchorUserEl}
                 open={openUser}
-                onClose={()=>setAnchorUserEl(null)}
+                onClose={() => setAnchorUserEl(null)}
             >
                 {menuItems.map((item: any, index: any) => (
                     <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
@@ -187,14 +188,14 @@ export default function SearchBar() {
                                         onClick={() => {
                                             if (mediatype === 'person') {
                                                 navigate(`/person/${item.id}`);
-                                            } else if (mediatype=== "movie") {
+                                            } else if (mediatype === "movie") {
                                                 navigate(`/movie/${item.id}`);
                                             }
                                             else {
                                                 navigate(`/tv/${item.id}`);
                                             }
                                         }}>
-                                          
+
                                         <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
                                             className="w-20 h-28"
                                             onError={handleImageError} />
