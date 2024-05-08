@@ -46,6 +46,10 @@ export default function PersonDetail({
                 console.error('Error copying link:', error);
             });
     };
+    const handleImageError = (e: any) => {
+        const imgElement = e.currentTarget as HTMLImageElement;
+        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+    };
     return (
         <section className="" style={{
             position: "relative",
@@ -59,7 +63,6 @@ export default function PersonDetail({
                     backgroundSize: "cover", backgroundPosition: "center",
                     backgroundColor: 'black'
                 }}>
-
                 </div>
 
                 <div style={{ position: "relative", zIndex: "1" }}>
@@ -73,10 +76,7 @@ export default function PersonDetail({
                         <div className=" py-2 hidden lg:block ">•</div>
                         <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personVideos')}>Videos</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block hover:underline" onClick={() => navigate('/IMDbPro')}>IMDbPro</button>
-                        {/* <button className="py-2 px-3 border-r border-gray-400 flex items-center gap-2">
-                            <i className="fa-solid fa-icons"></i>
-                            <p>All Topic</p>
-                        </button> */}
+                        
                         <IconButton
                             onClick={handleShareClick}
                             size="small"
@@ -177,7 +177,10 @@ export default function PersonDetail({
                     </div>
                     <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
                         <div className="hidden lg:block col-span-3 bg-gray-200  h-full">
-                            <img src={`https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}`} alt="product images" />
+                            <img
+                                src={`https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}`}
+                                onError={handleImageError}
+                                alt="product1 images" />
                         </div>
                         <div className="lg:col-span-7 md:col-span-12 lg:ml-2 bg-black relative"
                             onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}>
@@ -215,7 +218,7 @@ export default function PersonDetail({
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden">
                             <div onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}
-                                className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -226,7 +229,7 @@ export default function PersonDetail({
                                 </div>
                             </div>
                             <div onClick={() => navigate(`/image/person/${singleMovieList[0]?.id}`)}
-                                className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -317,7 +320,7 @@ export default function PersonDetail({
                         </div>
                         <div className='grid grid-cols-3 gap-1 mt-2' >
                             <div>
-                                <img src={`https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}`} alt="product images" />
+                                <img onError={handleImageError} src={`https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}`} alt="product2 images" />
                             </div>
                             <div className='col-span-2 px-2 '>
                                 <div>

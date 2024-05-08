@@ -108,12 +108,12 @@ export default function PersonLayout() {
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 id="personalDetails" className="text-2xl font-bold text-black ">Personal details</h2>
                                     </div>
-                                    <div className="flex items-center ml-auto gap-2 hover:bg-gray-300 px-2 py-2" >
+                                    {/* <div className="flex items-center ml-auto gap-2 hover:bg-gray-300 px-2 py-2" >
                                         <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
                                         <p className="flex items-center text-2xl font-bold text-black ">
                                             Edit
                                         </p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <PersonDetailExternal personDetailExList={personList} />
                             </div>

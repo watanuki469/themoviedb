@@ -23,6 +23,8 @@ export default function TopBar() {
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
+
 
   const handleCloseDialogClick = () => {
     setOpen(false);
@@ -38,6 +40,9 @@ export default function TopBar() {
       if (isLargeScreen && isDrawerOpen) {
         setOpen(!open);
         setIsDrawerOpen(!isDrawerOpen);
+      }
+      else if (isLargeScreen && anchorUserEl!=null) {
+        setAnchorUserEl(null);
       }
       else if (!isLargeScreen && open) {
         setOpen(!open);
@@ -233,8 +238,7 @@ export default function TopBar() {
     { id: 4, label: 'ko-KR', name: 'Korean' },
   ];
 
-  const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
-  const [mediatype, setMediaType] = useState('multi');
+  const [mediatype, setMediaType] = useState('EN');
   useEffect(() => {
     const languageString = localStorage.getItem('language');
     if (languageString) {

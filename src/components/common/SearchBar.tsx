@@ -8,8 +8,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setListSearch } from "../../redux/reducers/search.reducer";
 import { AppDispatch } from "../../redux/store";
 
-
-
 interface MenuItem {
     id: number;
     label: string;
@@ -30,7 +28,7 @@ export default function SearchBar() {
         { id: 3, label: 'tv', icon: 'fa-tv' },
         { id: 4, label: 'person', icon: 'fa-user-group' },
     ];
-  
+
 
     const anchorRef = useRef(null);
 
@@ -68,11 +66,11 @@ export default function SearchBar() {
         }
         function handleResize() {
             const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
-            if (isLargeScreen && open) {
-                setOpen(false);
+            if (isLargeScreen && anchorUserEl != null) {
+                setAnchorUserEl(null);
             }
-            else if (!isLargeScreen && open) {
-                setOpen(false);
+            else if (!isLargeScreen && anchorUserEl != null) {
+                setAnchorUserEl(null);
             }
         }
 
@@ -184,18 +182,26 @@ export default function SearchBar() {
                             {searchList[0]?.results?.map((item: any, index: any) => (
                                 <div className="mt-1" key={index}
                                 >
-                                    <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2 "
+                                    <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
                                         onClick={() => {
-                                            if (mediatype === 'person') {
-                                                navigate(`/person/${item.id}`);
-                                            } else if (mediatype === "movie") {
-                                                navigate(`/movie/${item.id}`);
-                                            }
-                                            else {
-                                                navigate(`/tv/${item.id}`);
+                                            if (mediatype === 'multi') {
+                                                if (item?.media_type === 'person') {
+                                                    navigate(`/person/${item.id}`);
+                                                } else if (item?.media_type === "movie") {
+                                                    navigate(`/movie/${item.id}`);
+                                                } else {
+                                                    navigate(`/tv/${item.id}`);
+                                                }
+                                            } else {
+                                                if (mediatype === 'person') {
+                                                    navigate(`/person/${item.id}`);
+                                                } else if (mediatype === "movie") {
+                                                    navigate(`/movie/${item.id}`);
+                                                } else {
+                                                    navigate(`/tv/${item.id}`);
+                                                }
                                             }
                                         }}>
-
                                         <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
                                             className="w-20 h-28"
                                             onError={handleImageError} />
@@ -206,8 +212,7 @@ export default function SearchBar() {
                                             )}
                                             <div className="items-center flex flex-wrap  ">
                                                 <p>
-                                                    {item?.known_for_department}, {item?.known_for?.[0]?.title} (
-                                                    {item?.known_for?.[0]?.release_date?.slice(0, 4)})
+                                                    {item?.known_for_department}
                                                 </p>
                                             </div>
                                         </div>
@@ -218,7 +223,7 @@ export default function SearchBar() {
                     </Fade>
                 )}
             </Popper>
-        </div>
+        </div >
 
     )
 }

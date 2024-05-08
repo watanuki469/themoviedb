@@ -16,7 +16,7 @@ export default function TvReview({
     return (
         <section className=" md:grid lg:py-4  lg:px-4 md:py-0 md:px-0">
             <div className="text-black font-sans " >
-                <div style={{ position: "relative"}}>
+                <div style={{ position: "relative" }}>
                     <div className="bg-white shadow-sm shadow-black w-full py-4 px-4 ">
                         <div className="text-black flex py-4 ">
                             <div className="flex items-center">
@@ -43,7 +43,7 @@ export default function TvReview({
                             </div>
                         </div>
                         <div>
-                            {singleTvList[0]?.reviews.results.slice(0, 1).map((item: any, index: any) => (
+                            {singleTvList[0]?.reviews?.results?.slice(0, 1).map((item: any, index: any) => (
                                 <div className='flex text-black' key={index}>
                                     <div>
                                         <div className='font-bold text-xl'>A review by {item.author}</div>
@@ -57,25 +57,40 @@ export default function TvReview({
                             ))}
                         </div>
                         <div>
-                            <div className=' flex py-2 px-1 mt-1'>
-                                <div className='flex items-center gap-1 h-full'>
-                                    <i className="fa-solid fa-thumbs-up text-xl"></i>
-                                    <div>helpful</div>
-                                    <div>•</div>
-                                    <div>79</div>
-                                    <i className="fa-solid fa-thumbs-up fa-rotate-180 ml-2 text-xl"></i>
-                                    <div>12</div>
+                            {singleTvList[0]?.reviews?.results?.length > 0 ? (
+                                <div>
+                                    <div className=' flex py-2 px-1 mt-1'>
+                                        <div className='flex items-center gap-1 h-full'>
+                                            <i className="fa-solid fa-thumbs-up text-xl"></i>
+                                            <div>helpful</div>
+                                            <div>•</div>
+                                            <div>79</div>
+                                            <i className="fa-solid fa-thumbs-up fa-rotate-180 ml-2 text-xl"></i>
+                                            <div>12</div>
+                                        </div>
+                                        <div className='ml-auto'>
+                                            <MoreVertIcon></MoreVertIcon>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className='ml-auto'>
-                                    <MoreVertIcon></MoreVertIcon>
-                                </div>
-                            </div>
+                            )
+                                : (<div>
+
+                                </div>)}
+
                         </div>
                     </div>
-                    <div className='flex gap-2 px-2 py-2'>
-                        <p className='text-blue-500'>{singleTvList[0]?.reviews?.results[0]?.author}</p>
-                        <p>•</p>
-                        <p>{singleTvList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
+                    <div className=''>
+                        {singleTvList[0]?.reviews?.results?.length > 0 ? (
+                            <div  className='flex gap-2 px-2 py-2'>
+                                <p className='text-blue-500'>{singleTvList[0]?.reviews?.results[0]?.author}</p>
+                                <p>•</p>
+                                <p>{singleTvList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
+                            </div>
+                        ) : (
+                            <div>
+                            </div>
+                        )}
 
                     </div>
 

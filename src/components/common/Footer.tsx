@@ -4,11 +4,21 @@ export default function Footer() {
             <div className="container mx-auto px-4">
                 <div className="flex justify-center items-center mb-2  text-white">
                     <div className="flex space-x-10 ">
-                        <i  className="hover:text-yellow-300 fa-brands fa-tiktok"></i>
-                        <i  className="hover:text-yellow-300 fa-brands fa-instagram"></i>
-                        <i  className="hover:text-yellow-300 fa-brands fa-twitter"></i>
-                        <i  className="hover:text-yellow-300 fa-brands fa-youtube"></i>
-                        <i  className="hover:text-yellow-300 fa-brands fa-facebook"></i>
+                        <a href="https://www.tiktok.com/@imdb">
+                            <i className="hover:text-yellow-300 fa-brands fa-tiktok"></i>
+                        </a>
+                        <a href="https://www.instagram.com/imdb/">
+                            <i className="hover:text-yellow-300 fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://twitter.com/imdb">
+                            <i className="hover:text-yellow-300 fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="https://www.youtube.com/imdb">
+                            <i className="hover:text-yellow-300 fa-brands fa-youtube"></i>
+                        </a>
+                        <a href="https://www.facebook.com/imdb">
+                            <i className="hover:text-yellow-300 fa-brands fa-facebook"></i>
+                        </a>
                     </div>
                 </div>
                 <div className="mt-8 max-w-4xl items-center justify-center ml-auto mr-auto space-x-10 "

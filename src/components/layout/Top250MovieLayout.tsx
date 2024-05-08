@@ -678,8 +678,7 @@ export default function Top250MovieLayout() {
                                             bgcolor: anchorRankingEl ? 'blue' : 'white',
                                             color: anchorRankingEl ? 'white' : 'blue',
                                             border: anchorRankingEl ? '2px dashed' : '',
-                                            ":hover": {
-                                                border: '2px dashed',
+                                            ":hover": {                                               
                                                 backgroundColor: 'blue'
                                                 , color: 'white'
                                             },

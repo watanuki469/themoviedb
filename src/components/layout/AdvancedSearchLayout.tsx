@@ -114,7 +114,7 @@ export default function AdvancedSearchLayout() {
     }
     const [isRating, setIsRating] = useState(false);
 
-    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular|any>();
+    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular | any>();
     const handleClick = (index: any) => {
         setIsRating(true)
         setSelectedStudent(index);
@@ -153,7 +153,7 @@ export default function AdvancedSearchLayout() {
                                                 <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                             </div>
                                             <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title?selectedStudent?.title:selectedStudent?.name}</p>
+                                            <p className="text-2xl ">{selectedStudent?.title ? selectedStudent?.title : selectedStudent?.name}</p>
                                             <div className="gap-2 px-2 py-2">
                                                 <Rating name="customized-10" value={value} size="large"
                                                     onChange={(event, newValue) => {
@@ -251,7 +251,7 @@ export default function AdvancedSearchLayout() {
                                                 <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                             </div>
                                             <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title?selectedStudent?.title:selectedStudent?.name}</p>
+                                            <p className="text-2xl ">{selectedStudent?.title ? selectedStudent?.title : selectedStudent?.name}</p>
                                             <div className="gap-2 px-2 py-2">
                                                 <Rating name="customized-10" value={value} size="large"
                                                     onChange={(event, newValue) => {
@@ -354,7 +354,7 @@ export default function AdvancedSearchLayout() {
                                                 <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                             </div>
                                             <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title?selectedStudent?.title:selectedStudent?.name}</p>
+                                            <p className="text-2xl ">{selectedStudent?.title ? selectedStudent?.title : selectedStudent?.name}</p>
                                             <div className="gap-2 px-2 py-2">
                                                 <Rating name="customized-10" value={value} size="large"
                                                     onChange={(event, newValue) => {
@@ -677,7 +677,7 @@ export default function AdvancedSearchLayout() {
                         <div className="mt-3 ">
                             <div className="items-center ">
                                 <h2 className="text-lg text-black ">
-                                    Discover IMDb's robust title search. Mix and match info to refine your searches. Looking for 1970s Canadian horror films rated above 6 by at least 100 users? Find them here. All fields below are optional, but at least one is needed for a search. For ranges (release date, votes), use 'min' for larger/after and 'max' for smaller/before. You can also press 'Enter' after checking a box or focusing on a field. To learn more please visit our help site and FAQs.
+                                    Discover IMDb's robust title search. Mix and match info to refine your searches. Looking for 1970s Canadian horror films rated above 6 by at least 100 users? Find them here. All fields below are optional, but at least one title field is needed for a search. For ranges (release date, votes), use 'min' for larger/after and 'max' for smaller/before. To learn more please visit our help site and FAQs.
                                 </h2>
                             </div>
                         </div>
@@ -808,7 +808,6 @@ export default function AdvancedSearchLayout() {
                                                 color: anchorRankingEl ? 'white' : 'blue',
                                                 border: anchorRankingEl ? '2px dashed' : '',
                                                 ":hover": {
-                                                    border: '2px dashed',
                                                     backgroundColor: 'blue'
                                                     , color: 'white'
                                                 },

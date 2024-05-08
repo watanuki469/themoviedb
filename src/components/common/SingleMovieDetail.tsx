@@ -122,6 +122,10 @@ export default function SingleMovieDetail({
         }
         return num;
     }
+    const handleImageError = (e: any) => {
+        const imgElement = e.currentTarget as HTMLImageElement;
+        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+    };
     return (
         <section className="" style={{
             position: "relative",
@@ -145,7 +149,7 @@ export default function SingleMovieDetail({
                                     <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                 </div>
                                 <p className="text-yellow-300 font-bold">Rate this</p>
-                                <p className="text-2xl ">{singleMovieList[0]?.original_title}</p>
+                                <p className="text-2xl ">{singleMovieList[0]?.title?singleMovieList[0]?.title:singleMovieList[0]?.name}</p>
                                 <div className="gap-2 px-2 py-2">
                                     <Rating name="customized-10" value={value} size="large"
                                         onChange={(event, newValue) => {
@@ -332,7 +336,9 @@ export default function SingleMovieDetail({
                     </div>
                     <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
                         <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-90 ">
-                            <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" />
+                            <img 
+                                 onError={handleImageError}
+                            src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" />
                         </div>
                         <div className=" lg:col-span-7 md:col-span-12   lg:ml-2 bg-black hover:opacity-90">
                             <iframe
@@ -350,7 +356,7 @@ export default function SingleMovieDetail({
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden ">
                             <div onClick={() => navigate(`/video/${singleMovieList[0]?.id}`)}
-                                className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -361,7 +367,7 @@ export default function SingleMovieDetail({
                                 </div>
                             </div>
                             <div onClick={() => navigate(`/image/movie/${singleMovieList[0]?.id}`)}
-                                className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -537,7 +543,8 @@ export default function SingleMovieDetail({
                         </div>
                         <div className='grid grid-cols-3 gap-1 mt-2' >
                             <div>
-                                <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" />
+                                <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`}
+                                onError={handleImageError} alt="produdđct images" />
                             </div>
                             <div className='col-span-2'>
                                 <div className='gap-2'>

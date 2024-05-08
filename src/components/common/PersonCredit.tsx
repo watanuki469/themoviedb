@@ -1,6 +1,7 @@
 import { Box, Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -36,12 +37,34 @@ export default function PersonCredit({
         setNumberIndex(index);
     };
     const [value, setValue] = useState<number | null>(0);
-    
+
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
+    const [checkLog, setCheckLog] = useState(false)
+
+    const handleWatchList = (movie: any) => {
+        const storedDataString = localStorage.getItem('watchList');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[movie?.id]) {
+            delete storedData[movie?.id];
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            setCheckLog(!checkLog)
+            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
+
+        } else {
+            storedData[movie?.id] = movie;
+            setCheckLog(!checkLog)
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
+
+        }
+    }
 
     return (
         <section className="relative w-full cursor-pointer">
@@ -72,14 +95,14 @@ export default function PersonCredit({
                                 <div className="bg-black px-4 py-4">
                                     <div className="flex gap-2 ">
                                         <img src={`https://image.tmdb.org/t/p/w500/${personCreditList[numberIndex]?.poster_path}`} alt="product images"
-                                            className="w-20 h-28"  onError={handleImageError} />
+                                            className="w-20 h-28" onError={handleImageError} />
                                         <div className="gap-2">
                                             <div className="flex items-center text-white gap-2"
                                                 onClick={() => navigate(`/movie/${personCreditList[numberIndex]?.id}`)}>
                                                 <p className="text-xl font-bold"> {personCreditList[numberIndex]?.title}</p>
                                                 <i
-                                                  onClick={()=>navigate(`/movie/${personCreditList[numberIndex]?.id}`)}
-                                                className="fa-solid fa-chevron-right text-2xl text-white hover:text-yellow-300"></i>
+                                                    onClick={() => navigate(`/movie/${personCreditList[numberIndex]?.id}`)}
+                                                    className="fa-solid fa-chevron-right text-2xl text-white hover:text-yellow-300"></i>
 
                                             </div>
                                             <div className="flex flex-row gap-3 mt-1">
@@ -111,16 +134,66 @@ export default function PersonCredit({
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4 px-2 py-2 text-center items-center">
-                                        <button
-                                         onClick={()=>navigate(`/IMDbPro`)}
-                                        className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-80 px-2 py-2 gap-2">
+                                        {/* <button
+                                            onClick={() => navigate(`/IMDbPro`)}
+                                            className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-80 px-2 py-2 gap-2">
                                             <p><i className="fa-solid fa-play"></i></p>
                                             <p>Watchlist</p>
+                                        </button> */}
+                                        <button className="w-full flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-80 gap-2  "
+                                            onClick={() => handleWatchList(personCreditList[numberIndex])}>
+                                            {checkLog ? (
+                                                <div>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[personCreditList[numberIndex]?.id] ? (
+                                                        <div className="py-2 px-3 flex justify-center items-center  text-center">
+                                                            <i className="fas fa-check font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold'  >
+                                                                    <p>Remove</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex justify-center items-center  text-center">
+                                                            <i className="fas fa-plus font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold'  >
+                                                                    <p>Watchlist</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[personCreditList[numberIndex]?.id] ? (
+                                                        <div className="py-2 px-3 flex justify-center items-center  text-center">
+                                                            <i className="fas fa-check font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold'  >
+                                                                    <p>Remove</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex justify-center items-center  text-center">
+                                                            <i className="fas fa-plus font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold'  >
+                                                                    <p>Watchlist</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </button>
                                         <button
-                                        onClick={()=>navigate(`/movie/${personCreditList[numberIndex]?.id}`)}
-                                        className="flex text-blue-500 justify-center items-center text-center bg-gray-600 hover:opacity-90 px-2 py-2 gap-2 ">
-                                            <p><i className="fa-solid fa-plus"></i></p>
+                                            onClick={() => navigate(`/movie/${personCreditList[numberIndex]?.id}`)}
+                                            className="flex text-blue-500 justify-center font-bold items-center text-center bg-gray-600 hover:opacity-90 px-2 py-2 gap-2 ">
+                                            <p><i className="fa-solid fa-plus "></i></p>
                                             <p>Trailer</p>
                                         </button>
                                     </div>
@@ -145,7 +218,7 @@ export default function PersonCredit({
                                             <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                         </div>
                                         <p className="text-yellow-300 font-bold">Rate this</p>
-                                        <p className="text-2xl ">{personCreditList[numberIndex]?.original_title}</p>
+                                        <p className="text-2xl ">{personCreditList[numberIndex]?.title ? personCreditList[numberIndex]?.title : personCreditList[numberIndex]?.name}</p>
                                         <div className="gap-2 px-2 py-2">
                                             <Rating name="customized-10" value={value} size="large"
                                                 onChange={(event, newValue) => {
@@ -191,9 +264,9 @@ export default function PersonCredit({
                                             <div className="flex-1" style={{ maxWidth: "100px" }}
                                                 onClick={() => navigate(`/movie/${item?.id}`)}> {/* Đặt kích thước tối đa cho ảnh */}
                                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images"
-                                                    className="object-cover h-full w-full bg-gray-500" style={{ maxWidth: "100%",height:'100%' }} onError={handleImageError} /> {/* Đặt kích thước tối đa cho ảnh */}
+                                                    className="object-cover h-full w-full bg-gray-500" style={{ maxWidth: "100%", height: '100%' }} onError={handleImageError} /> {/* Đặt kích thước tối đa cho ảnh */}
                                             </div>
-                                            <div className=" text-black flex-1  flex-col"  onClick={()=>navigate(`/movie/${item?.id}`)}>
+                                            <div className=" text-black flex-1  flex-col" onClick={() => navigate(`/movie/${item?.id}`)}>
                                                 <div className=" py-2">
                                                     <div className="text-xl font-bold  mb-1">
                                                         <p className="line-clamp-1"> {item.title ? item.title : item.name}</p>
@@ -244,10 +317,10 @@ export default function PersonCredit({
                                                 <div className="flex-1" style={{ maxWidth: "100px" }}
                                                     onClick={() => navigate(`/movie/${item?.id}`)}>
                                                     <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" onError={handleImageError}
-                                                        className="object-cover h-full w-full bg-gray-500 " style={{minHeight:'150px'}} />
+                                                        className="object-cover h-full w-full bg-gray-500 " style={{ minHeight: '150px' }} />
                                                 </div>
-                                                <div className="bg-white text-black px-2  flex-1 flex-col " 
-                                                  onClick={()=>navigate(`/movie/${item?.id}`)}>
+                                                <div className="bg-white text-black px-2  flex-1 flex-col "
+                                                    onClick={() => navigate(`/movie/${item?.id}`)}>
                                                     <div className="py-2 ">
                                                         <div className="text-xl font-bold mb-1">
                                                             <p className="line-clamp-1"> {item.title ? item.title : item.name}</p>

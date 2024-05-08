@@ -715,7 +715,6 @@ export default function Top250TvLayout() {
                                             color: anchorRankingEl ? 'white' : 'blue',
                                             border: anchorRankingEl ? '2px dashed' : '',
                                             ":hover": {
-                                                border: '2px dashed',
                                                 backgroundColor: 'blue'
                                                 , color: 'white'
                                             },

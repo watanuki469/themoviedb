@@ -226,7 +226,7 @@ export default function TvDetail({
                         </div>
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden">
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90">
+                            <div className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90">
                                 <div className="flex flex-col justify-center items-center "
                                     onClick={() => navigate(`/videoTv/${singleTvList[0]?.id}`)}>
                                     <div className="text-center">
@@ -237,7 +237,7 @@ export default function TvDetail({
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-red-200 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90"
+                            <div className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90"
                                 onClick={() => navigate(`/image/tv/${singleTvList[0]?.id}`)}>
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">

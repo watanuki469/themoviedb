@@ -171,7 +171,7 @@ export default function MovieLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={movieImageList} />
                             </div>
-                            <div className="text-white flex py-4 ">
+                            <div className="text-white flex py-4 " onClick={()=>navigate(`/fullcredits/movie/${id}`)}>
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>

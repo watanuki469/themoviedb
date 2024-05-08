@@ -109,7 +109,7 @@ export default function FourSwiperRow({
                                     <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                 </div>
                                 <p className="text-yellow-300 font-bold">Rate this</p>
-                                <p className="text-2xl ">{fourSwiperRowList[numberIndex]?.original_title ? (fourSwiperRowList[numberIndex]?.original_title) : (fourSwiperRowList[numberIndex]?.title ? (fourSwiperRowList[numberIndex]?.title) : (fourSwiperRowList[numberIndex]?.name))}</p>
+                                <p className="text-2xl ">{fourSwiperRowList[numberIndex]?.title ? fourSwiperRowList[numberIndex]?.title : fourSwiperRowList[numberIndex]?.name}</p>
                                 <div className="gap-2 px-2 py-2">
                                     <Rating name="customized-10" value={value} size="large"
                                         onChange={(event, newValue) => {
@@ -164,56 +164,56 @@ export default function FourSwiperRow({
                                         </div>
                                     </div>
                                     <div className="h-12 mt-2">
-                                        <p className="line-clamp-2"> {item.title ? item.title : item.name}</p>
+                                        <p className="line-clamp-2"> {item?.title ? item?.title : item?.name}</p>
                                     </div>
                                     <button className="w-full hover:opacity-70 rounded-lg bg-gray-300 " onClick={() => handleWatchList(item)}>
-                                            {checkLog ? (
-                                                <div>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item?.id] ? (
-                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
-                                                            <i className="fas fa-check font-bold text-lg  mr-2"></i>
-                                                            <div className="text-center">
-                                                                <div className='font-bold text-sm'  >
-                                                                    <p>Remove</p>
-                                                                </div>
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-lg  mr-2"></i>
-                                                            <div className="text-center">
+                                        {checkLog ? (
+                                            <div>
+                                                {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item?.id] ? (
+                                                    <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                        <i className="fas fa-check font-bold text-lg  mr-2"></i>
+                                                        <div className="text-center">
                                                             <div className='font-bold text-sm'  >
-                                                                    <p>Watchlist</p>
-                                                                </div>
+                                                                <p>Remove</p>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                        <i className="fas fa-plus font-bold text-lg  mr-2"></i>
+                                                        <div className="text-center">
+                                                            <div className='font-bold text-sm'  >
+                                                                <p>Watchlist</p>
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <div>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item?.id] ? (
-                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
-                                                            <i className="fas fa-check font-bold text-lg  mr-2"></i>
-                                                            <div className="text-center">
-                                                                <div className='font-bold text-sm'  >
-                                                                    <p>Remove</p>
-                                                                </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item?.id] ? (
+                                                    <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                        <i className="fas fa-check font-bold text-lg  mr-2"></i>
+                                                        <div className="text-center">
+                                                            <div className='font-bold text-sm'  >
+                                                                <p>Remove</p>
                                                             </div>
                                                         </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-lg  mr-2"></i>
-                                                            <div className="text-center">
-                                                                <div className='font-bold'  >
-                                                                    <p>Watchlist</p>
-                                                                </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                        <i className="fas fa-plus font-bold text-lg  mr-2"></i>
+                                                        <div className="text-center">
+                                                            <div className='font-bold text-sm'  >
+                                                                <p>Watchlist</p>
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </button>
                                     <button className="flex items-center px-4 py-2 hover:opacity-50 rounded-lg w-full justify-center border-none "
                                         onClick={() => {
                                             if (item?.media_type === 'person') {

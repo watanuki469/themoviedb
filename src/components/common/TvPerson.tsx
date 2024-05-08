@@ -53,7 +53,7 @@ export default function TvPerson({
                             <div onClick={() => navigate(`/person/${item?.id}`)}>
                                 <p className="text-black font-bold hover:opacity-50">{item?.name}</p>
                                 <p className="text-gray-500 hover:underline">{item?.roles[0]?.character}</p>
-                                <p className="text-gray-500 hover:bg-gray-200 px-2 py-1">
+                                <p className="text-gray-500 hover:bg-gray-200 py-1">
                                     {item?.roles[0]?.episode_count} episodes • {firstYear && lastYear ? `${firstYear}-${lastYear}` : ''}
                                 </p>
                             </div>

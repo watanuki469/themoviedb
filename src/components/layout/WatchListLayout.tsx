@@ -164,10 +164,6 @@ export function WatchListLayout() {
 
     const [currentSelection, setCurrentSelection] = useState('case1'); // Default view is 'detail'
 
-    const switchCurrentSelection = (view: any) => {
-        setCurrentView(view);
-    };
-
     const handleFromDateChange = (event: any) => {
         setFromDate(event.target.value);
     };
@@ -232,7 +228,7 @@ export function WatchListLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/movie/${movie?.id}`)}
+                                        <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                             onError={handleImageError} className="w-28 h-40 hover:opacity-80" />
                                         <div>
@@ -244,7 +240,7 @@ export function WatchListLayout() {
                                                         {index !== movie.genre_ids.length - 1 && ","} {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
                                                     </div>
                                                 ))}
-                                              
+
                                                 {movie?.genres?.map((genre: any, index: any) => (
                                                     <div key={index}>
                                                         {genreMapping[genre?.id]}
@@ -310,19 +306,16 @@ export function WatchListLayout() {
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-2" onClick={() => navigate(`/movie/${movie?.id}`)}   >
+                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movie.id)}   >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        Details
+                                        Remove
                                     </button>
 
                                 </div>
                             </div>
-
                         </div>
                     </section>
-
                 )
-
         }
     }
 

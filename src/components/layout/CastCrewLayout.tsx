@@ -72,7 +72,7 @@ export default function CastCrewLayout() {
         mediaList = tvList;
     }
     console.log(mediaList);
-    console.log(singleMovieList);
+
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
@@ -103,7 +103,14 @@ export default function CastCrewLayout() {
                                                     <i className="fa-solid fa-chevron-right ml-auto hover:text-yellow-300"></i>
                                                 </div>
                                                 <div className='border-t-2 border-gray py-2'>
-                                                    <p>Full Cast & Crew: {mediaList[0]?.credits?.cast?.length + mediaList[0]?.credits?.crew?.length}</p>
+                                                    <p>
+                                                        Full Cast & Crew: {
+                                                            (!isNaN(mediaList[0]?.credits?.cast?.length) ? mediaList[0]?.credits?.cast?.length : 0) +
+                                                            (!isNaN(mediaList[0]?.credits?.crew?.length) ? mediaList[0]?.credits?.crew?.length : 0) +
+                                                            (!isNaN(mediaList[0]?.aggregate_credits?.cast?.length) ? mediaList[0]?.aggregate_credits?.cast?.length : 0) +
+                                                            (!isNaN(mediaList[0]?.aggregate_credits?.crew?.length) ? mediaList[0]?.aggregate_credits?.crew?.length : 0)
+                                                        }
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -111,18 +118,39 @@ export default function CastCrewLayout() {
                                     <div className="w-full border-t-2 border-gray-500">
                                         <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.credits?.crew?.map((item: any, index: any) => (
-                                                <div className="flex items-center  border-b-2 py-2">
-                                                    <div key={index} className="flex items-center">
+                                                <div key={index} className="flex items-center  border-b-2 py-2">
+                                                    <div className="flex items-center">
                                                         <div className="h-32 w-24 bg-cover mr-4 hover:opacity-80"
                                                             style={{
-                                                                backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                                             }}
                                                             onClick={() => navigate(`/person/${item?.id}`)}>
                                                         </div>
 
                                                         <div className="">
                                                             <p className="font-bold">{item?.name}</p>
-                                                            <p className="text-lg text-gray-500">{item?.job}</p>
+                                                            <p className="text-lg text-gray-500">Know For: {item?.known_for_department}</p>
+                                                            <p className="text-lg text-gray-500">Job: {item?.job}</p>
+                                                        </div>
+                                                    </div>
+                                                    <i className="fa-solid fa-chevron-right ml-auto  text-black hover:text-yellow-300 text-sm px-2"></i>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black w-full">
+                                            {mediaList[0]?.credits?.cast?.map((item: any, index: any) => (
+                                                <div key={index} className="flex items-center  border-b-2 py-2 w-full">
+                                                    <div className="flex items-center w-full">
+                                                        <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
+                                                            style={{
+                                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                                            }}
+                                                            onClick={() => navigate(`/person/${item?.id}`)}>
+                                                        </div>
+
+                                                        <div className="w-full">
+                                                            <p className="font-bold">{item?.name}</p>
+                                                            <div className="text-lg text-gray-500">Character: {item?.character}</div>
                                                         </div>
                                                     </div>
                                                     <i className="fa-solid fa-chevron-right ml-auto  text-black hover:text-yellow-300 text-sm px-2"></i>
@@ -130,12 +158,41 @@ export default function CastCrewLayout() {
                                             ))}
                                         </div>
                                         <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black">
-                                            {mediaList[0]?.credits?.cast?.map((item: any, index: any) => (
-                                                <div className="flex items-center  border-b-2 py-2">
-                                                    <div key={index} className="flex items-center">
+                                            {mediaList[0]?.aggregate_credits?.cast?.map((item: any, index: any) => (
+                                                <div key={index} className="flex items-center  border-b-2 py-2">
+                                                    <div  className="flex items-center">
                                                         <div className="h-32 w-24 bg-cover mr-4 hover:opacity-80"
                                                             style={{
-                                                                backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                                            }}
+                                                            onClick={() => navigate(`/person/${item?.id}`)}>
+                                                        </div>
+
+                                                        <div className="">
+                                                            <p className="font-bold">{item?.name}</p>
+                                                            <div className="text-lg text-gray-500">
+                                                                {item?.roles?.map((role: any, index: number) => (
+                                                                    <span key={index}>
+                                                                        {role?.character}
+                                                                        {index !== item.roles.length - 1 && ', '}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                            <p className="text-lg text-gray-500">{item?.total_episode_count} episodes</p>
+
+                                                        </div>
+                                                    </div>
+                                                    <i className="fa-solid fa-chevron-right ml-auto  text-black hover:text-yellow-300 text-sm px-2"></i>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black">
+                                            {mediaList[0]?.aggregate_credits?.crew?.map((item: any, index: any) => (
+                                                <div  key={index} className="flex items-center  border-b-2 py-2">
+                                                    <div className="flex items-center">
+                                                        <div className="h-32 w-24 bg-cover mr-4 hover:opacity-80"
+                                                            style={{
+                                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                                             }}
                                                             onClick={() => navigate(`/person/${item?.id}`)}>
                                                         </div>
@@ -143,6 +200,7 @@ export default function CastCrewLayout() {
                                                         <div className="">
                                                             <p className="font-bold">{item?.name}</p>
                                                             <p className="text-lg text-gray-500">{item?.character}</p>
+                                                            <p className="text-lg text-gray-500">{item?.total_episode_count} episodes</p>
                                                         </div>
                                                     </div>
                                                     <i className="fa-solid fa-chevron-right ml-auto  text-black hover:text-yellow-300 text-sm px-2"></i>
