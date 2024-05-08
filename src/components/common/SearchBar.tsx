@@ -60,7 +60,6 @@ export default function SearchBar() {
     const searchList = useAppSelector((state) => state.search.listSearch)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
         if (query.trim().length === 0) {
         }
         else {
@@ -80,9 +79,6 @@ export default function SearchBar() {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
 
     }, [mediatype, query, open]);
 
@@ -130,7 +126,7 @@ export default function SearchBar() {
                 {menuItems.map((item: any, index: any) => (
                     <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
                         <div className='items-start'>
-                            <a key={item.id} href="#" className=" text-gray-700 capitalize hover:bg-gray-100 hover:text-gray-900 flex items-center" role="menuitem">
+                            <a key={item.id} href="#" className=" text-gray-700 capitalize hover:opacity-80 flex items-center" role="menuitem">
                                 <i className={`mr-2 fas ${item.icon}`}></i>
                                 {item.label}
                             </a>

@@ -270,15 +270,14 @@ export default function TopBar() {
           <button
             onClick={() => navigate("/")}
             className=" bg-yellow-400 text-black text-center 
-            border-none font-extrabold text-2xl font-sans
-            whitespace-nowrap hover:bg-black hover:text-blue-500
-             hover:border-red-500  rounded-md px-1 py-1"
+            border-none font-extrabold text-xl font-sans
+            whitespace-nowrap hover:bg-black hover:text-blue-500 rounded-md px-1 py-1"
           >
             IMDb
           </button>
           <Dialog.Root open={open} onOpenChange={setOpen} >
             <Dialog.Trigger>
-              <div className="hidden lg:flex items-center content-center justify-center self-center text-white gap-2 text-lg hover:bg-black hover:opacity-95">
+              <div className="hidden lg:flex items-center content-center justify-center self-center text-white gap-2 hover:bg-black hover:opacity-95">
                 <i className="fa-sharp fa-solid fa-bars"></i>
                 <p> Menu </p>
               </div>
@@ -292,7 +291,7 @@ export default function TopBar() {
                   <div className="flex items-center">
                     <button
                       onClick={() => navigate("/")}
-                      className="bg-yellow-400 text-black text-center border-none font-extrabold text-2xl font-sans whitespace-nowrap hover:opacity-80 rounded-md"
+                      className="bg-yellow-400 px-2 py-1 text-black text-center border-none font-extrabold text-2xl font-sans whitespace-nowrap hover:opacity-80 rounded-md"
                     >
                       IMDb
                     </button>
@@ -468,7 +467,7 @@ export default function TopBar() {
 
           </Dialog.Root>
           <div className="grow ">
-            <div className=" hidden lg:flex bg-red-300 w-full z-20">
+            <div className=" hidden lg:flex w-full z-20">
               <SearchBar />
             </div>
           </div>
@@ -487,8 +486,8 @@ export default function TopBar() {
               className="flex items-center gap-2"
             >
               <i className="fa-regular fa-bookmark  text-white"></i>
-              <p className="text-white text-xl font-extrabold border-none ">
-                Watch List
+              <p className="text-white border-none ">
+                Watchlist
               </p>
             </button>
           </div>
