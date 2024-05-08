@@ -1,6 +1,7 @@
 import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -55,6 +56,38 @@ export default function FourSwiperRow({
         navigate(`/${mediaType}/${id}`)
     };
     let navigate = useNavigate()
+
+    const [checkLog, setCheckLog] = useState(false)
+
+    const handleWatchList = (movie: any) => {
+        const storedDataString = localStorage.getItem('watchList');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[movie?.id]) {
+            delete storedData[movie?.id];
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            setCheckLog(!checkLog)
+            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
+
+        } else {
+            storedData[movie?.id] = movie;
+            setCheckLog(!checkLog)
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
+
+        }
+    }
+    function formatNumber(num: any) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'm';
+        }
+        if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'k';
+        }
+        return num;
+    }
 
 
     return (
@@ -133,13 +166,55 @@ export default function FourSwiperRow({
                                     <div className="h-12 mt-2">
                                         <p className="line-clamp-2"> {item.title ? item.title : item.name}</p>
                                     </div>
-                                    <button
-                                        onClick={() => navigate(`/IMDbPro`)}
-                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
-                                        <i className="fas fa-plus mr-2"></i>
-                                        <p>Watchlists</p>
-                                    </button>
-                                    <button className="flex items-center px-4 py-2 hover:bg-gray-300 rounded-lg w-full justify-center border-none "
+                                    <button className="w-full hover:opacity-70 rounded-lg bg-gray-300 " onClick={() => handleWatchList(item)}>
+                                            {checkLog ? (
+                                                <div>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item?.id] ? (
+                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                            <i className="fas fa-check font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold text-sm'  >
+                                                                    <p>Remove</p>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                            <div className='font-bold text-sm'  >
+                                                                    <p>Watchlist</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item?.id] ? (
+                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                            <i className="fas fa-check font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold text-sm'  >
+                                                                    <p>Remove</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500  text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-lg  mr-2"></i>
+                                                            <div className="text-center">
+                                                                <div className='font-bold'  >
+                                                                    <p>Watchlist</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </button>
+                                    <button className="flex items-center px-4 py-2 hover:opacity-50 rounded-lg w-full justify-center border-none "
                                         onClick={() => {
                                             if (item?.media_type === 'person') {
                                                 navigate(`/person/${item.id}`);

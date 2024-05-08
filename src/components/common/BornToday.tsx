@@ -8,6 +8,7 @@ import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function BornToday() {
     const [movieNews, setMovieNews] = useState<any[]>([]);
+    const [err, setErr] = useState(false);
     let navigate = useNavigate();
     const dispatch = useAppDispatch();
     const currentDate = new Date();
@@ -17,8 +18,6 @@ export default function BornToday() {
 
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));        
-
         axiosBornToday.get('', {
             params: {
                 month: currentMonth,
@@ -26,23 +25,20 @@ export default function BornToday() {
             },
         })
             .then((response) => {
-                console.log(response);
+                setErr(false)
                 setMovieNews(response.data.list || []);
             })
             .catch((error) => {
-                console.error('Error fetching born today:', error);
+                // console.error('Error fetching born today:', error);
+                setErr(true)
             })
-        // .finally(() => {
-        //     // Dừng loading sau khi nhận dữ liệu
-        //     dispatch(setGlobalLoading(false));
-        // });
     }, []);
 
 
     const [activeSlider, setActiveSlider] = useState(3);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 568) {
                 setActiveSlider(2);
             }
             else if (window.innerWidth < 900) {
@@ -59,48 +55,64 @@ export default function BornToday() {
     }, []);
 
     return (
-        <div className="py-6">
-            <Swiper
-                spaceBetween={10}
-                slidesPerView={activeSlider}
-                autoplay={{
-                    delay: 3500,
-                    disableOnInteraction: false,
-                }}
-                navigation={true}
-                modules={[Pagination, Navigation]}
-                className="mySwiper text-white"
-            >
-                {movieNews?.map((item: any, index: any) => {
-                    return (
-                        <SwiperSlide key={index}>
-                            <div className="w-full h-auto">
-                                <div className="items-center justify-center text-center">
-                                    <div className="w-36 h-36 mx-auto rounded-full bg-cover items-center justify-center hover:opacity-80"
-                                        style={{
-                                            backgroundImage: `url(${item?.primaryImage?.imageUrl})`
-                                        }}
-                                        onClick={() => navigate(`/search?title=${item?.nameText?.text}`)}
-                                    >
-                                    </div>
+        <div>
+            {err ? (
+                <div></div>
+            ) : (
+                <div>
+                    <div className="flex items-center mt-8">
+                        <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                        <h2 className="text-xl font-bold text-white ">Born Today</h2>
+                        <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
+                    </div>
+                    <div className="py-6">
 
-                                    <div className="">
-                                        <p className="text-white">{item?.nameText?.text}</p>
-                                        {item?.birthDateComponents?.dateComponents?.year ? (
-                                            <p className="">Age: {currentYear - item?.birthDateComponents?.dateComponents?.year}</p>
+                        <Swiper
+                            spaceBetween={10}
+                            slidesPerView={activeSlider}
+                            autoplay={{
+                                delay: 3500,
+                                disableOnInteraction: false,
+                            }}
+                            navigation={true}
+                            modules={[Pagination, Navigation]}
+                            className="mySwiper text-white"
+                        >
+                            {movieNews?.map((item: any, index: any) => {
+                                return (
+                                    <SwiperSlide key={index}>
+                                        <div className="w-full h-auto">
+                                            <div className="items-center justify-center text-center">
+                                                <div className="w-36 h-36 mx-auto rounded-full bg-cover items-center justify-center hover:opacity-80"
+                                                    style={{
+                                                        backgroundImage: `url(${item?.primaryImage?.imageUrl})`
+                                                    }}
+                                                    onClick={() => navigate(`/search?title=${item?.nameText?.text}`)}
+                                                >
+                                                </div>
 
-                                        ) : (
-                                            <div>
+                                                <div className="">
+                                                    <p className="text-white">{item?.nameText?.text}</p>
+                                                    {item?.birthDateComponents?.dateComponents?.year ? (
+                                                        <p className="">Age: {currentYear - item?.birthDateComponents?.dateComponents?.year}</p>
+
+                                                    ) : (
+                                                        <div>
+                                                        </div>
+                                                    )
+                                                    }
+                                                </div>
                                             </div>
-                                        )
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                    );
-                })}
-            </Swiper>
+                                        </div>
+                                    </SwiperSlide>
+                                );
+                            })}
+                        </Swiper>
+                    </div>
+                </div>
+            )}
+
         </div>
+
     )
 }

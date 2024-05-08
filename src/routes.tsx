@@ -18,6 +18,8 @@ import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
+import { WatchListLayout } from "./components/layout/WatchListLayout";
+import WatchToWWatch from "./components/layout/WatchToWatchLayout";
 
 export const routesGen = {
   home: "/",
@@ -132,13 +134,19 @@ const routes = [
     element: <PopularCelebLayout/>,
     state: "popularCeleb"
   },
-  
 
-
+  {
+    path: "/watchList",
+    element: <WatchListLayout/>,
+    state: "watchList"
+  },
+  //not have api suitable
   // {
-  //   path: "/:mediaType/:mediaId",
-  //   element: <MediaDetail />
-  // }
+  //   path: "/watchToWatch/:name",
+  //   element: <WatchToWWatch/>,
+  //   state: "watchToWatch"
+  // },
+
 ];
 
 export default routes;

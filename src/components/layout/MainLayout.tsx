@@ -112,21 +112,9 @@ export default function MainLayout() {
                     </div>
                     <div className="mt-8 overflow-hidden " >
                         <SwiperRow searchItemList={topRatedTv} mediaType={'tv'} />
-                    </div>
-
-                    <div className="flex items-center mt-8">
-                        <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                        <h2 className="text-xl font-bold text-white ">Born Today</h2>
-                        <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
-                    </div>
+                    </div>                    
 
                     <BornToday/>
-
-                    <div className="flex items-center mt-8">
-                        <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                        <h2 className="text-xl font-bold text-white ">Top New</h2>
-                        <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
-                    </div>
                     
                     <div className=" overflow-hidden">
                         <div className="flex items-center mt-12">
@@ -143,9 +131,7 @@ export default function MainLayout() {
                             </div>
                         </div>
                     </div>
-
-
-
+                    
                     <div className=" overflow-hidden">
                         <Footer />
                     </div>

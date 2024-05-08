@@ -30,7 +30,7 @@ export default function TvLayout() {
             apiController.apiTv.tv(id),
         ])
             .then((data: any) => {
-                if (data) {
+                if (data) {                    
                     dispatch(setListTv(data));
                 } else {
                     console.error("API response structure is not as expected.", data);
@@ -68,6 +68,7 @@ export default function TvLayout() {
             dispatch(setGlobalLoading(false));
         }, 1000);
     }, [id]);
+
     const currentDate = new Date();
 
     // Mảng các tên tháng
@@ -92,6 +93,8 @@ export default function TvLayout() {
             setTotalEpisodes(sum);
         }
     }, [tvList]);
+    console.log(tvList);
+    
 
     return (
         <div className=" min-h-screen cursor-pointer">

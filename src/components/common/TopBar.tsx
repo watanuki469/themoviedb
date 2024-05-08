@@ -483,7 +483,7 @@ export default function TopBar() {
           <Divider className=" hidden lg:flex" orientation="vertical" sx={{ bgcolor: "red", color: 'white', border: "1px solid gray", height: '20px' }} />
           <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
             <button
-              onClick={() => navigate("/IMDbPro")}
+              onClick={() => navigate("/watchList")}
               className="flex items-center gap-2"
             >
               <i className="fa-regular fa-bookmark  text-white"></i>

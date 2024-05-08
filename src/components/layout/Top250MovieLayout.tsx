@@ -238,50 +238,10 @@ export default function Top250MovieLayout() {
                 return (
                     <section className=" w-1/2 lg:w-1/4 px-2 " key={movieIndex}
                     >
-                        {isRating && (
-                            <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                                <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                                    <div className="flex items-center justify-end">
-                                        <div className="flex justify-end">
-                                            <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                                <i className="fa-solid fa-times text-xl"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="bg-black px-4 py-4">
-                                        <div className="aligns-center justify-center items-center text-center gap-2">
-                                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                                <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                                <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                            </div>
-                                            <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title}</p>
-                                            <div className="gap-2 px-2 py-2">
-                                                <Rating name="customized-10" value={value} size="large"
-                                                    onChange={(event, newValue) => {
-                                                        setValue(newValue);
-                                                    }}
-                                                    max={10} sx={{
-                                                        color: 'blue', mt: 1,
-                                                        '& .MuiRating-iconEmpty': {
-                                                            borderColor: 'red',
-                                                            color: 'gray'
-                                                        },
-                                                    }} />
-                                                <br />
-                                                <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`} onClick={() => handleClose()}>
-                                                    Rate
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
-                                    <div className="items-center gap-2">
+                                    <div className="items-center gap-2 ">
                                         <div className="px-2">{movieIndex}</div>
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
@@ -477,6 +437,7 @@ export default function Top250MovieLayout() {
                 console.error('Error copying link:', error);
             });
     };
+    
 
 
     return (

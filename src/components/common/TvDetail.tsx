@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
 
-
-
 export interface TwoMovieRowProps {
     singleTvList: any
     singleTvImageList: any
@@ -18,8 +16,6 @@ export default function TvDetail({
     singleTvImageList
 }: TwoMovieRowProps) {
     let navigate = useNavigate()
-    console.log(singleTvImageList);
-
     const totalImages = singleTvImageList[0]?.backdrops?.length + singleTvImageList[0]?.logos?.length + singleTvImageList[0]?.posters?.length;
     const scrollToElement = (elementId: any) => {
         const element = document.getElementById(elementId);
@@ -52,6 +48,38 @@ export default function TvDetail({
                 console.error('Error copying link:', error);
             });
     };
+    const [checkLog, setCheckLog] = useState(false)
+
+    const handleWatchList = (movie: any) => {
+        const storedDataString = localStorage.getItem('watchList');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[movie?.id]) {
+            delete storedData[movie?.id];
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            setCheckLog(!checkLog)
+            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
+
+        } else {
+            storedData[movie?.id] = movie;
+            setCheckLog(!checkLog)
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
+
+        }
+    }
+    function formatNumber(num: any) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'm';
+        }
+        if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'k';
+        }
+        return num;
+    }
+
     return (
         <section className="" style={{
             position: "relative",
@@ -303,15 +331,58 @@ export default function TvDetail({
                                                 </button>
                                             </div>
                                         </div>
-                                        <button className="flex items-center w-full  border-2 border-black bg-yellow-300 ">
-                                            <div className="py-2 px-3 border-gray-400 flex items-center gap-2 grow  text-center h-full">
-                                                <i className="fa-solid fa-icons text-black"></i>
-                                                <div className="text-left">
-                                                    <p className="text-black font-bold">Add to Watchlist 1</p>
-                                                    <p>Added by {singleTvList[0]?.vote_count} user</p>
+                                        <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " onClick={() => handleWatchList(singleTvList[0])}>
+                                            {checkLog ? (
+                                                <div>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Remove from watchList</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)}user</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Add to Watchlist</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
-                                            <div className="py-3 px-3  flex items-center border-gray-500 border-l-2 justify-center h-full ">
+                                            ) : (
+                                                <div>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Remove from watchList</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Add to Watchlist</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <div className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </div>
                                         </button>
@@ -386,14 +457,58 @@ export default function TvDetail({
                         </div>
 
                         <div className='px-3 py-2 border-b border-gray-300 '>
-                            <button className="flex items-center w-full  border-2 border-black bg-yellow-300 ">
-                                <div className="py-2 px-3 border-gray-400 flex items-center gap-2 grow  text-center h-full">
-                                    <i className="fa-solid fa-icons text-black"></i>
-                                    <div className="text-left">
-                                        <p className="text-black font-bold">Add to list</p>
+                            <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " onClick={() => handleWatchList(singleTvList[0])}>
+                                {checkLog ? (
+                                    <div>
+                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Remove from watchList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleTvList[0]?.vote_count)}user</p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Add to Watchlist</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                                <div className="py-3 px-3  flex items-center border-gray-500 border-l-2 justify-center h-full ">
+                                ) : (
+                                    <div>
+                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Remove from watchList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Add to Watchlist</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                <div className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                     <i className="fa-solid fa-chevron-down"></i>
                                 </div>
                             </button>

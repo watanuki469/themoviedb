@@ -1,6 +1,7 @@
 import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -46,6 +47,28 @@ export default function SwiperRow({
         setNumberIndex(0);
         setValue(0)
     };
+    const [checkLog, setCheckLog] = useState(false)
+
+    const handleWatchList = (movie: any) => {
+        const storedDataString = localStorage.getItem('watchList');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[movie?.id]) {
+            delete storedData[movie?.id];
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            setCheckLog(!checkLog)
+            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
+
+        } else {
+            storedData[movie?.id] = movie;
+            setCheckLog(!checkLog)
+            localStorage.setItem('watchList', JSON.stringify(storedData));
+            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
+
+        }
+    }
 
     return (
         <div className="h-full ">
@@ -117,11 +140,44 @@ export default function SwiperRow({
                                     <div className="h-12 mt-2">
                                         <p className="line-clamp-2">{index}. {item.title ? item.title : item.name}</p>
                                     </div>
-                                    <button 
-                                     onClick={()=>navigate(`/IMDbPro`)}
-                                    className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
-                                        <i className="fas fa-plus mr-2"></i>
-                                        <p>Watchlists</p>
+
+                                    <button
+                                        onClick={() => handleWatchList(item)}
+                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
+                                        {checkLog ? (
+                                            <div>
+                                                {
+                                                    localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item.id] ? (
+                                                        <div className="items-center flex">
+                                                            <i className="fas fa-check mr-2"></i>
+                                                            <p>Remove</p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="items-center flex">
+                                                            <i className="fas fa-plus mr-2"></i>
+                                                            <p>Watchlists</p>
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
+                                        )
+                                            : (
+                                                <div>
+                                                    {
+                                                        localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item.id] ? (
+                                                            <div className="items-center flex">
+                                                                <i className="fas fa-check mr-2"></i>
+                                                                <p>Remove</p>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="items-center flex">
+                                                                <i className="fas fa-plus mr-2"></i>
+                                                                <p>Watchlists</p>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
+                                            )}
                                     </button>
                                     <button
                                         onClick={() => navigate(`/${mediaType == 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
@@ -131,7 +187,7 @@ export default function SwiperRow({
                                     </button>
                                 </div>
                             </div>
-                        </SwiperSlide>                      
+                        </SwiperSlide>
                     )
                 })}
             </Swiper>
