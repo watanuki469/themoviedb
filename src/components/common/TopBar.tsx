@@ -506,13 +506,15 @@ export default function TopBar() {
             <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
           </div>
           {/*change language */}
+
           <Button
             id="demo-customized-button"
             aria-controls={openUser ? 'demo-customized-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={openUser ? 'true' : undefined}
             sx={{
-              bgcolor: 'black',fontWeight:'extrabold', color: 'white', borderRadius: '0', display: { xs: "none", md: "flex" },
+              bgcolor: 'black',fontWeight:'extrabold', color: 'white', borderRadius: '0',
+              //  display: { xs: "none", md: "flex" },
               '&:hover': {
                 opacity: '80%'
               }
@@ -540,12 +542,12 @@ export default function TopBar() {
             open={openUser}
             onClose={() => setAnchorUserEl(null)}
           >
-            {menuItems.map((item: any, index: any) => (
-              <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
+            {menuItems?.map((item: any, index: any) => (
+              <MenuItem disableRipple key={index} onClick={() => handleClose(item?.label)}>
                 <div className='items-start'>
-                  <a key={item.id} href="#" className=" text-gray-700 capitalize flex items-center" role="menuitem">
-                    {item.name}
-                  </a>
+                  <p className=" text-gray-700 capitalize flex items-center" role="menuitem">
+                    {item?.name}
+                  </p>
                 </div>
               </MenuItem>
             ))}

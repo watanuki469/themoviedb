@@ -32,7 +32,7 @@ export default function LoginLayout() {
             }
         } catch (error) {
             // Handle network errors or other exceptions
-            toast.error("An error occurred during login");
+            toast.error("Your account not exsis");
         }
         setLoadingAPI(false);
     }

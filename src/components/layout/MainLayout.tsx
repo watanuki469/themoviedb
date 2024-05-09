@@ -62,7 +62,7 @@ export default function MainLayout() {
                                 </a>
                                 <p className="mt-2 hover:underline">TV Tracker: Renewed and Canceled Shows</p>
                                 <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
-                            </div>
+                           n </div>
 
                         </div>
                     </div>
