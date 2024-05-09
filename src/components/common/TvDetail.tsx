@@ -331,9 +331,9 @@ export default function TvDetail({
                                                 </button>
                                             </div>
                                         </div>
-                                        <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " onClick={() => handleWatchList(singleTvList[0])}>
+                                        <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " >
                                             {checkLog ? (
-                                                <div>
+                                                <div onClick={() => handleWatchList(singleTvList[0])}>
                                                     {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
                                                         <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                             <i className="fas fa-check font-bold text-xl  mr-2"></i>
@@ -357,7 +357,7 @@ export default function TvDetail({
                                                     )}
                                                 </div>
                                             ) : (
-                                                <div>
+                                                <div onClick={() => handleWatchList(singleTvList[0])}>
                                                     {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
                                                         <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                             <i className="fas fa-check font-bold text-xl  mr-2"></i>
@@ -382,7 +382,9 @@ export default function TvDetail({
                                                 </div>
                                             )}
 
-                                            <div className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
+                                            <div
+                                                onClick={() => navigate('/watchList')}
+                                                className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </div>
                                         </button>
@@ -457,9 +459,9 @@ export default function TvDetail({
                         </div>
 
                         <div className='px-3 py-2 border-b border-gray-300 '>
-                            <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " onClick={() => handleWatchList(singleTvList[0])}>
+                            <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " >
                                 {checkLog ? (
-                                    <div>
+                                    <div onClick={() => handleWatchList(singleTvList[0])}>
                                         {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                 <i className="fas fa-check font-bold text-xl  mr-2"></i>
@@ -483,7 +485,7 @@ export default function TvDetail({
                                         )}
                                     </div>
                                 ) : (
-                                    <div>
+                                    <div onClick={() => handleWatchList(singleTvList[0])}>
                                         {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                 <i className="fas fa-check font-bold text-xl  mr-2"></i>
@@ -508,7 +510,9 @@ export default function TvDetail({
                                     </div>
                                 )}
 
-                                <div className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
+                                <div
+                                    onClick={() => navigate('/watchList')}
+                                    className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                     <i className="fa-solid fa-chevron-down"></i>
                                 </div>
                             </button>

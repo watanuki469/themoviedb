@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { loginApi } from "../../redux/client/api.Login";
-import bg from '../../assets/home-background.jpg'
+import bg from '../../assets/home-background.jpg';
+import { fetchAllUser, loginApi } from "../../redux/client/api.Login";
 
 
 export default function LoginLayout() {
@@ -25,7 +25,7 @@ export default function LoginLayout() {
                 localStorage.setItem("token", (res as any).token);
                 localStorage.setItem("email", email); // Assuming email is defined elsewhere
                 navigate("/");
-                toast.success(`Welcome to Vasiliev movie web, `)
+                toast.success(`Welcome to Vasiliev movie web `)
             } else {
                 // Handle unexpected response format
                 toast.error("Unexpected response from server");
@@ -36,12 +36,25 @@ export default function LoginLayout() {
         }
         setLoadingAPI(false);
     }
+    const [user, setListUser] = useState<any[]>([]);
+
+    // useEffect(() => {
+    //     fetchAllUser('1')
+    //         .then((res) => {
+    //             setListUser(res?.data);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching data:", error);
+    //         });
+    // }, []);
+    // console.log(user);
+    
 
     return (
         <div className="min-h-screen cursor-pointer py-16 px-2" style={{ backgroundImage: `url(${bg})` }}>
-            <div className="bg-black text-white bg-opacity-70 ml-auto mr-auto flex justify-center items-center rounded w-6/12  ">
+            <div className="bg-black text-white bg-opacity-70 ml-auto mr-auto flex justify-center items-center rounded lg:w-6/12 w-10/12  ">
                 <div className="w-full max-w-xl shadow-2xl px-10 py-10 ">
-                    <h2 className="text-3xl font-bold mb-4 text-center text-blue-500">Log in</h2>
+                    <h2 className="text-3xl font-bold mb-4 text-center text-blue-500">Log in IMDb</h2>
                     <div className="mb-4 ">Email or Username (eve.holt@reqres.in)</div>
 
                     <input type="text"

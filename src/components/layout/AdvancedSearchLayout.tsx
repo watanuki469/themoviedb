@@ -19,9 +19,12 @@ export default function AdvancedSearchLayout() {
     const [mediatype, setMediaType] = useState('movie');
     const topRatedMovies = useAppSelector((state) => state.search.listSearch)
     console.log(topRatedMovies);
+    
 
     const [searchParams, setSearchParams] = useSearchParams()
     const genreParam = searchParams.get("genre");
+    const [votesFrom, setVotesFrom] = useState('');
+    const [votesTo, setVotesTo] = useState('');
     const [query, setQuery] = useState('');
     useEffect(() => {
         const titleParam = searchParams.get("title");
@@ -47,11 +50,20 @@ export default function AdvancedSearchLayout() {
     }
 
     useEffect(() => {
+        let timerId: ReturnType<typeof setTimeout>;
+
         if (query.trim().length === 0) {
+            setQuery('');
+
+        } else {
+            timerId = setTimeout(() => {
+                dispatch(fetchSearch());
+            }, 2000); 
         }
-        else {
-            dispatch(fetchSearch());
-        }
+
+        return () => {
+            clearTimeout(timerId); // Hủy timeout nếu component unmounts hoặc effect chạy lại trước khi timeout được kích hoạt
+        };
     }, [mediatype, query]);
 
 
@@ -540,7 +552,6 @@ export default function AdvancedSearchLayout() {
 
     const onQueryChange = (e: any) => {
         const newQuery = e.target.value;
-        // setOpen(!!newQuery);
         setQuery(newQuery);
     };
 
@@ -597,8 +608,7 @@ export default function AdvancedSearchLayout() {
     };
 
 
-    const [votesFrom, setVotesFrom] = useState('');
-    const [votesTo, setVotesTo] = useState('');
+  
 
     // Hàm xử lý sự kiện khi người dùng thay đổi ngày "From"
     const handleFromVotesChange = (event: any) => {
@@ -636,26 +646,23 @@ export default function AdvancedSearchLayout() {
     useEffect(() => {
         let params = [];
         if (query.trim().length > 0) {
-            params.push('title=' + query.trim());
+            params.push('Title=' + query.trim());
         }
         if (selectedGenres.length > 0) {
-            params.push('genres=' + selectedGenres.join(','));
+            params.push('Genres=' + selectedGenres.join(','));
+        }
+        if (votesFrom && votesTo) {
+            params.push('votes=' + votesFrom.trim() + '->' + votesTo.trim());
         }
         if (fromDate && toDate) {
-            params.push('releaseday=' + fromDate.trim() + '->' + toDate.trim());
-            // params.push('+'+toDate.trim());
+            params.push('Releaseday=' + fromDate.trim() + '->' + toDate.trim());
         }
         if (imdbImdbRatingFrom && imdbImdbRatingTo) {
-            params.push('IM=' + fromDate.trim() + '->' + toDate.trim());
-            // params.push('+'+toDate.trim());
+            params.push('IMDBRating=' + imdbImdbRatingFrom.trim() + '->' + imdbImdbRatingTo.trim());
         }
-        if (fromDate && toDate) {
-            params.push('releaseday=' + fromDate.trim() + '->' + toDate.trim());
-            // params.push('+'+toDate.trim());
-        }
-
+       
         setSearchParams(params.join('&'));
-    }, [mediatype, query, selectedGenres, fromDate, toDate]);
+    }, [mediatype, query, selectedGenres, fromDate, toDate,votesFrom,votesTo,imdbImdbRatingFrom,imdbImdbRatingTo]);
 
 
     return (
@@ -704,7 +711,7 @@ export default function AdvancedSearchLayout() {
                         {selectedGenres.map((genre, index) => (
                             <div key={index} className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                 <p className="">
-                                    Genre: {genre}
+                                    Genres: {genre}
                                 </p>
                                 <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => handleRemoveGenreFilter(genre)}></i>
                             </div>
@@ -768,6 +775,7 @@ export default function AdvancedSearchLayout() {
                                     <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => clearImdbFromTo()}></i>
                                 </div>
                             ) : (
+
                                 <div></div>
                             )
                         }
@@ -1046,82 +1054,94 @@ export default function AdvancedSearchLayout() {
                                         }}>
                                         </div>
                                     )}
-                                    {topRatedMovies[0]?.results
-                                        .filter((movie: any) => {
-                                            if (selectedGenres?.length === 0) return true; // No genre filter
-                                            // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres.every((genre) =>
-                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                            );
 
-                                            return hasAllGenres;
-                                        })
-                                        .filter((movie: any) => {
-                                            // Lọc theo khoảng ngày phát hành
-                                            if (!fromDate || !toDate) return true; // Nếu không có khoảng ngày được chọn
-                                            const releaseDate = new Date(movie?.release_date);
-                                            const from = new Date(fromDate);
-                                            const to = new Date(toDate);
-                                            // Kiểm tra xem ngày phát hành có nằm trong khoảng fromDate và toDate không
-                                            return releaseDate >= from && releaseDate <= to;
-                                        })
-                                        .filter((movie: any) => {
-                                            if (!imdbImdbRatingFrom || !imdbImdbRatingTo) return true;
-                                            const releaseDate = new Number(movie?.vote_average);
-                                            const from = new Number(imdbImdbRatingFrom);
-                                            const to = new Number(imdbImdbRatingTo);
-                                            return releaseDate >= from && releaseDate <= to;
-                                        })
-                                        .filter((movie: any) => {
-                                            if (!votesFrom || !votesTo) return true;
-                                            const releaseDate = new Number(movie?.vote_count);
-                                            const from = new Number(votesFrom);
-                                            const to = new Number(votesTo);
-                                            return releaseDate >= from && releaseDate <= to;
-                                        })
+                                    {
+                                        query?.length > 0 ? (
+                                            <div>
+                                                {
+                                                    topRatedMovies[0]?.results
+                                                        .filter((movie: any) => {
+                                                            if (selectedGenres?.length === 0) return true; // No genre filter
+                                                            // Check if every selected genre is present in the movie's genres
+                                                            const hasAllGenres = selectedGenres.every((genre) =>
+                                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                                            );
 
-                                        .filter(() => {
-                                            if (applyFilter === true) return true; // No filter
-                                            return null
-                                        })
-                                        .sort((a: any, b: any) => {
-                                            if (menuItemNum === '5') {
-                                                // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
-                                                if (titleA < titleB) {
-                                                    return -1;
-                                                }
-                                                if (titleA > titleB) {
-                                                    return 1;
-                                                }
-                                                return 0;
-                                            }
-                                            else if (menuItemNum === '1') {
-                                                return b?.vote_average - a?.vote_average;
-                                            }
-                                            else if (menuItemNum === '2') {
-                                                return a?.id - b?.id;
-                                            }
-                                            else if (menuItemNum === '3') {
-                                                return compareReleaseDates(a, b);
+                                                            return hasAllGenres;
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            // Lọc theo khoảng ngày phát hành
+                                                            if (!fromDate || !toDate) return true; // Nếu không có khoảng ngày được chọn
+                                                            const releaseDate = new Date(movie?.release_date);
+                                                            const from = new Date(fromDate);
+                                                            const to = new Date(toDate);
+                                                            // Kiểm tra xem ngày phát hành có nằm trong khoảng fromDate và toDate không
+                                                            return releaseDate >= from && releaseDate <= to;
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            if (!imdbImdbRatingFrom || !imdbImdbRatingTo) return true;
+                                                            const releaseDate = new Number(movie?.vote_average);
+                                                            const from = new Number(imdbImdbRatingFrom);
+                                                            const to = new Number(imdbImdbRatingTo);
+                                                            return releaseDate >= from && releaseDate <= to;
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            if (!votesFrom || !votesTo) return true;
+                                                            const releaseDate = new Number(movie?.vote_count);
+                                                            const from = new Number(votesFrom);
+                                                            const to = new Number(votesTo);
+                                                            return releaseDate >= from && releaseDate <= to;
+                                                        })
 
-                                            }
-                                            else if (menuItemNum === '4') {
-                                                return b?.vote_count - a?.vote_count;
+                                                        .filter(() => {
+                                                            if (applyFilter === true) return true; // No filter
+                                                            return null
+                                                        })
+                                                        .sort((a: any, b: any) => {
+                                                            if (menuItemNum === '5') {
+                                                                // Sắp xếp theo thứ tự alphabet của title
+                                                                const titleA = a?.original_title?.toUpperCase();
+                                                                const titleB = b?.original_title?.toUpperCase();
+                                                                if (titleA < titleB) {
+                                                                    return -1;
+                                                                }
+                                                                if (titleA > titleB) {
+                                                                    return 1;
+                                                                }
+                                                                return 0;
+                                                            }
+                                                            else if (menuItemNum === '1') {
+                                                                return b?.vote_average - a?.vote_average;
+                                                            }
+                                                            else if (menuItemNum === '2') {
+                                                                return a?.id - b?.id;
+                                                            }
+                                                            else if (menuItemNum === '3') {
+                                                                return compareReleaseDates(a, b);
 
-                                            }
-                                            else if (menuItemNum === '7') {
-                                                return compareReleaseDates(b, a);
-                                            }
-                                            else if (menuItemNum === '6') {
-                                                return b?.popularity - a?.popularity;
-                                            }
-                                            else {
-                                                return 0
-                                            }
-                                        })
-                                        ?.map((m: any, index: any) => renderMovieItem(m, index, currentView, sortOrder))}
+                                                            }
+                                                            else if (menuItemNum === '4') {
+                                                                return b?.vote_count - a?.vote_count;
+
+                                                            }
+                                                            else if (menuItemNum === '7') {
+                                                                return compareReleaseDates(b, a);
+                                                            }
+                                                            else if (menuItemNum === '6') {
+                                                                return b?.popularity - a?.popularity;
+                                                            }
+                                                            else {
+                                                                return 0
+                                                            }
+                                                        })
+                                                        ?.map((m: any, index: any) => renderMovieItem(m, index, currentView, sortOrder))}
+                                            </div>
+                                        ) :
+                                            (
+                                                <div>
+                                                </div>
+                                            )}
+
                                 </div>
                             </div>
                         </div>

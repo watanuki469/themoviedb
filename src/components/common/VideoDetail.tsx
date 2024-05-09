@@ -17,6 +17,8 @@ export default function VideoDetail({
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [numberIndex]);
+    console.log(singleMovieList);
+    let navigate = useNavigate()
 
 
     const usRelease = singleMovieList[numberIndex]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === "US");
@@ -46,18 +48,19 @@ export default function VideoDetail({
                     </div>
                     <div className="hidden lg:block col-span-4 h-full ml-2 overflow-hidden">
                         <div className=" h-1/2 flex px-2 py-2 gap-2 max-h-40">
-                            <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
+                            <img onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}
+                                src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
                                 className="max-w-32 h-full" />
-                            <div className=''>
-                                <div className='justify-between flex items-center'>
-                                    <p className='text-lg'>{singleMovieList[0]?.original_title} ({singleMovieList[0]?.release_date?.slice(numberIndex, 4)} )</p>
+                            <div className='' >
+                                <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}>
+                                    <p className='text-lg'>{singleMovieList[0]?.title ? singleMovieList[0]?.title : singleMovieList[0]?.name} ({singleMovieList[0]?.release_date ? singleMovieList[0]?.release_date?.slice(0, 4) : singleMovieList[0]?.first_air_date?.slice(0, 4)} )</p>
                                     <i className="fa-solid fa-chevron-right"></i>
                                 </div>
                                 <div className='flex gap-2 flex-wrap text-gray-500  text-sm'>
                                     {certification} |
                                     {singleMovieList[0]?.genres?.map((item: any, index: any) => (
                                         <div key={index} className=" gap-2 flex" >
-                                            <p> {item.name}</p>
+                                            <p className='hover:underline hover:text-yellow-300' onClick={() => navigate(`/search?genres=${item?.name}`)}> {item?.name}</p>
 
                                             <p className=''>{index < Math.min(singleMovieList[0]?.genres?.length) - 1 ? '•' : ''}</p>
 
@@ -70,7 +73,6 @@ export default function VideoDetail({
                         </div>
                         <div className="h-1/2 px-2 py-2 gap-2">
                             <div className='items-center gap-2'>
-                                {/* <p className='text-xl'>No. {numberIndex} </p> */}
                                 <p>{singleMovieList[0]?.videos?.results[numberIndex]?.name}</p>
 
                             </div>
@@ -86,10 +88,12 @@ export default function VideoDetail({
                         <div className='col-span-1'>
                             <div className='h-full aligns-center item-center justify-center px-2 py-2 bg-black flex'>
                                 <div className='flex w-full gap-2'>
-                                    <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
+                                    <img
+                                        onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}
+                                        src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
                                         className="max-w-32 h-full max-h-32" />
                                     <div className=' px-2 py-2 w-full items-center'>
-                                        <div className='justify-between flex items-center'>
+                                        <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)} >
                                             <p className='text-lg'>{singleMovieList[0]?.original_title} ({singleMovieList[0]?.release_date?.slice(numberIndex, 4)} )</p>
                                             <i className="fa-solid fa-chevron-right mr-4"></i>
                                         </div>
@@ -97,14 +101,10 @@ export default function VideoDetail({
                                             {certification} |
                                             {singleMovieList[0]?.genres?.map((item: any, index: any) => (
                                                 <div key={index} className=" gap-2 flex" >
-                                                    <p> {item.name}</p>
-
+                                                    <p className='hover:underline hover:text-yellow-300' onClick={() => navigate(`/search?genres=${item?.name}`)}> {item?.name}</p>
                                                     <p className=''>{index < Math.min(singleMovieList[0]?.genres?.length) - 1 ? '•' : ''}</p>
-
                                                 </div>
-
                                             ))}
-
                                         </div>
                                     </div>
                                 </div>

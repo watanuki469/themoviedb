@@ -2,6 +2,7 @@ import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import CastCrewLayout from "./components/layout/CastCrewLayout";
 import CelebNewLayout from "./components/layout/CelebNewLayout";
+import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import LoginLayout from "./components/layout/LoginLayout";
 import MainLayout from "./components/layout/MainLayout";
@@ -13,6 +14,7 @@ import ProLayout from "./components/layout/ProLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
+import TopPopularTvLayout from "./components/layout/TopPopularTvLayout";
 import TvLayout from "./components/layout/TvLayout";
 import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
@@ -83,6 +85,11 @@ const routes = [
     state: "top250Tv"
   },
   {
+    path: "/topPopularTv",
+    element: <TopPopularTvLayout/>,
+    state: "topPopularTv"
+  },
+  {
     path: "/topBoxOffice",
     element: <TopBoxOffice/>,
     state: "topBoxOffice"
@@ -140,6 +147,15 @@ const routes = [
     element: <WatchListLayout/>,
     state: "watchList"
   },
+  {
+    path: "/favoriteList",
+    element: <FavoriteListLayout/>,
+    state: "FavoriteList"
+  },
+
+  
+
+
   //not have api suitable
   // {
   //   path: "/watchToWatch/:name",

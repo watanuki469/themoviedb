@@ -59,10 +59,13 @@ export default function SearchBar() {
     const searchList = useAppSelector((state) => state.search.listSearch)
 
     useEffect(() => {
+        let timerId: ReturnType<typeof setTimeout>;
         if (query.trim().length === 0) {
         }
         else {
-            dispatch(fetchSearch());
+            timerId = setTimeout(() => {
+                dispatch(fetchSearch());
+            }, 2000); 
         }
         function handleResize() {
             const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
@@ -187,18 +190,24 @@ export default function SearchBar() {
                                             if (mediatype === 'multi') {
                                                 if (item?.media_type === 'person') {
                                                     navigate(`/person/${item.id}`);
+                                                    setOpen(false)
                                                 } else if (item?.media_type === "movie") {
                                                     navigate(`/movie/${item.id}`);
+                                                    setOpen(false)
                                                 } else {
                                                     navigate(`/tv/${item.id}`);
+                                                    setOpen(false)
                                                 }
                                             } else {
                                                 if (mediatype === 'person') {
                                                     navigate(`/person/${item.id}`);
+                                                    setOpen(false)
                                                 } else if (mediatype === "movie") {
                                                     navigate(`/movie/${item.id}`);
+                                                    setOpen(false)
                                                 } else {
                                                     navigate(`/tv/${item.id}`);
+                                                    setOpen(false)
                                                 }
                                             }
                                         }}>

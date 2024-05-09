@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import FourSwiperRow from "../../modules/FourSwiperRow";
@@ -139,8 +139,31 @@ export default function MovieLayout() {
     // Lấy tên của tháng hiện tại từ mảng monthNames
     const currentMonthName = monthNames[currentMonth];
 
+    const moreToExploreRef = useRef<HTMLDivElement>(null); // Định rõ kiểu của ref là HTMLDivElement
+    const [moreToExploreHeight, setMoreToExploreHeight] = useState(0);
+    useEffect(() => {
+        const updateMoreToExploreHeight = () => {
+            const windowHeight = window.innerHeight;
+            const moreToExploreElement = moreToExploreRef.current;
+            if (moreToExploreElement) { // Kiểm tra xem moreToExploreElement có tồn tại không trước khi sử dụng nó
+                const moreToExploreRect = moreToExploreElement.getBoundingClientRect();
+                const newHeight = Math.max(windowHeight / 2, moreToExploreRect.height);
+                setMoreToExploreHeight(newHeight);
+            }
+        };
+
+        // Update height initially and when window resizes
+        updateMoreToExploreHeight();
+        window.addEventListener('resize', updateMoreToExploreHeight);
+
+        return () => {
+            window.removeEventListener('resize', updateMoreToExploreHeight);
+        };
+    }, []);
+
+
     return (
-        <div className=" min-h-screen cursor-pointer">
+        <div className=" min-h-screen cursor-pointer w-full">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -150,7 +173,7 @@ export default function MovieLayout() {
             </div>
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
+                    <div className="md:grid grid-cols-12 gap-2 w-full px-2">
                         <div className="lg:col-span-8 md-col-span-12  w-full ">
                             <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -166,12 +189,12 @@ export default function MovieLayout() {
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.images?.backdrops?.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"
-                                onClick={()=>navigate(`/image/movie/${id}`)}></i>
+                                    onClick={() => navigate(`/image/movie/${id}`)}></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={movieImageList} />
                             </div>
-                            <div className="text-white flex py-4 " onClick={()=>navigate(`/fullcredits/movie/${id}`)}>
+                            <div className="text-white flex py-4 " onClick={() => navigate(`/fullcredits/movie/${id}`)}>
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>
@@ -219,7 +242,7 @@ export default function MovieLayout() {
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieReview">User Reviews</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews.results.length}</p>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews?.results?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
                                 <div className="flex items-center ml-auto gap-2" >
@@ -232,21 +255,36 @@ export default function MovieLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <SingleMovieReview singleMovieList={singleMovieList} />
                             </div>
-
-
-
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 ">
+                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 object-none object-right-bottom">
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                <h2 className="text-2xl font-bold text-black ">More tof explore</h2>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <ListRow listRowList={topRatedMovies} />
                             </div>
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p className="text-red w-full text-blue-500"> See our picks</p>
+                        </div> */}
+                        <div className="hidden lg:block col-span-4 h-full px-2 py-2 ">
+                            <div
+                                ref={moreToExploreRef}
+                                style={{ height: moreToExploreHeight, overflow: 'auto' }}
+                                className="bg-white flex flex-col"
+                            >
+                                <div className="flex items-center py-3">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black">More to explore</h2>
+                                </div>
+                                <div className="lg:max-w-full md:w-screen overflow-y-auto">
+                                    <ListRow listRowList={topRatedMovies} />
+                                </div>
+                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
+                                <p className="text-red w-full text-blue-500"> See our picks</p>
+                            </div>
                         </div>
+
                     </div>
 
                 </div>

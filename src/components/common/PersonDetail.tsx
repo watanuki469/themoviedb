@@ -50,6 +50,37 @@ export default function PersonDetail({
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
+    const [checkLog, setCheckLog] = useState(false)
+
+    const handleWatchList = (movie: any) => {
+        const storedDataString = localStorage.getItem('favoriteList');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[movie?.id]) {
+            delete storedData[movie?.id];
+            localStorage.setItem('favoriteList', JSON.stringify(storedData));
+            setCheckLog(!checkLog)
+            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from favoriteList successfully`);
+
+        } else {
+            storedData[movie?.id] = movie;
+            setCheckLog(!checkLog)
+            localStorage.setItem('favoriteList', JSON.stringify(storedData));
+            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to favoriteList successfully`);
+
+        }
+    }
+    function formatNumber(num: any) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'm';
+        }
+        if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'k';
+        }
+        return num;
+    }
     return (
         <section className="" style={{
             position: "relative",
@@ -76,7 +107,7 @@ export default function PersonDetail({
                         <div className=" py-2 hidden lg:block ">•</div>
                         <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personVideos')}>Videos</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block hover:underline" onClick={() => navigate('/IMDbPro')}>IMDbPro</button>
-                        
+
                         <IconButton
                             onClick={handleShareClick}
                             size="small"
@@ -284,14 +315,62 @@ export default function PersonDetail({
                                             </div>
 
                                         </button>
-                                        <button className="items-center w-full  border-2 border-black bg-yellow-300 ">
-                                            <div className="py-2 px-3 border-gray-400 flex items-center gap-2 grow  text-center h-full">
-                                                <i className="fa-solid fa-plus text-black"></i>
-                                                <div className="text-left">
-                                                    <p className="text-black font-bold">Add to list</p>
+                                        <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 ">
+                                            {checkLog ? (
+                                                <div onClick={() => handleWatchList(singleMovieList[0])}>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Remove from FavoriteList</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)}user</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Add to FavoriteList</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
+                                            ) : (
+                                                <div onClick={() => handleWatchList(singleMovieList[0])}>
+                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Remove from FavoriteList</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                            <div className="text-left">
+                                                                <div className='font-bold'  >
+                                                                    <p>Add to FavoriteList</p>
+                                                                </div>
+                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
 
+                                            <div
+                                                onClick={() =>'/favoriteList'}
+                                                className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
+                                                <i className="fa-solid fa-chevron-down"></i>
+                                            </div>
                                         </button>
 
                                     </div>
@@ -331,7 +410,7 @@ export default function PersonDetail({
                                     </p>
                                 </div>
                                 <div className='gap-2'>
-                                    <p>{singleMovieList[0]?.birthday &&
+                                    <p>Born :{singleMovieList[0]?.birthday &&
                                         new Date(singleMovieList[0]?.birthday).toLocaleDateString('en-US', {
                                             month: 'long',
                                             day: 'numeric',
@@ -344,7 +423,7 @@ export default function PersonDetail({
                         </div>
 
                         <div className='px-3 py-2 border-b border-gray-300 '>
-                            <button className="flex items-center w-full  border-2 border-black bg-yellow-300 ">
+                            {/* <button className="flex items-center w-full  border-2 border-black bg-yellow-300 ">
                                 <div className="py-2 px-3 border-gray-400 flex items-center gap-2 grow  text-center h-full">
                                     <i className="fa-solid fa-icons text-black"></i>
                                     <div className="text-left">
@@ -352,6 +431,61 @@ export default function PersonDetail({
                                     </div>
                                 </div>
                                 <div className="py-3 px-3  flex items-center border-gray-500 border-l-2 justify-center h-full ">
+                                    <i className="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </button> */}
+                            <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " onClick={() => handleWatchList(singleMovieList[0])}>
+                                {checkLog ? (
+                                    <div>
+                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Remove from FavoriteList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)}user</p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Add to FavoriteList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Remove from FavoriteList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Add to FavoriteList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                <div className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                     <i className="fa-solid fa-chevron-down"></i>
                                 </div>
                             </button>

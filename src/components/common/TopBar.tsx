@@ -88,7 +88,7 @@ export default function TopBar() {
         return ['Release Calendar', 'Most Popular Movies', 'Top Box Office'
           , 'Movies News', 'Browse Movie By Genre'];
       case 'TV Shows':
-        return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows', 'TV News'];
+        return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows','Browse Tv By Genre', 'TV News'];
       case 'Watch':
         return ['What to Watch', 'Latest Trailers', 'IMDb Originals', 'IMDb Picks', 'IMDb Podcasts'];
       case 'Awards & Events':
@@ -125,7 +125,9 @@ export default function TopBar() {
         } else if (item === 'Top 250 TV Shows') {
           navigate('/Top250Tv');
         } else if (item === 'Most Popular TV Shows') {
-          navigate('/Top250Tv');
+          navigate('/topPopularTv');
+        } else if (item === 'Browse Tv By Genre') {
+          navigate('/features/genre');
         } else if (item === 'TV News') {
           navigate('/news/tv');
         } else {
@@ -265,9 +267,9 @@ export default function TopBar() {
 
 
   return (
-    <section className="static w-full bg-black mx-auto h-12 py-2 mb-4">
+    <section className=" w-full bg-black mx-auto h-12 py-2 mb-4 static ">
       {isSearchOpen ? (
-        <div className='items-center h-full w-full flex '>
+        <div className='items-center h-10 mt-1 px-2 w-full flex gap-2'>
           <SearchBar />
           <i className="fa-regular fa-circle-xmark text-white text-3xl" onClick={() => setIsSearchOpen(false)}></i>
         </div>
@@ -363,8 +365,11 @@ export default function TopBar() {
                             Whats on TV & Streaming
                           </p>
                           <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">Top 250 TV Shows</p>
-                          <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">
                             Most Popular TV Shows
+                          </p>
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">
+                            Browse Movie By Genre
                           </p>
                           <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV News</p>
                         </div>
@@ -514,7 +519,7 @@ export default function TopBar() {
             aria-expanded={openUser ? 'true' : undefined}
             sx={{
               bgcolor: 'black',fontWeight:'extrabold', color: 'white', borderRadius: '0',
-              //  display: { xs: "none", md: "flex" },
+               display: { xs: "none", md: "flex" },
               '&:hover': {
                 opacity: '80%'
               }
@@ -612,6 +617,15 @@ export default function TopBar() {
             </MenuItem>
 
             <div className='hover:text-yellow-300'>
+              <MenuItem onClick={()=>navigate('/favoriteList')}>
+                <ListItemIcon>
+                <i className="fa-solid fa-user-astronaut text-2xl"></i>
+                </ListItemIcon>
+                <p>Favorite Actor List</p>
+              </MenuItem>
+            </div>
+
+            <div className='hover:text-yellow-300'>
               <MenuItem onClick={handleCopyLink}>
                 <ListItemIcon>
                   <i className="fa-solid fa-cat text-2xl "></i>
@@ -623,8 +637,8 @@ export default function TopBar() {
 
           </Menu>
           <button onClick={() => navigate("/")}
-            className=" bg-yellow-400 text-black text-center border-none font-bold text-sm h-10 rounded-lg font-sans
-            whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2"
+            className=" bg-yellow-400 text-black text-center border-none font-bold text-sm  rounded-lg
+            whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2 mr-2"
           >
             Use App
           </button>

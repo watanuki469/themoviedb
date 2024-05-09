@@ -147,7 +147,7 @@ export default function MainLayout() {
                             onClick={() => navigate('/top250Movie')}
                             className="lg:grid lg:grid-cols-3 gap-2 text-white ">
                             <div>
-                                <ListRow listRowList={topRatedMovies} />
+                                <ListRow listRowList={topRatedMovies?.slice(3)} />
                                 <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
                             </div>

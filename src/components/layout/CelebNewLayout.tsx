@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import CelebrityNew from "../../modules/CelebrityNew";
 import TopNew from "../../modules/TopNew";
 import TvNew from "../../modules/TvNew";
-import { fetchAllMovieNew } from "../../redux/client/api.MovieNew";
-import TopBar from "../common/TopBar";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { useAppDispatch } from "../../redux/hooks";
 import axiosTvNew from "../../redux/axios/axiosTVNew";
+import { useAppDispatch } from "../../redux/hooks";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import TopBar from "../common/TopBar";
 
 export default function CelebNewLayout() {
     const [movieNews, setMovieNews] = useState<any[]>([]);

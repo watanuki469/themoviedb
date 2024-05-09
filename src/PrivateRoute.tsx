@@ -6,7 +6,7 @@ export function PrivateRoute(props: RouteProps) {
     const isLoggedIn = Boolean(localStorage.getItem('token'))
     console.log('Is login =', isLoggedIn)
     // if (!isLoggedIn) {
-    //     return <Navigate to="/Login" />
+    //     return <Navigate to="login" />
     // }
     return isLoggedIn ? <Outlet /> : <Navigate to="/login" />;
 }   
