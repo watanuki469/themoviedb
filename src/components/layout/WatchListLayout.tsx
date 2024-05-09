@@ -264,7 +264,7 @@ export function WatchListLayout() {
                                 {/* <div className="ml-auto" onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie.id}`)} >
                                     <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                 </div> */}
-                                <div className="ml-auto" onClick={() => removeFromWatchList(movie.id)} >
+                                <div className="ml-auto" onClick={() => removeFromWatchList(movie?.id)} >
                                     <Tooltip title="Click here to remove from watchlist">
                                         <i className="fa-solid fa-trash px-2 text-green-500 text-xl"></i>
                                     </Tooltip>

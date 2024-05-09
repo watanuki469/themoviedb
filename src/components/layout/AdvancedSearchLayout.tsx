@@ -18,8 +18,6 @@ export default function AdvancedSearchLayout() {
     let navigate = useNavigate()
     const [mediatype, setMediaType] = useState('movie');
     const topRatedMovies = useAppSelector((state) => state.search.listSearch)
-    console.log(topRatedMovies);
-    
 
     const [searchParams, setSearchParams] = useSearchParams()
     const genreParam = searchParams.get("genre");
@@ -58,13 +56,13 @@ export default function AdvancedSearchLayout() {
         } else {
             timerId = setTimeout(() => {
                 dispatch(fetchSearch());
-            }, 2000); 
+            }, 2000);
         }
 
         return () => {
             clearTimeout(timerId); // Hủy timeout nếu component unmounts hoặc effect chạy lại trước khi timeout được kích hoạt
         };
-    }, [mediatype, query]);
+    }, [query]);
 
 
 
@@ -608,7 +606,7 @@ export default function AdvancedSearchLayout() {
     };
 
 
-  
+
 
     // Hàm xử lý sự kiện khi người dùng thay đổi ngày "From"
     const handleFromVotesChange = (event: any) => {
@@ -644,7 +642,16 @@ export default function AdvancedSearchLayout() {
         setToDate('')
     }
     useEffect(() => {
+        const mediaParam = searchParams.get("MediaType");
         let params = [];
+        if (mediaParam) {
+            setMediaType(mediaParam);
+            params.push('MediaType=' + mediaParam);
+        }
+        if (!mediaParam) {            
+            params.push('MediaType=' + mediatype);
+        }
+        
         if (query.trim().length > 0) {
             params.push('Title=' + query.trim());
         }
@@ -660,9 +667,9 @@ export default function AdvancedSearchLayout() {
         if (imdbImdbRatingFrom && imdbImdbRatingTo) {
             params.push('IMDBRating=' + imdbImdbRatingFrom.trim() + '->' + imdbImdbRatingTo.trim());
         }
-       
+
         setSearchParams(params.join('&'));
-    }, [mediatype, query, selectedGenres, fromDate, toDate,votesFrom,votesTo,imdbImdbRatingFrom,imdbImdbRatingTo]);
+    }, [mediatype, query, selectedGenres, fromDate, toDate, votesFrom, votesTo, imdbImdbRatingFrom, imdbImdbRatingTo]);
 
 
     return (

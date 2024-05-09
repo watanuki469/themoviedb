@@ -1,22 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import ListRow from "../../modules/ListRow";
 import SwiperRow from "../../modules/SwiperRow";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
+import BornToday from "../common/BornToday";
 import Footer from "../common/Footer";
 import Slider from "../common/Slider";
 import TopBar from "../common/TopBar";
-import BornToday from "../common/BornToday";
-import TopNew from "../../modules/TopNew";
 
 export default function MainLayout() {
-    const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
     const discoverTv = useAppSelector((state) => state.movies.discoverTv)
     const discoverMovie = useAppSelector((state) => state.movies.discoverMovies)
-    const nextFlix = useAppSelector((state) => state.movies.listNetflixOriginal)
 
     const currentDate = new Date();
 
@@ -62,7 +59,7 @@ export default function MainLayout() {
                                 </a>
                                 <p className="mt-2 hover:underline">TV Tracker: Renewed and Canceled Shows</p>
                                 <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
-                           n </div>
+                            </div>
 
                         </div>
                     </div>

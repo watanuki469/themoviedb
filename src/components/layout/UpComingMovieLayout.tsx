@@ -13,6 +13,8 @@ export default function UpComingMovieLayout() {
     let navigate = useNavigate()
     const [mediatype, setMediaType] = useState('movie');
     const upComingList = useAppSelector((state) => state.upComing.listUpComing)
+    console.log(upComingList);
+    
 
     const fetchUpComing = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -106,6 +108,7 @@ export default function UpComingMovieLayout() {
                                                         alt="product images"
                                                         className="w-20 h-28 hover:opacity-80"
                                                         onError={handleImageError}
+                                                        onClick={() => navigate(`/${item?.title ? 'movie' : 'tv'}/${item?.id}`)} 
                                                     />
                                                     <div>
                                                         <p>{item?.original_title} ({item?.release_date?.slice(0, 4)})</p>

@@ -102,7 +102,7 @@ export default function ImageLayout() {
             })
     }
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         if (mediaType === 'tv') {
             dispatch(fetchTv());
             dispatch(fetchTvImages());
@@ -189,6 +189,10 @@ export default function ImageLayout() {
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+    };
+    const handleSwitchImage = (e: any) => {
+        setCurrentView('table')
+        setActiveStep(e)
     };
     const [isContentVisible, setContentVisible] = useState(true);
 
@@ -534,6 +538,8 @@ export default function ImageLayout() {
                                                         onError={handleImageError}
                                                         alt="movie-img"
                                                         className='h-24 w-24 object-cover bg-gray-200 '
+                                                        onClick={()=>handleSwitchImage(index)}
+                                                       
                                                     />
                                                 ))}
                                             </div>
@@ -569,6 +575,7 @@ export default function ImageLayout() {
                                                         alt="person-img"
                                                         className='h-24 w-24 object-cover bg-gray-200 '
                                                         key={index * 10}
+                                                        onClick={()=>handleSwitchImage(index)}
                                                     />
                                                 ))}
                                             </div>

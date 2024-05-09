@@ -26,9 +26,7 @@ export default function MovieLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
-    const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
-
+    
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
             apiController.apiSingleMovieRequests.singleMovie(id),
