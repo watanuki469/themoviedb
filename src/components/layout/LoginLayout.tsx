@@ -62,7 +62,7 @@ export default function LoginLayout() {
                         fullWidth
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        sx={{border:4,borderColor:'blue',borderRadius:2}}
+                        // sx={{border:4,borderColor:'blue',borderRadius:2}}
                         // color="success"
                     />
                     <div className="py-4">Password (12345678)</div>
@@ -74,7 +74,7 @@ export default function LoginLayout() {
                             fullWidth
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
-                            sx={{border:4,borderColor:'blue',borderRadius:2}}
+                            // sx={{border:4,borderColor:'blue',borderRadius:2}}
                             // color="success"
                         />
 
@@ -90,14 +90,14 @@ export default function LoginLayout() {
                         </button>
                     </div>
 
-                    <div
+                    {/* <div
                         className={`w-full py-2 px-4 mb-4 text-center rounded-md bg-gray-300 text-gray-500 hover:bg-gray-200 font-bold cursor-not-allowed`}
                     >
                         <span className="mr-1">
                             <i className="fas fa-angle-left"></i>
                         </span>
                         <span onClick={handleGoBack} className="cursor-pointer">Go Back</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
