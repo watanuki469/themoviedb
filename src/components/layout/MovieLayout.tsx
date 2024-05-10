@@ -249,7 +249,7 @@ export default function MovieLayout() {
                                 <SingleMovieStoryLine singleMovieList={singleMovieList} />
                             </div>
                             <div className="text-white flex py-4 ">
-                                <div className="flex items-center ">
+                                <div className="flex items-center hover:text-yellow-300" onClick={()=>navigate(`/fullReview/movie/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieReview">User Reviews</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews?.results?.length}</p>

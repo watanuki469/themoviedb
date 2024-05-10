@@ -19,6 +19,7 @@ import TopPopularTvLayout from "./components/layout/TopPopularTvLayout";
 import TvLayout from "./components/layout/TvLayout";
 import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
+import UserReviewLayout from "./components/layout/UserReviewLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
 import { WatchListLayout } from "./components/layout/WatchListLayout";
@@ -121,6 +122,11 @@ const routes = [
     state: "fullcredits"
   },
   {
+    path: "/fullReview/:mediaType/:id",
+    element: <UserReviewLayout/>,
+    state: "fullReview"
+  },
+  {
     path: "/news/movie",
     element: <MovieNewLayout/>,
     state: "movieNew"
@@ -159,6 +165,7 @@ const routes = [
     element: <ActivityLayout/>,
     state: "activity"
   },
+
 
   
 

@@ -493,7 +493,7 @@ export default function PopularCelebLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={topRatedMovies} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>

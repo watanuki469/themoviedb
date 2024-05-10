@@ -113,9 +113,10 @@ export default function TvReview({
                                                 aria-controls={openShare ? 'account-menu' : undefined}
                                                 aria-haspopup="true"
                                                 aria-expanded={openShare ? 'true' : undefined}
+                                                sx={{ backgroundColor: 'white', }}
                                             >
                                                 <Avatar sx={{
-                                                    bgcolor: 'none', color: 'white', ":hover": {
+                                                    bgcolor: 'white', color: 'white', ":hover": {
                                                         bgcolor: 'gray', opacity: '50%'
                                                     }
                                                 }}>

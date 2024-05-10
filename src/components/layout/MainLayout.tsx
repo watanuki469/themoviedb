@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import ListRow from "../../modules/ListRow";
 import SwiperRow from "../../modules/SwiperRow";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import BornToday from "../common/BornToday";
 import Footer from "../common/Footer";
 import Slider from "../common/Slider";
 import TopBar from "../common/TopBar";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { fetchMovies } from "../../redux/reducers/movies.reducer";
 
 export default function MainLayout() {
+    const dispatch=useAppDispatch()
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
@@ -86,8 +89,7 @@ export default function MainLayout() {
         // Clean up event listener on unmount
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-
-
+  
     return (
         <div className=" min-h-screen cursor-pointer">
             <div className="bg-black">

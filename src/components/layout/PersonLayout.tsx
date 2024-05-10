@@ -90,8 +90,8 @@ export default function PersonLayout() {
                                 <h2 id="personPhotos" className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{personList[0]?.images?.profiles?.length}</p>
                                 <i
-                                 onClick={()=>navigate(`/image/person/${personList[0]?.id}`)}
-                                className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                    onClick={() => navigate(`/image/person/${personList[0]?.id}`)}
+                                    className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={personList[0]?.images?.profiles}></FourPhotos>
@@ -108,9 +108,9 @@ export default function PersonLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="personVideos" className="text-2xl font-bold text-black ">Videos</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{personList[0]?.combined_credits?.cast?.length}</p>
-                                    <i 
-                                     onClick={()=>navigate(`/video/${personList[0]?.combined_credits?.cast[0]?.id}`)}
-                                    className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                    <i
+                                        onClick={() => navigate(`/video/${personList[0]?.combined_credits?.cast[0]?.id}`)}
+                                        className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
                                 <PersonMovie personMovieList={personList[0]?.combined_credits?.cast} />
                             </div>
@@ -135,11 +135,14 @@ export default function PersonLayout() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                             </div>
-                            <ListRow listRowList={topRatedMovies} />
+                            <div onClick={() => navigate(`/top250Movie`)}> 
+                                <ListRow listRowList={topRatedMovies} />
+                            </div>
+
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p
-                              onClick={()=>navigate(`/top250Movie`)}
-                            className="text-red w-full text-blue-500"> See our picks</p>
+                                onClick={() => navigate(`/top250Movie`)}
+                                className="text-red w-full text-blue-500"> See our picks</p>
                         </div>
                     </div>
                 </div>

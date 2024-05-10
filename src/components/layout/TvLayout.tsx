@@ -30,7 +30,7 @@ export default function TvLayout() {
             apiController.apiTv.tv(id),
         ])
             .then((data: any) => {
-                if (data) {                    
+                if (data) {
                     dispatch(setListTv(data));
                 } else {
                     console.error("API response structure is not as expected.", data);
@@ -106,7 +106,7 @@ export default function TvLayout() {
             localStorage.setItem('activity', JSON.stringify(storedData));
         }
     })
-    
+
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -153,7 +153,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
                             </div>
-                            <div className="text-white flex py-4 " onClick={()=>navigate(`/fullcredits/tv/${id}`)}>
+                            <div className="text-white flex py-4 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvCast" className="text-2xl font-bold text-black ">Top Cast</h2>
@@ -199,7 +199,7 @@ export default function TvLayout() {
                                 <TvStoryLine tvList={tvList} />
                             </div>
                             <div className="text-white flex py-4 ">
-                                <div className="flex items-center ">
+                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/tv/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvReview" className="text-2xl font-bold text-black ">User Reviews</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.reviews.results.length}</p>
@@ -240,7 +240,9 @@ export default function TvLayout() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                             </div>
-                            <ListRow listRowList={topRatedMovies} />
+                            <div onClick={() => navigate(`/top250Movie`)}>
+                                <ListRow listRowList={topRatedMovies} />
+                            </div>
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p className="text-red w-full text-blue-500"> See our picks</p>
                         </div>

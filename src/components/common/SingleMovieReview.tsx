@@ -115,7 +115,7 @@ export default function SingleMovieReview({
                                                 aria-expanded={openShare ? 'true' : undefined}
                                             >
                                                 <Avatar sx={{
-                                                    bgcolor: 'none', color: 'white', ":hover": {
+                                                    bgcolor: 'white', color: 'white', ":hover": {
                                                         bgcolor: 'gray', opacity: '50%'
                                                     }
                                                 }}>
@@ -199,6 +199,13 @@ export default function SingleMovieReview({
 
                                         </div>
                                     </div>
+                                    <div className='flex gap-2 px-2 py-2'>
+                                        <p className='text-blue-500'>{singleMovieList[0]?.reviews?.results[0]?.author}</p>
+                                        <p>•</p>
+                                        <p>{singleMovieList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
+
+                                    </div>
+
                                 </div>
                             )
                                 : (<div>
@@ -207,12 +214,12 @@ export default function SingleMovieReview({
 
                         </div>
                     </div>
-                    <div className='flex gap-2 px-2 py-2'>
+                    {/* <div className='flex gap-2 px-2 py-2'>
                         <p className='text-blue-500'>{singleMovieList[0]?.reviews?.results[0]?.author}</p>
                         <p>•</p>
                         <p>{singleMovieList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
 
-                    </div>
+                    </div> */}
 
 
                 </div>
