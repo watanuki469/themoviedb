@@ -14,7 +14,6 @@ export default function CastCrewLayout() {
     const tvList = useAppSelector((state) => state.tv.listTv)
     const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
 
-
     const fetchTv = () => (dispatch: AppDispatch) => {
         Promise.all([
             apiController.apiTv.tv(id),
@@ -115,12 +114,12 @@ export default function CastCrewLayout() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="w-full border-t-2 border-gray-500">
-                                        <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black">
+                                    <div className="w-full border-t-2 border-gray-500  flex flex-wrap">
+                                        <div className="items-center w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.credits?.crew?.map((item: any, index: any) => (
-                                                <div key={index} className="flex items-center  border-b-2 py-2">
-                                                    <div className="flex items-center">
-                                                        <div className="h-32 w-24 bg-cover mr-4 hover:opacity-80"
+                                                <div key={index} className="flex items-center w-full border-b-2 py-2">
+                                                    <div className="flex items-center w-full">
+                                                        <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
                                                             style={{
                                                                 backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                                             }}
@@ -137,7 +136,7 @@ export default function CastCrewLayout() {
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black w-full">
+                                        <div className="items-center w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.credits?.cast?.map((item: any, index: any) => (
                                                 <div key={index} className="flex items-center  border-b-2 py-2 w-full">
                                                     <div className="flex items-center w-full">
@@ -148,8 +147,9 @@ export default function CastCrewLayout() {
                                                             onClick={() => navigate(`/person/${item?.id}`)}>
                                                         </div>
 
-                                                        <div className="w-full">
+                                                        <div className="">
                                                             <p className="font-bold">{item?.name}</p>
+                                                            <div className="text-lg text-gray-500">Know For: {item?.known_for_department}</div>
                                                             <div className="text-lg text-gray-500">Character: {item?.character}</div>
                                                         </div>
                                                     </div>
@@ -157,11 +157,11 @@ export default function CastCrewLayout() {
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black">
+                                        <div className="items-center w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.aggregate_credits?.cast?.map((item: any, index: any) => (
                                                 <div key={index} className="flex items-center  border-b-2 py-2">
                                                     <div  className="flex items-center">
-                                                        <div className="h-32 w-24 bg-cover mr-4 hover:opacity-80"
+                                                        <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
                                                             style={{
                                                                 backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                                             }}
@@ -186,11 +186,11 @@ export default function CastCrewLayout() {
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="items-center flex-wrap w-full grid lg:grid-cols-2 text-black">
+                                        <div className="items-center  w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.aggregate_credits?.crew?.map((item: any, index: any) => (
                                                 <div  key={index} className="flex items-center  border-b-2 py-2">
                                                     <div className="flex items-center">
-                                                        <div className="h-32 w-24 bg-cover mr-4 hover:opacity-80"
+                                                        <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
                                                             style={{
                                                                 backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                                             }}

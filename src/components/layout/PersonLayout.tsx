@@ -59,6 +59,18 @@ export default function PersonLayout() {
 
     // Lấy tên của tháng hiện tại từ mảng monthNames
     const currentMonthName = monthNames[currentMonth];
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('activity');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[personList[0]?.id]) {
+        } else {
+            storedData[personList[0]?.id] = personList[0];
+            localStorage.setItem('activity', JSON.stringify(storedData));
+        }
+    })
 
     return (
         <div className=" min-h-screen cursor-pointer">

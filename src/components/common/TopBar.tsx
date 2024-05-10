@@ -1,5 +1,6 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LaunchIcon from '@mui/icons-material/Launch';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
@@ -7,7 +8,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import StarsIcon from "@mui/icons-material/Stars";
 import TvIcon from '@mui/icons-material/Tv';
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import { Avatar, Box, Button, Divider, FormControl, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, } from "@mui/material";
+import { Avatar, Box, Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import * as Dialog from "@radix-ui/react-dialog";
 import "flowbite";
 import { Fragment, useEffect, useState } from "react";
@@ -15,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '../../redux/hooks';
 import SearchBar from "./SearchBar";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
 export default function TopBar() {
@@ -41,7 +41,7 @@ export default function TopBar() {
         setOpen(!open);
         setIsDrawerOpen(!isDrawerOpen);
       }
-      else if (isLargeScreen && anchorUserEl!=null) {
+      else if (isLargeScreen && anchorUserEl != null) {
         setAnchorUserEl(null);
       }
       else if (!isLargeScreen && open) {
@@ -85,10 +85,9 @@ export default function TopBar() {
   const getMenuContent = (menu: any) => {
     switch (menu) {
       case 'Movies':
-        return ['Release Calendar', 'Most Popular Movies', 'Top Box Office'
-          , 'Movies News', 'Browse Movie By Genre'];
+        return ['Release Calendar', 'Most Popular Movies', 'Top Box Office', 'Movies News', 'Browse Movie By Genre'];
       case 'TV Shows':
-        return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows','Browse Tv By Genre', 'TV News'];
+        return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows', 'Browse Tv By Genre', 'TV News'];
       case 'Watch':
         return ['What to Watch', 'Latest Trailers', 'IMDb Originals', 'IMDb Picks', 'IMDb Podcasts'];
       case 'Awards & Events':
@@ -511,15 +510,14 @@ export default function TopBar() {
             <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
           </div>
           {/*change language */}
-
           <Button
             id="demo-customized-button"
             aria-controls={openUser ? 'demo-customized-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={openUser ? 'true' : undefined}
             sx={{
-              bgcolor: 'black',fontWeight:'extrabold', color: 'white', borderRadius: '0',
-               display: { xs: "none", md: "flex" },
+              bgcolor: 'black', fontWeight: 'extrabold', color: 'white', borderRadius: '0',
+              display: { xs: "none", md: "flex" },
               '&:hover': {
                 opacity: '80%'
               }
@@ -527,7 +525,7 @@ export default function TopBar() {
             onClick={handleClick}
             endIcon={<KeyboardArrowDownIcon />}
           >
-            {mediatype.toString().slice(0, 2)}
+            {mediatype?.toString().slice(0, 2)}
           </Button>
           <Menu
             elevation={0}
@@ -539,6 +537,13 @@ export default function TopBar() {
               vertical: 'top',
               horizontal: 'right',
             }}
+            sx={{
+              "& .MuiPaper-root": {
+                backgroundColor: "black"
+              },
+              color: "white",
+            }}
+
             id="demo-customized-menu"
             MenuListProps={{
               'aria-labelledby': 'demo-customized-button',
@@ -547,15 +552,59 @@ export default function TopBar() {
             open={openUser}
             onClose={() => setAnchorUserEl(null)}
           >
+            <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Fully Supported</MenuItem>
+            {/* <Divider sx={{ color: 'white', borderColor: "white" }} /> */}
             {menuItems?.map((item: any, index: any) => (
-              <MenuItem disableRipple key={index} onClick={() => handleClose(item?.label)}>
-                <div className='items-start'>
-                  <p className=" text-gray-700 capitalize flex items-center" role="menuitem">
-                    {item?.name}
-                  </p>
-                </div>
-              </MenuItem>
+              <div key={index} className=''>
+                {item?.name === 'English' ? (
+                  <div>
+                    <MenuItem disableRipple sx={{
+                      borderBottom: '2px solid gray', '&:hover': {
+                        backgroundColor:'blue'
+                      }
+                    }} key={index} onClick={() => handleClose(item?.label)}>
+                      <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white font-extrabold' : ''} `}>
+                        {mediatype === item?.label ? (
+                          <i className="fa-brands fa-gg-circle text-yellow-300 text-2xl"></i>
+                        ) : (
+                          <i className="fa-regular fa-circle text-2xl"></i>
+                        )}
+
+                        <p className="capitalize flex items-center font-bold px-2 py-2" role="menuitem">
+                          {item?.name} ({item?.label})
+                        </p>
+                      </div>
+                    </MenuItem>
+                    <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Partially Supported</MenuItem>
+                  </div>
+
+                ) :
+                  (
+                    <MenuItem disableRipple key={index} sx={{
+                      '&:hover': {
+                        backgroundColor:'blue'
+                      }
+                    }} onClick={() => handleClose(item?.label)}>
+                      <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white' : ''} `}>
+                        {mediatype === item?.label ? (
+                          <i className="fa-brands fa-gg-circle text-yellow-300 text-2xl"></i>
+                        ) : (
+                          <i className="fa-regular fa-circle text-2xl"></i>
+                        )}
+
+                        <p className="capitalize flex items-center font-bold px-2 py-2 " role="menuitem">
+                          {item?.name} ({item?.label})
+                        </p>
+                      </div>
+                    </MenuItem>
+                  )
+                }
+
+
+              </div>
+
             ))}
+
           </Menu>
 
           <IconButton
@@ -617,19 +666,54 @@ export default function TopBar() {
             </MenuItem>
 
             <div className='hover:text-yellow-300'>
-              <MenuItem onClick={()=>navigate('/favoriteList')}>
-                <ListItemIcon>
-                <i className="fa-solid fa-user-astronaut text-2xl"></i>
-                </ListItemIcon>
+              <MenuItem onClick={() => navigate('/favoriteList')}>
+                <Avatar
+                  sx={{
+                    backgroundColor: 'green',
+                    width: 40,
+                    height: 40
+                  }}
+                  children={
+                    // <ListItemIcon>
+                    <i className="fa-solid fa-user-astronaut"></i>
+                    // </ListItemIcon>
+                  }
+                />
                 <p>Favorite Actor List</p>
+              </MenuItem>
+            </div>
+            <div className='hover:text-yellow-300'>
+              <MenuItem onClick={() => navigate('/activity')}>
+                <Avatar
+                  sx={{
+                    backgroundColor: 'purple',
+                    width: 40,
+                    height: 40
+                  }}
+                  children={
+                    // <ListItemIcon>
+                    <i className="fa-solid fa-street-view"></i>
+                    // </ListItemIcon>
+                  }
+                />
+                <p>Your Activity</p>
               </MenuItem>
             </div>
 
             <div className='hover:text-yellow-300'>
               <MenuItem onClick={handleCopyLink}>
-                <ListItemIcon>
-                  <i className="fa-solid fa-cat text-2xl "></i>
-                </ListItemIcon>
+                <Avatar
+                  sx={{
+                    backgroundColor: 'chocolate',
+                    width: 40,
+                    height: 40
+                  }}
+                  children={
+                    // <ListItemIcon>
+                    <i className="fa-solid fa-cat"></i>
+                    // </ListItemIcon>
+                  }
+                />
                 <p>Logout</p>
               </MenuItem>
             </div>

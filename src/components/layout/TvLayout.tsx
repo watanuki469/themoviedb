@@ -93,7 +93,19 @@ export default function TvLayout() {
             setTotalEpisodes(sum);
         }
     }, [tvList]);
-    console.log(tvList);
+
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('activity');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[tvList[0]?.id]) {
+        } else {
+            storedData[tvList[0]?.id] = tvList[0];
+            localStorage.setItem('activity', JSON.stringify(storedData));
+        }
+    })
     
 
     return (

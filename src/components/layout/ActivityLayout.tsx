@@ -8,15 +8,12 @@ import { toast } from "react-toastify";
 import Footer from "../common/Footer";
 
 
-export function WatchListLayout() {
+export function ActivityLayout() {
     const [watchList, setWatchList] = useState<any[]>([]);
     const [handleRefine, setHandleRefine] = useState(false);
     const [movieCheck, setMovieCheck] = useState(false);
     const [seriesCheck, setSeriesCheck] = useState(false);
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
-    const [query, setQuery] = useState('');
-
+    const [actorCheck, setActorCheck] = useState(false);
 
     const toggleFeature = (type: any) => {
         if (type === "movie") {
@@ -24,11 +21,14 @@ export function WatchListLayout() {
         } else if (type === "tv") {
             setSeriesCheck(!seriesCheck);
         }
+        else if (type === "actor") {
+            setActorCheck(!actorCheck);
+        }
     };
 
     useEffect(() => {
         // Lấy dữ liệu từ local storage
-        const storedDataString = localStorage.getItem('watchList');
+        const storedDataString = localStorage.getItem('activity');
         let storedData = [];
 
         if (storedDataString) {
@@ -41,7 +41,7 @@ export function WatchListLayout() {
     }, []);
     const removeFromWatchList = (imdb_id: string) => {
         // Lấy dữ liệu từ local storage
-        const storedDataString = localStorage.getItem('watchList');
+        const storedDataString = localStorage.getItem('activity');
         let storedData: Record<string, any> = {};
 
         if (storedDataString) {
@@ -52,12 +52,11 @@ export function WatchListLayout() {
         delete storedData[imdb_id];
 
         // Cập nhật local storage
-        localStorage.setItem('watchList', JSON.stringify(storedData));
+        localStorage.setItem('activity', JSON.stringify(storedData));
 
         // Cập nhật state để render lại
         setWatchList(Object.values(storedData));
     };
-    const [email, setEmail] = useState(localStorage.getItem('email') || ''); // Lấy giá trị email từ local storage nếu có
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
@@ -87,9 +86,6 @@ export function WatchListLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    const [selectedOption, setSelectedOption] = useState<string | null>('none');
-    const [applyFilter, setApplyFilter] = useState(true);
-    const [filterType, setFilterType] = useState('none');
 
     function shortenNumber(number: any) {
         if (number >= 1000000000) {
@@ -103,59 +99,7 @@ export function WatchListLayout() {
         }
         return number;
     }
-    const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
-    const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorRankingEl(event.currentTarget);
-    };
 
-    const handleOptionClick = (option: any) => {
-        setApplyFilter(option === 'none' ? (true) : (false));
-        setFilterType(option);
-        setSelectedOption(option === selectedOption ? null : option);
-    };
-    const handleRankingClose = () => {
-        setAnchorRankingEl(null);
-    };
-    const [selectedRankingOption, setSelectedRankingOption] = useState(null);
-
-    const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
-
-    function compareReleaseDates(a: any, b: any) {
-        const releaseDateA = new Date(a.release_date);
-        const releaseDateB = new Date(b.release_date);
-        return releaseDateA.getTime() - releaseDateB.getTime();
-    }
-    const handleMenuItemClick = (option: any) => {
-        setSelectedRankingOption(option);
-        let menuItemNum = '';
-        switch (option) {
-            case 'Ranking':
-                menuItemNum = '1';
-                break;
-            case 'IMDb Rating':
-                menuItemNum = '2';
-                break;
-            case 'Release Day':
-                menuItemNum = '3';
-                break;
-            case 'Number Of Rating':
-                menuItemNum = '4';
-                break;
-            case 'Alphabetical':
-                menuItemNum = '5';
-                break;
-            case 'Popularity':
-                menuItemNum = '6';
-                break;
-            case 'Runtime':
-                menuItemNum = '7';
-                break;
-            default:
-                break;
-        }
-        setMenuItemNum(menuItemNum);
-        handleRankingClose();
-    };
     const [currentView, setCurrentView] = useState('Detail'); // Default view is 'detail'
 
     const switchView = (view: any) => {
@@ -164,57 +108,15 @@ export function WatchListLayout() {
 
     const [currentSelection, setCurrentSelection] = useState('case1'); // Default view is 'detail'
 
-    const handleFromDateChange = (event: any) => {
-        setFromDate(event.target.value);
-    };
-
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "To"
-    const handleToDateChange = (event: any) => {
-        setToDate(event.target.value);
-    };
-
     type GenreID = number;
     type GenreName = string;
     const genreMapping: Record<GenreID, GenreName> = {
         28: 'Action', 12: 'Adventure', 10768: 'War & Politics', 10765: 'Sci-Fi & Fantasy', 10759: 'Action & Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
     };
     type Genre = | ' ';
-    const [genreCount, setGenreCount] = useState<Record<string, number>>({});
-    const [numberGen, setNumberGen] = useState(0);
-    const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
-    function countGenres(topRatedMovies: any): Record<GenreName, number> {
-        const genreCounting: Record<GenreName, number> = {};
-        topRatedMovies?.forEach((movie: any) => {
-            movie?.genre_ids?.forEach((id: GenreID) => {
-                // Lấy tên thể loại từ đối tượng ánh xạ
-                const genreName: GenreName = genreMapping[id];
-                // Nếu thể loại đã tồn tại, tăng giá trị đếm lên 1; ngược lại, tạo mới với giá trị 1.
-                genreCounting[genreName] = (genreCounting[genreName] || 0) + 1;
-            });
-        });
-        return genreCounting;
-    }
-    const handleGenreClick = (selectedGenre: Genre) => {
-        if (selectedGenres.includes(selectedGenre)) {
-            // If already selected, remove it
-            setSelectedGenres(selectedGenres.filter((genre) => genre !== selectedGenre));
 
-        } else {
-            // If not selected, add it
-            setSelectedGenres([...selectedGenres, selectedGenre]);
-        }
-
-    };
-    useEffect(() => {
-        const genreCount = countGenres(watchList);
-        setGenreCount(genreCount);
-        const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
-        setNumberGen(totalGenreCount);
-
-    }, [watchList]);
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
-        // Implement rendering logic based on the currentView (detail, grid, compact)
         if (movieIndex >= 50) {
             return null;
         }
@@ -228,38 +130,67 @@ export function WatchListLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                        <img onClick={() => navigate(`/${movie?.poster_path ? (movie?.title ? 'movie' : 'tv') : ('person')}/${movie.id}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                             onError={handleImageError} className="w-28 h-40 hover:opacity-80" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
-                                            <div className="flex flex-wrap gap-2">{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)} ||
-                                                {movie?.genre_ids?.map((genre: any, index: any) => (
-                                                    <div key={index}>
-                                                        {genreMapping[genre]}
-                                                        {index !== movie.genre_ids.length - 1 && ","} {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
-                                                    </div>
-                                                ))}
+                                            <div className="flex flex-wrap gap-2 items-center">
+                                                <div>
+                                                    {
+                                                        movie?.poster_path ?
+                                                            (
+                                                                movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)
+                                                            )
+                                                            :
+                                                            (
+                                                                movie?.birthday &&
+                                                                new Date(movie?.birthday).toLocaleDateString('en-US', {
+                                                                    month: 'long',
+                                                                    day: 'numeric',
+                                                                    year: 'numeric'
+                                                                })
+                                                            )
+                                                    }
+                                                </div>
+                                                <div> || </div>
+                                                <div className="flex flex-wrap gap-2 items-center">
+                                                    {movie?.genre_ids?.map((genre: any, index: any) => (
+                                                        <div key={index}>
+                                                            {genreMapping[genre]}
+                                                            {index !== movie.genre_ids.length - 1 && ","} {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
+                                                        </div>
+                                                    ))}
 
-                                                {movie?.genres?.map((genre: any, index: any) => (
-                                                    <div key={index}>
-                                                        {genreMapping[genre?.id]}
-                                                        {index !== movie?.genres?.length - 1 && ","}  {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
-                                                    </div>
-                                                ))}
-                                            </div>
+                                                    {movie?.genres?.map((genre: any, index: any) => (
+                                                        <div key={index}>
+                                                            {genreMapping[genre?.id]}
+                                                            {index !== movie?.genres?.length - 1 && ","}  {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
+                                                        </div>
+                                                    ))}
 
-                                            <div className="flex items-center gap-2">
-                                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                                <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                    <div> {movie?.known_for_department}</div>
+                                                </div>
                                             </div>
+                                            {movie?.poster_path ? (
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-star text-yellow-300"></i>
+                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                </div>
+                                            ) : (
+                                                <div></div>
+                                            )}
+
                                             <div className="mt-1 lg:line-clamp-none line-clamp-4">
-                                                <p>{movie?.overview}</p>
+                                                <p>{movie?.poster_path ? movie?.overview : (movie?.biography && movie?.biography?.length > 400 ?
+                                                    movie?.biography?.slice(0, 400) + "..." :
+                                                    movie?.biography)}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
+
 
                                 <div className="ml-auto" onClick={() => removeFromWatchList(movie?.id)} >
                                     <Tooltip title="Click here to remove from watchlist">
@@ -281,21 +212,45 @@ export function WatchListLayout() {
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="px-2">{movieIndex}</div>
-                                        <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full  hover:opacity-80" />
+
+                                        <img onClick={() => navigate(`/${movie?.poster_path ? (movie?.title ? 'movie' : 'tv') : ('person')}/${movie.id}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
+                                            onError={handleImageError} className="w-full hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
+                                                {
+                                                    movie?.poster_path ?
+                                                        (
+                                                            < div className="flex items-center gap-2">
+                                                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                                                <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                            </div>
+                                                        ) : (
+                                                            < div className="flex items-center gap-2">
+                                                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                                                <p>{movie?.known_for_department} </p>
+                                                            </div>
+
+                                                        )
+                                                }
 
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title ? movie?.title : movie?.name}</p>
                                                 </div>
                                                 <div className="flex flex-wrap">
-                                                    {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
+                                                    {
+                                                        movie?.poster_path ? (
+                                                            movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)
+
+                                                        ) : (
+                                                            movie?.birthday &&
+                                                            new Date(movie?.birthday).toLocaleDateString('en-US', {
+                                                                month: 'long',
+                                                                day: 'numeric',
+                                                                year: 'numeric'
+                                                            })
+                                                        )
+                                                    }
                                                 </div>
 
                                             </div>
@@ -311,7 +266,7 @@ export function WatchListLayout() {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section >
                 )
         }
     }
@@ -330,8 +285,8 @@ export function WatchListLayout() {
                     <div className="lg:max-w-full md:w-screen ">
                         <div className="flex mt-3 border-b-2 border-gray py-4">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold ">Your Watchlist</h2>
-                                <p className="text-xl font-semibold text-gray-500">Public</p>
+                                <h2 className="text-2xl font-bold ">Your History List</h2>
+                                <p className="text-xl font-semibold text-gray-500">Private</p>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center text-2xl font-bold text-black ">Share </p>
@@ -430,56 +385,6 @@ export function WatchListLayout() {
                                 <h2 className="lg:text-2xl text-lg font-bold ">{watchList?.length} Title</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
-                                <Button
-                                    id="demo-customized-button"
-                                    aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
-                                    aria-haspopup="true"
-                                    variant="contained"
-                                    disableElevation
-                                    onClick={handleRankingClick}
-                                    endIcon={<i className="fa-solid fa-caret-down"></i>}
-                                    sx={{
-                                        bgcolor: anchorRankingEl ? 'blue' : 'white',
-                                        color: anchorRankingEl ? 'white' : 'blue',
-                                        border: anchorRankingEl ? '2px dashed' : '',
-                                        ":hover": {
-                                            // border: '2px dashed',
-                                            backgroundColor: 'blue'
-                                            , color: 'white'
-                                        },
-                                    }}
-                                >
-                                    {selectedRankingOption ? selectedRankingOption : 'Options'}
-                                </Button>
-                                <Menu
-                                    id="demo-customized-menu"
-                                    anchorEl={anchorRankingEl}
-                                    open={Boolean(anchorRankingEl)}
-                                    onClose={handleRankingClose}
-                                >
-                                    <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                        Ranking
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                        IMDb Rating
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                        Release Day
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                        Number Of Rating
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                        Alphabetical
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                        Popularity
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                        Runtime
-                                    </MenuItem>
-                                </Menu>
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
                                     <Avatar sx={{
                                         width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
@@ -514,32 +419,17 @@ export function WatchListLayout() {
                                 <div className="flex border-b-2 border-gray py-2 items-center w-full">
                                     <div className="md:grid md:grid-cols-12 cursor-pointer  w-full ">
                                         <div className="lg:col-span-5 col-span-12 bg-gray-400">
-                                            <div onClick={() => setCurrentSelection('case1')} className={`h-24 py-2 border-b-2 border-gray-500 hover:opacity-90  hover:bg-gray-200 ${currentSelection == 'case1' ? 'bg-gray-200' : ''} `}>
-                                                <div>Type (Film, TV, etc.)</div>
+                                            <div onClick={() => setCurrentSelection('case1')} className={`h-full px-4 py-8  hover:opacity-90  hover:bg-gray-200 ${currentSelection == 'case1' ? 'bg-gray-200' : ''} `}>
+                                                <div className="font-bold">Type (Film, TV, etc.)</div>
                                                 <div className="capitalize">
                                                     {movieCheck ? 'movie' : ''}
                                                     {seriesCheck ? 'tv' : ''}
-                                                    {!movieCheck && !seriesCheck ? 'all' : ''}
-                                                </div>
-
-                                            </div>
-                                            <div onClick={() => setCurrentSelection('case2')} className={`h-24  py-2 border-b-2 border-gray-500 hover:opacity-90 hover:bg-gray-200 ${currentSelection == 'case2' ? 'bg-gray-200' : ''} `}>
-                                                <div>Genres</div>
-                                                <div>
-                                                    {selectedGenres?.length > 0 ? (
-                                                        selectedGenres?.map((genre: Genre, index: number) => (
-                                                            <span key={index}>
-                                                                {genre}{index !== selectedGenres?.length - 1 ? ', ' : ''}
-                                                            </span>
-                                                        ))
-                                                    ) : (
-                                                        <span>All</span>
-                                                    )}
+                                                    {actorCheck ? 'actor' : ''}
+                                                    {!movieCheck && !seriesCheck && !actorCheck ? 'all' : ''}
                                                 </div>
                                             </div>
-                                            <div onClick={() => setCurrentSelection('case3')} className={`h-24 py-2  border-b-2 border-gray-500 hover:opacity-90 hover:bg-gray-200 ${currentSelection == 'case3' ? 'bg-gray-200' : ''} `}>Release Year</div>
                                         </div>
-                                        <div className="lg:col-span-7 col-span-12 bg-gray-200 w-full h-72">
+                                        <div className="lg:col-span-7 col-span-12 bg-gray-200 w-full h-full">
                                             <button id='1' className="relative hover:opacity-90 w-full" >
                                                 {currentSelection == 'case1' ? (
                                                     <div className="w-full py-4 px-2">
@@ -567,7 +457,17 @@ export function WatchListLayout() {
 
                                                                     </div>
                                                                 )}
-                                                                {!movieCheck && !seriesCheck && (
+                                                                {actorCheck && (
+                                                                    <div className="flex items-center">
+                                                                        <div className="flex gap-2 items-center">
+                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("actor")}></i>
+                                                                            <div>Feature Actor</div>
+                                                                        </div>
+                                                                        <div className="ml-auto"> {watchList.filter(movie => movie?.profile_path).length}</div>
+
+                                                                    </div>
+                                                                )}
+                                                                {!movieCheck && !seriesCheck && !actorCheck && (
                                                                     <>
                                                                         <div className="flex items-center">
                                                                             <div className="flex gap-2 items-center">
@@ -583,8 +483,13 @@ export function WatchListLayout() {
                                                                             </div>
                                                                             <div className="ml-auto"> {watchList.filter(movie => movie?.name).length}</div>
                                                                         </div>
-
-
+                                                                        <div className="flex items-center mt-4">
+                                                                            <div className="flex gap-2 items-center">
+                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("actor")}></i>
+                                                                                <div>Feature Actor</div>
+                                                                            </div>
+                                                                            <div className="ml-auto"> {watchList.filter(movie => movie?.profile_path).length}</div>
+                                                                        </div>
                                                                     </>
                                                                 )}
                                                             </div>
@@ -594,65 +499,8 @@ export function WatchListLayout() {
                                                     : (
                                                         <div></div>
                                                     )}
-                                                {currentSelection == 'case2' ? (
-                                                    <div className="w-full py-4 px-2 text-xl  overflow-auto h-72">
-                                                        <div className="w-full items-center">
-                                                            {/* <div className="flex gap-2 items-center">
-                                                                    <i className="fa-regular fa-square-check" onClick={() => toggleFeature("movie")}></i>
-                                                                    <div>Feature Movie</div>
-                                                                </div>
-                                                                <div className="ml-auto">
-                                                                    {watchList.filter(movie => movie?.title).length}
-                                                                </div> */}
-                                                            {Object.entries(genreCount).map(([genre, count], index) => (
-                                                                <div
-                                                                    key={`genre-${genre}-${index}`}
-                                                                    className={`w-full px-2 py-2 flex items-center`}
-                                                                    onClick={() => handleGenreClick(genre as Genre)}
-                                                                >
-                                                                    <div className="flex gap-2 items-center">
-                                                                        {selectedGenres.includes(genre as Genre) ?
-                                                                            <i className="fa-regular fa-square-check"></i> :
-                                                                            <i className="fa-regular fa-square"></i>}
-                                                                        <div>{`${genre}`}</div>
-                                                                    </div>
-                                                                    <div className="ml-auto">{`${count}`}</div> {/* Đưa count ra ngoài cùng */}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )
-                                                    : (
-                                                        <div></div>
-                                                    )}
-                                                {currentSelection == 'case3' ? (
-                                                    <div className="w-full py-4 px-2 text-xl ">
-                                                        <div className="w-full items-center">
-                                                            <div>Release year or range</div>
-                                                            {/* <label htmlFor="endDate" className="block mb-2">Or just enter:</label> */}
-                                                            <div className="flex items-center gap-2">
-                                                                <input
-                                                                    id="startDate"
-                                                                    name="startDate"
-                                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                                    value={fromDate} // Đặt giá trị của "From" từ state
-                                                                    onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
-                                                                />
-                                                                <p className="px-1">To</p>
-                                                                <input
-                                                                    id="endDate"
-                                                                    name="endDate"
-                                                                    className="border border-gray-300 px-2 py-1 w-full"
-                                                                    value={toDate} // Đặt giá trị của "To" từ state
-                                                                    onChange={handleToDateChange} // Xử lý sự kiện thay đổi của "To"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                                    : (
-                                                        <div></div>
-                                                    )}
+
+
                                             </button>
                                         </div>
                                     </div>
@@ -672,82 +520,21 @@ export function WatchListLayout() {
                                     }}>
                                     {watchList
                                         .filter((movie: any) => {
-                                            if (selectedGenres?.length === 0) return true; // No genre filter
-                                            // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres.every((genre) =>
-                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                            );
-
-
-                                            return hasAllGenres;
-                                        })
-
-                                        .filter(() => {
-                                            if (applyFilter === true) return true; // No filter
-                                            return null
-                                        })
-                                        .filter((movie: any) => {
-                                            // Lọc theo khoảng ngày phát hành
-                                            if (!fromDate || !toDate) return true; // Nếu không có khoảng ngày được chọn
-
-                                            const releaseDate = new Date(movie?.release_date);
-                                            const releaseDate2 = new Date(movie?.first_air_date);
-
-                                            const from = new Date(fromDate);
-                                            const to = new Date(toDate);
-
-                                            // Kiểm tra xem ngày phát hành hoặc ngày phát sóng có nằm trong khoảng fromDate và toDate không
-                                            return (releaseDate >= from && releaseDate <= to) || (releaseDate2 >= from && releaseDate2 <= to);
-                                        })
-                                        .filter((movie: any) => {
                                             if (movieCheck) {
                                                 return movie?.title !== undefined; // Chỉ hiển thị phim có tiêu đề
                                             }
                                             else if (seriesCheck) {
                                                 return movie?.name != undefined
                                             }
+                                            else if (actorCheck) {
+                                                return movie?.profile_path != undefined
+                                            }
                                             else {
                                                 return true; // Không áp dụng bộ lọc
                                             }
                                         })
 
-                                        .sort((a, b) => {
-                                            if (menuItemNum === '5') {
-                                                // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
-                                                if (titleA < titleB) {
-                                                    return -1;
-                                                }
-                                                if (titleA > titleB) {
-                                                    return 1;
-                                                }
-                                                return 0;
-                                            }
-                                            else if (menuItemNum === '1') {
-                                                return b?.vote_average - a?.vote_average;
-                                            }
-                                            else if (menuItemNum === '2') {
-                                                return a?.id - b?.id;
-                                            }
-                                            else if (menuItemNum === '3') {
-                                                return compareReleaseDates(a, b);
 
-                                            }
-                                            else if (menuItemNum === '4') {
-                                                return b?.vote_count - a?.vote_count;
-
-                                            }
-                                            else if (menuItemNum === '7') {
-                                                return compareReleaseDates(b, a);
-                                            }
-                                            else if (menuItemNum === '6') {
-                                                return b?.popularity - a?.popularity;
-                                            }
-                                            else {
-                                                return 0
-                                            }
-                                        })
                                         .map((m, index) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>

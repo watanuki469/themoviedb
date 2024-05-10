@@ -1,3 +1,4 @@
+import { ActivityLayout } from "./components/layout/ActivityLayout";
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import CastCrewLayout from "./components/layout/CastCrewLayout";
@@ -151,6 +152,12 @@ const routes = [
     path: "/favoriteList",
     element: <FavoriteListLayout/>,
     state: "FavoriteList"
+  },
+
+  {
+    path: "/activity",
+    element: <ActivityLayout/>,
+    state: "activity"
   },
 
   

@@ -101,8 +101,8 @@ export default function TvPerson({
             </div>
 
             <div className="text-black mt-5">
-
-                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
+                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300"
+                onClick={()=>navigate(`/fullcredits/tv/${singleMovieList[0]?.id}`)}>
                     <div className="font-bold">All Cast & Crew</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 

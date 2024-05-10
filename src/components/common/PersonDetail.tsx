@@ -325,7 +325,6 @@ export default function PersonDetail({
                                                                 <div className='font-bold'  >
                                                                     <p>Remove from FavoriteList</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)}user</p>
                                                             </div>
                                                         </div>
                                                     ) : (
@@ -335,7 +334,6 @@ export default function PersonDetail({
                                                                 <div className='font-bold'  >
                                                                     <p>Add to FavoriteList</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
                                                             </div>
                                                         </div>
                                                     )}
@@ -349,7 +347,6 @@ export default function PersonDetail({
                                                                 <div className='font-bold'  >
                                                                     <p>Remove from FavoriteList</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
                                                             </div>
                                                         </div>
                                                     ) : (
@@ -359,7 +356,6 @@ export default function PersonDetail({
                                                                 <div className='font-bold'  >
                                                                     <p>Add to FavoriteList</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
                                                             </div>
                                                         </div>
                                                     )}

@@ -155,7 +155,7 @@ export function FavoriteListLayout() {
                                                 <div> {movie?.known_for_department}</div>
                                             </div>
                                             <div className="mt-1 lg:line-clamp-none line-clamp-4">
-                                                {movie?.biography && movie?.biography.length > 400 ?
+                                                {movie?.biography && movie?.biography?.length > 400 ?
                                                     movie?.biography?.slice(0, 400) + "..." :
                                                     movie?.biography}
                                             </div>

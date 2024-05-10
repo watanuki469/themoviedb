@@ -20,13 +20,14 @@ import SingleMoviePerson from "../common/SingleMoviePerson";
 import SingleMovieReview from "../common/SingleMovieReview";
 import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import TopBar from "../common/TopBar";
+import { toast } from "react-toastify";
 
 export default function MovieLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    
+
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
             apiController.apiSingleMovieRequests.singleMovie(id),
@@ -109,7 +110,6 @@ export default function MovieLayout() {
     const movieImageList = useAppSelector((state) => state.movieImage.listMovieImage)
     const movieCreditList = useAppSelector((state) => state.movieCredit.listMovieCredit)
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
-    console.log(movieSimilarList);
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
@@ -159,6 +159,18 @@ export default function MovieLayout() {
         };
     }, []);
 
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('activity');
+        let storedData: { [key: string]: any } = {};
+        if (storedDataString !== null) {
+            storedData = JSON.parse(storedDataString);
+        }
+        if (storedData[singleMovieList[0]?.id]) {
+        } else {
+            storedData[singleMovieList[0]?.id] = singleMovieList[0];
+            localStorage.setItem('activity', JSON.stringify(storedData));
+        }
+    })
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
