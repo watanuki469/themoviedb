@@ -181,14 +181,14 @@ export default function MovieLayout() {
                         movieCreditList={movieCreditList} movieImageList={movieImageList} />
                 </div>
             </div>
-            <div className="bg-white">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+            <div className="bg-white w-full ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="md:grid grid-cols-12 gap-2 w-full px-2">
                         <div className="lg:col-span-8 md-col-span-12  w-full ">
                             <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Videos</h2>
-                                <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList.length}</p>
+                                <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList?.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
@@ -208,7 +208,7 @@ export default function MovieLayout() {
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList.length}</p>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
                                 <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
@@ -221,12 +221,12 @@ export default function MovieLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
                             </div>
-                            <div className="text-white flex py-4 mt-4">
+                            <div className="text-white flex py-4 mt-4 w-full items-center"  >
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More Like This</h2>
                                 </div>
-                                <div className="flex items-center ml-auto gap-2" >
+                                <div className=" ml-auto gap-2" >
                                     <i className="fa-regular fa-circle-question text-black text-2xl ml-2"></i>
                                 </div>
                             </div>

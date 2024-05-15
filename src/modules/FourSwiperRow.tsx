@@ -18,12 +18,16 @@ export default function FourSwiperRow({
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 560) {
                 setActiveSlider(2);
-            } else if (window.innerWidth < 1024) {
+            }
+            else if (window.innerWidth < 780) {
                 setActiveSlider(3);
+            }
+            else if (window.innerWidth < 1024) {
+                setActiveSlider(5);
             } else {
-                setActiveSlider(4);
+                setActiveSlider(6);
             }
         };
 

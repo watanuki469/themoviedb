@@ -1,12 +1,13 @@
+import AppsIcon from '@mui/icons-material/Apps';
+import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TopBar from "../common/TopBar";
-import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import ShareIcon from '@mui/icons-material/Share';
-import AppsIcon from '@mui/icons-material/Apps';
 import { toast } from "react-toastify";
 import Footer from "../common/Footer";
-
+import TopBar from "../common/TopBar";
+import mongoose from 'mongoose';
+import axios from 'axios';
 
 export function WatchListLayout() {
     const [watchList, setWatchList] = useState<any[]>([]);
@@ -213,6 +214,7 @@ export function WatchListLayout() {
         setNumberGen(totalGenreCount);
 
     }, [watchList]);
+
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         // Implement rendering logic based on the currentView (detail, grid, compact)
         if (movieIndex >= 50) {
@@ -263,7 +265,7 @@ export function WatchListLayout() {
 
                                 <div className="ml-auto" onClick={() => removeFromWatchList(movie?.id)} >
                                     <Tooltip title="Click here to remove from watchlist">
-                                        <i className="fa-solid fa-trash px-2 text-green-500 text-xl"></i>
+                                        <i className="fa-solid fa-trash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
                                     </Tooltip>
                                 </div>
                             </div>
@@ -303,7 +305,7 @@ export function WatchListLayout() {
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movie.id)}   >
+                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movie?.id)}   >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
                                         Remove
                                     </button>
@@ -317,9 +319,9 @@ export function WatchListLayout() {
     }
 
 
-
     return (
         <div className=" min-h-screen cursor-pointer">
+          
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />

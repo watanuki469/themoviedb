@@ -398,11 +398,11 @@ export default function SingleMovieDetail({
                                     <div className="py-2 border-b border-gray-300">{singleMovieList[0]?.overview}</div>
                                     <div className="py-2 border-b border-gray-300 flex gap-3">
                                         <div>Director</div>
-                                        <div>
+                                        <div className='flex flex-wrap gap-2'>
                                             {director.slice(0, 3).map((item: any, index: number) => (
                                                 <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
-                                                    <span>{index < Math.min(director.length) - 1 ? '•' : ''}</span>
+                                                    <span>{index < Math.min(director?.slice(0,3).length) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
 
@@ -410,18 +410,18 @@ export default function SingleMovieDetail({
                                     </div>
                                     <div className=" border-b border-gray-300 flex gap-2 py-2 items-center aligns-center">
                                         <div className="">Writers</div>
-                                        <div className="flex gap-3 justify-center text-center aligns-center">
+                                        <div className="flex flex-wrap gap-2 justify-center text-center aligns-center">
                                             {writer.slice(0, 3).map((item: any, index: number) => (
                                                 <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
-                                                    <span>{index < Math.min(writer.length) - 1 ? '•' : ''}</span>
+                                                    <span>{index < Math.min(writer?.slice(0,3).length) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
                                         </div>
                                     </div>
                                     <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                         <div className="">Star</div>
-                                        <div className="flex gap-3">
+                                        <div className="flex flex-wrap gap-2">
                                             {movieCreditList.slice(0, 3).map((item: any, index: number) => (
                                                 <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
@@ -598,13 +598,13 @@ export default function SingleMovieDetail({
                                 </div>
                                 {isOpen && (
                                     <div>
-                                        <div className="py-2 border-b border-gray-300 flex gap-1">
+                                        <div className="py-2 border-b border-gray-300 gap-1">
                                             <div>Director</div>
                                             <div className='items-center flex flex-wrap gap-1 justify-start '>
                                                 {director.slice(0, 3).map((item: any, index: number) => (
                                                     <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
                                                         <span className="text-blue-600">{item?.name}</span>
-                                                        <span>{index < Math.min(director.length) - 1 ? '•' : ''}</span>
+                                                        <span>{index < Math.min(director?.slice(0,3).length) - 1 ? '•' : ''}</span>
                                                     </p>
                                                 ))}
 
@@ -616,7 +616,7 @@ export default function SingleMovieDetail({
                                                 {writer.slice(0, 3).map((item: any, index: number) => (
                                                     <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
                                                         <span className="text-blue-600">{item?.name}</span>
-                                                        <span>{index < Math.min(writer.length) - 1 ? '•' : ''}</span>
+                                                        <span>{index < Math.min(writer?.slice(0,3).length) - 1 ? '•' : ''}</span>
                                                     </p>
                                                 ))}
                                             </div>

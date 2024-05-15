@@ -5,13 +5,14 @@ import CastCrewLayout from "./components/layout/CastCrewLayout";
 import CelebNewLayout from "./components/layout/CelebNewLayout";
 import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
 import ImageLayout from "./components/layout/ImageLayout";
-import LoginLayout from "./components/layout/LoginLayout";
+import LoginLayoutTest from "./components/layout/LoginLayoutTest";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import MovieNewLayout from "./components/layout/MovieNewLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
+import RegisterLayoutTest from "./components/layout/RegisterLayoutTest";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
@@ -23,7 +24,6 @@ import UserReviewLayout from "./components/layout/UserReviewLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
 import { WatchListLayout } from "./components/layout/WatchListLayout";
-import WatchToWWatch from "./components/layout/WatchToWatchLayout";
 
 // export const routesGen = {
 //   home: "/",
@@ -164,6 +164,16 @@ const routes = [
     path: "/activity",
     element: <ActivityLayout/>,
     state: "activity"
+  },
+  {
+    path: "/test",
+    element: <LoginLayoutTest/>,
+    state: "test"
+  },
+  {
+    path: "/register",
+    element: <RegisterLayoutTest/>,
+    state: "register"
   },
 
 

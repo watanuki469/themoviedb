@@ -39,7 +39,7 @@ export default function TvPerson({
 
     return (
         <section className="px-2 py-2">
-            <div className="hidden md:grid relative">
+            <div className="hidden lg:grid relative">
                 <div className="grid grid-cols-2 gap-4 ">
                     {singleMovieList[0]?.aggregate_credits?.cast?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
@@ -62,7 +62,7 @@ export default function TvPerson({
                     ))}
                 </div>
             </div>
-            <div className="lg:hidden">
+            <div className="lg:hidden flex">
                 <Swiper
                     spaceBetween={10}
                     slidesPerView={activeSlider}

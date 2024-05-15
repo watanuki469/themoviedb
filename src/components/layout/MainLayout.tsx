@@ -42,7 +42,7 @@ export default function MainLayout() {
         if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        console.log('Stored data:', storedData);
+        // console.log('Stored data:', storedData);
 
         // Lưu dữ liệu vào state
         setWatchList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng

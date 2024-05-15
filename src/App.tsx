@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
-import routes from "./routes";
-import PageWrapper from "./components/common/PageWrapper";
-import HomePage from "./pages/HomePage";
-import LoginLayout from './components/layout/LoginLayout';
 import { PrivateRoute } from './PrivateRoute';
 import GlobalLoading from './components/common/GlobalLoading';
-import { useEffect } from 'react';
+import PageWrapper from "./components/common/PageWrapper";
+import LoginLayout from './components/layout/LoginLayout';
+import LoginLayoutTest from './components/layout/LoginLayoutTest';
+import HomePage from "./pages/HomePage";
+import routes from "./routes";
 
 function App() {
   // useEffect(() => {
@@ -18,11 +18,13 @@ function App() {
   //     localStorage.setItem('hasRunBefore', 'true');
   //   }
   // }, []);
+
   return (
     <div>
       <GlobalLoading />
       <Routes>
         <Route path="/login" element={<LoginLayout />}></Route>
+        <Route path="/login2" element={<LoginLayoutTest />}></Route>
         <Route path="/" element={<PrivateRoute />} >
           <Route path="/" element={<HomePage />} />
           {routes.map((route, index) => (

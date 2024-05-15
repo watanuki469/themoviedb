@@ -9,6 +9,7 @@ import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
 import { toast } from "react-toastify";
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import TopBar from "../common/TopBar";
 
 export default function UserReviewLayout() {
     const { mediaType, id } = useParams();
@@ -122,6 +123,10 @@ export default function UserReviewLayout() {
     return (
         <div className=" min-h-screen cursor-pointer bg-white text-black  ">
             <div className="text-xl">
+                <div className="h-20 bg-black px-4">
+                    <TopBar />
+                </div>
+
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <section className='relative overflow-hidden min-h-screen'>
                         <div className="w-full ">

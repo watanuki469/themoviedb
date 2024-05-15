@@ -6,6 +6,7 @@ import { setListMovieCredit } from '../../redux/reducers/movieCredit.reducer';
 import { setListTv } from "../../redux/reducers/tv.reducer";
 import { AppDispatch } from "../../redux/store";
 import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
+import TopBar from "../common/TopBar";
 
 export default function CastCrewLayout() {
     const { mediaType, id } = useParams();
@@ -80,8 +81,12 @@ export default function CastCrewLayout() {
     // đang thực hiện trang cast & crew cho movie và tv
 
     return (
-        <div className=" min-h-screen cursor-pointer bg-white text-black  ">
-            <div className="text-xl">
+        <div className=" min-h-screen cursor-pointer bg-white text-black mx-auto aligns-center  ">
+            <div className="h-20 bg-black px-4"> 
+                <TopBar />
+            </div>
+
+            <div className="text-xl ">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center font-semibold  ">
                     <section className='relative overflow-hidden min-h-screen'>
                         <div className="w-full ">
@@ -160,7 +165,7 @@ export default function CastCrewLayout() {
                                         <div className="items-center w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.aggregate_credits?.cast?.map((item: any, index: any) => (
                                                 <div key={index} className="flex items-center  border-b-2 py-2">
-                                                    <div  className="flex items-center">
+                                                    <div className="flex items-center">
                                                         <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
                                                             style={{
                                                                 backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
@@ -188,7 +193,7 @@ export default function CastCrewLayout() {
                                         </div>
                                         <div className="items-center  w-full grid lg:grid-cols-2 text-black">
                                             {mediaList[0]?.aggregate_credits?.crew?.map((item: any, index: any) => (
-                                                <div  key={index} className="flex items-center  border-b-2 py-2">
+                                                <div key={index} className="flex items-center  border-b-2 py-2">
                                                     <div className="flex items-center">
                                                         <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
                                                             style={{

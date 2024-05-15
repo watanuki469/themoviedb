@@ -32,42 +32,48 @@ export default function SingleMoviePerson({
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
-    const [activeSlider, setActiveSlider] = useState(5);
+    const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
                 setActiveSlider(2);
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(3);
             } else {
                 setActiveSlider(4);
             }
         };
+
         window.addEventListener('resize', handleResize);
+        // Call handleResize at initial load
         handleResize();
+
+        // Clean up event listener on unmount
         return () => window.removeEventListener('resize', handleResize);
     }, []);
     return (
         <section className="px-2 py-2">
-            <div className="hidden md:grid relative">
+            <div className="hidden lg:grid relative">
                 <div className="grid grid-cols-2 gap-4 ">
                     {movieCreditList?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
                             <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80"
                                 style={{
-                                    backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                    backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                 }}
                                 onClick={() => navigate(`/person/${item?.id}`)}>
                             </div>
 
                             <div className="">
-                                <p className="text-black font-bold">{item.name}</p>
-                                <p className="text-gray-500">{item.character}</p>
+                                <p className="text-black font-bold">{item?.name}</p>
+                                <p className="text-gray-500">{item?.character}</p>
                             </div>
                         </div>
 
                     ))}
                 </div>
             </div>
-            <div className="lg:hidden">
+            <div className="lg:hidden flex">
                 <Swiper
                     spaceBetween={10}
                     slidesPerView={activeSlider}
@@ -86,14 +92,14 @@ export default function SingleMoviePerson({
                                     <div key={index} className="items-center justify-center text-center">
                                         <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center hover:opacity-80"
                                             style={{
-                                                backgroundImage: `url(${item.profile_path ? `https://image.tmdb.org/t/p/w200/${item.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                             }}
                                             onClick={() => navigate(`/person/${item?.id}`)}>
                                         </div>
 
                                         <div className="">
-                                            <p className="text-black font-bold">{item.name}</p>
-                                            <p className="text-gray-500">{item.character}</p>
+                                            <p className="text-black font-bold">{item?.name}</p>
+                                            <p className="text-gray-500">{item?.character}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -108,10 +114,10 @@ export default function SingleMoviePerson({
                 <div className="py-2 border-b border-gray-300 flex gap-2">
                     <div className="font-bold">Director</div>
                     <div className='items-center flex flex-wrap gap-1 justify-start '>
-                        {director.slice(0, 3).map((item: any, index: number) => (
+                        {director?.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
-                                <span>{index < Math.min(director.length) - 1 ? '•' : ''}</span>
+                                <span>{index < Math.min(director?.slice(0,3).length) - 1 ? '•' : ''}</span>
                             </p>
                         ))}
 
@@ -123,7 +129,7 @@ export default function SingleMoviePerson({
                         {writer.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
-                                <span>{index < Math.min(writer.length) - 1 ? '•' : ''}</span>
+                                <span>{index < Math.min(writer?.slice(0,3).length) - 1 ? '•' : ''}</span>
                             </p>
                         ))}
                     </div>
