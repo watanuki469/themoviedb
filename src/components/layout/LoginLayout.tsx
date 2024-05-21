@@ -23,8 +23,10 @@ export default function LoginLayout() {
             const res = await loginApi(email.trim(), password);
             if (res && (res as any).token) {
                 localStorage.setItem("token", (res as any).token);
-                localStorage.setItem("email", email); // Assuming email is defined elsewhere
+                // localStorage.setItem("email", email); // Assuming email is defined elsewhere
+                localStorage.setItem("user", JSON.stringify(email))
                 navigate("/");
+                console.log(res);                
                 toast.success(`Welcome to Vasiliev movie web `)
             } else {
                 // Handle unexpected response format
@@ -36,19 +38,6 @@ export default function LoginLayout() {
         }
         setLoadingAPI(false);
     }
-    const [user, setListUser] = useState<any[]>([]);
-
-    // useEffect(() => {
-    //     fetchAllUser('1')
-    //         .then((res) => {
-    //             setListUser(res?.data);
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error fetching data:", error);
-    //         });
-    // }, []);
-    // console.log(user);
-    
 
     return (
         <div className="min-h-screen cursor-pointer py-16 px-2" style={{ backgroundImage: `url(${bg})` }}>

@@ -13,17 +13,21 @@ export default function ListRow({
     const [activeSlider, setActiveSlider] = useState(3);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
-            } else {
+            } else if (window.innerWidth < 600) {
+                setActiveSlider(2);
+            } else if (window.innerWidth < 768) {
                 setActiveSlider(3);
-            }
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(3);
+            } 
         };
-
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
 
 
     return (

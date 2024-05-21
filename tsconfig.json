@@ -20,16 +20,6 @@
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".", // Base URL for module resolution
-    "paths": {
-      "@src/*": [
-        "src/*"
-      ]
-    },
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "outDir": "./dist", // Ensure output is directed to a specific folder
   },
   "include": [
     "src",
@@ -40,11 +30,6 @@
     {
       "path": "./tsconfig.node.json"
     }
-  ],"ts-node": {
-    "transpileOnly": true,
-    "moduleTypes": {
-      "webpack.dev.config.ts":"cjs"
-    },
+  ],
 
-  }
 }

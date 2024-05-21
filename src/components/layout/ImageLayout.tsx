@@ -11,10 +11,10 @@ import { setListPerson } from "../../redux/reducers/person.reducer";
 import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
 import { setListTv } from "../../redux/reducers/tv.reducer";
 import { setListTvImage } from "../../redux/reducers/tvImage.reducer";
-import { AppDispatch } from "../../redux/store";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import { AppDispatch } from '../../redux/store';
 
 export default function ImageLayout() {
     const { mediaType, id } = useParams();

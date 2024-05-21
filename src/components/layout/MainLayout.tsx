@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
 import ListRow from "../../modules/ListRow";
 import SwiperRow from "../../modules/SwiperRow";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -6,10 +8,6 @@ import BornToday from "../common/BornToday";
 import Footer from "../common/Footer";
 import Slider from "../common/Slider";
 import TopBar from "../common/TopBar";
-import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
 
 export default function MainLayout() {
     const dispatch=useAppDispatch()
@@ -88,14 +86,14 @@ export default function MainLayout() {
 
         // Clean up event listener on unmount
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, []);     
   
     return (
         <div className=" min-h-screen cursor-pointer">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
-
+                    
                     <div className="mt-8 ">
                         <Slider />
                     </div>
@@ -108,7 +106,7 @@ export default function MainLayout() {
                     <div className="lg:max-w-full md:w-screen mt-2  ">
                         <div
                             onClick={() => navigate('/top250Movie')}
-                            className="lg:grid lg:grid-cols-3 gap-2 text-white ">
+                            className="lg:grid lg:grid-cols-3 grid-cols-2 grid gap-2 text-white ">
                             <div>
                                 <ListRow listRowList={topRatedMovies} />
                                 <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>
@@ -121,7 +119,6 @@ export default function MainLayout() {
                                 <p className="mt-2 hover:underline">TV Tracker: Renewed and Canceled Shows</p>
                                 <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
                             </div>
-
                         </div>
                     </div>
 
@@ -203,7 +200,7 @@ export default function MainLayout() {
                     <div className="lg:max-w-full md:w-screen mt-6  ">
                         <div
                             onClick={() => navigate('/top250Movie')}
-                            className="lg:grid lg:grid-cols-3 gap-2 text-white ">
+                            className="grid grid-cols-3 gap-2 text-white ">
                             <div>
                                 <ListRow listRowList={topRatedMovies?.slice(3)} />
                                 <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>

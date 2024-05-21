@@ -27,7 +27,7 @@ export default function FourSwiperRow({
             else if (window.innerWidth < 1024) {
                 setActiveSlider(5);
             } else {
-                setActiveSlider(6);
+                setActiveSlider(5);
             }
         };
 

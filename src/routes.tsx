@@ -170,15 +170,6 @@ const routes = [
     element: <LoginLayoutTest/>,
     state: "test"
   },
-  {
-    path: "/register",
-    element: <RegisterLayoutTest/>,
-    state: "register"
-  },
-
-
-  
-
 
   //not have api suitable
   // {

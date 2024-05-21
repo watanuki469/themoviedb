@@ -19,10 +19,14 @@ export default function SwiperRow({
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
-            } else if (window.innerWidth < 1024) {
+            } else if (window.innerWidth < 600) {
                 setActiveSlider(3);
+            } else if (window.innerWidth < 768) {
+                setActiveSlider(4);
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(5);
             } else {
                 setActiveSlider(6);
             }

@@ -14,7 +14,7 @@ import "flowbite";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import SearchBar from "./SearchBar";
 
 
@@ -24,7 +24,21 @@ export default function TopBar() {
   const [open, setOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
+  const [userInfoList, setUserInfoList] = useState<any[]>([]);
+  useEffect(() => {
+      // Lấy dữ liệu từ local storage
+      const storedDataString = localStorage.getItem('user');
+      let storedData = [];
 
+      if (storedDataString) {
+          storedData = JSON.parse(storedDataString);
+      }
+      console.log('Stored data:', storedData);
+
+      // Lưu dữ liệu vào state
+      setUserInfoList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
+  }, []);
+  
 
   const handleCloseDialogClick = () => {
     setOpen(false);
@@ -204,25 +218,25 @@ export default function TopBar() {
   const handleShareClose = () => {
     setAnchorShareEl(null);
   };
-  const handleCopyLink = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    navigate('/login')
+    localStorage.removeItem("user");
+    navigate('/login2')
   };
 
   const stringToColor = (str: any) => {
     let hash = 0;
     let i;
 
-    for (i = 0; i < str.length; i += 1) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    for (i = 0; i < str?.length; i += 1) {
+      hash = str?.charCodeAt(i) + ((hash << 5) - hash);
     }
 
     let color = "#";
 
     for (i = 0; i < 3; i += 1) {
       const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
+      color += `00${value?.toString(16)}`?.slice(-2);
     }
 
     return color;
@@ -653,16 +667,18 @@ export default function TopBar() {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem onClick={() => toast.success('meow meow')}>
+            <MenuItem sx={{ ":hover":{
+                    color:'#ffc107',
+                  }}} onClick={() => toast.success('meow meow')}>
               <Avatar
                 sx={{
                   backgroundColor: stringToColor(email),
                   width: 40,
-                  height: 40
+                  height: 40,                 
                 }}
-                children={`${email?.split(" ")[0][0]}`}
+                children={`${userInfoList[1]?.split(" ")[0][0]}`}
               />
-              {email}
+              {userInfoList[1]}
             </MenuItem>
 
             <div className='hover:text-yellow-300'>
@@ -674,9 +690,7 @@ export default function TopBar() {
                     height: 40
                   }}
                   children={
-                    // <ListItemIcon>
                     <i className="fa-solid fa-user-astronaut"></i>
-                    // </ListItemIcon>
                   }
                 />
                 <p>Favorite Actor List</p>
@@ -701,7 +715,7 @@ export default function TopBar() {
             </div>
 
             <div className='hover:text-yellow-300'>
-              <MenuItem onClick={handleCopyLink}>
+              <MenuItem onClick={handleLogout}>
                 <Avatar
                   sx={{
                     backgroundColor: 'chocolate',
