@@ -8,8 +8,8 @@ const registerMongoApi = (displayName: any, email: any, password: any, confirmPa
     return axiosMongo.post("/api/user/signup", { displayName, email, password, confirmPassword })
 }
 
-const updateMongoPasswordApi = (email:any,password:any,newPassword:any,confirmNewPassword:any) => {
-    return axiosMongo.put("/api/users", { email, password,newPassword,confirmNewPassword })
+const updateMongoPasswordApi = (email: any, password: any, newPassword: any, confirmNewPassword: any) => {
+    return axiosMongo.put("/api/users", { email, password, newPassword, confirmNewPassword })
 }
 
 const deleteMongoUser = (id: any) => {
@@ -22,4 +22,28 @@ const loginMongoApi = (email: any, password: any) => {
         });
 }
 
-export { fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi }
+const favoriteMongoApi = (email: string, movieId: string, mediaType: string, movieName: string,  movieImg: string, movieReleaseDay: Date, movieGenre: number[], movieReview: string, moviePopularity: string, movieVoteAverage: string, movieVoteCount: string) => {
+    return axiosMongo.post(`/api/user/addFavorite`, {
+        email,
+        movieId,
+        mediaType,
+        movieName,
+        movieImg,
+        movieReleaseDay,
+        movieGenre,
+        movieReview,
+        moviePopularity,
+        movieVoteAverage,
+        movieVoteCount
+    });
+};
+const getFavoriteMongoApi = (email: any) => {
+    return axiosMongo.get(`/api/user/getFavorite`, {
+        params: {
+            email: email
+        }
+    });
+}
+
+
+export { fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi, favoriteMongoApi, getFavoriteMongoApi }

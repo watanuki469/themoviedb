@@ -97,6 +97,8 @@ export default function SingleMovieDetail({
 
     const handleWatchList = (movie: any) => {
         const storedDataString = localStorage.getItem('watchList');
+        console.log(storedDataString);
+        
         let storedData: { [key: string]: any } = {};
         if (storedDataString !== null) {
             storedData = JSON.parse(storedDataString);
@@ -112,7 +114,6 @@ export default function SingleMovieDetail({
             setCheckLog(!checkLog)
             localStorage.setItem('watchList', JSON.stringify(storedData));
             toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
-
         }
     }
     function formatNumber(num: any) {

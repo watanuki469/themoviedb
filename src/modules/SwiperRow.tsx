@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import {  favoriteMongoApi, getFavoriteMongoApi } from "../redux/client/api.LoginMongo";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setFavorite, setListFavorite } from "../redux/reducers/login.reducer";
+import { AppDispatch } from "../redux/store";
 
 export interface SwiperRowProps {
     searchItemList: any
@@ -13,10 +17,45 @@ export interface SwiperRowProps {
 export default function SwiperRow({
     searchItemList,
     mediaType
-}: SwiperRowProps) {
+}: SwiperRowProps) {    
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    const [checkLog, setCheckLog] = useState(false)
+    const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const dispatch = useAppDispatch()
+    const favoriteList = useAppSelector((state) => state.login.listFavorite);
 
-    let navigate = useNavigate()
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
+
+        if (storedDataString) {
+            storedData = JSON.parse(storedDataString);
+        }
+        setUserInfoList(Object.values(storedData));
+    }, []);
+
+    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFavoriteMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListFavorite(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
+        }
+    }
+
+    useEffect(() => {
+        if (userInfoList.length > 0) {
+            dispatch(fetchGetFavorites());
+        }
+    }, [userInfoList]);
+
+    let navigate = useNavigate();
     const [activeSlider, setActiveSlider] = useState(6);
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 500) {
@@ -33,46 +72,89 @@ export default function SwiperRow({
         };
 
         window.addEventListener('resize', handleResize);
-        // Call handleResize at initial load
         handleResize();
-
-        // Clean up event listener on unmount
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
     const [isRating, setIsRating] = useState(false);
     const [numberIndex, setNumberIndex] = useState(0);
     const handleClick = (index: number) => {
         setIsRating(true)
         setNumberIndex(index);
     };
+
     const [value, setValue] = useState<number | null>(0);
     const handleClose = () => {
         setIsRating(false)
         setNumberIndex(0);
         setValue(0)
     };
-    const [checkLog, setCheckLog] = useState(false)
 
-    const handleWatchList = (movie: any) => {
-        const storedDataString = localStorage.getItem('watchList');
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
-            storedData = JSON.parse(storedDataString);
+    const fetchFavorite = (
+        movieId: string,
+        movieName: string,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+      ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+          const response = await favoriteMongoApi(
+            email,
+            movieId,
+            mediaType,
+            movieName,
+            movieImg,
+            movieReleaseDay,
+            movieGenre,
+            movieReview,
+            moviePopularity,
+            movieVoteAverage,
+            movieVoteCount
+          );
+          dispatch(setFavorite(response));
+          if (response) {
+            await dispatch(fetchGetFavorites());
+          } else {
+            toast.error('Something went wrong');
+          }
+        } catch (e) {
+          console.log("Updating watch list failed: " + e);
+          toast.error("Updating watch list failed");
         }
-        if (storedData[movie?.id]) {
-            delete storedData[movie?.id];
-            localStorage.setItem('watchList', JSON.stringify(storedData));
-            setCheckLog(!checkLog)
-            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
-
-        } else {
-            storedData[movie?.id] = movie;
-            setCheckLog(!checkLog)
-            localStorage.setItem('watchList', JSON.stringify(storedData));
-            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
-
-        }
-    }
+      };
+    
+    const handleWatchList = async (
+        index: number,
+        movieId: any,
+        movieName: any,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+      ) => {
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        await dispatch(fetchFavorite(
+          movieId,
+          movieName,
+          movieImg,
+          movieReleaseDay,
+          movieGenre,
+          movieReview,
+          moviePopularity,
+          movieVoteAverage,
+          movieVoteCount
+        ));
+        setCheckLog(!checkLog);
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+      };
 
     return (
         <div className="h-full ">
@@ -125,6 +207,7 @@ export default function SwiperRow({
                 className="mySwiper flex text-white"
             >
                 {searchItemList?.map((item: any, index: any) => {
+                    const existingIndex = favoriteList.findIndex(fav => fav.itemId == item?.id);
                     return (
                         <SwiperSlide key={index} className="bg-gray-200">
                             <div className="w-full h-auto hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
@@ -144,57 +227,55 @@ export default function SwiperRow({
                                     <div className="h-12 mt-2">
                                         <p className="line-clamp-2">{index}. {item.title ? item.title : item.name}</p>
                                     </div>
-
                                     <button
-                                        onClick={() => handleWatchList(item)}
-                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none">
-                                        {checkLog ? (
-                                            <div>
-                                                {
-                                                    localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item.id] ? (
-                                                        <div className="items-center flex">
-                                                            <i className="fas fa-check mr-2"></i>
-                                                            <p>Remove</p>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="items-center flex">
-                                                            <i className="fas fa-plus mr-2"></i>
-                                                            <p>Watchlists</p>
-                                                        </div>
-                                                    )
-                                                }
-                                            </div>
-                                        )
-                                            : (
-                                                <div>
-                                                    {
-                                                        localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[item.id] ? (
-                                                            <div className="items-center flex">
-                                                                <i className="fas fa-check mr-2"></i>
+                                        onClick={() => handleWatchList(index, item?.id, item?.title || item?.name,item?.poster_path,item?.first_air_date?item?.first_air_date:item?.release_date,item?.genre_ids,item?.overview,item?.popularity,item?.vote_average,item?.vote_count
+                                        )}
+                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none"
+                                    >
+                                        <div>
+                                            {existingIndex !== -1 ? (
+                                                loading[index] ? (
+                                                    <div>
+                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                    </div>
+                                                ) : (
+                                                    <div className="py-2 px-3 flex justify-center items-center text-blue-500 text-center h-full">
+                                                        <i className="fas fa-minus font-bold text-lg mr-2"></i>
+                                                        <div className="text-center">
+                                                            <div className="font-bold text-sm">
                                                                 <p>Remove</p>
                                                             </div>
-                                                        ) : (
-                                                            <div className="items-center flex">
-                                                                <i className="fas fa-plus mr-2"></i>
-                                                                <p>Watchlists</p>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            ) : (
+                                                <div className="font-bold text-sm">
+                                                    {loading[index] ? (
+                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                    ) : (
+                                                        <div className="py-2 px-3 flex justify-center items-center text-blue-500 text-center h-full">
+                                                            <i className="fas fa-plus font-bold text-lg mr-2"></i>
+                                                            <div className="text-center">
+                                                                <p>Watchlist</p>
                                                             </div>
-                                                        )
-                                                    }
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
+                                        </div>
                                     </button>
                                     <button
-                                        onClick={() => navigate(`/${mediaType == 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
+                                        onClick={() => navigate(`/${mediaType === 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
                                         className="flex items-center px-4 py-2 border rounded-lg w-full justify-center border-none text-white">
                                         <i className="fa-solid fa-play mr-2"></i>
                                         <p>Trailer</p>
                                     </button>
                                 </div>
                             </div>
-                        </SwiperSlide>
+                        </SwiperSlide >
                     )
                 })}
-            </Swiper>
+            </Swiper >
         </div >
     );
 }

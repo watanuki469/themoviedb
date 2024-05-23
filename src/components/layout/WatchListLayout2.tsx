@@ -4,60 +4,130 @@ import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } fro
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import mongoose from 'mongoose';
-import axios from 'axios';
+import { favoriteMongoApi, getFavoriteMongoApi } from '../../redux/client/api.LoginMongo';
+import { AppDispatch } from '../../redux/store';
+import { setFavorite, setListFavorite } from '../../redux/reducers/login.reducer';
 
-export function WatchListLayout() {
-    const [watchList, setWatchList] = useState<any[]>([]);
-    const [handleRefine, setHandleRefine] = useState(false);
-    const [movieCheck, setMovieCheck] = useState(false);
-    const [seriesCheck, setSeriesCheck] = useState(false);
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
-    const [query, setQuery] = useState('');
+export function WatchListLayout2() {
+    const dispatch = useAppDispatch()
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const [checkLog, setCheckLog] = useState(false)
 
-    const toggleFeature = (type: any) => {
-        if (type === "movie") {
-            setMovieCheck(!movieCheck);
-        } else if (type === "tv") {
-            setSeriesCheck(!seriesCheck);
-        }
-    };
 
     useEffect(() => {
-        // Lấy dữ liệu từ local storage
-        const storedDataString = localStorage.getItem('watchList');
+        const storedDataString = localStorage.getItem('user');
         let storedData = [];
 
         if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        console.log('Stored data:', storedData);
-
-        // Lưu dữ liệu vào state
-        setWatchList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
+        setUserInfoList(Object.values(storedData));
     }, []);
-    const removeFromWatchList = (imdb_id: string) => {
-        // Lấy dữ liệu từ local storage
-        const storedDataString = localStorage.getItem('watchList');
-        let storedData: Record<string, any> = {};
 
-        if (storedDataString) {
-            storedData = JSON.parse(storedDataString);
+    const favoriteList = useAppSelector((state: any) => state.login.listFavorite);
+    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFavoriteMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListFavorite(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
         }
-
-        // Xóa item với imdb_id tương ứng khỏi object
-        delete storedData[imdb_id];
-
-        // Cập nhật local storage
-        localStorage.setItem('watchList', JSON.stringify(storedData));
-
-        // Cập nhật state để render lại
-        setWatchList(Object.values(storedData));
+    }
+    useEffect(() => {
+        if (userInfoList.length > 0) {
+            dispatch(fetchGetFavorites());
+        }
+    }, [userInfoList]);
+    const fetchFavorite = (
+        movieId: string,
+        mediaType: string,
+        movieName: string,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await favoriteMongoApi(
+                email,
+                movieId,
+                mediaType,
+                movieName,
+                movieImg,
+                movieReleaseDay,
+                movieGenre,
+                movieReview,
+                moviePopularity,
+                movieVoteAverage,
+                movieVoteCount
+            );
+            dispatch(setFavorite(response));
+            if (response) {
+                await dispatch(fetchGetFavorites());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
     };
-    const [email, setEmail] = useState(localStorage.getItem('email') || ''); // Lấy giá trị email từ local storage nếu có
+
+    const removeFromWatchList = async (
+        index: number,
+        movieId: any,
+        movieName: any,
+        mediaType: any,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+    ) => {
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        await dispatch(fetchFavorite(
+            movieId,
+            mediaType,
+            movieName,
+            movieImg,
+            movieReleaseDay,
+            movieGenre,
+            movieReview,
+            moviePopularity,
+            movieVoteAverage,
+            movieVoteCount
+        ));
+        setCheckLog(!checkLog);
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+    };
+
+    const [handleRefine, setHandleRefine] = useState(false);
+    const [movieCheck, setMovieCheck] = useState(false);
+    const [seriesCheck, setSeriesCheck] = useState(false);
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
+
+    const toggleFeature = (type: any) => {
+        if (type == "Movie") {
+            setMovieCheck(!movieCheck);
+        } else if (type == "TV") {
+            setSeriesCheck(!seriesCheck);
+        }
+    };
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
@@ -186,7 +256,7 @@ export function WatchListLayout() {
     function countGenres(topRatedMovies: any): Record<GenreName, number> {
         const genreCounting: Record<GenreName, number> = {};
         topRatedMovies?.forEach((movie: any) => {
-            movie?.genre_ids?.forEach((id: GenreID) => {
+            movie?.itemGenre?.forEach((id: GenreID) => {
                 // Lấy tên thể loại từ đối tượng ánh xạ
                 const genreName: GenreName = genreMapping[id];
                 // Nếu thể loại đã tồn tại, tăng giá trị đếm lên 1; ngược lại, tạo mới với giá trị 1.
@@ -207,12 +277,12 @@ export function WatchListLayout() {
 
     };
     useEffect(() => {
-        const genreCount = countGenres(watchList);
+        const genreCount = countGenres(favoriteList);
         setGenreCount(genreCount);
         const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
         setNumberGen(totalGenreCount);
 
-    }, [watchList]);
+    }, [favoriteList]);
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         // Implement rendering logic based on the currentView (detail, grid, compact)
@@ -229,42 +299,41 @@ export function WatchListLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                        <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
                                             onError={handleImageError} className="w-28 h-40 hover:opacity-80" />
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
-                                            <div className="flex flex-wrap gap-2">{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)} ||
-                                                {movie?.genre_ids?.map((genre: any, index: any) => (
+                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.itemName}</p>
+                                            <div className="flex flex-wrap gap-2">{movie?.itemReleaseDay?.slice(0, 4)} ||
+                                                {movie?.itemGenre?.map((genre: any, index: any) => (
                                                     <div key={index}>
                                                         {genreMapping[genre]}
-                                                        {index !== movie.genre_ids.length - 1 && ","} {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
-                                                    </div>
-                                                ))}
-
-                                                {movie?.genres?.map((genre: any, index: any) => (
-                                                    <div key={index}>
-                                                        {genreMapping[genre?.id]}
-                                                        {index !== movie?.genres?.length - 1 && ","}  {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
+                                                        {index < (movie?.itemGenre?.length - 1) ? "," : ''} {/* Thêm dấu phẩy nếu không phải là phần tử cuối cùng */}
                                                     </div>
                                                 ))}
                                             </div>
 
                                             <div className="flex items-center gap-2">
                                                 <i className="fa-solid fa-star text-yellow-300"></i>
-                                                <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                <p>{movie?.itemVoteAverage?.slice(0, 3)} ({shortenNumber(movie?.itemVoteCount)})</p>
                                             </div>
                                             <div className="mt-1 lg:line-clamp-none line-clamp-4">
-                                                <p>{movie?.overview}</p>
+                                                <p>{movie?.itemReview}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
 
-                                <div className="ml-auto" onClick={() => removeFromWatchList(movie?.id)} >
-                                    <Tooltip title="Click here to remove from watchlist">
-                                        <i className="fa-solid fa-trash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
+                                <div className="ml-auto" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.mediaType, movie?.itemImg, movie?.itemReleaseDay, movie?.itemGenre, movie?.itemReview, movie?.itemPopularity, movie?.itemVoteAverage, movie?.itemVoteCount)} >
+                                    <Tooltip title="Click here to remove from userInfoList">
+                                        {loading[movieIndex] ? (
+                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                        ) :
+                                            (
+                                                <i className="fa-solid fa-trash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
+
+                                            )}
                                     </Tooltip>
                                 </div>
                             </div>
@@ -304,9 +373,18 @@ export function WatchListLayout() {
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movie?.id)}   >
+                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.mediaType, movie?.itemImg, movie?.itemReleaseDay, movie?.itemGenre, movie?.itemReview, movie?.itemPopularity, movie?.itemVoteAverage, movie?.itemVoteCount)} >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        Remove
+
+                                        {loading[movieIndex] ? (
+                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                        ) :
+                                            (
+                                                <div>
+                                                    Remove
+                                                </div>
+
+                                            )}
                                     </button>
 
                                 </div>
@@ -320,7 +398,7 @@ export function WatchListLayout() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-          
+
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
@@ -331,7 +409,7 @@ export function WatchListLayout() {
                     <div className="lg:max-w-full md:w-screen ">
                         <div className="flex mt-3 border-b-2 border-gray py-4">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold ">Your Watchlist</h2>
+                                <h2 className="text-2xl font-bold ">Your WatchList</h2>
                                 <p className="text-xl font-semibold text-gray-500">Public</p>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
@@ -428,7 +506,7 @@ export function WatchListLayout() {
                         </div>
                         <div className="flex border-b-2 border-gray py-2 items-center ">
                             <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold ">{watchList?.length} Title</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold ">{userInfoList?.length} Title</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
@@ -549,11 +627,11 @@ export function WatchListLayout() {
                                                                 {movieCheck && (
                                                                     <div className="flex items-center">
                                                                         <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("movie")}></i>
+                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("Movie")}></i>
                                                                             <div>Feature Movie</div>
                                                                         </div>
                                                                         <div className="ml-auto">
-                                                                            {watchList.filter(movie => movie?.title).length}
+                                                                            {favoriteList?.filter((movie: any) => movie?.itemType == 'Movie').length}
                                                                         </div>
 
                                                                     </div>
@@ -561,10 +639,10 @@ export function WatchListLayout() {
                                                                 {seriesCheck && (
                                                                     <div className="flex items-center">
                                                                         <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("tv")}></i>
+                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("TV")}></i>
                                                                             <div>Feature TV Mini-Series</div>
                                                                         </div>
-                                                                        <div className="ml-auto"> {watchList.filter(movie => movie?.name).length}</div>
+                                                                        <div className="ml-auto">{favoriteList?.filter((movie: any) => movie?.itemType == 'TV').length}</div>
 
                                                                     </div>
                                                                 )}
@@ -572,17 +650,17 @@ export function WatchListLayout() {
                                                                     <>
                                                                         <div className="flex items-center">
                                                                             <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("movie")}></i>
+                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("Movie")}></i>
                                                                                 <div>Feature Movie</div>
                                                                             </div>
-                                                                            <div className="ml-auto"> {watchList.filter(movie => movie?.title).length}</div>
+                                                                            <div className="ml-auto">{favoriteList?.filter((movie: any) => movie?.itemType == 'Movie').length}</div>
                                                                         </div>
                                                                         <div className="flex items-center mt-4">
                                                                             <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("tv")}></i>
+                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("TV")}></i>
                                                                                 <div>Feature TV Mini-Series</div>
                                                                             </div>
-                                                                            <div className="ml-auto"> {watchList.filter(movie => movie?.name).length}</div>
+                                                                            <div className="ml-auto"> {favoriteList?.filter((movie: any) => movie?.itemType == 'TV').length}</div>
                                                                         </div>
 
 
@@ -598,13 +676,6 @@ export function WatchListLayout() {
                                                 {currentSelection == 'case2' ? (
                                                     <div className="w-full py-4 px-2 text-xl  overflow-auto h-72">
                                                         <div className="w-full items-center">
-                                                            {/* <div className="flex gap-2 items-center">
-                                                                    <i className="fa-regular fa-square-check" onClick={() => toggleFeature("movie")}></i>
-                                                                    <div>Feature Movie</div>
-                                                                </div>
-                                                                <div className="ml-auto">
-                                                                    {watchList.filter(movie => movie?.title).length}
-                                                                </div> */}
                                                             {Object.entries(genreCount).map(([genre, count], index) => (
                                                                 <div
                                                                     key={`genre-${genre}-${index}`}
@@ -671,15 +742,13 @@ export function WatchListLayout() {
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                         display: 'flex', flexWrap: 'wrap'
                                     }}>
-                                    {watchList
+                                    {favoriteList
                                         .filter((movie: any) => {
                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                             // Check if every selected genre is present in the movie's genres
                                             const hasAllGenres = selectedGenres.every((genre) =>
-                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                                movie?.itemGenre?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                             );
-
-
                                             return hasAllGenres;
                                         })
 
@@ -691,32 +760,31 @@ export function WatchListLayout() {
                                             // Lọc theo khoảng ngày phát hành
                                             if (!fromDate || !toDate) return true; // Nếu không có khoảng ngày được chọn
 
-                                            const releaseDate = new Date(movie?.release_date);
-                                            const releaseDate2 = new Date(movie?.first_air_date);
+                                            const releaseDate = new Date(movie?.itemReleaseDay);
 
                                             const from = new Date(fromDate);
                                             const to = new Date(toDate);
 
                                             // Kiểm tra xem ngày phát hành hoặc ngày phát sóng có nằm trong khoảng fromDate và toDate không
-                                            return (releaseDate >= from && releaseDate <= to) || (releaseDate2 >= from && releaseDate2 <= to);
+                                            return (releaseDate >= from && releaseDate <= to)
                                         })
                                         .filter((movie: any) => {
                                             if (movieCheck) {
-                                                return movie?.title !== undefined; // Chỉ hiển thị phim có tiêu đề
+                                                return movie?.itemType == 'Movie';
                                             }
                                             else if (seriesCheck) {
-                                                return movie?.name != undefined
+                                                return movie?.itemType == 'TV'
                                             }
                                             else {
-                                                return true; // Không áp dụng bộ lọc
+                                                return true;
                                             }
                                         })
 
-                                        .sort((a, b) => {
+                                        .sort((a: any, b: any) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
+                                                const titleA = a?.itemName?.toUpperCase();
+                                                const titleB = b?.itemName?.toUpperCase();
                                                 if (titleA < titleB) {
                                                     return -1;
                                                 }
@@ -726,10 +794,10 @@ export function WatchListLayout() {
                                                 return 0;
                                             }
                                             else if (menuItemNum === '1') {
-                                                return b?.vote_average - a?.vote_average;
+                                                return b?.itemVoteAverage - a?.itemVoteAverage;
                                             }
                                             else if (menuItemNum === '2') {
-                                                return a?.id - b?.id;
+                                                return a?.itemId - b?.itemId;
                                             }
                                             else if (menuItemNum === '3') {
                                                 return compareReleaseDates(a, b);
@@ -749,7 +817,7 @@ export function WatchListLayout() {
                                                 return 0
                                             }
                                         })
-                                        .map((m, index) => renderMovieItem(m, index, currentView))}
+                                        .map((m: any, index: any) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>
                         </div>

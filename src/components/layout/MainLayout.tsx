@@ -144,7 +144,7 @@ export default function MainLayout() {
                     </div>
 
                     <div className="mt-10 overflow-hidden">
-                        <SwiperRow searchItemList={topRatedMovies} mediaType={'movie'} />
+                        <SwiperRow searchItemList={topRatedMovies} mediaType={'Movie'} />
 
                     </div>
 
@@ -155,7 +155,7 @@ export default function MainLayout() {
                     </div>
 
                     <div className="mt-8 overflow-hidden">
-                        <SwiperRow searchItemList={mostPopularTv} mediaType={'tv'} />
+                        <SwiperRow searchItemList={mostPopularTv} mediaType={'TV'} />
 
                     </div>
 
@@ -169,7 +169,7 @@ export default function MainLayout() {
                         <h3 className="text-sm font-semibold">Top rated TV shows just for you</h3>
                     </div>
                     <div className="mt-8 overflow-hidden " >
-                        <SwiperRow searchItemList={topRatedTv} mediaType={'tv'} />
+                        <SwiperRow searchItemList={topRatedTv} mediaType={'TV'} />
                     </div>
 
                     <BornToday />

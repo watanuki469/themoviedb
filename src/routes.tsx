@@ -24,6 +24,7 @@ import UserReviewLayout from "./components/layout/UserReviewLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
 import { WatchListLayout } from "./components/layout/WatchListLayout";
+import { WatchListLayout2 } from "./components/layout/WatchListLayout2";
 
 // export const routesGen = {
 //   home: "/",
@@ -152,6 +153,11 @@ const routes = [
   {
     path: "/watchList",
     element: <WatchListLayout/>,
+    state: "watchList"
+  },
+  {
+    path: "/watchList2",
+    element: <WatchListLayout2/>,
     state: "watchList"
   },
   {
