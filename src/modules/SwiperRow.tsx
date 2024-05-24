@@ -206,7 +206,7 @@ export default function SwiperRow({
                 className="mySwiper flex text-white"
             >
                 {searchItemList?.map((item: any, index: any) => {
-                    const existingIndex = favoriteList.findIndex(fav => fav.itemId == item?.id);
+                    const existingIndex = favoriteList.findIndex(fav => fav?.itemId == item?.id);
                     return (
                         <SwiperSlide key={index} className="bg-gray-200">
                             <div className="w-full h-auto hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>

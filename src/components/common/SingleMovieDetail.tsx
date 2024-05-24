@@ -550,7 +550,7 @@ export default function SingleMovieDetail({
                                     <div className="flex flex-col justify-center items-center h-full ">
                                         <button className="w-full flex items-center  border-2 border-black bg-yellow-300 " >
 
-                                            <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, 'Movie', singleMovieList[0]?.title, singleMovieList[0]?.poster_path, singleMovieList[0]?.release_date, singleMovieList[0]?.genres, singleMovieList[0]?.overview, singleMovieList[0]?.popularity, singleMovieList[0]?.vote_average, singleMovieList[0]?.vote_count)}>
+                                            <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, 'Movie', singleMovieList[0]?.title, singleMovieList[0]?.poster_path, singleMovieList[0]?.release_date, singleMovieList[0]?.genres?.map((item:any)=>item?.id), singleMovieList[0]?.overview, singleMovieList[0]?.popularity, singleMovieList[0]?.vote_average, singleMovieList[0]?.vote_count)}>
                                                 {existingIndex !== -1 ? (
                                                     loading[0] ? (
                                                         <div>
