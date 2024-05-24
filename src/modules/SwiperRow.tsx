@@ -239,10 +239,10 @@ export default function SwiperRow({
                                                     </div>
                                                 ) : (
                                                     <div className="py-2 px-3 flex justify-center items-center text-blue-500 text-center h-full">
-                                                        <i className="fas fa-minus font-bold text-lg mr-2"></i>
+                                                        <i className="fas fa-plus font-bold text-lg mr-2"></i>
                                                         <div className="text-center">
                                                             <div className="font-bold text-sm">
-                                                                <p>Remove</p>
+                                                                <p>Watchlist</p>
                                                             </div>
                                                         </div>
                                                     </div>
