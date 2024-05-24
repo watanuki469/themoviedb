@@ -221,6 +221,7 @@ export default function TopBar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem('activity');
     navigate('/login2')
   };
 

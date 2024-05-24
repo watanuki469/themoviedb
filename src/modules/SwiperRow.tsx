@@ -117,7 +117,7 @@ export default function SwiperRow({
           );
           dispatch(setFavorite(response));
           if (response) {
-            // await dispatch(fetchGetFavorites());            
+            await dispatch(fetchGetFavorites());            
           } else {
             toast.error('Something went wrong');
           }
