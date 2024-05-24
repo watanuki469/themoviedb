@@ -70,7 +70,6 @@ export default function SwiperRow({
                 setActiveSlider(6);
             }
         };
-
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
@@ -118,7 +117,7 @@ export default function SwiperRow({
           );
           dispatch(setFavorite(response));
           if (response) {
-            await dispatch(fetchGetFavorites());
+            // await dispatch(fetchGetFavorites());            
           } else {
             toast.error('Something went wrong');
           }
@@ -228,7 +227,7 @@ export default function SwiperRow({
                                         <p className="line-clamp-2">{index}. {item.title ? item.title : item.name}</p>
                                     </div>
                                     <button
-                                        onClick={() => handleWatchList(index, item?.id, item?.title || item?.name,item?.poster_path,item?.first_air_date?item?.first_air_date:item?.release_date,item?.genre_ids,item?.overview,item?.popularity,item?.vote_average,item?.vote_count
+                                        onClick={() => handleWatchList(index, item?.id, item?.title || item?.name,item?.poster_path,item?.first_air_date?item?.first_air_date:item?.release_date,item?.genre_ids?.map((item:any)=>item?.id),item?.overview,item?.popularity,item?.vote_average,item?.vote_count
                                         )}
                                         className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none"
                                     >

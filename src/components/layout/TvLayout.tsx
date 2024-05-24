@@ -19,6 +19,10 @@ import TwoMovieRow from "../../modules/TwoMovieRow";
 import TvReview from "../common/TvReview";
 import TvDetailExternal from "../common/TvDetailExternal";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { getListRecentlyViewMongoApi, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
+import { setRecentlyView } from "../../redux/reducers/login.reducer";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function TvLayout() {
     const { id } = useParams()
@@ -93,6 +97,8 @@ export default function TvLayout() {
             setTotalEpisodes(sum);
         }
     }, [tvList]);
+    // const timezoneResponse = axios.get("http://worldtimeapi.org/api/timezone/Asia/Ho_Chi_Minh");
+    // const createdTime = timezoneResponse.data.datetime;
 
     useEffect(() => {
         const storedDataString = localStorage.getItem('activity');
@@ -107,21 +113,75 @@ export default function TvLayout() {
         }
     })
 
+    // const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    // useEffect(() => {
+    //     const storedDataString = localStorage.getItem('user');
+    //     let storedData = [];
+
+    //     if (storedDataString) {
+    //         storedData = JSON.parse(storedDataString);
+    //     }
+    //     setUserInfoList(Object.values(storedData));
+    // }, []);
+
+    // const email = userInfoList[0];
+
+    // const response = recentlyViewMongoApi(
+    //     email,
+    //     tvList[0]?.id,
+    //     tvList[0]?.name,
+    //     tvList[0]?.poster_path,
+    //     "TV",
+    // );
+    // useEffect(() => {
+    //     dispatch(setRecentlyView(response))
+    // })
+    // useEffect(() => {
+    //     dispatch(setRecentlyView(recentlyViewMongoApi(
+    //         userInfoList[0],
+    //         tvList[0]?.id,
+    //         tvList[0]?.name,
+    //         tvList[0]?.poster_path,
+    //         "TV",
+    //     )))
+    // },[userInfoList[0]])
+    // useEffect(() => {
+    //     const fetchTimezoneData = async () => {
+    //         try {
+    //             const timezoneResponse = await axios.get("http://worldtimeapi.org/api/timezone/Asia/Ho_Chi_Minh");
+    //             const createdTime = timezoneResponse.data.datetime;
+
+    //             const storedDataString = localStorage.getItem('activity');
+    //             let storedData = storedDataString ? JSON.parse(storedDataString) : {};
+
+    //             if (!storedData[tvList[0]?.id]) {
+    //                 storedData[tvList[0]?.id] = { ...tvList[0], createdTime };
+    //                 localStorage.setItem('activity', JSON.stringify(storedData));
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching timezone data:", error);
+    //         }
+    //     };
+
+    //     fetchTimezoneData();
+    // }, [tvList]);
+
+
 
     return (
-        <div className=" min-h-screen cursor-pointer">
+        <div className=" min-h-screen cursor-pointer max-w-full overflow-hidden">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                     <TvDetail singleTvList={tvList} singleTvImageList={tvImageList} />
                 </div>
             </div>
-            <div className="bg-white">
+            <div className="bg-white max-w-full ">
                 <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
                     <div className="md:grid grid-cols-12 gap-2 ">
                         <div className="lg:col-span-8 md-col-span-12  max-w-full ">
                             <div className="lg:max-w-full md:w-screen">
-                                <div className="text-white py-4 ">
+                                <div className="text-white py-4 px-2 w-screen ">
                                     <div className="flex items-center ">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-black ">Episodes</h2>
@@ -143,7 +203,7 @@ export default function TvLayout() {
                                 </div>
                                 <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results} />
                             </div>
-                            <div className="flex items-center py-4">
+                            <div className="flex items-center py-4 px-2 w-screen">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
@@ -153,37 +213,28 @@ export default function TvLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
                             </div>
-                            <div className="text-white flex py-4 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
-                                <div className="flex items-center ">
+                            <div className="text-white flex py-4 w-screen px-2 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
+                                <div className="flex items-center w-full ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvCast" className="text-2xl font-bold text-black ">Top Cast</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
-                                {/* <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
-                                    <i className="fa-solid fa-pencil text-black text-xl ml-2"></i>
-                                    <p className="flex items-center text-xl font-bold text-black ">
-                                        Edit
-                                    </p>
-                                </div> */}
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <TvPerson singleMovieList={tvList} />
                             </div>
-                            <div className="text-white flex py-4 mt-4">
+                            <div className="text-white flex py-4 mt-4 px-2 w-screen">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More Like This</h2>
                                 </div>
-                                {/* <div className="flex items-center ml-auto gap-2" >
-                                    <i className="fa-regular fa-circle-question text-black text-2xl ml-2"></i>
-                                </div> */}
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'tv'} />
                             </div>
 
-                            <div className="text-white flex py-2 ">
+                            <div className="text-white flex py-2 w-screen px-2">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Story Line</h2>
@@ -198,7 +249,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <TvStoryLine tvList={tvList} />
                             </div>
-                            <div className="text-white flex py-4 ">
+                            <div className="text-white flex py-4 px-2 w-screen">
                                 <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/tv/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvReview" className="text-2xl font-bold text-black ">User Reviews</h2>
@@ -215,7 +266,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <TvReview singleTvList={tvList} />
                             </div>
-                            <div className="text-white flex py-4 ">
+                            <div className="text-white flex py-4  px-2 w-screen">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvTrvia" className="text-2xl font-bold text-black ">Detail</h2>

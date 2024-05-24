@@ -65,7 +65,7 @@ export default function SearchBar() {
         else {
             timerId = setTimeout(() => {
                 dispatch(fetchSearch());
-            }, 2000); 
+            }, 2000);
         }
         function handleResize() {
             const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
@@ -160,7 +160,7 @@ export default function SearchBar() {
             </div>
             <Popper
                 anchorEl={anchorRef?.current}
-                open={open}
+                open={open}                
                 transition
                 placement="bottom-start"
                 sx={{
@@ -181,9 +181,12 @@ export default function SearchBar() {
                                 color: "#999",
                                 width: "100%",
                                 height: '100%',
+                                maxHeight: '24rem',
+                                overflow: 'auto'
+
                             }}>
                             {searchList[0]?.results?.map((item: any, index: any) => (
-                                <div className="mt-1" key={index}
+                                <div className="mt-1 max-h-92 overflow-auto" key={index}
                                 >
                                     <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
                                         onClick={() => {

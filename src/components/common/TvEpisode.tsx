@@ -1,10 +1,7 @@
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { format, parseISO } from 'date-fns';
 import { Rating } from '@mui/material';
+import { format, parseISO } from 'date-fns';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export interface TwoTvRowProps {

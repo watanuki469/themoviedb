@@ -21,14 +21,20 @@ export default function TvPerson({
     const [activeSlider, setActiveSlider] = useState(5);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
-            } else {
+            } else if (window.innerWidth < 600) {
+                setActiveSlider(3);
+            } else if (window.innerWidth < 768) {
                 setActiveSlider(4);
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(5);
+            } else {
+                setActiveSlider(6);
             }
         };
+
         window.addEventListener('resize', handleResize);
-        window.scrollTo(0, 0);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);

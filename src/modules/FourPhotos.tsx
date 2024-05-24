@@ -14,10 +14,14 @@ export default function FourPhotos({
     const [activeSlider, setActiveSlider] = useState(4);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
-            } else if (window.innerWidth < 1024) {
+            } else if (window.innerWidth < 600) {
                 setActiveSlider(3);
+            } else if (window.innerWidth < 768) {
+                setActiveSlider(4);
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(5);
             } else {
                 setActiveSlider(4);
             }
@@ -46,7 +50,7 @@ export default function FourPhotos({
             }}>
                 <Swiper
                     spaceBetween={10}
-                    slidesPerView="auto"
+                    slidesPerView={activeSlider}
                     grabCursor={true}
                     style={{ width: "100%", height: "max-content",maxWidth:'100%' }}
                     autoplay={{

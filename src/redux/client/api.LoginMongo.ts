@@ -44,6 +44,44 @@ const getFavoriteMongoApi = (email: any) => {
         }
     });
 }
+const favoriteActorMongoApi = (email: string, movieId: string,  movieName: string,  movieImg: string, movieReleaseDay: Date, movieReview: string, moviePopularity: string, movieKnowFor: string) => {
+    return axiosMongo.post(`/api/user/addFavoriteActor`, {
+        email,
+        movieId,
+        movieName,
+        movieImg,
+        movieReleaseDay,
+        movieReview,
+        moviePopularity,
+        movieKnowFor,
+    });
+};
+const getFavoriteActorMongoApi = (email: any) => {
+    return axiosMongo.get(`/api/user/getFavoriteActor`, {
+        params: {
+            email: email
+        }
+    });
+}
+
+const recentlyViewMongoApi = (email: string, movieId: string,  movieName: string,  movieImg: string, movieType:string) => {
+    return axiosMongo.post(`/api/user/addRecentlyViewed`, {
+        email,
+        movieId,
+        movieName,
+        movieImg,
+        movieType
+    });
+};
+const getListRecentlyViewMongoApi = (email: any) => {
+    return axiosMongo.get(`/api/user/getRecentlyViewed`, {
+        params: {
+            email: email
+        }
+    });
+}
 
 
-export { fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi, favoriteMongoApi, getFavoriteMongoApi }
+export { fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi,
+     favoriteMongoApi, getFavoriteMongoApi ,favoriteActorMongoApi,getFavoriteActorMongoApi
+    ,recentlyViewMongoApi,getListRecentlyViewMongoApi}

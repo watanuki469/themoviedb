@@ -266,17 +266,6 @@ export default function MovieLayout() {
                                 <SingleMovieReview singleMovieList={singleMovieList} />
                             </div>
                         </div>
-                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 object-none object-right-bottom">
-                            <div className="flex items-center py-3">
-                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">More tof explore</h2>
-                            </div>
-                            <div className="lg:max-w-full md:w-screen">
-                                <ListRow listRowList={topRatedMovies} />
-                            </div>
-                            <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                            <p className="text-red w-full text-blue-500"> See our picks</p>
-                        </div> */}
                         <div className="hidden lg:block col-span-4 h-full px-2 py-2 ">
                             <div
                                 ref={moreToExploreRef}

@@ -6,6 +6,10 @@ interface ILoginState {
     listFavorite: any[],
     register:any[],
     favorite:any[],
+    listFavoriteActor:any[],
+    favoriteActor:any[],
+    listRecentlyView:any[],
+    recentlyView:any[]
 }
 
 const initialState: ILoginState = {
@@ -14,6 +18,10 @@ const initialState: ILoginState = {
     listFavorite: [],
     register:[],
     favorite:[],
+    listFavoriteActor:[],
+    favoriteActor:[],
+    listRecentlyView:[],
+    recentlyView:[],
 }
 
 const setListLoginState = (state: ILoginState, action: any) => {
@@ -34,6 +42,20 @@ const setListFavoriteState = (state: ILoginState, action: any) => {
     state.listFavorite = action.payload?.favorites;
 }
 
+const setFavoriteActorState = (state: ILoginState, action: any) => {
+    state.favoriteActor = action.payload;
+}
+const setListFavoriteActorState = (state: ILoginState, action: any) => {
+    state.listFavoriteActor = action.payload.favoritesActor;
+}
+
+const setRecentlyViewState = (state: ILoginState, action: any) => {
+    state.recentlyView = action.payload;
+}
+const setListRecentlyViewState = (state: ILoginState, action: any) => {
+    state.listRecentlyView = action.payload.recentlyViewed;
+}
+
 export const LoginSlice = createSlice({
     name: 'Login',
     initialState,
@@ -43,9 +65,15 @@ export const LoginSlice = createSlice({
         setRegister:(state, action) => setRegisterState(state, action),
         setFavorite:(state, action) => setFavoriteState(state, action),
         setListFavorite:(state, action) => setListFavoriteState(state, action),
+        setFavoriteActor:(state, action) => setFavoriteActorState(state, action),
+        setListActorFavorite:(state, action) => setListFavoriteActorState(state, action),
+        setRecentlyView:(state, action) => setRecentlyViewState(state, action),
+        setListRecentlyView:(state, action) => setListRecentlyViewState(state, action),
     }
 });
 
-export const { setListLogin, setUser,setRegister,setFavorite,setListFavorite } = LoginSlice.actions;
+export const { setListLogin, setUser,setRegister,setFavorite,setListFavorite,setFavoriteActor,setListActorFavorite 
+    ,setListRecentlyView,setRecentlyView
+} = LoginSlice.actions;
 
 export default LoginSlice.reducer;

@@ -26,21 +26,6 @@ import VideoTvLayout from "./components/layout/VideoTvLayout";
 import { WatchListLayout } from "./components/layout/WatchListLayout";
 import { WatchListLayout2 } from "./components/layout/WatchListLayout2";
 
-// export const routesGen = {
-//   home: "/",
-//   movie: (id: any) => `/${id}`,
-//   video: (id: any) => `/video/${id}`,
-//   upComing: "/upComing",
-//   pro: "/pro",
-//   genre: "/features/genre",
-//   mediaDetail: (type: any, id: any) => `/${type}/${id}`,
-//   search: (title: any, votes: any,rating:any,genre:any) => `/${title}&${votes}&`,
-//   person: (id: any) => `/person/${id}`,
-//   favoriteList: "/favorites",
-//   reviewList: "/reviews",
-//   passwordUpdate: "password-update"
-// };
-
 const routes = [
   {
     index: true,

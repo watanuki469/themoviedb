@@ -23,8 +23,7 @@ export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    console.log(topRatedMovies);
-
+    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     useEffect(() => {
         dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
@@ -819,7 +818,7 @@ export default function Top250MovieLayout() {
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
                                 <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250Movie`)}>
-                                    <ListRow listRowList={topRatedMovies} />
+                                    <ListRow listRowList={mostPopularTv} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>

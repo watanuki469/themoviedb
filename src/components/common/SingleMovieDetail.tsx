@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import ShareIcon from '@mui/icons-material/Share';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { AppDispatch } from '../../redux/store';
+import { favoriteMongoApi, getFavoriteMongoApi } from '../../redux/client/api.LoginMongo';
+import { setFavorite, setListFavorite } from '../../redux/reducers/login.reducer';
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -20,17 +24,124 @@ export default function SingleMovieDetail({
     movieCreditList
 }: TwoMovieRowProps) {
     let navigate = useNavigate()
-
     const [director, setDirector] = useState<any[]>([])
     const [writer, setWriter] = useState<any[]>([])
-
     const [isRating, setIsRating] = useState(false);
+
     const handleClick = () => {
         setIsRating(true);
     };
     const [value, setValue] = useState<number | null>(0);
-    console.log('1234444' + singleMovieList);
 
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    const [checkLog, setCheckLog] = useState(false)
+    const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const dispatch = useAppDispatch()
+    const favoriteList = useAppSelector((state) => state.login.listFavorite);
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
+
+        if (storedDataString) {
+            storedData = JSON.parse(storedDataString);
+        }
+        setUserInfoList(Object.values(storedData));
+    }, []);
+    useEffect(() => {
+        if (userInfoList.length > 0) {
+            dispatch(fetchGetFavorites());
+        }
+    }, [userInfoList]);
+    const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleMovieList[0]?.id);
+
+
+    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFavoriteMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListFavorite(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
+        }
+    }
+    const fetchFavorite = (
+        movieId: string,
+        mediaType: string,
+        movieName: string,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await favoriteMongoApi(
+                email,
+                movieId,
+                mediaType,
+                movieName,
+                movieImg,
+                movieReleaseDay,
+                movieGenre,
+                movieReview,
+                moviePopularity,
+                movieVoteAverage,
+                movieVoteCount
+            );
+            dispatch(setFavorite(response));
+            if (response) {
+                await dispatch(fetchGetFavorites());
+                if(existingIndex !== -1){
+                    toast.info(`${singleMovieList[0]?.title} has been remove from watchlist`)
+                }
+                else{
+                    toast.success(`${singleMovieList[0]?.title} has been added to watchlist`)
+                }
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+
+    const handleWatchList = async (
+        index: number,
+        movieId: any,
+        mediaType: any,
+        movieName: any,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+    ) => {
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        await dispatch(fetchFavorite(
+            movieId,
+            mediaType,
+            movieName,
+            movieImg,
+            movieReleaseDay,
+            movieGenre,
+            movieReview,
+            moviePopularity,
+            movieVoteAverage,
+            movieVoteCount
+        ));
+        setCheckLog(!checkLog);
+       
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+    };
 
     useEffect(() => {
         if (singleMovieList && singleMovieList.length > 0) {
@@ -50,7 +161,6 @@ export default function SingleMovieDetail({
     const certification = usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
 
     const [isOpen, setIsOpen] = useState(false);
-
 
     const toggleContent = () => {
         setIsOpen(!isOpen);
@@ -86,36 +196,28 @@ export default function SingleMovieDetail({
                 console.error('Error copying link:', error);
             });
     };
-    // const [isFavorite, setIsFavorite] = useState(() => {
+
+    // const handleWatchList = (movie: any) => {
     //     const storedDataString = localStorage.getItem('watchList');
-    //     if (storedDataString && JSON.parse(storedDataString)[singleMovieList[0]?.id]) {
-    //         return true;
+    //     console.log(storedDataString);
+
+    //     let storedData: { [key: string]: any } = {};
+    //     if (storedDataString !== null) {
+    //         storedData = JSON.parse(storedDataString);
     //     }
-    //     return false;
-    // });
-    const [checkLog, setCheckLog] = useState(false)
+    //     if (storedData[movie?.id]) {
+    //         delete storedData[movie?.id];
+    //         localStorage.setItem('watchList', JSON.stringify(storedData));
+    //         setCheckLog(!checkLog)
+    //         toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
 
-    const handleWatchList = (movie: any) => {
-        const storedDataString = localStorage.getItem('watchList');
-        console.log(storedDataString);
-        
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
-            storedData = JSON.parse(storedDataString);
-        }
-        if (storedData[movie?.id]) {
-            delete storedData[movie?.id];
-            localStorage.setItem('watchList', JSON.stringify(storedData));
-            setCheckLog(!checkLog)
-            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
-
-        } else {
-            storedData[movie?.id] = movie;
-            setCheckLog(!checkLog)
-            localStorage.setItem('watchList', JSON.stringify(storedData));
-            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
-        }
-    }
+    //     } else {
+    //         storedData[movie?.id] = movie;
+    //         setCheckLog(!checkLog)
+    //         localStorage.setItem('watchList', JSON.stringify(storedData));
+    //         toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
+    //     }
+    // }
     function formatNumber(num: any) {
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'm';
@@ -403,7 +505,7 @@ export default function SingleMovieDetail({
                                             {director.slice(0, 3).map((item: any, index: number) => (
                                                 <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
-                                                    <span>{index < Math.min(director?.slice(0,3).length) - 1 ? '•' : ''}</span>
+                                                    <span>{index < Math.min(director?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
 
@@ -415,7 +517,7 @@ export default function SingleMovieDetail({
                                             {writer.slice(0, 3).map((item: any, index: number) => (
                                                 <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                     <span className="text-blue-600">{item?.name}</span>
-                                                    <span>{index < Math.min(writer?.slice(0,3).length) - 1 ? '•' : ''}</span>
+                                                    <span>{index < Math.min(writer?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
                                         </div>
@@ -447,9 +549,14 @@ export default function SingleMovieDetail({
                                 <div className="w-full h-full items-center justify-center text-center">
                                     <div className="flex flex-col justify-center items-center h-full ">
                                         <button className="w-full flex items-center  border-2 border-black bg-yellow-300 " >
-                                            {checkLog ? (
-                                                <div onClick={() => handleWatchList(singleMovieList[0])}>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+
+                                            <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, 'Movie', singleMovieList[0]?.title, singleMovieList[0]?.poster_path, singleMovieList[0]?.release_date, singleMovieList[0]?.genres, singleMovieList[0]?.overview, singleMovieList[0]?.popularity, singleMovieList[0]?.vote_average, singleMovieList[0]?.vote_count)}>
+                                                {existingIndex !== -1 ? (
+                                                    loading[0] ? (
+                                                        <div>
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        </div>
+                                                    ) : (
                                                         <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                             <i className="fas fa-check font-bold text-xl  mr-2"></i>
                                                             <div className="text-left">
@@ -459,43 +566,25 @@ export default function SingleMovieDetail({
                                                                 <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                             </div>
                                                         </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                    )
+                                                ) : (
+                                                    <div className="font-bold text-sm">
+                                                        {loading[0] ? (
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        ) : (
+                                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                             <i className="fas fa-plus font-bold text-xl  mr-2"></i>
                                                             <div className="text-left">
                                                                 <div className='font-bold'  >
-                                                                    <p>Add to Watchlist</p>
+                                                                    <p>Add to watchList</p>
                                                                 </div>
                                                                 <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <div onClick={() => handleWatchList(singleMovieList[0])}>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Remove from watchList</p>
-                                                                </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Add to Watchlist</p>
-                                                                </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
 
                                             <div
                                                 onClick={() => navigate('/watchList')}
@@ -605,7 +694,7 @@ export default function SingleMovieDetail({
                                                 {director.slice(0, 3).map((item: any, index: number) => (
                                                     <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
                                                         <span className="text-blue-600">{item?.name}</span>
-                                                        <span>{index < Math.min(director?.slice(0,3).length) - 1 ? '•' : ''}</span>
+                                                        <span>{index < Math.min(director?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                                                     </p>
                                                 ))}
 
@@ -617,7 +706,7 @@ export default function SingleMovieDetail({
                                                 {writer.slice(0, 3).map((item: any, index: number) => (
                                                     <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
                                                         <span className="text-blue-600">{item?.name}</span>
-                                                        <span>{index < Math.min(writer?.slice(0,3).length) - 1 ? '•' : ''}</span>
+                                                        <span>{index < Math.min(writer?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                                                     </p>
                                                 ))}
                                             </div>
@@ -640,56 +729,41 @@ export default function SingleMovieDetail({
                         </div>
                         <div className='px-3 py-2 border-b border-gray-300 '>
                             <button className="flex items-center w-full  border-2 border-black bg-yellow-300 " >
-                                {checkLog ? (
-                                    <div onClick={() => handleWatchList(singleMovieList[0])}>
-                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
-                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Remove from watchList</p>
-                                                    </div>
-                                                    <p>Added by {singleMovieList[0]?.runtime}k user</p>
-                                                </div>
+                                <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, 'Movie', singleMovieList[0]?.title, singleMovieList[0]?.poster_path, singleMovieList[0]?.release_date, singleMovieList[0]?.genres.map((genre: any) => genre.id), singleMovieList[0]?.overview, singleMovieList[0]?.popularity, singleMovieList[0]?.vote_average, singleMovieList[0]?.vote_count)}>
+                                    {existingIndex !== -1 ? (
+                                        loading[0] ? (
+                                            <div>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                             </div>
                                         ) : (
                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                            <div className="text-left">
+                                                <div className='font-bold'  >
+                                                    <p>Remove from watchList</p>
+                                                </div>
+                                                <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
+                                            </div>
+                                        </div>
+                                        )
+                                    ) : (
+                                        <div className="font-bold text-sm">
+                                            {loading[0] ? (
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            ) : (
+                                                <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                 <i className="fas fa-plus font-bold text-xl  mr-2"></i>
                                                 <div className="text-left">
                                                     <div className='font-bold'  >
-                                                        <p>Add to Watchlist</p>
+                                                        <p>Add to watchList</p>
                                                     </div>
-                                                    <p>Added by {singleMovieList[0]?.runtime}k user</p>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                 </div>
                                             </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div onClick={() => handleWatchList(singleMovieList[0])}>
-                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
-                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Remove from watchList</p>
-                                                    </div>
-                                                    <p>Added by {singleMovieList[0]?.runtime}k user</p>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Add to Watchlist</p>
-                                                    </div>
-                                                    <p>Added by {singleMovieList[0]?.runtime}k user</p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
 
                                 <div onClick={() => navigate('/watchList')} className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                     <i className="fa-solid fa-chevron-down"></i>

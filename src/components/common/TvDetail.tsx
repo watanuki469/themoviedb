@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { AppDispatch } from '../../redux/store';
+import { favoriteMongoApi, getFavoriteMongoApi } from '../../redux/client/api.LoginMongo';
+import { setFavorite, setListFavorite } from '../../redux/reducers/login.reducer';
 
 export interface TwoMovieRowProps {
     singleTvList: any
@@ -48,28 +52,137 @@ export default function TvDetail({
                 console.error('Error copying link:', error);
             });
     };
+    
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
+    const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const dispatch = useAppDispatch()
+    const favoriteList = useAppSelector((state) => state.login.listFavorite);
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
 
-    const handleWatchList = (movie: any) => {
-        const storedDataString = localStorage.getItem('watchList');
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
+        if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        if (storedData[movie?.id]) {
-            delete storedData[movie?.id];
-            localStorage.setItem('watchList', JSON.stringify(storedData));
-            setCheckLog(!checkLog)
-            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
+        setUserInfoList(Object.values(storedData));
+    }, []);
+    useEffect(() => {
+        if (userInfoList.length > 0) {
+            dispatch(fetchGetFavorites());
+        }
+    }, [userInfoList]);
+    const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleTvList[0]?.id);
 
-        } else {
-            storedData[movie?.id] = movie;
-            setCheckLog(!checkLog)
-            localStorage.setItem('watchList', JSON.stringify(storedData));
-            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
-
+    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFavoriteMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListFavorite(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
         }
     }
+    const fetchFavorite = (
+        movieId: string,
+        mediaType: string,
+        movieName: string,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await favoriteMongoApi(
+                email,
+                movieId,
+                mediaType,
+                movieName,
+                movieImg,
+                movieReleaseDay,
+                movieGenre,
+                movieReview,
+                moviePopularity,
+                movieVoteAverage,
+                movieVoteCount
+            );
+            dispatch(setFavorite(response));
+            if (response) {
+                await dispatch(fetchGetFavorites());
+                if (existingIndex !== -1) {
+                    toast.info(`${singleTvList[0]?.name} has been remove from watchlist`)
+                }
+                else {
+                    toast.success(`${singleTvList[0]?.name} has been added to watchlist`)
+                }
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+
+    const handleWatchList = async (
+        index: number,
+        movieId: any,
+        mediaType: any,
+        movieName: any,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieGenre: number[],
+        movieReview: string,
+        moviePopularity: string,
+        movieVoteAverage: string,
+        movieVoteCount: string
+    ) => {
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        await dispatch(fetchFavorite(
+            movieId,
+            mediaType,
+            movieName,
+            movieImg,
+            movieReleaseDay,
+            movieGenre,
+            movieReview,
+            moviePopularity,
+            movieVoteAverage,
+            movieVoteCount
+        ));
+        setCheckLog(!checkLog);
+
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+    };
+    // const [checkLog, setCheckLog] = useState(false)
+
+    // const handleWatchList = (movie: any) => {
+    //     const storedDataString = localStorage.getItem('watchList');
+    //     let storedData: { [key: string]: any } = {};
+    //     if (storedDataString !== null) {
+    //         storedData = JSON.parse(storedDataString);
+    //     }
+    //     if (storedData[movie?.id]) {
+    //         delete storedData[movie?.id];
+    //         localStorage.setItem('watchList', JSON.stringify(storedData));
+    //         setCheckLog(!checkLog)
+    //         toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
+
+    //     } else {
+    //         storedData[movie?.id] = movie;
+    //         setCheckLog(!checkLog)
+    //         localStorage.setItem('watchList', JSON.stringify(storedData));
+    //         toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
+
+    //     }
+    // }
     function formatNumber(num: any) {
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'm';
@@ -79,6 +192,15 @@ export default function TvDetail({
         }
         return num;
     }
+    const handleImageError = (e: any) => {
+        const imgElement = e.currentTarget as HTMLImageElement;
+        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+    };
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleContent = () => {
+        setIsOpen(!isOpen);
+    };
 
     return (
         <section className="" style={{
@@ -86,7 +208,7 @@ export default function TvDetail({
             backgroundSize: "cover",
             backgroundPosition: "center",
         }}>
-            <div className="text-white font-sans font-medium " >
+            <div className="text-white font-sans font-medium max-w-full " >
                 <div style={{
                     backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleTvList[0]?.backdrop_path}')`,
                     position: "absolute", width: "100%", height: "100%", opacity: "0.5",
@@ -252,7 +374,7 @@ export default function TvDetail({
 
                     </div>
                     <div className="bg-black relative px-2 py-2">
-                        <div className=" grid-cols-12 hidden md:grid gap-6 h-full">
+                        <div className=" grid-cols-12 hidden lg:grid gap-6 h-full">
                             <div className=" col-span-8  bg-black  ">
                                 <div className="flex gap-2 mb-1">
                                     {singleTvList[0]?.genres?.map((item: any) => (
@@ -300,7 +422,7 @@ export default function TvDetail({
                                     </div>
                                 </div>
                             </div>
-                            <div className=" col-span-4">
+                            <div className="col-span-4">
                                 <div className="w-full h-full items-center justify-center text-center">
                                     <div className="flex flex-col justify-center items-center h-full ">
                                         <div className="grid grid-cols-2 gap-2 w-full">
@@ -310,7 +432,6 @@ export default function TvDetail({
                                                         <p className='text-yellow-300 text-left'>Streaming</p>
                                                         <img
                                                             src={`https://media.themoviedb.org/t/p/h60${singleTvList[0]?.networks[0]?.logo_path}`}
-                                                            alt="product images"
                                                             className='bg-gray-500'
                                                         />
 
@@ -327,60 +448,45 @@ export default function TvDetail({
                                             </div>
                                             <div className="w-full">
                                                 <button className="py-2 px-3 flex items-center gap-2 ">
-
                                                 </button>
                                             </div>
                                         </div>
                                         <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " >
-                                            {checkLog ? (
-                                                <div onClick={() => handleWatchList(singleTvList[0])}>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
+                                            <div onClick={() => handleWatchList(0, singleTvList[0]?.id, 'TV', singleTvList[0]?.name, singleTvList[0]?.poster_path, singleTvList[0]?.release_date,singleTvList?.genres?.map((item:any)=>item?.id), singleTvList[0]?.overview, singleTvList[0]?.popularity, singleTvList[0]?.vote_average, singleTvList[0]?.vote_count)}>
+                                                {existingIndex !== -1 ? (
+                                                    loading[0] ? (
+                                                        <div>
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        </div>
+                                                    ) : (
                                                         <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                             <i className="fas fa-check font-bold text-xl  mr-2"></i>
                                                             <div className="text-left">
                                                                 <div className='font-bold'  >
                                                                     <p>Remove from watchList</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)}user</p>
+                                                                <p>Added by {formatNumber(singleTvList[0]?.popularity)} user</p>
                                                             </div>
                                                         </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Add to Watchlist</p>
+                                                    )
+                                                ) : (
+                                                    <div className="font-bold text-sm">
+                                                        {loading[0] ? (
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        ) : (
+                                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                                <div className="text-left">
+                                                                    <div className='font-bold'  >
+                                                                        <p>Add to watchList</p>
+                                                                    </div>
+                                                                    <p>Added by {formatNumber(singleTvList[0]?.popularity)} user</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <div onClick={() => handleWatchList(singleTvList[0])}>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Remove from watchList</p>
-                                                                </div>
-                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Add to Watchlist</p>
-                                                                </div>
-                                                                <p>Added by {formatNumber(singleTvList[0]?.vote_count)} user</p>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
 
                                             <div
                                                 onClick={() => navigate('/watchList')}
@@ -405,7 +511,6 @@ export default function TvDetail({
                                                 <button className="py-2 px-3 flex items-center gap-2 ">
                                                     <p className="bg-yellow-300 h-6 w-6 items-center justify-center">
                                                         {isNaN(Math.floor(singleTvList[0]?.vote_average * 10 + 2)) ? 'N/A' : Math.floor(singleTvList[0]?.vote_average * 10 + 2)}
-
                                                     </p>
                                                     <p>Metascore</p>
                                                 </button>
@@ -435,32 +540,99 @@ export default function TvDetail({
                         </div>
                         <div className='grid grid-cols-3 gap-1 mt-2' >
                             <div>
-                                <img src={`https://media.themoviedb.org/t/p/h60${singleTvList[0]?.networks[0]?.logo_path}`} alt="product images" className='bg-gray-500' />
+                                <img src={`https://image.tmdb.org/t/p/w500/${singleTvList[0]?.poster_path}`}
+                                    onError={handleImageError} alt="produdđct images" />
                             </div>
-                            <div className='col-span-2 px-2 '>
+                            <div className='col-span-2'>
+                                <div className='gap-2'>
+                                    {singleTvList[0]?.genres.slice(0, 4).map((item: any) => (
+                                        <button key={item.id} className="bg-none text-white py-2 px-2 mr-2 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
+                                            {item.name}
+                                        </button>
+                                    ))}
+                                </div>
                                 <div>
                                     <p className="py-2 ">
-                                        {singleTvList[0]?.biography && singleTvList[0]?.biography.length > 120 ?
-                                            singleTvList[0]?.biography.slice(0, 120) + "..." :
-                                            singleTvList[0]?.biography}
-                                    </p>
-                                </div>
-                                <div className='gap-2'>
-                                    <p>{singleTvList[0]?.birthday &&
-                                        new Date(singleTvList[0]?.birthday).toLocaleDateString('en-US', {
-                                            month: 'long',
-                                            day: 'numeric',
-                                            year: 'numeric'
-                                        })
-                                    }
+                                        {singleTvList[0]?.overview && singleTvList[0]?.overview.length > 120 ?
+                                            singleTvList[0]?.overview.slice(0, 120) + "..." :
+                                            singleTvList[0]?.overview}
                                     </p>
                                 </div>
                             </div>
                         </div>
+                        <div className='mt-2 flex'>
+                            <div className=' flex items-center gap-2' >
+                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <span className=" text-xl">
+                                    {typeof singleTvList[0]?.vote_average === 'number' ?
+                                        (singleTvList[0]?.vote_average % 1 === 0 ?
+                                            singleTvList[0]?.vote_average.toFixed(0) :
+                                            singleTvList[0]?.vote_average.toFixed(1)) : 'N/A'
+                                    }
+
+                                </span>
+                                <span className="text-stone-400">  /10</span>
+                                <div className="text-stone-400">{singleTvList[0]?.vote_count}k</div>
+                                <div className="flex ">
+                                    <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
+                                        <i className="fa-regular fa-star "></i>
+                                        <p>Rate</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='px-3 items-center'>
+                            <div>
+                                <div className="border-b border-gray-300 flex gap-1 py-2 items-center aligns-center" onClick={toggleContent}>
+                                    <div>
+                                        {isOpen ? <i className="fa-solid fa-chevron-up"></i> : <i className="fa-solid fa-chevron-down"></i>}
+                                    </div>
+                                    <div>Top Credit</div>
+                                </div>
+                                {isOpen && (
+                                    <div>
+                                        <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center">
+                                            <div className="">Writers</div>
+                                            <div className="flex gap-2 flex-wrap justify-start text-center aligns-center items-center">
+                                                {singleTvList[0]?.created_by?.slice(0, 3).map((item: any, index: number) => (
+                                                    <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
+                                                        <span className="text-blue-600">{item?.name}</span>
+                                                        <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center">
+                                            <div className="">Star</div>
+                                            <div className="flex gap-2 flex-wrap justify-start text-center aligns-center items-center">
+                                                {singleTvList[0]?.aggregate_credits?.cast?.slice(0, 3).map((item: any, index: number) => (
+                                                    <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
+                                                        <span className="text-blue-600">{item?.name}</span>
+                                                        <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center">
+                                            <div className="">IMDb<span className="text-blue-500">Pro</span></div>
+                                            <div className="flex gap-3 items-center">
+                                                <p onClick={() => navigate(`/`)} className="hover:underline flex gap-2">
+                                                    <span className="text-blue-600">See production info at IMDbPro</span>
+                                                </p>
+                                                <i className="fa-solid fa-arrow-up-right-from-square"></i>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
 
                         <div className='px-3 py-2 border-b border-gray-300 '>
                             <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " >
-                                {checkLog ? (
+                                {/* {checkLog ? (
                                     <div onClick={() => handleWatchList(singleTvList[0])}>
                                         {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleTvList[0]?.id] ? (
                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
@@ -508,7 +680,42 @@ export default function TvDetail({
                                             </div>
                                         )}
                                     </div>
-                                )}
+                                )} */}
+                                <div onClick={() => handleWatchList(0, singleTvList[0]?.id, 'TV', singleTvList[0]?.title, singleTvList[0]?.poster_path, singleTvList[0]?.release_date, singleTvList?.genres?.map((item:any)=>item?.id), singleTvList[0]?.overview, singleTvList[0]?.popularity, singleTvList[0]?.vote_average, singleTvList[0]?.vote_count)}>
+                                    {existingIndex !== -1 ? (
+                                        loading[0] ? (
+                                            <div>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            </div>
+                                        ) : (
+                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Remove from watchList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleTvList[0]?.popularity)} user</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    ) : (
+                                        <div className="font-bold text-sm">
+                                            {loading[0] ? (
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            ) : (
+                                                <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                    <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                    <div className="text-left">
+                                                        <div className='font-bold'  >
+                                                            <p>Add to watchList</p>
+                                                        </div>
+                                                        <p>Added by {formatNumber(singleTvList[0]?.popularity)} user</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
 
                                 <div
                                     onClick={() => navigate('/watchList')}

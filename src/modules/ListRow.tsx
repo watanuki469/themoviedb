@@ -14,14 +14,17 @@ export default function ListRow({
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 500) {
-                setActiveSlider(2);
+                setActiveSlider(1);
             } else if (window.innerWidth < 600) {
                 setActiveSlider(2);
             } else if (window.innerWidth < 768) {
-                setActiveSlider(3);
+                setActiveSlider(2);
             } else if (window.innerWidth < 1024) {
                 setActiveSlider(3);
             } 
+            else{
+                setActiveSlider(3)
+            }
         };
         window.addEventListener('resize', handleResize);
         handleResize();

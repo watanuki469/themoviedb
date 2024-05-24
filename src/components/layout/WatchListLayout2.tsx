@@ -17,7 +17,6 @@ export function WatchListLayout2() {
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const [checkLog, setCheckLog] = useState(false)
 
-
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
@@ -42,7 +41,7 @@ export function WatchListLayout2() {
         }
     }
     useEffect(() => {
-        if (userInfoList.length > 0) {
+        if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites());
         }
     }, [userInfoList]);
@@ -351,21 +350,21 @@ export function WatchListLayout2() {
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="px-2">{movieIndex}</div>
-                                        <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                        <img onClick={() => navigate(`/${movie?.mediaType}/${movie?.movieId}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
                                             onError={handleImageError} className="w-full  hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                    <p>{movie?.itemVoteAverage?.slice(0,3)} ({shortenNumber(movie?.itemVoteCount)})</p>
                                                 </div>
 
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title ? movie?.title : movie?.name}</p>
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
                                                 </div>
                                                 <div className="flex flex-wrap">
-                                                    {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
+                                                    {movie?.itemReleaseDay?.slice(0,10)}
                                                 </div>
 
                                             </div>
@@ -506,7 +505,7 @@ export function WatchListLayout2() {
                         </div>
                         <div className="flex border-b-2 border-gray py-2 items-center ">
                             <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold ">{userInfoList?.length} Title</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold ">{favoriteList?.length} Title</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center text-lg text-gray-400 ">Sort by </p>

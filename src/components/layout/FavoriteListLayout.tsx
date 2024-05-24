@@ -6,40 +6,104 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { AppDispatch } from '../../redux/store';
+import { favoriteActorMongoApi, getFavoriteActorMongoApi } from '../../redux/client/api.LoginMongo';
+import { setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
 
 
 export function FavoriteListLayout() {
-    const [watchList, setWatchList] = useState<any[]>([]);
+    const dispatch = useAppDispatch()
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const [checkLog, setCheckLog] = useState(false)
+
     useEffect(() => {
-        // Lấy dữ liệu từ local storage
-        const storedDataString = localStorage.getItem('favoriteList');
+        const storedDataString = localStorage.getItem('user');
         let storedData = [];
 
         if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        console.log('Stored data:', storedData);
-
-        // Lưu dữ liệu vào state
-        setWatchList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
+        setUserInfoList(Object.values(storedData));
     }, []);
-    const removeFromWatchList = (imdb_id: string) => {
-        // Lấy dữ liệu từ local storage
-        const storedDataString = localStorage.getItem('favoriteList');
-        let storedData: Record<string, any> = {};
 
-        if (storedDataString) {
-            storedData = JSON.parse(storedDataString);
+    const favoriteActorList = useAppSelector((state: any) => state.login.listFavoriteActor);
+    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFavoriteActorMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListActorFavorite(response));
+            } else {
+                throw new Error('Failed to fetch favorites actor list');
+            }
+        } catch (e) {
+            console.log("Fetching favorites actor failed: " + e);
         }
+    }
+   const favoriteActorList2=[...favoriteActorList]
 
-        // Xóa item với imdb_id tương ứng khỏi object
-        delete storedData[imdb_id];
+    useEffect(() => {
+        if (userInfoList.length > 0) {
+            dispatch(fetchGetFavorites());
+        }
+    }, [userInfoList]);
 
-        // Cập nhật local storage
-        localStorage.setItem('favoriteList', JSON.stringify(storedData));
+    const fetchFavorite = (
+        movieId: string,
+        movieName: string,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieReview: string,
+        moviePopularity: string,
+        movieKnowFor: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await favoriteActorMongoApi(
+                email,
+                movieId,
+                movieName,
+                movieImg,
+                movieReleaseDay,
+                movieReview,
+                moviePopularity,
+                movieKnowFor,
+            );
+            dispatch(setFavoriteActor(response));
+            if (response) {
+                await dispatch(fetchGetFavorites())
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
 
-        // Cập nhật state để render lại
-        setWatchList(Object.values(storedData));
+    const removeFromWatchList = async (
+        index: number,
+        movieId: any,
+        movieName: any,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieReview: string,
+        moviePopularity: string,
+        movieKnowFor: string,
+    ) => {
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        await dispatch(fetchFavorite(
+            movieId,
+            movieName,
+            movieImg,
+            movieReleaseDay,
+            movieReview,
+            moviePopularity,
+            movieKnowFor,
+        ));
+        setCheckLog(!checkLog);
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
@@ -135,16 +199,16 @@ export function FavoriteListLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/person/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500${movie?.profile_path}`}
+                                        <img onClick={() => navigate(`/person/${movie?.itemId}`)}
+                                            src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
                                             onError={handleImageError} className="w-28 h-40 hover:opacity-80" />
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.itemName}</p>
                                             <div className="flex flex-wrap gap-2">
                                                 <div>
-                                                    {movie?.birthday &&
-                                                        new Date(movie?.birthday).toLocaleDateString('en-US', {
+                                                    {movie?.itemReleaseDay &&
+                                                        new Date(movie?.itemReleaseDay).toLocaleDateString('en-US', {
                                                             month: 'long',
                                                             day: 'numeric',
                                                             year: 'numeric'
@@ -152,20 +216,26 @@ export function FavoriteListLayout() {
                                                     }
                                                 </div>
                                                 <div>||</div>
-                                                <div> {movie?.known_for_department}</div>
+                                                <div> {movie?.itemKnowFor}</div>
                                             </div>
                                             <div className="mt-1 lg:line-clamp-none line-clamp-4">
-                                                {movie?.biography && movie?.biography?.length > 400 ?
-                                                    movie?.biography?.slice(0, 400) + "..." :
-                                                    movie?.biography}
+                                                {movie?.itemReview && movie?.itemReview?.length > 400 ?
+                                                    movie?.itemReview?.slice(0, 400) + "..." :
+                                                    movie?.itemReview}
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
-                                <div className="ml-auto" onClick={() => removeFromWatchList(movie.id)} >
+                                <div className="ml-auto" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.itemImg, movie?.itemReleaseDay, movie?.itemReview, movie?.itemPopularity, movie?.itemKnowFor)} >
                                     <Tooltip title="Click here to remove from watchlist">
-                                        <i className="fa-solid fa-trash px-2 text-green-500 text-xl"></i>
+                                        {loading[movieIndex] ? (
+                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                        ) :
+                                            (
+                                                <i className="fa-solid fa-trash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
+
+                                            )}
                                     </Tooltip>
                                 </div>
                             </div>
@@ -183,22 +253,22 @@ export function FavoriteListLayout() {
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="px-2">{movieIndex}</div>
-                                        <img onClick={() => navigate(`/movie/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500${movie?.profile_path}`}
+                                        <img onClick={() => navigate(`/movie/${movie?.itemId}`)}
+                                            src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
                                             onError={handleImageError} className="w-full  hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.name}</p>
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    {movie?.known_for_department}
+                                                    {movie?.itemKnowFor}
                                                 </div>
 
                                                 <div className="">
-                                                    {movie?.birthday &&
-                                                        new Date(movie?.birthday).toLocaleDateString('en-US', {
+                                                    {movie?.itemReleaseDay &&
+                                                        new Date(movie?.itemReleaseDay).toLocaleDateString('en-US', {
                                                             month: 'long',
                                                             day: 'numeric',
                                                             year: 'numeric'
@@ -209,9 +279,14 @@ export function FavoriteListLayout() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movie.id)}   >
+                                <div className="px-2 py-2" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.itemImg, movie?.itemReleaseDay, movie?.itemReview, movie?.itemPopularity, movie?.itemKnowFor)} >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        Remove
+                                        {loading[movieIndex] ? (
+                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                        ) :
+                                            (
+                                                <div>Remove</div>
+                                            )}
                                     </button>
 
                                 </div>
@@ -331,7 +406,7 @@ export function FavoriteListLayout() {
                         </div>
                         <div className="flex border-b-2 border-gray py-2 items-center ">
                             <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold ">{watchList?.length} Title</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold ">{favoriteActorList?.length} Title</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
@@ -411,12 +486,12 @@ export function FavoriteListLayout() {
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                         display: 'flex', flexWrap: 'wrap'
                                     }}>
-                                    {watchList
-                                        .sort((a, b) => {
+                                    {favoriteActorList2
+                                        .sort((a:any, b:any) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.name?.toUpperCase();
-                                                const titleB = b?.name?.toUpperCase();
+                                                const titleA = a?.itemName?.toUpperCase();
+                                                const titleB = b?.itemName?.toUpperCase();
                                                 if (titleA < titleB) {
                                                     return -1;
                                                 }
@@ -426,27 +501,27 @@ export function FavoriteListLayout() {
                                                 return 0;
                                             }
                                             else if (menuItemNum === '1') {
-                                                return b?.vote_average - a?.vote_average;
+                                                return b?.itemPopularity - a?.itemPopularity;
                                             }
                                             else if (menuItemNum === '2') {
-                                                return b?.id - a?.id;
+                                                return b?.itemId - a?.itemId;
                                             }
                                             else if (menuItemNum === '3') {
                                                 return compareReleaseDates(a, b);
 
                                             }
                                             else if (menuItemNum === '4') {
-                                                return b?.vote_count - a?.vote_count;
+                                                return a?.itemPopularity - b?.itemPopularity;
 
                                             }
                                             else if (menuItemNum === '6') {
-                                                return b?.popularity - a?.popularity;
+                                                return b?.itemPopularity - a?.itemPopularity;
                                             }
                                             else {
                                                 return 0
                                             }
                                         })
-                                        .map((m, index) => renderMovieItem(m, index, currentView))}
+                                        ?.map((m: any, index: any) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>
                         </div>

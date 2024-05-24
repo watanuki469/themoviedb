@@ -2,9 +2,13 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import ShareIcon from '@mui/icons-material/Share';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { AppDispatch } from '../../redux/store';
+import { favoriteActorMongoApi, getFavoriteActorMongoApi } from '../../redux/client/api.LoginMongo';
+import {  setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
 
 
 export interface TwoMovieRowProps {
@@ -50,28 +54,124 @@ export default function PersonDetail({
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
+    const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const dispatch = useAppDispatch()
+    const favoriteList = useAppSelector((state) => state.login.listFavoriteActor);
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
 
-    const handleWatchList = (movie: any) => {
-        const storedDataString = localStorage.getItem('favoriteList');
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
+        if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        if (storedData[movie?.id]) {
-            delete storedData[movie?.id];
-            localStorage.setItem('favoriteList', JSON.stringify(storedData));
-            setCheckLog(!checkLog)
-            toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from favoriteList successfully`);
+        setUserInfoList(Object.values(storedData));
+    }, []);
 
-        } else {
-            storedData[movie?.id] = movie;
-            setCheckLog(!checkLog)
-            localStorage.setItem('favoriteList', JSON.stringify(storedData));
-            toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to favoriteList successfully`);
+    const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleMovieList[0]?.id);
 
+    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFavoriteActorMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListActorFavorite(response));
+            } else {
+                throw new Error('Failed to fetch favorites actor list');
+            }
+        } catch (e) {
+            console.log("Fetching favorites actor failed: " + e);
         }
     }
+    useEffect(() => {
+        if (userInfoList?.length > 0) {
+            dispatch(fetchGetFavorites());
+        }
+    }, [userInfoList]);
+
+    const fetchFavorite = (
+        movieId: string,
+        movieName: string,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieReview: string,
+        moviePopularity: string,
+        movieKnowFor: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await favoriteActorMongoApi(
+                email,
+                movieId,
+                movieName,
+                movieImg,
+                movieReleaseDay,
+                movieReview,
+                moviePopularity,
+                movieKnowFor,
+            );
+            dispatch(setFavoriteActor(response));
+            if (response) {
+                await dispatch(fetchGetFavorites());
+                if (existingIndex !== -1) {
+                    toast.info(`${singleMovieList[0]?.name} has been remove from watchlist`)
+                }
+                else {
+                    toast.success(`${singleMovieList[0]?.name} has been added to watchlist`)
+                }
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+
+    const handleWatchList = async (
+        index: number,
+        movieId: any,
+        movieName: any,
+        movieImg: string,
+        movieReleaseDay: Date,
+        movieReview: string,
+        moviePopularity: string,
+        movieKnowFor: string,
+    ) => {
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        await dispatch(fetchFavorite(
+            movieId,
+            movieName,
+            movieImg,
+            movieReleaseDay,
+            movieReview,
+            moviePopularity,
+            movieKnowFor,
+        ));
+        setCheckLog(!checkLog);
+        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+    };
+
+    // const handleWatchList = (movie: any) => {
+    //     const storedDataString = localStorage.getItem('favoriteList');
+    //     let storedData: { [key: string]: any } = {};
+    //     if (storedDataString !== null) {
+    //         storedData = JSON.parse(storedDataString);
+    //     }
+    //     if (storedData[movie?.id]) {
+    //         delete storedData[movie?.id];
+    //         localStorage.setItem('favoriteList', JSON.stringify(storedData));
+    //         setCheckLog(!checkLog)
+    //         toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from favoriteList successfully`);
+
+    //     } else {
+    //         storedData[movie?.id] = movie;
+    //         setCheckLog(!checkLog)
+    //         localStorage.setItem('favoriteList', JSON.stringify(storedData));
+    //         toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to favoriteList successfully`);
+
+    //     }
+    // }
     function formatNumber(num: any) {
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'm';
@@ -316,54 +416,45 @@ export default function PersonDetail({
 
                                         </button>
                                         <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 ">
-                                            {checkLog ? (
-                                                <div onClick={() => handleWatchList(singleMovieList[0])}>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+                                            <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, singleMovieList[0]?.name, singleMovieList[0]?.profile_path, singleMovieList[0]?.birthday, singleMovieList[0]?.biography, singleMovieList[0]?.popularity, singleMovieList[0]?.known_for_department)}>
+                                                {existingIndex !== -1 ? (
+                                                    loading[0] ? (
+                                                        <div>
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        </div>
+                                                    ) : (
                                                         <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                             <i className="fas fa-check font-bold text-xl  mr-2"></i>
                                                             <div className="text-left">
                                                                 <div className='font-bold'  >
-                                                                    <p>Remove from FavoriteList</p>
+                                                                    <p>Remove from watchList</p>
                                                                 </div>
+                                                                <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
                                                             </div>
                                                         </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Add to FavoriteList</p>
+                                                    )
+                                                ) : (
+                                                    <div className="font-bold text-sm">
+                                                        {loading[0] ? (
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        ) : (
+                                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                                <div className="text-left">
+                                                                    <div className='font-bold'  >
+                                                                        <p>Add to watchList</p>
+                                                                    </div>
+                                                                    <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <div onClick={() => handleWatchList(singleMovieList[0])}>
-                                                    {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Remove from FavoriteList</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Add to FavoriteList</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+
 
                                             <div
-                                                onClick={() =>'/favoriteList'}
+                                                onClick={() => '/favoriteList'}
                                                 className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </div>
@@ -430,56 +521,42 @@ export default function PersonDetail({
                                     <i className="fa-solid fa-chevron-down"></i>
                                 </div>
                             </button> */}
-                            <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " onClick={() => handleWatchList(singleMovieList[0])}>
-                                {checkLog ? (
-                                    <div>
-                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
+                            <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 ">
+                                <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, singleMovieList[0]?.name, singleMovieList[0]?.profile_path, singleMovieList[0]?.birthday, singleMovieList[0]?.biography, singleMovieList[0]?.popularity, singleMovieList[0]?.known_for_department)}>
+                                    {existingIndex !== -1 ? (
+                                        loading[0] ? (
+                                            <div>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            </div>
+                                        ) : (
                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
                                                 <i className="fas fa-check font-bold text-xl  mr-2"></i>
                                                 <div className="text-left">
                                                     <div className='font-bold'  >
-                                                        <p>Remove from FavoriteList</p>
+                                                        <p>Remove from watchList</p>
                                                     </div>
-                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)}user</p>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
                                                 </div>
                                             </div>
-                                        ) : (
-                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Add to FavoriteList</p>
+                                        )
+                                    ) : (
+                                        <div className="font-bold text-sm">
+                                            {loading[0] ? (
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            ) : (
+                                                <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
+                                                    <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                    <div className="text-left">
+                                                        <div className='font-bold'  >
+                                                            <p>Add to watchList</p>
+                                                        </div>
+                                                        <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
                                                     </div>
-                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div>
-                                        {localStorage.getItem('watchList') && JSON.parse(localStorage.getItem('watchList')!)[singleMovieList[0]?.id] ? (
-                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Remove from FavoriteList</p>
-                                                    </div>
-                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Add to FavoriteList</p>
-                                                    </div>
-                                                    <p>Added by {formatNumber(singleMovieList[0]?.vote_count)} user</p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
 
                                 <div className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                     <i className="fa-solid fa-chevron-down"></i>

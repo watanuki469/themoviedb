@@ -4,21 +4,11 @@ import GlobalLoading from './components/common/GlobalLoading';
 import PageWrapper from "./components/common/PageWrapper";
 import LoginLayout from './components/layout/LoginLayout';
 import LoginLayoutTest from './components/layout/LoginLayoutTest';
+import RegisterLayoutTest from './components/layout/RegisterLayoutTest';
 import HomePage from "./pages/HomePage";
 import routes from "./routes";
-import RegisterLayoutTest from './components/layout/RegisterLayoutTest';
 
 function App() {
-  // useEffect(() => {
-  //   // Kiểm tra xem đã chạy lần đầu tiên hay không
-  //   if (!localStorage.getItem('hasRunBefore')) {
-  //     // Nếu là lần đầu tiên, xóa dữ liệu trong localStorage
-  //     localStorage.clear();
-
-  //     // Đặt biến flag để đánh dấu rằng đã chạy ít nhất một lần
-  //     localStorage.setItem('hasRunBefore', 'true');
-  //   }
-  // }, []);
 
   return (
     <div>
