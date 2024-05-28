@@ -26,17 +26,18 @@ const LoginLayoutTest = () => {
         ])
             .then((response: any) => {
                 if (response && response[0].token) {
+                    dispatch(setGlobalLoading(true));
                     dispatch(setListLogin(response));
                     dispatch(setUser(response));
-                                   
                     localStorage.setItem("token", response[0].token);
                     localStorage.setItem("user", JSON.stringify(response[0])); // Save user data as JSON string
                     navigate('/'); // Navigate to the desired route
                     toast.success('Login successfully');
-                    console.log(`meomeo`);                    
-                    console.log(response);    
+                    setTimeout(() => {
+                        dispatch(setGlobalLoading(false));
+                    }, 3000);
                 } else {
-                    throw new Error('Login failed');
+                    throw toast.error('Login failed')
                 }
             })
             .catch((e) => {
@@ -46,11 +47,7 @@ const LoginLayoutTest = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(setGlobalLoading(true));
         dispatch(fetchLogin())
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
     };
 
     return (

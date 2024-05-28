@@ -7,8 +7,9 @@ import { toast } from 'react-toastify';
 import ShareIcon from '@mui/icons-material/Share';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { AppDispatch } from '../../redux/store';
-import { favoriteMongoApi, getFavoriteMongoApi } from '../../redux/client/api.LoginMongo';
-import { setFavorite, setListFavorite } from '../../redux/reducers/login.reducer';
+import { favoriteMongoApi, getFavoriteMongoApi, getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
+import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from '../../redux/reducers/login.reducer';
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -27,17 +28,20 @@ export default function SingleMovieDetail({
     const [director, setDirector] = useState<any[]>([])
     const [writer, setWriter] = useState<any[]>([])
     const [isRating, setIsRating] = useState(false);
-
-    const handleClick = () => {
-        setIsRating(true);
-    };
     const [value, setValue] = useState<number | null>(0);
+
+    const handleClick = (value:any) => {
+        setIsRating(true);
+        setValue(value)
+    };
 
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
+    const ratingList = useAppSelector((state) => state.login.listRating);
+
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
@@ -47,13 +51,19 @@ export default function SingleMovieDetail({
         }
         setUserInfoList(Object.values(storedData));
     }, []);
+
     useEffect(() => {
+        dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetFavorites());
+            dispatch(fetchGetRating())
         }
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
     }, [userInfoList]);
-    const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleMovieList[0]?.id);
-
+    const existingIndex = favoriteList?.findIndex((fav: any) => fav?.itemId == singleMovieList[0]?.id);
+    const existingRating = ratingList?.find((rating: any) => rating?.itemId == singleMovieList[0]?.id); // Find the rating object for the item
 
     const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
         try {
@@ -97,10 +107,10 @@ export default function SingleMovieDetail({
             dispatch(setFavorite(response));
             if (response) {
                 await dispatch(fetchGetFavorites());
-                if(existingIndex !== -1){
+                if (existingIndex !== -1) {
                     toast.info(`${singleMovieList[0]?.title} has been remove from watchlist`)
                 }
-                else{
+                else {
                     toast.success(`${singleMovieList[0]?.title} has been added to watchlist`)
                 }
             } else {
@@ -139,8 +149,97 @@ export default function SingleMovieDetail({
             movieVoteCount
         ));
         setCheckLog(!checkLog);
-       
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+    };
+
+    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
+
+    const fetchGetRating = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getListRatingMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListRating(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
+        }
+    }
+
+    const fetchRating = (
+        itemId: string,
+        itemType: string,
+        itemRating: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await ratingMongoApi(
+                email,
+                itemId,
+                itemType,
+                itemRating,
+            );
+            dispatch(setRating(response));
+            if (response) {
+                await dispatch(fetchGetRating());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+
+    const handleRating = async (itemRating: any,
+    ) => {
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
+        await dispatch(fetchRating(
+            singleMovieList[0]?.id,
+            'Movie',
+            itemRating,
+        ));
+        setCheckLog(!checkLog);
+        setIsRating(false)
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: false }));
+    };
+
+    const fetchRemove = (
+        movieId: string,
+        movieType: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await removeRatingMongoApi(
+                email,
+                movieId,
+                movieType,
+            );
+            dispatch(setDeleteRating(response));
+            if (response) {
+                await dispatch(fetchGetRating());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+    const handleRemoveRating = async (
+        index: number,
+        movieId: any,
+        movieType: any,
+    ) => {
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
+        await dispatch(fetchRemove(
+            movieId,
+            movieType,
+        ));
+        setCheckLog(!checkLog);
+        setIsRating(false)
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
     };
 
     useEffect(() => {
@@ -268,8 +367,13 @@ export default function SingleMovieDetail({
                                             },
                                         }} />
                                     <br />
-                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`} onClick={() => setIsRating(false)}>
+                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                        onClick={() => handleRating(value)}>
                                         Rate
+                                    </button>
+                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                        onClick={() => handleRemoveRating(0, singleMovieList[0]?.id, 'Movie')}>
+                                        Remove Rating
                                     </button>
                                 </div>
                             </div>
@@ -390,7 +494,7 @@ export default function SingleMovieDetail({
                         <div className="items-center">
                             <div className="mr-4 text-2xl">{singleMovieList[0]?.title}</div>
                             <div className="flex space-x-4 text-stone-400">
-                                <div>{singleMovieList[0]?.release_date.split("-")[0]}</div>
+                                <div>{singleMovieList[0]?.release_date?.split("-")[0]}</div>
                                 <div>{certification ? certification : "NR"}</div>
                                 <div>
                                     {Math.floor(singleMovieList[0]?.runtime / 60)} h {singleMovieList[0]?.runtime % 60} min
@@ -428,10 +532,34 @@ export default function SingleMovieDetail({
                                 </div>
                                 <div className="items-center text-center justify-center m-auto mr-4 aligns-center ">
                                     <div className="    text-stone-400">Your Rating</div>
-                                    <div className="flex hover:bg-opacity-80 hover:bg-gray-500" onClick={() => handleClick()}>
+                                    <div className="flex hover:bg-opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
                                         <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
-                                            <i className="fa-regular fa-star "></i>
-                                            <p>Rate</p>
+                                            {
+                                                existingRating ? (
+                                                    loading2[0] ? (
+                                                        <div>
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center ">
+                                                            <i className="fa-solid fa-star text-blue-500"></i>
+                                                            <div>{existingRating?.itemRating}</div>
+                                                        </div>
+
+                                                    )
+                                                ) : (
+                                                    <div className="font-bold text-sm">
+                                                        {loading2[0] ? (
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        ) : (
+                                                            <div className="flex items-center text-xl">
+                                                                <div>Rate</div>
+                                                                <i className="fa-regular fa-star text-blue-500"></i>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )
+                                            }
                                         </button>
 
                                     </div>
@@ -439,7 +567,7 @@ export default function SingleMovieDetail({
                             </div>
                         </div>
                     </div>
-                    <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
+                    <div className="md:grid md:grid-cols-12 gap-y-4 h-full py-2">
                         <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-90 ">
                             <img
                                 onError={handleImageError}
@@ -550,7 +678,7 @@ export default function SingleMovieDetail({
                                     <div className="flex flex-col justify-center items-center h-full ">
                                         <button className="w-full flex items-center  border-2 border-black bg-yellow-300 " >
 
-                                            <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, 'Movie', singleMovieList[0]?.title, singleMovieList[0]?.poster_path, singleMovieList[0]?.release_date, singleMovieList[0]?.genres?.map((item:any)=>item?.id), singleMovieList[0]?.overview, singleMovieList[0]?.popularity, singleMovieList[0]?.vote_average, singleMovieList[0]?.vote_count)}>
+                                            <div onClick={() => handleWatchList(0, singleMovieList[0]?.id, 'Movie', singleMovieList[0]?.title, singleMovieList[0]?.poster_path, singleMovieList[0]?.release_date, singleMovieList[0]?.genres?.map((item: any) => item?.id), singleMovieList[0]?.overview, singleMovieList[0]?.popularity, singleMovieList[0]?.vote_average, singleMovieList[0]?.vote_count)}>
                                                 {existingIndex !== -1 ? (
                                                     loading[0] ? (
                                                         <div>
@@ -573,14 +701,14 @@ export default function SingleMovieDetail({
                                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                         ) : (
                                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                            <div className="text-left">
-                                                                <div className='font-bold'  >
-                                                                    <p>Add to watchList</p>
+                                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                                <div className="text-left">
+                                                                    <div className='font-bold'  >
+                                                                        <p>Add to watchList</p>
+                                                                    </div>
+                                                                    <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                             </div>
-                                                        </div>
                                                         )}
                                                     </div>
                                                 )}
@@ -737,14 +865,14 @@ export default function SingleMovieDetail({
                                             </div>
                                         ) : (
                                             <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                            <i className="fas fa-check font-bold text-xl  mr-2"></i>
-                                            <div className="text-left">
-                                                <div className='font-bold'  >
-                                                    <p>Remove from watchList</p>
+                                                <i className="fas fa-check font-bold text-xl  mr-2"></i>
+                                                <div className="text-left">
+                                                    <div className='font-bold'  >
+                                                        <p>Remove from watchList</p>
+                                                    </div>
+                                                    <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                 </div>
-                                                <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                             </div>
-                                        </div>
                                         )
                                     ) : (
                                         <div className="font-bold text-sm">
@@ -752,14 +880,14 @@ export default function SingleMovieDetail({
                                                 <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                             ) : (
                                                 <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                <i className="fas fa-plus font-bold text-xl  mr-2"></i>
-                                                <div className="text-left">
-                                                    <div className='font-bold'  >
-                                                        <p>Add to watchList</p>
+                                                    <i className="fas fa-plus font-bold text-xl  mr-2"></i>
+                                                    <div className="text-left">
+                                                        <div className='font-bold'  >
+                                                            <p>Add to watchList</p>
+                                                        </div>
+                                                        <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                     </div>
-                                                    <p>Added by {formatNumber(singleMovieList[0]?.runtime)} user</p>
                                                 </div>
-                                            </div>
                                             )}
                                         </div>
                                     )}

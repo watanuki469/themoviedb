@@ -1,3 +1,4 @@
+import { createAsyncThunk } from "@reduxjs/toolkit"
 import axiosMongo from "../axios/axiosUserMongo"
 
 const fetchAllMongoUser = (page: any) => {
@@ -22,7 +23,7 @@ const loginMongoApi = (email: any, password: any) => {
         });
 }
 
-const favoriteMongoApi = (email: string, movieId: string, mediaType: string, movieName: string,  movieImg: string, movieReleaseDay: Date, movieGenre: number[], movieReview: string, moviePopularity: string, movieVoteAverage: string, movieVoteCount: string) => {
+const favoriteMongoApi = (email: string, movieId: string, mediaType: string, movieName: string, movieImg: string, movieReleaseDay: Date, movieGenre: number[], movieReview: string, moviePopularity: string, movieVoteAverage: string, movieVoteCount: string) => {
     return axiosMongo.post(`/api/user/addFavorite`, {
         email,
         movieId,
@@ -44,7 +45,7 @@ const getFavoriteMongoApi = (email: any) => {
         }
     });
 }
-const favoriteActorMongoApi = (email: string, movieId: string,  movieName: string,  movieImg: string, movieReleaseDay: Date, movieReview: string, moviePopularity: string, movieKnowFor: string) => {
+const favoriteActorMongoApi = (email: string, movieId: string, movieName: string, movieImg: string, movieReleaseDay: Date, movieReview: string, moviePopularity: string, movieKnowFor: string) => {
     return axiosMongo.post(`/api/user/addFavoriteActor`, {
         email,
         movieId,
@@ -64,7 +65,7 @@ const getFavoriteActorMongoApi = (email: any) => {
     });
 }
 
-const recentlyViewMongoApi = (email: string, movieId: string,  movieName: string,  movieImg: string, movieType:string) => {
+const recentlyViewMongoApi = (email: string, movieId: string, movieName: string, movieImg: string, movieType: string) => {
     return axiosMongo.post(`/api/user/addRecentlyViewed`, {
         email,
         movieId,
@@ -73,6 +74,7 @@ const recentlyViewMongoApi = (email: string, movieId: string,  movieName: string
         movieType
     });
 };
+
 const getListRecentlyViewMongoApi = (email: any) => {
     return axiosMongo.get(`/api/user/getRecentlyViewed`, {
         params: {
@@ -80,8 +82,59 @@ const getListRecentlyViewMongoApi = (email: any) => {
         }
     });
 }
+export const fetchRecentlyViewed = createAsyncThunk(
+    'login/fetchRecentlyViewed',
+    async (email, thunkAPI) => {
+      const response = await getListRecentlyViewMongoApi(email);
+      return response.data;
+    }
+  );
+  
+  export const addRecentlyViewed = createAsyncThunk(
+    'login/addRecentlyViewed',
+    async ({ email, movieId, movieName, movieImg, movieType }:any, thunkAPI) => {
+      const response = await recentlyViewMongoApi(email, movieId, movieName, movieImg, movieType);
+      return response.data;
+    }
+  );
+
+const removeListRecentlyViewMongoApi = (email: any, movieId: any, movieType: any, removeAll: any) => {
+    return axiosMongo.post(`/api/user/removeRecentlyViewed`, {
+        email: email,
+        movieId: movieId,
+        movieType: movieType,
+        removeAll: removeAll
+    });
+}
+
+const ratingMongoApi = (email: string, itemId: any, itemType: any, itemRating: any) => {
+    return axiosMongo.post(`/api/user/addRating`, {
+        email,
+        itemId,
+        itemType,
+        itemRating
+    });
+};
+const getListRatingMongoApi = (email: any) => {
+    return axiosMongo.get(`/api/user/getRating`, {
+        params: {
+            email: email
+        }
+    });
+}
+
+const removeRatingMongoApi = (email: any, movieId: any, movieType: any) => {
+    return axiosMongo.post(`/api/user/removeRating`, {
+        email: email,
+        movieId: movieId,
+        movieType: movieType,
+    });
+}
 
 
-export { fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi,
-     favoriteMongoApi, getFavoriteMongoApi ,favoriteActorMongoApi,getFavoriteActorMongoApi
-    ,recentlyViewMongoApi,getListRecentlyViewMongoApi}
+export {
+    fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi,
+    favoriteMongoApi, getFavoriteMongoApi, favoriteActorMongoApi, getFavoriteActorMongoApi
+    , recentlyViewMongoApi, getListRecentlyViewMongoApi, removeListRecentlyViewMongoApi,
+    ratingMongoApi, getListRatingMongoApi, removeRatingMongoApi
+}

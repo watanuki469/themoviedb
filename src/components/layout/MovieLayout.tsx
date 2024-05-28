@@ -21,6 +21,8 @@ import SingleMovieReview from "../common/SingleMovieReview";
 import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import TopBar from "../common/TopBar";
 import { toast } from "react-toastify";
+import { addRecentlyViewed, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
+import { setRecentlyView } from "../../redux/reducers/login.reducer";
 
 export default function MovieLayout() {
     const { id } = useParams()
@@ -159,18 +161,40 @@ export default function MovieLayout() {
         };
     }, []);
 
+    // useEffect(() => {
+    //     const storedDataString = localStorage.getItem('activity');
+    //     let storedData: { [key: string]: any } = {};
+    //     if (storedDataString !== null) {
+    //         storedData = JSON.parse(storedDataString);
+    //     }
+    //     if (storedData[singleMovieList[0]?.id]) {
+    //     } else {
+    //         storedData[singleMovieList[0]?.id] = singleMovieList[0];
+    //         localStorage.setItem('activity', JSON.stringify(storedData));
+    //     }
+    // })
+
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
     useEffect(() => {
-        const storedDataString = localStorage.getItem('activity');
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
+
+        if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        if (storedData[singleMovieList[0]?.id]) {
-        } else {
-            storedData[singleMovieList[0]?.id] = singleMovieList[0];
-            localStorage.setItem('activity', JSON.stringify(storedData));
-        }
-    })
+        setUserInfoList(Object.values(storedData));
+
+    }, []);
+    
+    useEffect(() => {
+        dispatch(addRecentlyViewed({
+            email: userInfoList[0],
+            movieId: singleMovieList[0]?.id,
+            movieName: singleMovieList[0]?.title,
+            movieImg: singleMovieList[0]?.poster_path,
+            movieType: "Movie",
+        }))
+    }, [userInfoList, singleMovieList, dispatch])
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
@@ -201,7 +225,7 @@ export default function MovieLayout() {
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"
                                     onClick={() => navigate(`/image/movie/${id}`)}></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/image/movie/${id}`)}>
                                 <FourPhotos fourPhotosList={movieImageList} />
                             </div>
                             <div className="text-white flex py-4 " onClick={() => navigate(`/fullcredits/movie/${id}`)}>
@@ -231,7 +255,7 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'movie'} />
+                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'Movie'} />
                             </div>
                             <div className="text-white flex py-4 ">
                                 <div className="flex items-center ">
@@ -249,7 +273,7 @@ export default function MovieLayout() {
                                 <SingleMovieStoryLine singleMovieList={singleMovieList} />
                             </div>
                             <div className="text-white flex py-4 ">
-                                <div className="flex items-center hover:text-yellow-300" onClick={()=>navigate(`/fullReview/movie/${id}`)}>
+                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/movie/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieReview">User Reviews</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews?.results?.length}</p>

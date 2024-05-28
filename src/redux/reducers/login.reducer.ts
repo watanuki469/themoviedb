@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { addRecentlyViewed, fetchRecentlyViewed } from '../client/api.LoginMongo';
 
 interface ILoginState {
     listLogin: any[],
@@ -9,7 +10,13 @@ interface ILoginState {
     listFavoriteActor:any[],
     favoriteActor:any[],
     listRecentlyView:any[],
-    recentlyView:any[]
+    recentlyView:any[],
+    deleteRecently:any[],
+    listRating:any[],
+    rating:any[],
+    deleteRating:any[],
+    loading:boolean,
+    error:any
 }
 
 const initialState: ILoginState = {
@@ -22,6 +29,12 @@ const initialState: ILoginState = {
     favoriteActor:[],
     listRecentlyView:[],
     recentlyView:[],
+    deleteRecently:[],
+    listRating:[],
+    rating:[],
+    deleteRating:[],
+    loading: false,
+    error: null,
 }
 
 const setListLoginState = (state: ILoginState, action: any) => {
@@ -53,8 +66,22 @@ const setRecentlyViewState = (state: ILoginState, action: any) => {
     state.recentlyView = action.payload;
 }
 const setListRecentlyViewState = (state: ILoginState, action: any) => {
-    state.listRecentlyView = action.payload.recentlyViewed;
+    state.listRecentlyView = action.payload.recentlyViewedList;
 }
+const setDeleteRecentlyViewState = (state: ILoginState, action: any) => {
+    state.deleteRecently = action.payload.recentlyViewedList;
+}
+const setRatingState = (state: ILoginState, action: any) => {
+    state.rating = action.payload;
+}
+const setListRatingState = (state: ILoginState, action: any) => {
+    state.listRating = action.payload.ratingList;
+}
+
+const setDeleteRatingState = (state: ILoginState, action: any) => {
+    state.deleteRecently = action.payload.recentlyViewedList;
+}
+
 
 export const LoginSlice = createSlice({
     name: 'Login',
@@ -69,11 +96,42 @@ export const LoginSlice = createSlice({
         setListActorFavorite:(state, action) => setListFavoriteActorState(state, action),
         setRecentlyView:(state, action) => setRecentlyViewState(state, action),
         setListRecentlyView:(state, action) => setListRecentlyViewState(state, action),
-    }
+        setDeleteRecentlyView:(state, action) => setDeleteRecentlyViewState(state, action),
+        setRating:(state, action) => setRatingState(state, action),
+        setListRating:(state, action) => setListRatingState(state, action),
+        setDeleteRating:(state, action) => setDeleteRatingState(state, action),
+    },
+    extraReducers: (builder) => {
+        builder
+          .addCase(fetchRecentlyViewed.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(fetchRecentlyViewed.fulfilled, (state, action) => {
+            state.loading = false;
+            state.listRecentlyView = action.payload;
+          })
+          .addCase(fetchRecentlyViewed.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+          })
+          .addCase(addRecentlyViewed.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(addRecentlyViewed.fulfilled, (state, action) => {
+            state.loading = false;
+            state.recentlyView = action.payload;
+          })
+          .addCase(addRecentlyViewed.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+          });
+      },
 });
 
 export const { setListLogin, setUser,setRegister,setFavorite,setListFavorite,setFavoriteActor,setListActorFavorite 
-    ,setListRecentlyView,setRecentlyView
+    ,setListRecentlyView,setRecentlyView,setDeleteRecentlyView,setRating,setListRating,setDeleteRating
 } = LoginSlice.actions;
 
 export default LoginSlice.reducer;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import ListRow from "../../modules/ListRow";
@@ -14,6 +14,8 @@ import PersonDetail from "../common/PersonDetail";
 import PersonDetailExternal from "../common/PersonDetailExternal";
 import PersonMovie from "../common/PersonMovie";
 import TopBar from "../common/TopBar";
+import { setRecentlyView } from "../../redux/reducers/login.reducer";
+import { addRecentlyViewed, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
 
 export default function PersonLayout() {
     const { id } = useParams()
@@ -59,18 +61,39 @@ export default function PersonLayout() {
 
     // Lấy tên của tháng hiện tại từ mảng monthNames
     const currentMonthName = monthNames[currentMonth];
+    // useEffect(() => {
+    //     const storedDataString = localStorage.getItem('activity');
+    //     let storedData: { [key: string]: any } = {};
+    //     if (storedDataString !== null) {
+    //         storedData = JSON.parse(storedDataString);
+    //     }
+    //     if (storedData[personList[0]?.id]) {
+    //     } else {
+    //         storedData[personList[0]?.id] = personList[0];
+    //         localStorage.setItem('activity', JSON.stringify(storedData));
+    //     }
+    // })
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
     useEffect(() => {
-        const storedDataString = localStorage.getItem('activity');
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
+
+        if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        if (storedData[personList[0]?.id]) {
-        } else {
-            storedData[personList[0]?.id] = personList[0];
-            localStorage.setItem('activity', JSON.stringify(storedData));
-        }
-    })
+        setUserInfoList(Object.values(storedData));
+    }, []);
+    
+    useEffect(() => {
+        dispatch(addRecentlyViewed({
+            email: userInfoList[0],
+            movieId: personList[0]?.id,
+            movieName: personList[0]?.name,
+            movieImg: personList[0]?.profile_path,
+            movieType: "Person",
+        }))
+    }, [userInfoList, personList, dispatch])
+
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -93,7 +116,7 @@ export default function PersonLayout() {
                                     onClick={() => navigate(`/image/person/${personList[0]?.id}`)}
                                     className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/image/person/${id}`)}>
                                 <FourPhotos fourPhotosList={personList[0]?.images?.profiles}></FourPhotos>
                             </div>
                             <div className="flex items-center py-4">
@@ -120,12 +143,6 @@ export default function PersonLayout() {
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 id="personalDetails" className="text-2xl font-bold text-black ">Personal details</h2>
                                     </div>
-                                    {/* <div className="flex items-center ml-auto gap-2 hover:bg-gray-300 px-2 py-2" >
-                                        <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
-                                        <p className="flex items-center text-2xl font-bold text-black ">
-                                            Edit
-                                        </p>
-                                    </div> */}
                                 </div>
                                 <PersonDetailExternal personDetailExList={personList} />
                             </div>
@@ -135,7 +152,7 @@ export default function PersonLayout() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                             </div>
-                            <div onClick={() => navigate(`/top250Movie`)}> 
+                            <div onClick={() => navigate(`/top250Movie`)}>
                                 <ListRow listRowList={topRatedMovies} />
                             </div>
 

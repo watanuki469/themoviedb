@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Rating } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { AppDispatch } from '../../redux/store';
-import { favoriteMongoApi, getFavoriteMongoApi } from '../../redux/client/api.LoginMongo';
-import { setFavorite, setListFavorite } from '../../redux/reducers/login.reducer';
+import { favoriteMongoApi, getFavoriteMongoApi, getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
+import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from '../../redux/reducers/login.reducer';
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 export interface TwoMovieRowProps {
     singleTvList: any
@@ -52,12 +53,17 @@ export default function TvDetail({
                 console.error('Error copying link:', error);
             });
     };
-    
+
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    const [isRating, setIsRating] = useState(false);
     const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
+    const [value, setValue] = useState<number | null>(0);
+
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
+    const ratingList = useAppSelector((state) => state.login.listRating);
+
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
@@ -68,11 +74,22 @@ export default function TvDetail({
         setUserInfoList(Object.values(storedData));
     }, []);
     useEffect(() => {
+        dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetFavorites());
+            dispatch(fetchGetRating())
         }
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
     }, [userInfoList]);
     const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleTvList[0]?.id);
+    const existingRating = ratingList?.find((rating: any) => rating?.itemId == singleTvList[0]?.id); // Find the rating object for the item
+
+    const handleClick = (value: any) => {
+        setIsRating(true);
+        setValue(value)
+    };
 
     const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
         try {
@@ -161,8 +178,96 @@ export default function TvDetail({
 
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
-    // const [checkLog, setCheckLog] = useState(false)
 
+    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
+
+    const fetchGetRating = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getListRatingMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListRating(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
+        }
+    }
+
+    const fetchRating = (
+        itemId: string,
+        itemType: string,
+        itemRating: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await ratingMongoApi(
+                email,
+                itemId,
+                itemType,
+                itemRating,
+            );
+            dispatch(setRating(response));
+            if (response) {
+                await dispatch(fetchGetRating());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+
+    const handleRating = async (itemRating: any,
+    ) => {
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
+        await dispatch(fetchRating(
+            singleTvList[0]?.id,
+            'TV',
+            itemRating,
+        ));
+        setCheckLog(!checkLog);
+        setIsRating(false)
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: false }));
+    };
+
+    const fetchRemove = (
+        movieId: string,
+        movieType: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await removeRatingMongoApi(
+                email,
+                movieId,
+                movieType,
+            );
+            dispatch(setDeleteRating(response));
+            if (response) {
+                await dispatch(fetchGetRating());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+    const handleRemoveRating = async (
+        index: number,
+        movieId: any,
+        movieType: any,
+    ) => {
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
+        await dispatch(fetchRemove(
+            movieId,
+            movieType,
+        ));
+        setCheckLog(!checkLog);
+        setIsRating(false)
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+    };
     // const handleWatchList = (movie: any) => {
     //     const storedDataString = localStorage.getItem('watchList');
     //     let storedData: { [key: string]: any } = {};
@@ -208,6 +313,51 @@ export default function TvDetail({
             backgroundSize: "cover",
             backgroundPosition: "center",
         }}>
+            {isRating && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
+                    <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
+                        <div className="flex items-center justify-end">
+                            <div className="flex justify-end">
+                                <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                    <i className="fa-solid fa-times text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="bg-black px-4 py-4">
+                            <div className="aligns-center justify-center items-center text-center gap-2">
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
+                                    <i className="fa-solid fa-star text-9xl text-blue-500"></i>
+                                    <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
+                                </div>
+                                <p className="text-yellow-300 font-bold">Rate this</p>
+                                <p className="text-2xl ">{singleTvList[0]?.title ? singleTvList[0]?.title : singleTvList[0]?.name}</p>
+                                <div className="gap-2 px-2 py-2">
+                                    <Rating name="customized-10" value={value} size="large"
+                                        onChange={(event, newValue) => {
+                                            setValue(newValue);
+                                        }}
+                                        max={10} sx={{
+                                            color: 'blue', mt: 1,
+                                            '& .MuiRating-iconEmpty': {
+                                                borderColor: 'red',
+                                                color: 'gray'
+                                            },
+                                        }} />
+                                    <br />
+                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                        onClick={() => handleRating(value)}>
+                                        Rate
+                                    </button>
+                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                        onClick={() => handleRemoveRating(0, singleTvList[0]?.id, 'TV')}>
+                                        Remove Rating
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="text-white font-sans font-medium max-w-full " >
                 <div style={{
                     backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleTvList[0]?.backdrop_path}')`,
@@ -228,10 +378,7 @@ export default function TvDetail({
                         <div className=" py-2 hidden lg:block ">•</div>
                         <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('tvTrvia')}>Trivia</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block">IMDbPro</button>
-                        {/* <button className="py-2 px-3 border-r border-gray-400 flex items-center gap-2">
-                            <i className="fa-solid fa-icons"></i>
-                            <p>All Topic</p>
-                        </button> */}
+
                         <IconButton
                             onClick={handleShareClick}
                             size="small"
@@ -239,13 +386,7 @@ export default function TvDetail({
                             aria-haspopup="true"
                             aria-expanded={openShare ? 'true' : undefined}
                         >
-                            {/* <Avatar sx={{
-                                bgcolor: 'none', color: 'white', ":hover": {
-                                    bgcolor: 'gray', opacity: '50%'
-                                }
-                            }}> */}
                             <ShareIcon sx={{ color: 'white', mr: '10px' }} />
-                            {/* </Avatar> */}
                         </IconButton>
                         <Menu
                             anchorEl={anchorShareEl}
@@ -256,26 +397,12 @@ export default function TvDetail({
                             PaperProps={{
                                 elevation: 0,
                                 sx: {
-                                    overflow: 'visible',
-                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                    mt: 1.5,
+                                    overflow: 'visible', filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))', mt: 1.5,
                                     '& .MuiAvatar-root': {
-                                        width: 32,
-                                        height: 32,
-                                        ml: -0.5,
-                                        mr: 1,
+                                        width: 32, height: 32, ml: -0.5, mr: 1,
                                     },
                                     '&::before': {
-                                        content: '""',
-                                        display: 'block',
-                                        position: 'absolute',
-                                        top: 0,
-                                        right: 14,
-                                        width: 10,
-                                        height: 10,
-                                        bgcolor: 'background.paper',
-                                        transform: 'translateY(-50%) rotate(45deg)',
-                                        zIndex: 0,
+                                        content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                     },
                                 },
                             }}
@@ -321,11 +448,80 @@ export default function TvDetail({
                             </MenuItem>
                         </Menu>
                     </div>
-                    <div className="justify-between">
+                    <div className="flex justify-between py-2">
                         <div className="items-center">
                             <div className="mr-4 text-2xl">{singleTvList[0]?.name}</div>
                             <div className="flex space-x-4 text-stone-400">
-                                {singleTvList[0]?.known_for_department}
+                                <div>{singleTvList[0]?.first_air_date?.split("-")[0]}</div>
+                                {/* <div>{certification ? certification : "NR"}</div> */}
+                                {/* <div>
+                                    {Math.floor(singleTvList[0]?.runtime / 60)} h {singleTvList[0]?.runtime % 60} min
+                                </div> */}
+
+                            </div>
+                        </div>
+                        <div className="hidden lg:block">
+                            <div className="flex">
+                                <div className="items-center justify-center">
+                                    <div className="mr-4 text-stone-400" >IMDb Rating</div>
+                                    <div className="flex space-x-4 hover:bg-opacity-80 hover:bg-gray-500">
+                                        <div className="flex justify-center aligns-center items-center h-full gap-2">
+                                            <i className="fa-solid fa-star h-full items-center text-2xl text-yellow-300"></i>
+                                            <div className="">
+                                                <div>
+                                                    <span className=" text-xl">
+                                                        {typeof singleTvList[0]?.vote_average === 'number' ?
+                                                            (singleTvList[0]?.vote_average % 1 === 0 ?
+                                                                singleTvList[0]?.vote_average.toFixed(0) :
+                                                                singleTvList[0]?.vote_average.toFixed(1)
+                                                            )
+                                                            :
+                                                            'N/A'
+                                                        }
+
+                                                    </span>
+                                                    <span className="text-stone-400">  /10</span>
+                                                </div>
+                                                <div className="text-stone-400">{singleTvList[0]?.vote_count}k</div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div className="items-center text-center justify-center m-auto mr-4 aligns-center">
+                                    <div className="    text-stone-400">Your Rating</div>
+                                    <div className="hover:bg-opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
+                                        <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl text-center justify-center w-full ">
+                                            {
+                                                existingRating ? (
+                                                    loading2[0] ? (
+                                                        <div>
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center gap-2 ">
+                                                            <i className="fa-solid fa-star text-blue-500"></i>
+                                                            <div>{existingRating?.itemRating}</div>
+                                                        </div>
+
+                                                    )
+                                                ) : (
+                                                    <div className="font-bold text-sm">
+                                                        {loading2[0] ? (
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        ) : (
+                                                            <div className="flex items-center text-xl text-center gap-2">
+                                                                <div>Rate</div>
+                                                                <i className="fa-regular fa-star text-blue-500"></i>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )
+                                            }
+                                        </button>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -452,7 +648,7 @@ export default function TvDetail({
                                             </div>
                                         </div>
                                         <button className="w-full hover:opacity-90 flex items-center  border-2 border-black bg-yellow-300 " >
-                                            <div onClick={() => handleWatchList(0, singleTvList[0]?.id, 'TV', singleTvList[0]?.name, singleTvList[0]?.poster_path, singleTvList[0]?.release_date,singleTvList?.genres?.map((item:any)=>item?.id), singleTvList[0]?.overview, singleTvList[0]?.popularity, singleTvList[0]?.vote_average, singleTvList[0]?.vote_count)}>
+                                            <div onClick={() => handleWatchList(0, singleTvList[0]?.id, 'TV', singleTvList[0]?.name, singleTvList[0]?.poster_path, singleTvList[0]?.first_air_date, singleTvList[0]?.genres?.map((item: any) => item?.id), singleTvList[0]?.overview, singleTvList[0]?.popularity, singleTvList[0]?.vote_average, singleTvList[0]?.vote_count)}>
                                                 {existingIndex !== -1 ? (
                                                     loading[0] ? (
                                                         <div>
@@ -489,7 +685,7 @@ export default function TvDetail({
                                             </div>
 
                                             <div
-                                                onClick={() => navigate('/watchList')}
+                                                onClick={() => navigate('/watchList2')}
                                                 className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </div>
@@ -681,7 +877,7 @@ export default function TvDetail({
                                         )}
                                     </div>
                                 )} */}
-                                <div onClick={() => handleWatchList(0, singleTvList[0]?.id, 'TV', singleTvList[0]?.title, singleTvList[0]?.poster_path, singleTvList[0]?.release_date, singleTvList?.genres?.map((item:any)=>item?.id), singleTvList[0]?.overview, singleTvList[0]?.popularity, singleTvList[0]?.vote_average, singleTvList[0]?.vote_count)}>
+                                <div onClick={() => handleWatchList(0, singleTvList[0]?.id, 'TV', singleTvList[0]?.title, singleTvList[0]?.poster_path, singleTvList[0]?.first_air_date, singleTvList?.genres?.map((item: any) => item?.id), singleTvList[0]?.overview, singleTvList[0]?.popularity, singleTvList[0]?.vote_average, singleTvList[0]?.vote_count)}>
                                     {existingIndex !== -1 ? (
                                         loading[0] ? (
                                             <div>
@@ -718,7 +914,7 @@ export default function TvDetail({
                                 </div>
 
                                 <div
-                                    onClick={() => navigate('/watchList')}
+                                    onClick={() => navigate('/watchList2')}
                                     className="py-3 px-3 ml-auto w-16  flex items-center border-gray-500 border-l-2 justify-center h-full ">
                                     <i className="fa-solid fa-chevron-down"></i>
                                 </div>

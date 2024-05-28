@@ -190,8 +190,8 @@ export function WatchListLayout2() {
     const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
 
     function compareReleaseDates(a: any, b: any) {
-        const releaseDateA = new Date(a.release_date);
-        const releaseDateB = new Date(b.release_date);
+        const releaseDateA = new Date(a.createdTime);
+        const releaseDateB = new Date(b.createdTime);
         return releaseDateA.getTime() - releaseDateB.getTime();
     }
     const handleMenuItemClick = (option: any) => {

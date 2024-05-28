@@ -80,10 +80,10 @@ export default function TvStoryLine({
                             <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                 <div className="font-bold">Certificate</div>
                                 <div className="flex gap-3">
-                                    {tvList[0]?.content_ratings?.results?.slice(0, 4).map((item: any, index: number) => (
+                                    {tvList[0]?.content_ratings?.results?.slice(0, 1).map((item: any, index: number) => (
                                         <p key={index} className=" flex gap-2">
                                             <span className="hover:underline">{item?.rating}</span>
-                                            <span>{index < Math.min(tvList[0].content_ratings?.results?.length) - 1 ? '•' : ''}</span>
+                                            {/* <span>{index < Math.min(tvList[0].content_ratings?.results?.length) - 1 ? '•' : ''}</span> */}
                                         </p>
                                     ))}
                                 </div>

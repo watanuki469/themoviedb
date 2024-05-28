@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -31,7 +32,8 @@ export default function SingleMovieStoryLine({
         return randomText.trim(); // Remove trailing space
     }
 
-    const usRelease = singleMovieList[0]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === "US");
+    const languageString = localStorage.getItem('language');    
+    const usRelease = singleMovieList[0]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === `${languageString?.slice(3)}`);
     const certification =
         usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
 
@@ -108,7 +110,7 @@ export default function SingleMovieStoryLine({
                                     {singleMovieList[0]?.genres.slice(0, 4).map((item: any, index: number) => (
                                         <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
                                             <span className="text-blue-600">{item?.name}</span>
-                                            <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
+                                            <span>{index < Math.min(singleMovieList[0]?.genres.slice(0, 4)?.length) - 1 ? '•' : ''}</span>
                                         </p>
                                     ))}
                                 </div>

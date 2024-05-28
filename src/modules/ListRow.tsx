@@ -13,7 +13,7 @@ export default function ListRow({
     const [activeSlider, setActiveSlider] = useState(3);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 500) {
+            if (window.innerWidth < 400) {
                 setActiveSlider(1);
             } else if (window.innerWidth < 600) {
                 setActiveSlider(2);

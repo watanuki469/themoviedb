@@ -19,7 +19,7 @@ import TwoMovieRow from "../../modules/TwoMovieRow";
 import TvReview from "../common/TvReview";
 import TvDetailExternal from "../common/TvDetailExternal";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { getListRecentlyViewMongoApi, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
+import { addRecentlyViewed, getListRecentlyViewMongoApi, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
 import { setRecentlyView } from "../../redux/reducers/login.reducer";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -100,74 +100,39 @@ export default function TvLayout() {
     // const timezoneResponse = axios.get("http://worldtimeapi.org/api/timezone/Asia/Ho_Chi_Minh");
     // const createdTime = timezoneResponse.data.datetime;
 
-    useEffect(() => {
-        const storedDataString = localStorage.getItem('activity');
-        let storedData: { [key: string]: any } = {};
-        if (storedDataString !== null) {
-            storedData = JSON.parse(storedDataString);
-        }
-        if (storedData[tvList[0]?.id]) {
-        } else {
-            storedData[tvList[0]?.id] = tvList[0];
-            localStorage.setItem('activity', JSON.stringify(storedData));
-        }
-    })
-
-    // const [userInfoList, setUserInfoList] = useState<any[]>([]);
     // useEffect(() => {
-    //     const storedDataString = localStorage.getItem('user');
-    //     let storedData = [];
-
-    //     if (storedDataString) {
+    //     const storedDataString = localStorage.getItem('activity');
+    //     let storedData: { [key: string]: any } = {};
+    //     if (storedDataString !== null) {
     //         storedData = JSON.parse(storedDataString);
     //     }
-    //     setUserInfoList(Object.values(storedData));
-    // }, []);
-
-    // const email = userInfoList[0];
-
-    // const response = recentlyViewMongoApi(
-    //     email,
-    //     tvList[0]?.id,
-    //     tvList[0]?.name,
-    //     tvList[0]?.poster_path,
-    //     "TV",
-    // );
-    // useEffect(() => {
-    //     dispatch(setRecentlyView(response))
+    //     if (storedData[tvList[0]?.id]) {
+    //     } else {
+    //         storedData[tvList[0]?.id] = tvList[0];
+    //         localStorage.setItem('activity', JSON.stringify(storedData));
+    //     }
     // })
-    // useEffect(() => {
-    //     dispatch(setRecentlyView(recentlyViewMongoApi(
-    //         userInfoList[0],
-    //         tvList[0]?.id,
-    //         tvList[0]?.name,
-    //         tvList[0]?.poster_path,
-    //         "TV",
-    //     )))
-    // },[userInfoList[0]])
-    // useEffect(() => {
-    //     const fetchTimezoneData = async () => {
-    //         try {
-    //             const timezoneResponse = await axios.get("http://worldtimeapi.org/api/timezone/Asia/Ho_Chi_Minh");
-    //             const createdTime = timezoneResponse.data.datetime;
 
-    //             const storedDataString = localStorage.getItem('activity');
-    //             let storedData = storedDataString ? JSON.parse(storedDataString) : {};
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
 
-    //             if (!storedData[tvList[0]?.id]) {
-    //                 storedData[tvList[0]?.id] = { ...tvList[0], createdTime };
-    //                 localStorage.setItem('activity', JSON.stringify(storedData));
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching timezone data:", error);
-    //         }
-    //     };
+        if (storedDataString) {
+            storedData = JSON.parse(storedDataString);
+        }
+        setUserInfoList(Object.values(storedData));
+    }, []);
 
-    //     fetchTimezoneData();
-    // }, [tvList]);
-    // stop at here,add to recent list
-
-
+    useEffect(() => {
+        dispatch(addRecentlyViewed({
+            email: userInfoList[0],
+            movieId: tvList[0]?.id,
+            movieName: tvList[0]?.name,
+            movieImg: tvList[0]?.poster_path,
+            movieType: "TV",
+        }))
+    }, [userInfoList, tvList,dispatch])
 
     return (
         <div className=" min-h-screen cursor-pointer max-w-full overflow-hidden">
@@ -211,7 +176,7 @@ export default function TvLayout() {
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2  hover:text-yellow-300"
                                     onClick={() => navigate(`/image/tv/${id}`)}></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/image/tv/${id}`)}>
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
                             </div>
                             <div className="text-white flex py-4 w-screen px-2 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
@@ -232,7 +197,7 @@ export default function TvLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full md:w-screen">
-                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'tv'} />
+                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'TV'} />
                             </div>
 
                             <div className="text-white flex py-2 w-screen px-2">

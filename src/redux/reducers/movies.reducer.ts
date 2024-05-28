@@ -139,11 +139,11 @@ export const fetchMovies = () => (dispatch: AppDispatch) => {
                 console.error("API response structure is not as expected.", data);
             }
         })
-        .then(() => {
-            setTimeout(() => {
-                dispatch(setIsFetched(true))
-            }, 2000);
-        })
+        // .then(() => {
+        //     setTimeout(() => {
+        //         dispatch(setIsFetched(true))
+        //     }, 2000);
+        // })
         .catch((e) => {
             console.log(e);
         })

@@ -21,9 +21,13 @@ const RegisterLayoutTest = () => {
       registerMongoApi(displayName, email, password, confirmPassword),
     ])
       .then((response: any) => {
+        dispatch(setGlobalLoading(true))
         dispatch(setRegister(response));
         navigate('/login2')
         toast.success('Register Successfully')
+        setTimeout(() => {
+          dispatch(setGlobalLoading(false));
+        }, 4000);
       })
       .catch((e) => {
         console.log("Register Failed" + e);
@@ -32,11 +36,7 @@ const RegisterLayoutTest = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(setGlobalLoading(true))
-    dispatch(fetchRegister())
-    setTimeout(() => {
-      dispatch(setGlobalLoading(false));
-    }, 1000);
+    dispatch(fetchRegister())   
   };
 
   return (
