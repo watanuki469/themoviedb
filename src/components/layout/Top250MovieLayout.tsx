@@ -17,13 +17,16 @@ import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { ListMoviesPopular } from "../models/ListMoviesPopular";
-
+import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
+import { AppDispatch } from '../../redux/store';
+import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/login.reducer';
 
 export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
+
     useEffect(() => {
         dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
@@ -79,11 +82,6 @@ export default function Top250MovieLayout() {
         });
         return genreCounting;
     }
-
-    const sortedTopRatedMovies = [...topRatedMovies].sort((a: any, b: any) => {
-        const sortOrderFactor = sortOrder === 'asc' ? 1 : -1;
-        return sortOrderFactor * (a.movieIndex - b.movieIndex);
-    });
     useEffect(() => {
         const genreCount = countGenres(topRatedMovies);
         setGenreCount(genreCount);
@@ -108,12 +106,10 @@ export default function Top250MovieLayout() {
         if (selectedGenres.includes(selectedGenre)) {
             // If already selected, remove it
             setSelectedGenres(selectedGenres.filter((genre) => genre !== selectedGenre));
-
         } else {
             // If not selected, add it
             setSelectedGenres([...selectedGenres, selectedGenre]);
         }
-
     };
 
     const handleRemoveGenreFilter = (removedGenre: any) => {
@@ -132,70 +128,144 @@ export default function Top250MovieLayout() {
         }
         return number;
     }
-    const [isRating, setIsRating] = useState(false);
-
-    const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular>();
-    const handleClick = (index: any) => {
-        setIsRating(true)
-        setSelectedStudent(index);
-    };
     const [value, setValue] = useState<number | null>(0);
-    const handleClose = () => {
-        setIsRating(false)
-        setValue(0)
+    const [isRating, setIsRating] = useState(false);
+    const [numberIndex, setNumberIndex] = useState(0);
+    const [checkLog, setCheckLog] = useState(false)
+    const [selectedStudent, setSelectedStudent] = useState<any>();
+
+    const handleClick = (movie: any, value: any) => {
+        setIsRating(true)
+        setSelectedStudent(movie);
+        setValue(value)
     };
 
-    const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
+    const ratingList = useAppSelector((state) => state.login.listRating);
+    const [userInfoList, setUserInfoList] = useState<any[]>([]);
+    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
+    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
+
+    useEffect(() => {
+        const storedDataString = localStorage.getItem('user');
+        let storedData = [];
+
+        if (storedDataString) {
+            storedData = JSON.parse(storedDataString);
+        }
+        setUserInfoList(Object.values(storedData));
+    }, []);
+    const fetchGetRating = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getListRatingMongoApi(userInfoList[0]);
+            if (response) {
+                dispatch(setListRating(response));
+            } else {
+                throw new Error('Failed to fetch favorites');
+            }
+        } catch (e) {
+            console.log("Fetching favorites failed: " + e);
+        }
+    }
+
+    useEffect(() => {
+        dispatch(setGlobalLoading(true));
+        if (userInfoList.length > 0) {
+            dispatch(fetchGetRating())
+        }
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
+    }, [userInfoList]);
+    const fetchRating = (
+        itemId: string,
+        itemType: string,
+        itemRating: string,
+        itemImg: string,
+        itemName: string
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await ratingMongoApi(
+                email, itemId, itemType, itemRating, itemImg, itemName
+            );
+            dispatch(setRating(response));
+            if (response) {
+                await dispatch(fetchGetRating());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+    const handleRating = async (
+        index: number,
+        itemId: any,
+        itemType: any,
+        itemRating: any,
+        itemImg: any,
+        itemName: any
+    ) => {
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
+        await dispatch(fetchRating(
+            itemId, itemType, itemRating, itemImg, itemName
+        ));
+        setCheckLog(!checkLog);
+        setIsRating(false)
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        toast.success('Rating success')
+    };
+    const fetchRemove = (
+        movieId: string,
+        movieType: string,
+    ) => async (dispatch: AppDispatch) => {
+        const email = userInfoList[0];
+        try {
+            const response = await removeRatingMongoApi(
+                email, movieId, movieType,
+            );
+            dispatch(setDeleteRating(response));
+            if (response) {
+                await dispatch(fetchGetRating());
+                toast.info('Remove rating success')
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating watch list failed: " + e);
+            toast.error("Updating watch list failed");
+        }
+    };
+    const handleRemoveRating = async (
+        index: number, movieId: any, movieType: any,
+    ) => {
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
+        await dispatch(fetchRemove(
+            movieId, movieType,
+        ));
+        setCheckLog(!checkLog);
+        setIsRating(false)
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
+    };
+
+
+
+    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
+        const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
+
         // Implement rendering logic based on the currentView (detail, grid, compact)
         if (movieIndex >= 50) {
             return null;
         }
+
 
         switch (currentView) {
             case 'Detail':
                 return (
                     <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
                     >
-                        {isRating && (
-                            <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                                <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                                    <div className="flex items-center justify-end">
-                                        <div className="flex justify-end">
-                                            <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                                <i className="fa-solid fa-times text-xl"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="bg-black px-4 py-4">
-                                        <div className="aligns-center justify-center items-center text-center gap-2">
-                                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                                <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                                <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                            </div>
-                                            <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title}</p>
-                                            <div className="gap-2 px-2 py-2">
-                                                <Rating name="customized-10" value={value} size="large"
-                                                    onChange={(event, newValue) => {
-                                                        setValue(newValue);
-                                                    }}
-                                                    max={10} sx={{
-                                                        color: 'blue', mt: 1,
-                                                        '& .MuiRating-iconEmpty': {
-                                                            borderColor: 'red',
-                                                            color: 'gray'
-                                                        },
-                                                    }} />
-                                                <br />
-                                                <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`} onClick={() => handleClose()}>
-                                                    Rate
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
@@ -204,18 +274,43 @@ export default function Top250MovieLayout() {
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                             onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
+                                            <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 px-2 py-2 hover:text-black text-blue-500" onClick={() => handleClick(movie)}>
-                                                    <i className="fa-regular fa-star "></i>
-                                                    <p>Rate</p>
-                                                </button>
+                                                <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
+                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                        {
+                                                            existingRating ? (
+                                                                loading2[movieIndex] ? (
+                                                                    <div>
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center  gap-2 hover:bg-gray-500 w-fit px-2 py-2 rounded-lg">
+                                                                        <i className="fa-solid fa-star text-blue-500"></i>
+                                                                        <div>{existingRating?.itemRating}</div>
+                                                                    </div>
 
+                                                                )
+                                                            ) : (
+                                                                <div className="font-bold text-sm">
+                                                                    {loading2[movieIndex] ? (
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                    ) : (
+                                                                        <div className="hover:bg-gray-500  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
+                                                                            <i className="fa-regular fa-star text-blue-500"></i>
+                                                                            <div>Rate</div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -245,15 +340,41 @@ export default function Top250MovieLayout() {
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                             onError={handleImageError} className="w-full  hover:opacity-80" />
-                                        <div className="px-2 py-2 w-full">
-                                            <div className="flex flex-wrap items-center gap-2 justify-start text-left">
+                                        <div className="">
+                                            <div className="justify-start text-left px-2 py-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 " onClick={() => handleClick(movie)}>
-                                                    <i className="fa-regular fa-star "></i>
-                                                    <p>Rate</p>
+                                                <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                        {
+                                                            existingRating ? (
+                                                                loading2[movieIndex] ? (
+                                                                    <div>
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center  gap-2">
+                                                                        <i className="fa-solid fa-star text-blue-500"></i>
+                                                                        <div>{existingRating?.itemRating}</div>
+                                                                    </div>
+
+                                                                )
+                                                            ) : (
+                                                                <div className="text-black">
+                                                                    {loading2[movieIndex] ? (
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
+                                                                    ) : (
+                                                                        <div className="">
+                                                                            <i className="fa-regular fa-star text-blue-500"></i>
+                                                                            Rate
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
                                                 </button>
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title}</p>
@@ -283,46 +404,51 @@ export default function Top250MovieLayout() {
                 return (
                     <section className="px-2 border-t border-r border-l border-gray-500 w-full " key={movieIndex}
                     >
-                        {isRating && (
-                            <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                                <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                                    <div className="flex items-center justify-end">
-                                        <div className="flex justify-end">
-                                            <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                                <i className="fa-solid fa-times text-xl"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="bg-black px-4 py-4">
-                                        <div className="aligns-center justify-center items-center text-center gap-2">
-                                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                                <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                                <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                            </div>
-                                            <p className="text-yellow-300 font-bold">Rate this</p>
-                                            <p className="text-2xl ">{selectedStudent?.title}</p>
-                                            <div className="gap-2 px-2 py-2">
-                                                <Rating name="customized-10" value={value} size="large"
-                                                    onChange={(event, newValue) => {
-                                                        setValue(newValue);
-                                                    }}
-                                                    max={10} sx={{
-                                                        color: 'blue', mt: 1,
-                                                        '& .MuiRating-iconEmpty': {
-                                                            borderColor: 'red',
-                                                            color: 'gray'
-                                                        },
-                                                    }} />
-                                                <br />
-                                                <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`} onClick={() => handleClose()}>
-                                                    Rate
+                        {/* {isRating &&
+                            (
+                                <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
+                                    <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
+                                        <div className="flex items-center justify-end">
+                                            <div className="flex justify-end">
+                                                <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                                    <i className="fa-solid fa-times text-xl"></i>
                                                 </button>
+                                            </div>
+                                        </div>
+                                        <div className="bg-black px-4 py-4">
+                                            <div className="aligns-center justify-center items-center text-center gap-2">
+                                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
+                                                    <i className="fa-solid fa-star text-9xl text-blue-500"></i>
+                                                    <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
+                                                </div>
+                                                <p className="text-yellow-300 font-bold">Rate this</p>
+                                                <p className="text-2xl ">{(topRatedMovies[numberIndex]?.title ? (topRatedMovies[numberIndex]?.title) : (topRatedMovies[numberIndex]?.name))}</p>
+                                                <div className="gap-2 px-2 py-2">
+                                                    <Rating name="customized-10" value={value} size="large"
+                                                        onChange={(event, newValue) => {
+                                                            setValue(newValue);
+                                                        }}
+                                                        max={10} sx={{
+                                                            color: 'blue', mt: 1,
+                                                            '& .MuiRating-iconEmpty': {
+                                                                borderColor: 'red', color: 'gray'
+                                                            },
+                                                        }} />
+                                                    <br />
+                                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                                        onClick={() => handleRating(numberIndex, topRatedMovies[numberIndex]?.id, 'Movie', value, topRatedMovies[numberIndex]?.poster_path, topRatedMovies[numberIndex]?.name ? topRatedMovies[numberIndex]?.name : topRatedMovies[numberIndex]?.title)}>
+                                                        Rate
+                                                    </button>
+                                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                                        onClick={() => handleRemoveRating(numberIndex, topRatedMovies[numberIndex]?.id, 'Movie')}>
+                                                        Remove Rating
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )} */}
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
@@ -333,14 +459,39 @@ export default function Top250MovieLayout() {
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
-                                            <div className="flex flex-wrap items-center gap-2">
+                                            <div className="flex item-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 px-2 py-2 hover:text-black text-blue-500" onClick={() => handleClick(movie)}>
-                                                    <i className="fa-regular fa-star "></i>
-                                                    <p>Rate</p>
+                                                <button className=" hover:text-black text-blue-500" >
+                                                    <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                        {
+                                                            existingRating ? (
+                                                                loading2[movieIndex] ? (
+                                                                    <div>
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center  gap-2 ">
+                                                                        <i className="fa-solid fa-star text-blue-500"></i>
+                                                                        <div>{existingRating?.itemRating}</div>
+                                                                    </div>
+
+                                                                )
+                                                            ) : (
+                                                                <div className="font-bold text-sm">
+                                                                    {loading2[movieIndex] ? (
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                    ) : (
+                                                                        <div className="">
+                                                                            <i className="fa-regular fa-star text-blue-500"></i>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
                                                 </button>
 
                                             </div>
@@ -348,7 +499,7 @@ export default function Top250MovieLayout() {
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/movie/${movie.id}`)} >
+                                <div className="ml-auto" onClick={() => navigate(`/movie/${movie?.id}`)} >
                                     <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                 </div>
                             </div>
@@ -359,6 +510,7 @@ export default function Top250MovieLayout() {
         }
     }
     const [applyFilter, setApplyFilter] = useState(true);
+    const [filterRatedMovie, setFilterRatedMovie] = useState(false);
     const [filterType, setFilterType] = useState('none');
 
 
@@ -436,11 +588,74 @@ export default function Top250MovieLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    
 
 
     return (
         <div className=" min-h-screen cursor-pointer">
+            {isRating &&
+                (
+                    <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
+                        <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
+                            <div className="flex items-center justify-end">
+                                <div className="flex justify-end">
+                                    <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                        <i className="fa-solid fa-times text-xl"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="bg-black px-4 py-4">
+                                <div className="aligns-center justify-center items-center text-center gap-2">
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
+                                        <i className="fa-solid fa-star text-9xl text-blue-500"></i>
+                                        <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
+                                    </div>
+                                    <p className="text-yellow-300 font-bold">Rate this</p>
+                                    <p className="text-2xl ">{selectedStudent?.title ? selectedStudent.title : selectedStudent?.name}</p>
+                                    <div className="gap-2 px-2 py-2">
+                                        <Rating name="customized-10" value={value} size="large"
+                                            onChange={(event, newValue) => {
+                                                setValue(newValue);
+                                            }}
+                                            max={10} sx={{
+                                                color: 'blue', mt: 1,
+                                                '& .MuiRating-iconEmpty': {
+                                                    borderColor: 'red',
+                                                    color: 'gray'
+                                                },
+                                            }} />
+                                        <br />
+                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                            onClick={() => handleRating(numberIndex, selectedStudent?.id, 'Movie', value, selectedStudent?.poster_path, selectedStudent?.name ? selectedStudent?.name : selectedStudent?.title)}>
+                                            {loading2[numberIndex] ? (
+                                                <div>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                </div>
+                                            ) : (
+                                                <div className="">
+                                                    <div>Rate</div>
+                                                </div>
+                                            )
+                                            }
+                                        </button>
+                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
+                                            onClick={() => handleRemoveRating(numberIndex, selectedStudent?.id, 'Movie')}>
+                                            {loading3[numberIndex] ? (
+                                                <div>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                </div>
+                                            ) : (
+                                                <div className="">
+                                                    <div>Remove Rating</div>
+                                                </div>
+                                            )
+                                            }
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             <Dialog open={openGenDialog} onClose={handleDiaGenlogClose} maxWidth={'sm'}
                 keepMounted={true}
                 PaperProps={{
@@ -530,22 +745,10 @@ export default function Top250MovieLayout() {
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                             mt: 1.5,
                                             '& .MuiAvatar-root': {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
+                                                width: 32, height: 32, ml: -0.5, mr: 1,
                                             },
                                             '&::before': {
-                                                content: '""',
-                                                display: 'block',
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 14,
-                                                width: 10,
-                                                height: 10,
-                                                bgcolor: 'background.paper',
-                                                transform: 'translateY(-50%) rotate(45deg)',
-                                                zIndex: 0,
+                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                             },
                                         },
                                     }}
@@ -602,7 +805,7 @@ export default function Top250MovieLayout() {
 
                     </div>
                     <div className="md:grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
+                        <div className="lg:col-span-12 md-col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">
@@ -612,9 +815,12 @@ export default function Top250MovieLayout() {
                                                 const hasAllGenres = selectedGenres.every((genre) =>
                                                     movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                                 );
-
-
                                                 return hasAllGenres;
+                                            })
+                                            .filter((movie) => {
+                                                const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId);
+                                                if (filterRatedMovie === false) return true
+                                                return existingRating == undefined;
                                             })
                                             .filter((movie: any) => {
                                                 if (!applyFilter) return true; // No filter
@@ -627,8 +833,7 @@ export default function Top250MovieLayout() {
                                                 }
                                                 return true;
                                             })
-
-                                            .map((m, index) => renderMovieItem(m, index, currentView, sortOrder)).length}
+                                            .map((m, index) => renderMovieItem(m, index, currentView)).length}
                                         /{topRatedMovies.length} Titles</h2>
 
                                 </div>
@@ -647,22 +852,21 @@ export default function Top250MovieLayout() {
                             </div>
                             {/* filter icon */}
                             <div className=" flex flex-wrap items-center gap-2">
-                                <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
-                                    onClick={handleDiaGenlogOpen}>
-                                    <FilterListIcon />
-                                </button>
-                                {selectedGenres.map((genre, index) => (
-                                    <div key={index} className="flex items-center gap-2">
-                                        <p className="font-bold">
-                                            {genre}
-                                        </p>
-                                        <i className="fa-solid fa-xmark" onClick={() => handleRemoveGenreFilter(genre)}></i>
-                                    </div>
-                                ))
-                                }
-                            </div>
-                            <div className="flex  px-2 py-2">
-                                <div></div>
+                                <div className=" flex flex-wrap items-center gap-2">
+                                    <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
+                                        onClick={handleDiaGenlogOpen}>
+                                        <FilterListIcon />
+                                    </button>
+                                    {selectedGenres.map((genre, index) => (
+                                        <div key={index} className="flex items-center gap-2">
+                                            <p className="font-bold">
+                                                {genre}
+                                            </p>
+                                            <i className="fa-solid fa-xmark" onClick={() => handleRemoveGenreFilter(genre)}></i>
+                                        </div>
+                                    ))
+                                    }
+                                </div>
                                 <div className="ml-auto flex items-center gap-4">
                                     <p className="text-gray-500">Sort by</p>
                                     <Button
@@ -677,7 +881,7 @@ export default function Top250MovieLayout() {
                                             bgcolor: anchorRankingEl ? 'blue' : 'white',
                                             color: anchorRankingEl ? 'white' : 'blue',
                                             border: anchorRankingEl ? '2px dashed' : '',
-                                            ":hover": {                                               
+                                            ":hover": {
                                                 backgroundColor: 'blue'
                                                 , color: 'white'
                                             },
@@ -717,10 +921,10 @@ export default function Top250MovieLayout() {
                                 </div>
                             </div>
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
+                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
                             <p className="text-2xl font-bold" >You have rated</p>
-                            <p className="mt-3"><span className="text-green-500">0</span>/250 (0%)</p>
-                            <div className="flex items-center gap-3 mt-3 ">
+                            <p className="mt-3"><span className="text-green-500">{ratingList?.length}</span>/{topRatedMovies?.length} ({ratingList?.length / topRatedMovies?.length * 100}%)</p>
+                            <div className="flex items-center gap-3 mt-3 " onClick={() => setFilterRatedMovie(!filterRatedMovie)}>
                                 {isChecked ? (
                                     <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
                                 ) : (
@@ -729,7 +933,7 @@ export default function Top250MovieLayout() {
                                 <p>Hide titles you have rated</p>
 
                             </div>
-                        </div>
+                        </div> */}
                         <div className="lg:col-span-8 md-col-span-12  w-full ">
                             <div className="lg:max-w-full md:w-screen py-4 px-2 ">
                                 <div
@@ -749,26 +953,19 @@ export default function Top250MovieLayout() {
                                         .filter((movie: any) => {
                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                             // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres.every((genre) =>
+                                            const hasAllGenres = selectedGenres?.every((genre) =>
                                                 movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                             );
-
-
                                             return hasAllGenres;
                                         })
-                                        // .filter((movie) => {
-                                        //     if (selectedKeys.length === 0) return true; // No key filter
-
-                                        //     // Check if every selected genre is present in the movie's genres
-                                        //     const hasAllGenres = selectedKeys.every((keyword) =>
-                                        //         movie.keywords.some((mGenre) => mGenre.keyword === keyword)
-                                        //     );
-
-                                        //     return hasAllGenres;
-                                        // })
                                         .filter(() => {
                                             if (applyFilter === true) return true; // No filter
                                             return null
+                                        })
+                                        .filter((movie) => {
+                                            const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId);
+                                            if (filterRatedMovie === false) return true
+                                            return existingRating == undefined;
                                         })
                                         .sort((a, b) => {
                                             if (menuItemNum === '5') {
@@ -807,7 +1004,7 @@ export default function Top250MovieLayout() {
                                                 return 0
                                             }
                                         })
-                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))}
+                                        .map((m, index) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>
                         </div>
@@ -842,10 +1039,7 @@ export default function Top250MovieLayout() {
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ export default function UpComingMovieLayout() {
     const [mediatype, setMediaType] = useState('movie');
     const upComingList = useAppSelector((state) => state.upComing.listUpComing)
     console.log(upComingList);
-    
+
 
     const fetchUpComing = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -86,50 +86,53 @@ export default function UpComingMovieLayout() {
                         </button>
                     </div>
                     <div className="mt-4">
-                        {mediatype === 'movie' && upComingList[0]?.results?.map((item: any, index: any) => {
-                            const releaseDate = new Date(item?.release_date);
-                            if (releaseDate >= new Date()) {
-                                return (
-                                    <div key={index}>
-                                        <p className="text-2xl font-bold">
-                                            {item?.release_date &&
-                                                new Date(item?.release_date).toLocaleDateString('en-US', {
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                })
-                                            }
-                                        </p>
-                                        <div className="border-gray-300 border-2 mt-3 mb-2">
-                                            <div className="flex mt-2">
-                                                <div className="flex px-2 py-2 gap-2">
-                                                    <img
-                                                        src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`}
-                                                        alt="product images"
-                                                        className="w-20 h-28 hover:opacity-80"
-                                                        onError={handleImageError}
-                                                        onClick={() => navigate(`/${item?.title ? 'movie' : 'tv'}/${item?.id}`)} 
-                                                    />
-                                                    <div>
-                                                        <p>{item?.original_title} ({item?.release_date?.slice(0, 4)})</p>
-                                                        <p>Original Language: {item?.original_language}</p>
-                                                        <div className="flex flex-wrap items-center gap-2">
-                                                            Genre: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
-                                                                <div className="flex flex-wrap items-center gap-2" key={genreIndex}>
+                        {mediatype === 'movie' && upComingList[0]?.results
+                            .filter((item: any) => {
+                                const releaseDate = new Date(item.release_date);
+                                return releaseDate >= new Date();
+                            })
+                            .sort((a: any, b: any) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime())
+                            .map((item: any, index: any) => (
+                                <div key={index}>
+                                    <p className="text-2xl font-bold">
+                                        {item?.release_date &&
+                                            new Date(item?.release_date).toLocaleDateString('en-US', {
+                                                month: 'long',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                            })
+                                        }
+                                    </p>
+                                    <div className="border-gray-300 border-2 mt-3 mb-2">
+                                        <div className="flex mt-2">
+                                            <div className="flex px-2 py-2 gap-2">
+                                                <img
+                                                    src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`}
+                                                    alt="product images"
+                                                    className="w-20 h-28 hover:opacity-80"
+                                                    onError={handleImageError}
+                                                    onClick={() => navigate(`/${item?.title ? 'movie' : 'tv'}/${item?.id}`)}
+                                                />
+                                                <div>
+                                                    <p>{item?.original_title} ({item?.release_date?.slice(0, 4)})</p>
+                                                    <p>Original Language: {item?.original_language}</p>
+                                                    <div className="flex flex-wrap items-center gap-2">
+                                                        Genre: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
+                                                            <div className="flex items-center flex-wrap gap-2">
+                                                                <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genre=${genreMapping[genreId]}`)} key={genreIndex}>
                                                                     {genreMapping[genreId]}
-                                                                    {genreIndex < array.length - 1 && <span> • </span>}
                                                                 </div>
-                                                            ))}
-                                                        </div>
+                                                                {genreIndex < array.length - 1 && <span> • </span>}
+                                                            </div>
+                                                        ))}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                );
-                            }
-                            return null; // Tránh hiển thị phần tử không hợp lệ
-                        })}
+                                </div>
+                            ))
+                        }
 
                     </div>
                 </div>

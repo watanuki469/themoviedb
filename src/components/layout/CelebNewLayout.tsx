@@ -52,6 +52,8 @@ export default function CelebNewLayout() {
     const handleShareClose = () => {
         setAnchorShareEl(null);
     };
+    console.log(movieNews);
+
 
     return (
         <div className="min-h-screen cursor-pointer bg-white text-black">
@@ -64,7 +66,7 @@ export default function CelebNewLayout() {
             <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center py-2">
                 <section className='relative overflow-hidden min-h-screen'>
                     <div className="md:grid grid-cols-12 gap-3  w-full">
-                        <div className="lg:col-span-8 md-col-span-12 w-full ">
+                        <div className="lg:col-span-8 col-span-12 w-full ">
                             <div className="">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -80,11 +82,16 @@ export default function CelebNewLayout() {
                                                 <i className="fa-solid fa-arrow-up-right-from-square ml-2"></i>
 
                                             </a>
-                                            <img className="py-2" src={`${article?.node?.image.url}`}>
-                                            </img>
-                                            <div className="py-2">
-                                                {splitTextIntoParagraphs(article?.node?.text?.plainText)}
+                                            { }
+                                            <div className="grid grid-cols-12 gap-4">
+                                                <img
+                                                    onClick={() => window.location.href = article?.node?.source?.homepage?.url}
+                                                    className="py-2 col-span-3" src={`${article?.node?.image.url}`}></img>
+                                                <div className="py-2 col-span-9">
+                                                    {splitTextIntoParagraphs(article?.node?.text?.plainText)}
+                                                </div>
                                             </div>
+
                                             <a className="py-2 text-blue-500 hover:underline" href={`${article?.node?.source?.homepage?.url}`}>
                                                 See full article at {article?.node?.source?.homepage?.label}
                                                 <i className="fa-solid fa-arrow-up-right-from-square ml-2"></i>
@@ -138,22 +145,10 @@ export default function CelebNewLayout() {
                                                                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                                                 mt: 1.5,
                                                                 '& .MuiAvatar-root': {
-                                                                    width: 32,
-                                                                    height: 32,
-                                                                    ml: -0.5,
-                                                                    mr: 1,
+                                                                    width: 32, height: 32, ml: -0.5, mr: 1,
                                                                 },
                                                                 '&::before': {
-                                                                    content: '""',
-                                                                    display: 'block',
-                                                                    position: 'absolute',
-                                                                    top: 0,
-                                                                    right: 14,
-                                                                    width: 10,
-                                                                    height: 10,
-                                                                    bgcolor: 'background.paper',
-                                                                    transform: 'translateY(-50%) rotate(45deg)',
-                                                                    zIndex: 0,
+                                                                    content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                                                 },
                                                             },
                                                         }}

@@ -198,6 +198,8 @@ export default function TvDetail({
         itemId: string,
         itemType: string,
         itemRating: string,
+        itemImg:any,
+        itemName:any
     ) => async (dispatch: AppDispatch) => {
         const email = userInfoList[0];
         try {
@@ -206,6 +208,8 @@ export default function TvDetail({
                 itemId,
                 itemType,
                 itemRating,
+                itemImg,
+                itemName
             );
             dispatch(setRating(response));
             if (response) {
@@ -220,12 +224,16 @@ export default function TvDetail({
     };
 
     const handleRating = async (itemRating: any,
+        itemImg:any,
+        itemName:any
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
         await dispatch(fetchRating(
             singleTvList[0]?.id,
             'TV',
             itemRating,
+            itemImg,
+            itemName
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
@@ -345,7 +353,7 @@ export default function TvDetail({
                                         }} />
                                     <br />
                                     <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRating(value)}>
+                                        onClick={() => handleRating(value,singleTvList[0]?.poster_path,singleTvList[0]?.title ? singleTvList[0]?.title : singleTvList[0]?.name)}>
                                         Rate
                                     </button>
                                     <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}

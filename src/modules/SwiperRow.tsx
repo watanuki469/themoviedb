@@ -136,9 +136,12 @@ export default function SwiperRow({
                 movieVoteAverage,
                 movieVoteCount
             );
-            dispatch(setFavorite(response));
+            dispatch(setFavorite(response));     
+            console.log(response);
+                 
             if (response) {
                 await dispatch(fetchGetFavorites());
+
             } else {
                 toast.error('Something went wrong');
             }
@@ -162,15 +165,7 @@ export default function SwiperRow({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            movieId,
-            movieName,
-            movieImg,
-            movieReleaseDay,
-            movieGenre,
-            movieReview,
-            moviePopularity,
-            movieVoteAverage,
-            movieVoteCount
+            movieId, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
@@ -180,14 +175,13 @@ export default function SwiperRow({
         itemId: string,
         itemType: string,
         itemRating: string,
+        itemImg: string,
+        itemName: string
     ) => async (dispatch: AppDispatch) => {
         const email = userInfoList[0];
         try {
             const response = await ratingMongoApi(
-                email,
-                itemId,
-                itemType,
-                itemRating,
+                email, itemId, itemType, itemRating, itemImg, itemName
             );
             dispatch(setRating(response));
             if (response) {
@@ -206,16 +200,17 @@ export default function SwiperRow({
         itemId: any,
         itemType: any,
         itemRating: any,
+        itemImg: any,
+        itemName: any
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
         await dispatch(fetchRating(
-            itemId,
-            itemType,
-            itemRating,
+            itemId, itemType, itemRating, itemImg, itemName
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        toast.success('Rating success')
     };
     const fetchRemove = (
         movieId: string,
@@ -224,13 +219,12 @@ export default function SwiperRow({
         const email = userInfoList[0];
         try {
             const response = await removeRatingMongoApi(
-                email,
-                movieId,
-                movieType,
+                email, movieId, movieType,
             );
             dispatch(setDeleteRating(response));
             if (response) {
                 await dispatch(fetchGetRating());
+                toast.info('Remove rating success')
             } else {
                 toast.error('Something went wrong');
             }
@@ -240,14 +234,11 @@ export default function SwiperRow({
         }
     };
     const handleRemoveRating = async (
-        index: number,
-        movieId: any,
-        movieType: any,
+        index: number, movieId: any, movieType: any,
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
         await dispatch(fetchRemove(
-            movieId,
-            movieType,
+            movieId, movieType,
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
@@ -290,7 +281,7 @@ export default function SwiperRow({
                                             }} />
                                         <br />
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, searchItemList[numberIndex]?.id, mediaType, value)}>
+                                            onClick={() => handleRating(numberIndex, searchItemList[numberIndex]?.id, mediaType, value, searchItemList[numberIndex]?.poster_path, searchItemList[numberIndex]?.name ? searchItemList[numberIndex]?.name : searchItemList[numberIndex]?.title)}>
                                             Rate
                                         </button>
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}

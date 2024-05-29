@@ -83,10 +83,10 @@ export default function SingleMovieReview({
                             {singleMovieList[0]?.reviews.results.slice(0, 1).map((item: any, index: any) => (
                                 <div className='flex text-black' key={index}>
                                     <div>
-                                        <div className='font-bold text-xl'>A review by {item.author}</div>
+                                        <div className='font-bold text-xl'>A review by {item?.author}</div>
                                         <div>
                                             <p>
-                                                {item.content}
+                                                {item?.content}
                                             </p>
                                         </div>
                                     </div>
@@ -136,22 +136,10 @@ export default function SingleMovieReview({
                                                         filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                                         mt: 1.5,
                                                         '& .MuiAvatar-root': {
-                                                            width: 32,
-                                                            height: 32,
-                                                            ml: -0.5,
-                                                            mr: 1,
+                                                            width: 32, height: 32, ml: -0.5, mr: 1,
                                                         },
                                                         '&::before': {
-                                                            content: '""',
-                                                            display: 'block',
-                                                            position: 'absolute',
-                                                            top: 0,
-                                                            right: 14,
-                                                            width: 10,
-                                                            height: 10,
-                                                            bgcolor: 'background.paper',
-                                                            transform: 'translateY(-50%) rotate(45deg)',
-                                                            zIndex: 0,
+                                                            content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                                         },
                                                     },
                                                 }}

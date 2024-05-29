@@ -149,17 +149,7 @@ export default function FourSwiperRow({
         const email = userInfoList[0];
         try {
             const response = await favoriteMongoApi(
-                email,
-                movieId,
-                mediaType,
-                movieName,
-                movieImg,
-                movieReleaseDay,
-                movieGenre,
-                movieReview,
-                moviePopularity,
-                movieVoteAverage,
-                movieVoteCount
+                email, movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
             );
             dispatch(setFavorite(response));
             if (response) {
@@ -187,15 +177,7 @@ export default function FourSwiperRow({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            movieId,
-            movieName,
-            movieImg,
-            movieReleaseDay,
-            movieGenre,
-            movieReview,
-            moviePopularity,
-            movieVoteAverage,
-            movieVoteCount
+            movieId, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
@@ -205,14 +187,13 @@ export default function FourSwiperRow({
         itemId: string,
         itemType: string,
         itemRating: string,
+        itemImg:string,
+        itemName:string
     ) => async (dispatch: AppDispatch) => {
         const email = userInfoList[0];
         try {
             const response = await ratingMongoApi(
-                email,
-                itemId,
-                itemType,
-                itemRating,
+                email, itemId, itemType, itemRating,itemImg,itemName
             );
             dispatch(setRating(response));
             if (response) {
@@ -231,16 +212,17 @@ export default function FourSwiperRow({
         itemId: any,
         itemType: any,
         itemRating: any,
+        itemImg:any,
+        itemName:any
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
         await dispatch(fetchRating(
-            itemId,
-            itemType,
-            itemRating,
+            itemId, itemType, itemRating,itemImg,itemName
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        toast.success('Rating success')
     };
     const fetchRemove = (
         movieId: string,
@@ -249,9 +231,7 @@ export default function FourSwiperRow({
         const email = userInfoList[0];
         try {
             const response = await removeRatingMongoApi(
-                email,
-                movieId,
-                movieType,
+                email, movieId, movieType,
             );
             dispatch(setDeleteRating(response));
             if (response) {
@@ -271,23 +251,13 @@ export default function FourSwiperRow({
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
         await dispatch(fetchRemove(
-            movieId,
-            movieType,
+            movieId, movieType,
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        toast.info('Remove rating success')
     };
-    function formatNumber(num: any) {
-        if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + 'm';
-        }
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + 'k';
-        }
-        return num;
-    }
-
 
     return (
         <div className="">
@@ -324,7 +294,7 @@ export default function FourSwiperRow({
                                             }} />
                                         <br />
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, fourSwiperRowList[numberIndex]?.id, mediaType, value)}>
+                                            onClick={() => handleRating(numberIndex, fourSwiperRowList[numberIndex]?.id, mediaType, value,fourSwiperRowList[numberIndex]?.poster_path,fourSwiperRowList[numberIndex]?.name?fourSwiperRowList[numberIndex]?.name:fourSwiperRowList[numberIndex]?.title)}>
                                             Rate
                                         </button>
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
@@ -344,14 +314,13 @@ export default function FourSwiperRow({
                     delay: 3500,
                     disableOnInteraction: false,
                 }}
-                // navigation={true}
+                navigation={true}
                 modules={[Pagination, Navigation]}
                 className="mySwiper"
             >
                 {fourSwiperRowList?.map((item: any, index: any) => {
                     const existingIndex = favoriteList.findIndex(fav => fav?.itemId == item?.id);
-                    // const existingRating = ratingList.findIndex(fav => fav?.itemId == item?.id);
-                    const existingRating = ratingList.find(rating => rating?.itemId == item?.id); // Find the rating object for the item
+                    const existingRating = ratingList.find(rating => rating?.itemId == item?.id); 
 
                     return (
                         <SwiperSlide key={index} className="bg-white px-2 w-full">
@@ -366,7 +335,7 @@ export default function FourSwiperRow({
                                     <div className="flex gap-x-4 items-center ">
                                         <div className="flex items-center space-x-2">
                                             <i className="fas fa-star text-yellow-300"></i>
-                                            <p className="leading-relaxed text-gray-500">{item?.vote_average.toFixed(1)}</p>
+                                            <p className="leading-relaxed text-gray-500">{item?.vote_average?.toFixed(1)}</p>
                                         </div>
                                         {/* <div className="grow ml-auto" onClick={() => handleClick(index, existingRating?.itemRating)}>
                                             <i className="fa-regular fa-star text-blue-500"></i>
@@ -458,8 +427,8 @@ export default function FourSwiperRow({
                         </SwiperSlide>
                     )
                 })}
-                <div className="custom-next swiper-button-next flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:bg-opacity-80 px-6 py-8  h-full"></div>
-                <div className="custom-prev swiper-button-prev flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:bg-opacity-80 px-6 py-8  h-full"></div>
+                {/* <div className="custom-next swiper-button-next flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:bg-opacity-80 px-6 py-8  h-full"></div>
+                <div className="custom-prev swiper-button-prev flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:bg-opacity-80 px-6 py-8  h-full"></div> */}
             </Swiper>
         </div >
     );

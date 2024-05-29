@@ -12,6 +12,7 @@ import MovieNewLayout from "./components/layout/MovieNewLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
+import { RatingLayout } from "./components/layout/RatingLayout";
 import RegisterLayoutTest from "./components/layout/RegisterLayoutTest";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
@@ -155,6 +156,11 @@ const routes = [
     path: "/activity",
     element: <ActivityLayout/>,
     state: "activity"
+  },
+  {
+    path: "/rating",
+    element: <RatingLayout/>,
+    state: "rating"
   },
   {
     path: "/test",

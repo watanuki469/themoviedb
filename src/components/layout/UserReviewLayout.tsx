@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TopBar from "../common/TopBar";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function UserReviewLayout() {
     const { mediaType, id } = useParams();
@@ -49,7 +50,7 @@ export default function UserReviewLayout() {
             })
     }
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (mediaType === 'tv') {
             dispatch(fetchTv());
         }
@@ -59,9 +60,9 @@ export default function UserReviewLayout() {
         else if (mediaType === 'movie') {
             dispatch(fetchSingleMovies())
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
 
     let mediaList = [];
@@ -74,29 +75,24 @@ export default function UserReviewLayout() {
     } else if (mediaType === 'tv') {
         mediaList = tvList;
     }
-    console.log(mediaList);
-
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
 
-    const [randomNumber1, setRandomNumber1] = useState(0);
-    const [randomNumber2, setRandomNumber2] = useState(0);
-
+    const [randomNumbers, setRandomNumbers] = useState<any[]>([]);
+    const generateRandomNumbers = () => {
+        const randomNumber1 = Math.floor(Math.random() * 1000);
+        const randomNumber2 = Math.floor(Math.random() * 200); // Generates a number between 0 and 1
+        return { randomNumber1, randomNumber2 };
+    };
     useEffect(() => {
-        // Tạo số ngẫu nhiên từ 0 đến 999 cho cả hai số
-        const newRandomNumber1 = Math.floor(Math.random() * 1000);
-        let newRandomNumber2;
-        do {
-            newRandomNumber2 = Math.floor(Math.random() * 1000);
-        } while (newRandomNumber2 === newRandomNumber1); // Đảm bảo số thứ hai khác số đầu tiên
-
-        // Đặt số ngẫu nhiên vào state
-        setRandomNumber1(newRandomNumber1);
-        setRandomNumber2(newRandomNumber2);
-    }, []); // Không có dependencies, vì chúng ta chỉ muốn tạo số ngẫu nhiên một lần khi component được render
+        if (mediaList[0]?.reviews?.results) {
+            const generatedNumbers = mediaList[0].reviews?.results?.map(() => generateRandomNumbers());
+            setRandomNumbers(generatedNumbers);
+        }
+    }, [mediaList]);
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
     const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -118,7 +114,6 @@ export default function UserReviewLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    // đang thực hiện trang cast & crew cho movie và tv
 
     return (
         <div className=" min-h-screen cursor-pointer bg-white text-black  ">
@@ -181,9 +176,9 @@ export default function UserReviewLayout() {
                                                     <i className="fa-solid fa-thumbs-up text-xl"></i>
                                                     <div>helpful</div>
                                                     <div>•</div>
-                                                    <div>{randomNumber1}</div>
+                                                    <div>{randomNumbers[index]?.randomNumber1}</div>
                                                     <i className="fa-solid fa-thumbs-up fa-rotate-180 ml-2 text-xl"></i>
-                                                    <div>{randomNumber2}</div>
+                                                    <div>{randomNumbers[index]?.randomNumber2}</div>
                                                 </div>
                                                 <div className='ml-auto'>
 
@@ -208,8 +203,7 @@ export default function UserReviewLayout() {
                                                         anchorEl={anchorShareEl}
                                                         id="account-menu"
                                                         open={openShare}
-                                                        onClose={handleShareClose}
-                                                        onClick={handleShareClose}
+                                                        onClose={handleShareClose} onClick={handleShareClose}
                                                         PaperProps={{
                                                             elevation: 0,
                                                             sx: {
@@ -217,22 +211,10 @@ export default function UserReviewLayout() {
                                                                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                                                 mt: 1.5,
                                                                 '& .MuiAvatar-root': {
-                                                                    width: 32,
-                                                                    height: 32,
-                                                                    ml: -0.5,
-                                                                    mr: 1,
+                                                                    width: 32, height: 32, ml: -0.5, mr: 1,
                                                                 },
                                                                 '&::before': {
-                                                                    content: '""',
-                                                                    display: 'block',
-                                                                    position: 'absolute',
-                                                                    top: 0,
-                                                                    right: 14,
-                                                                    width: 10,
-                                                                    height: 10,
-                                                                    bgcolor: 'background.paper',
-                                                                    transform: 'translateY(-50%) rotate(45deg)',
-                                                                    zIndex: 0,
+                                                                    content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                                                 },
                                                             },
                                                         }}
@@ -282,10 +264,7 @@ export default function UserReviewLayout() {
                                             </div>
                                         </div>
                                     ))}
-
-
                                 </div>
-
                             </div>
                         </div>
                     </section>

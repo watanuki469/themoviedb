@@ -171,6 +171,8 @@ export default function SingleMovieDetail({
         itemId: string,
         itemType: string,
         itemRating: string,
+        itemImg:any,
+        itemName:any
     ) => async (dispatch: AppDispatch) => {
         const email = userInfoList[0];
         try {
@@ -179,6 +181,8 @@ export default function SingleMovieDetail({
                 itemId,
                 itemType,
                 itemRating,
+                itemImg,
+                itemName
             );
             dispatch(setRating(response));
             if (response) {
@@ -192,17 +196,21 @@ export default function SingleMovieDetail({
         }
     };
 
-    const handleRating = async (itemRating: any,
+    const handleRating = async (itemRating: any, itemImg:any,
+        itemName:any
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
         await dispatch(fetchRating(
             singleMovieList[0]?.id,
             'Movie',
             itemRating,
+            itemImg,
+            itemName
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
         setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: false }));
+        toast.success('Rating success')
     };
 
     const fetchRemove = (
@@ -240,6 +248,7 @@ export default function SingleMovieDetail({
         setCheckLog(!checkLog);
         setIsRating(false)
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        toast.info('Remove rating success')
     };
 
     useEffect(() => {
@@ -368,7 +377,7 @@ export default function SingleMovieDetail({
                                         }} />
                                     <br />
                                     <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRating(value)}>
+                                        onClick={() => handleRating(value,singleMovieList[0]?.poster_path,singleMovieList[0]?.title ? singleMovieList[0]?.title : singleMovieList[0]?.name)}>
                                         Rate
                                     </button>
                                     <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}

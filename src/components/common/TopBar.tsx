@@ -26,19 +26,19 @@ export default function TopBar() {
   const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
   const [userInfoList, setUserInfoList] = useState<any[]>([]);
   useEffect(() => {
-      // Lấy dữ liệu từ local storage
-      const storedDataString = localStorage.getItem('user');
-      let storedData = [];
+    // Lấy dữ liệu từ local storage
+    const storedDataString = localStorage.getItem('user');
+    let storedData = [];
 
-      if (storedDataString) {
-          storedData = JSON.parse(storedDataString);
-      }
-      console.log('Stored data:', storedData);
+    if (storedDataString) {
+      storedData = JSON.parse(storedDataString);
+    }
+    console.log('Stored data:', storedData);
 
-      // Lưu dữ liệu vào state
-      setUserInfoList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
+    // Lưu dữ liệu vào state
+    setUserInfoList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
   }, []);
-  
+
 
   const handleCloseDialogClick = () => {
     setOpen(false);
@@ -575,7 +575,7 @@ export default function TopBar() {
                   <div>
                     <MenuItem disableRipple sx={{
                       borderBottom: '2px solid gray', '&:hover': {
-                        backgroundColor:'blue'
+                        backgroundColor: 'blue'
                       }
                     }} key={index} onClick={() => handleClose(item?.label)}>
                       <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white font-extrabold' : ''} `}>
@@ -597,7 +597,7 @@ export default function TopBar() {
                   (
                     <MenuItem disableRipple key={index} sx={{
                       '&:hover': {
-                        backgroundColor:'blue'
+                        backgroundColor: 'blue'
                       }
                     }} onClick={() => handleClose(item?.label)}>
                       <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white' : ''} `}>
@@ -614,12 +614,8 @@ export default function TopBar() {
                     </MenuItem>
                   )
                 }
-
-
               </div>
-
             ))}
-
           </Menu>
 
           <IconButton
@@ -646,36 +642,24 @@ export default function TopBar() {
                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                 mt: 1.5,
                 '& .MuiAvatar-root': {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
+                  width: 32, height: 32, ml: -0.5, mr: 1,
                 },
                 '&::before': {
-                  content: '""',
-                  display: 'block',
-                  position: 'absolute',
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: 'background.paper',
-                  transform: 'translateY(-50%) rotate(45deg)',
-                  zIndex: 0,
+                  content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                 },
               },
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem sx={{ ":hover":{
-                    color:'#ffc107',
-                  }}} onClick={() => toast.success('meow meow')}>
+            <MenuItem sx={{
+              ":hover": {
+                color: '#ffc107',
+              }
+            }} onClick={() => toast.success('meow meow')}>
               <Avatar
                 sx={{
-                  backgroundColor: stringToColor(email),
-                  width: 40,
-                  height: 40,                 
+                  backgroundColor: stringToColor(email), width: 40, height: 40,
                 }}
                 children={`${userInfoList[1]?.split(" ")[0][0]}`}
               />
@@ -686,9 +670,7 @@ export default function TopBar() {
               <MenuItem onClick={() => navigate('/favoriteList')}>
                 <Avatar
                   sx={{
-                    backgroundColor: 'green',
-                    width: 40,
-                    height: 40
+                    backgroundColor: 'green',width: 40,height: 40
                   }}
                   children={
                     <i className="fa-solid fa-user-astronaut"></i>
@@ -698,17 +680,26 @@ export default function TopBar() {
               </MenuItem>
             </div>
             <div className='hover:text-yellow-300'>
+              <MenuItem onClick={() => navigate('/rating')}>
+                <Avatar
+                  sx={{
+                    backgroundColor: '#FB9AD1',width: 40,height: 40
+                  }}
+                  children={
+                    <i className="fa-solid fa-ranking-star"></i>
+                  }
+                />
+                <p>Rating List</p>
+              </MenuItem>
+            </div>
+            <div className='hover:text-yellow-300'>
               <MenuItem onClick={() => navigate('/activity')}>
                 <Avatar
                   sx={{
-                    backgroundColor: 'purple',
-                    width: 40,
-                    height: 40
+                    backgroundColor: 'purple',  width: 40,  height: 40
                   }}
                   children={
-                    // <ListItemIcon>
                     <i className="fa-solid fa-street-view"></i>
-                    // </ListItemIcon>
                   }
                 />
                 <p>Your Activity</p>
@@ -719,14 +710,10 @@ export default function TopBar() {
               <MenuItem onClick={handleLogout}>
                 <Avatar
                   sx={{
-                    backgroundColor: 'chocolate',
-                    width: 40,
-                    height: 40
+                    backgroundColor: 'chocolate',width: 40,height: 40
                   }}
                   children={
-                    // <ListItemIcon>
                     <i className="fa-solid fa-cat"></i>
-                    // </ListItemIcon>
                   }
                 />
                 <p>Logout</p>

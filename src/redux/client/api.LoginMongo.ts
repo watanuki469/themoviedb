@@ -85,18 +85,18 @@ const getListRecentlyViewMongoApi = (email: any) => {
 export const fetchRecentlyViewed = createAsyncThunk(
     'login/fetchRecentlyViewed',
     async (email, thunkAPI) => {
-      const response = await getListRecentlyViewMongoApi(email);
-      return response.data;
+        const response = await getListRecentlyViewMongoApi(email);
+        return response.data;
     }
-  );
-  
-  export const addRecentlyViewed = createAsyncThunk(
+);
+
+export const addRecentlyViewed = createAsyncThunk(
     'login/addRecentlyViewed',
-    async ({ email, movieId, movieName, movieImg, movieType }:any, thunkAPI) => {
-      const response = await recentlyViewMongoApi(email, movieId, movieName, movieImg, movieType);
-      return response.data;
+    async ({ email, movieId, movieName, movieImg, movieType }: any, thunkAPI) => {
+        const response = await recentlyViewMongoApi(email, movieId, movieName, movieImg, movieType);
+        return response.data;
     }
-  );
+);
 
 const removeListRecentlyViewMongoApi = (email: any, movieId: any, movieType: any, removeAll: any) => {
     return axiosMongo.post(`/api/user/removeRecentlyViewed`, {
@@ -107,12 +107,14 @@ const removeListRecentlyViewMongoApi = (email: any, movieId: any, movieType: any
     });
 }
 
-const ratingMongoApi = (email: string, itemId: any, itemType: any, itemRating: any) => {
+const ratingMongoApi = (email: string, itemId: any, itemType: any, itemRating: any, itemImg: any, itemName: any) => {
     return axiosMongo.post(`/api/user/addRating`, {
         email,
         itemId,
         itemType,
-        itemRating
+        itemRating,
+        itemImg,
+        itemName
     });
 };
 const getListRatingMongoApi = (email: any) => {
