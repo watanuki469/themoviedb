@@ -69,7 +69,7 @@ export default function TvStoryLine({
                                 <div className="font-bold">Genre</div>
                                 <div className="flex gap-3">
                                     {tvList[0]?.genres.slice(0, 4).map((item: any, index: number) => (
-                                        <p key={index} onClick={() => navigate(`/search?genre=${item?.name}`)} className=" flex gap-2">
+                                        <p key={index} onClick={() => navigate(`/search?mediaType=tv&genres=${item?.name}`)} className=" flex gap-2">
                                             <span className="text-blue-600 hover:underline">{item?.name}</span>
                                             <span className="">{index < Math.min(tvList[0]?.genres?.length) - 1 ? '•' : ''}</span>
                                         </p>

@@ -17,19 +17,15 @@ export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const [mediatype, setMediaType] = useState('movie');
+   
     const topRatedMovies = useAppSelector((state) => state.search.listSearch)
 
     const [searchParams, setSearchParams] = useSearchParams()
-    const genreParam = searchParams.get("genre");
+    const genreParam = searchParams.get("genres");
     const [votesFrom, setVotesFrom] = useState('');
     const [votesTo, setVotesTo] = useState('');
     const [query, setQuery] = useState('');
-    useEffect(() => {
-        const titleParam = searchParams.get("title");
-        if (titleParam) {
-            setQuery(titleParam);
-        }
-    }, []);
+    
 
     const fetchSearch = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -92,7 +88,10 @@ export default function AdvancedSearchLayout() {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
-
+    const handleClickMedia = (media: any) => {
+        setMediaType(media)
+        setSearchParams('mediaType='+media)
+    };
     const handleGenreClick = (selectedGenre: Genre) => {
         if (selectedGenres.includes(selectedGenre)) {
             // If already selected, remove it
@@ -605,9 +604,6 @@ export default function AdvancedSearchLayout() {
         setImdbRatingTo(event.target.value);
     };
 
-
-
-
     // Hàm xử lý sự kiện khi người dùng thay đổi ngày "From"
     const handleFromVotesChange = (event: any) => {
         if (!query) {
@@ -642,27 +638,35 @@ export default function AdvancedSearchLayout() {
         setToDate('')
     }
     useEffect(() => {
-        const mediaParam = searchParams.get("MediaType");
+        const titleParam = searchParams.get("title");
+        if (titleParam) {
+            setQuery(titleParam);
+            setSearchParams('title='+titleParam)
+        }
+    }, []);
+    useEffect(() => {
+        const mediaParam = searchParams.get("mediaType");
         let params = [];
+       
         if (mediaParam) {
             setMediaType(mediaParam);
-            params.push('MediaType=' + mediaParam);
+            params.push('mediaType=' + mediaParam);
         }
-        if (!mediaParam) {            
-            params.push('MediaType=' + mediatype);
-        }
+        else(
+            params.push('mediaType='+mediatype)
+        )
         
         if (query.trim().length > 0) {
-            params.push('Title=' + query.trim());
+            params.push('title=' + query.trim());
         }
         if (selectedGenres.length > 0) {
-            params.push('Genres=' + selectedGenres.join(','));
+            params.push('genres=' + selectedGenres.join(','));
         }
         if (votesFrom && votesTo) {
             params.push('votes=' + votesFrom.trim() + '->' + votesTo.trim());
         }
         if (fromDate && toDate) {
-            params.push('Releaseday=' + fromDate.trim() + '->' + toDate.trim());
+            params.push('releaseday=' + fromDate.trim() + '->' + toDate.trim());
         }
         if (imdbImdbRatingFrom && imdbImdbRatingTo) {
             params.push('IMDBRating=' + imdbImdbRatingFrom.trim() + '->' + imdbImdbRatingTo.trim());
@@ -698,15 +702,15 @@ export default function AdvancedSearchLayout() {
 
                         <div className="mt-3">
                             <div className="flex items-center gap-2" >
-                                <button onClick={() => setMediaType('movie')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'movie' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
+                                <button onClick={() => handleClickMedia('movie')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'movie' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
                                     <i className="fa-brands fa-youtube text-lg font-bold"></i>
                                     <p className="font-bold">Movie</p>
                                 </button>
-                                <button onClick={() => setMediaType('tv')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'tv' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
+                                <button onClick={() => handleClickMedia('tv')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'tv' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
                                     <i className="fa-solid fa-photo-film text-lg font-bold"></i>
                                     <p className="font-bold">TV</p>
                                 </button>
-                                <button onClick={() => setMediaType('person')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'person' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
+                                <button onClick={() => handleClickMedia('person')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'person' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
                                     <i className="fa-solid fa-user-group text-lg font-bold"></i>
                                     <p className="font-bold">Person</p>
                                 </button>
@@ -715,7 +719,7 @@ export default function AdvancedSearchLayout() {
                     </div>
                     <div className="flex flex-wrap gap-2 py-2 mt-1">
                         {/* display X */}
-                        {selectedGenres.map((genre, index) => (
+                        {selectedGenres?.map((genre, index) => (
                             <div key={index} className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                 <p className="">
                                     Genres: {genre}

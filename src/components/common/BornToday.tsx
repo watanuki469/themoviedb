@@ -88,8 +88,8 @@ export default function BornToday() {
                                                     style={{
                                                         backgroundImage: `url(${item?.primaryImage?.imageUrl})`
                                                     }}
-                                                    onClick={() => navigate(`/search?title=${item?.nameText?.text}`)}
-                                                >
+                                                    onClick={() => navigate(`/search?mediaType=person&title=${encodeURIComponent(item?.nameText?.text)}`)}
+                                                    >
                                                 </div>
 
                                                 <div className="">

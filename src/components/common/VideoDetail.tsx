@@ -60,7 +60,7 @@ export default function VideoDetail({
                                     {certification} |
                                     {singleMovieList[0]?.genres?.map((item: any, index: any) => (
                                         <div key={index} className=" gap-2 flex" >
-                                            <p className='hover:underline hover:text-yellow-300' onClick={() => navigate(`/search?genres=${item?.name}`)}> {item?.name}</p>
+                                            <p className='hover:underline hover:text-yellow-300' onClick={() => navigate(`/search?mediaType=${singleMovieList[0]?.title ? 'movie' : 'tv'}&genres=${item?.name}`)}> {item?.name}</p>
 
                                             <p className=''>{index < Math.min(singleMovieList[0]?.genres?.length) - 1 ? '•' : ''}</p>
 

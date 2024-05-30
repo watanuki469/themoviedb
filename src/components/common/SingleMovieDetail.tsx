@@ -628,7 +628,7 @@ export default function SingleMovieDetail({
                                 <div className="flex gap-2 mb-1">
                                     {singleMovieList[0]?.genres?.map((item: any) => (
                                         <button
-                                            onClick={() => navigate(`/search?genre=${item?.name}`)}
+                                            onClick={() => navigate(`/search?mediaType=movie&genres=${item?.name}`)}
                                             key={item?.id} className="bg-none text-white py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
                                             {item?.name}
                                         </button>

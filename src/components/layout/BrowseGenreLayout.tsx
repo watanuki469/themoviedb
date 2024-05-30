@@ -119,7 +119,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genre=${genre}`)}
+                                                onClick={() => navigate(`/search?genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -136,7 +136,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genre=${genre}`)}
+                                                onClick={() => navigate(`/search?genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -153,7 +153,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genre=${genre}`)}
+                                                onClick={() => navigate(`/search?genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -170,7 +170,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genre=${genre}`)}
+                                                onClick={() => navigate(`/search?genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -187,7 +187,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genre=${genre}`)}
+                                                onClick={() => navigate(`/search?genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -204,7 +204,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genre=${genre}`)}
+                                                onClick={() => navigate(`/search?genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:bg-opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -260,9 +260,9 @@ export default function BrowseGenreLayout() {
                             <div>
                                 <p className="text-gray-500">Create a more specific search using a variety of options and filters</p>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-black items-center text-center mt-2">
-                                    <li onClick={() => navigate('/search?MediaType=movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
-                                    <li onClick={() => navigate('/search?MediaType=tv')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li> 
-                                    <li onClick={() => navigate('/search?MediaType=person')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Person</li>
+                                    <li onClick={() => navigate('/search?mediaType=movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
+                                    <li onClick={() => navigate('/search?mediaType=tv')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li> 
+                                    <li onClick={() => navigate('/search?mediaType=person')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Person</li>
                                 </ul>
                             </div>
                         </div>

@@ -119,7 +119,7 @@ export default function UpComingMovieLayout() {
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         Genre: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
                                                             <div className="flex items-center flex-wrap gap-2">
-                                                                <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genre=${genreMapping[genreId]}`)} key={genreIndex}>
+                                                                <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)} key={genreIndex}>
                                                                     {genreMapping[genreId]}
                                                                 </div>
                                                                 {genreIndex < array.length - 1 && <span> • </span>}

@@ -31,7 +31,7 @@ export default function PopularCelebLayout() {
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
     const currentMonthName = monthNames[currentMonth];
-    
+
 
     useEffect(() => {
         // dispatch(setGlobalLoading(true));        
@@ -54,6 +54,8 @@ export default function PopularCelebLayout() {
         //     dispatch(setGlobalLoading(false));
         // });
     }, []);
+    console.log(movieNews);
+
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -88,9 +90,11 @@ export default function PopularCelebLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/movie/${movie?.primaryImage?.imageUrl}`)}
-                                            src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                        <a href={`${movie?.primaryImage?.imageUrl}`}>
+                                            <img
+                                                src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                        </a>
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.nameText?.text}</p>
                                             <div className='flex items-center flex-wrap'>
@@ -105,7 +109,7 @@ export default function PopularCelebLayout() {
                                                 ))}
                                             </div>
                                             <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'
-                                             onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
+                                                onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
                                             >
                                                 <p> {movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}</p>
                                                 <p>({movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.releaseYear?.year})</p>
@@ -127,25 +131,26 @@ export default function PopularCelebLayout() {
                 return (
                     <section className=" w-1/2 lg:w-1/4 px-2 " key={movieIndex}
                     >
-
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="px-2">{movieIndex}</div>
-                                        <img onClick={() => navigate(`/movie/${movie?.primaryImage?.imageUrl}`)}
-                                            src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
-                                            onError={handleImageError} className="w-full h-52  hover:opacity-80" />
+                                        <a href={`${movie?.primaryImage?.imageUrl}`}>
+                                            <img src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
+                                                onError={handleImageError} className="w-full h-52  hover:opacity-80" />
+                                        </a>
+
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
 
                                                 <div className="h-12 w-full"
-                                                
+
                                                 >
                                                     <p className="hover:opacity-50 line-clamp-2">  {movie?.nameText?.text}</p>
                                                 </div>
                                                 <div className='text-blue-500'
-                                                 onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
+                                                    onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
                                                 >
                                                     <p className='h-12 hover:underline'> {movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}</p>
                                                     <p className='h-12 hover:underline py-2'>({movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.releaseYear?.year})</p>
@@ -168,9 +173,10 @@ export default function PopularCelebLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/movie/${movie?.primaryImage?.imageUrl}`)}
-                                            src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                        <a href={`${movie?.primaryImage?.imageUrl}`}>
+                                            <img src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                        </a>
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.nameText?.text}</p>
                                             <div className='flex items-center flex-wrap'>
@@ -185,7 +191,7 @@ export default function PopularCelebLayout() {
                                                 ))}
                                             </div>
                                             <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'
-                                             onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
+                                                onClick={() => navigate(`/search?title=${movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}`)}
                                             >
                                                 <p> {movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.originalTitleText?.text}</p>
                                                 <p>({movie?.nameKnownFor?.edges[0]?.node?.knownForTitle?.releaseYear?.year})</p>
@@ -424,19 +430,6 @@ export default function PopularCelebLayout() {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
-                            <p className="text-2xl font-bold" >You have rated</p>
-                            <p className="mt-3"><span className="text-green-500">0</span>/250 (0%)</p>
-                            <div className="flex items-center gap-3 mt-3 ">
-                                {isChecked ? (
-                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
-                                ) : (
-                                    <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
-                                )}
-                                <p>Hide titles you have rated</p>
-
-                            </div>
-                        </div> */}
                         <div className="lg:col-span-8 md-col-span-12  w-full ">
                             <div className="lg:max-w-full md:w-screen py-4 px-2 ">
                                 <div
