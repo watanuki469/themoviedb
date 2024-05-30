@@ -205,12 +205,6 @@ export default function TvLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Story Line</h2>
                                 </div>
-                                {/* <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
-                                    <i className="fa-solid fa-pencil text-black text-xl ml-2"></i>
-                                    <p className="flex items-center text-xl font-bold text-black ">
-                                        Edit
-                                    </p>
-                                </div> */}
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <TvStoryLine tvList={tvList} />
@@ -219,15 +213,9 @@ export default function TvLayout() {
                                 <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/tv/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvReview" className="text-2xl font-bold text-black ">User Reviews</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.reviews.results.length}</p>
+                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.reviews?.results?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
-                                {/* <div className="flex items-center ml-auto gap-2" >
-                                    <i className="fa-solid fa-plus text-blue-500 text-sm ml-2"></i>
-                                    <p className="flex items-center text-sm text-blue-500 ">
-                                        Review
-                                    </p>
-                                </div> */}
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <TvReview singleTvList={tvList} />
@@ -239,12 +227,6 @@ export default function TvLayout() {
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
-                                {/* <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
-                                    <i className="fa-solid fa-pencil text-black text-xl ml-2"></i>
-                                    <p className="flex items-center text-xl font-bold text-black ">
-                                        Edit
-                                    </p>
-                                </div> */}
                             </div>
                             <div className="lg:max-w-full md:w-screen">
                                 <TvDetailExternal tvDetailExList={tvList} />

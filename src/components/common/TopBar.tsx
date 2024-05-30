@@ -134,7 +134,7 @@ export default function TopBar() {
 
       case 'TV Shows':
         if (item === 'Whats on TV & Streaming') {
-          navigate('/TVStreaming');
+          navigate('/whatOnTv');
         } else if (item === 'Top 250 TV Shows') {
           navigate('/Top250Tv');
         } else if (item === 'Most Popular TV Shows') {
@@ -375,16 +375,12 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p className="mt-2 hover:underline">
+                          <p onClick={() => navigate('/whatOnTv')}  className="mt-2 hover:underline">
                             Whats on TV & Streaming
                           </p>
                           <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">Top 250 TV Shows</p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">
-                            Most Popular TV Shows
-                          </p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">
-                            Browse Movie By Genre
-                          </p>
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">   Most Popular TV   </p>
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  Browse Movie By Genre</p>
                           <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV News</p>
                         </div>
                       </div>
@@ -395,10 +391,7 @@ export default function TopBar() {
                           <StarsIcon />
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                            {" "}
-                            Award & Event
-                          </p>
+                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap"> {" "}  Award & Event  </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -656,7 +649,9 @@ export default function TopBar() {
               ":hover": {
                 color: '#ffc107',
               }
-            }} onClick={() => toast.success('meow meow')}>
+            }}
+            // onClick={() => toast.success('meow meow')}
+            >
               <Avatar
                 sx={{
                   backgroundColor: stringToColor(email), width: 40, height: 40,
@@ -670,7 +665,7 @@ export default function TopBar() {
               <MenuItem onClick={() => navigate('/favoriteList')}>
                 <Avatar
                   sx={{
-                    backgroundColor: 'green',width: 40,height: 40
+                    backgroundColor: 'green', width: 40, height: 40
                   }}
                   children={
                     <i className="fa-solid fa-user-astronaut"></i>
@@ -683,7 +678,7 @@ export default function TopBar() {
               <MenuItem onClick={() => navigate('/rating')}>
                 <Avatar
                   sx={{
-                    backgroundColor: '#FB9AD1',width: 40,height: 40
+                    backgroundColor: '#FB9AD1', width: 40, height: 40
                   }}
                   children={
                     <i className="fa-solid fa-ranking-star"></i>
@@ -696,7 +691,7 @@ export default function TopBar() {
               <MenuItem onClick={() => navigate('/activity')}>
                 <Avatar
                   sx={{
-                    backgroundColor: 'purple',  width: 40,  height: 40
+                    backgroundColor: 'purple', width: 40, height: 40
                   }}
                   children={
                     <i className="fa-solid fa-street-view"></i>
@@ -710,7 +705,7 @@ export default function TopBar() {
               <MenuItem onClick={handleLogout}>
                 <Avatar
                   sx={{
-                    backgroundColor: 'chocolate',width: 40,height: 40
+                    backgroundColor: 'chocolate', width: 40, height: 40
                   }}
                   children={
                     <i className="fa-solid fa-cat"></i>

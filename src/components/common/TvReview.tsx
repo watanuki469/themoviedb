@@ -73,7 +73,6 @@ export default function TvReview({
                                             :
                                             'N/A'
                                         }
-
                                     </span>
                                     <span className="text-stone-400">  /10</span>
                                 </div>
@@ -106,7 +105,6 @@ export default function TvReview({
                                             <div>{randomNumber2}</div>
                                         </div>
                                         <div className='ml-auto'>
-
                                             <IconButton
                                                 onClick={handleShareClick}
                                                 size="small"
@@ -137,22 +135,10 @@ export default function TvReview({
                                                         filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                                         mt: 1.5,
                                                         '& .MuiAvatar-root': {
-                                                            width: 32,
-                                                            height: 32,
-                                                            ml: -0.5,
-                                                            mr: 1,
+                                                            width: 32, height: 32, ml: -0.5, mr: 1,
                                                         },
                                                         '&::before': {
-                                                            content: '""',
-                                                            display: 'block',
-                                                            position: 'absolute',
-                                                            top: 0,
-                                                            right: 14,
-                                                            width: 10,
-                                                            height: 10,
-                                                            bgcolor: 'background.paper',
-                                                            transform: 'translateY(-50%) rotate(45deg)',
-                                                            zIndex: 0,
+                                                            content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                                         },
                                                     },
                                                 }}
@@ -197,14 +183,11 @@ export default function TvReview({
                                                     Copy Link
                                                 </MenuItem>
                                             </Menu>
-
                                         </div>
                                     </div>
                                 </div>
                             )
-                                : (<div>
-
-                                </div>)}
+                                : (<div></div>)}
 
                         </div>
                     </div>
@@ -216,13 +199,9 @@ export default function TvReview({
                                 <p>{singleTvList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
                             </div>
                         ) : (
-                            <div>
-                            </div>
+                            <div></div>
                         )}
-
                     </div>
-
-
                 </div>
             </div>
         </section >

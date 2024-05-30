@@ -72,7 +72,7 @@ export default function TvNewLayout() {
                             <div className="">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black py-4">Movies News</h2>
+                                    <h2 className="text-2xl font-bold text-black py-4">TV News</h2>
                                 </div>
                             </div>
                             <div className="border-2 border-gray-500 px-4 py-4">

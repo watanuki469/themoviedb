@@ -26,6 +26,7 @@ import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
 import { WatchListLayout } from "./components/layout/WatchListLayout";
 import { WatchListLayout2 } from "./components/layout/WatchListLayout2";
+import WhatOnTvStream from "./components/layout/WhatOnTvStream";
 
 const routes = [
   {
@@ -77,6 +78,11 @@ const routes = [
     path: "/topPopularTv",
     element: <TopPopularTvLayout/>,
     state: "topPopularTv"
+  },
+  {
+    path: "/whatOnTv",
+    element: <WhatOnTvStream/>,
+    state: "whatOnTv"
   },
   {
     path: "/topBoxOffice",
