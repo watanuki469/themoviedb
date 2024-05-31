@@ -60,18 +60,6 @@ export default function MainLayout() {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
-    function shortenNumber(number: any) {
-        if (number >= 1000000000) {
-            return (number / 1000000000).toFixed(1) + 'b';
-        }
-        if (number >= 1000000) {
-            return (number / 1000000).toFixed(1) + 'm';
-        }
-        if (number >= 1000) {
-            return (number / 1000).toFixed(1) + 'k';
-        }
-        return number;
-    }
     const [activeSlider, setActiveSlider] = useState(3);
     useEffect(() => {
         const handleResize = () => {
@@ -87,7 +75,6 @@ export default function MainLayout() {
                 setActiveSlider(6);
             }
         };
-
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);

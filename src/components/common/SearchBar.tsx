@@ -160,7 +160,7 @@ export default function SearchBar() {
             </div>
             <Popper
                 anchorEl={anchorRef?.current}
-                open={open}                
+                open={open}
                 transition
                 placement="bottom-start"
                 sx={{
@@ -175,62 +175,61 @@ export default function SearchBar() {
                         <Box
                             // onClick={handleCloseButNotDeleteQuery}
                             sx={{
-                                border: 1,
-                                p: 1,
-                                bgcolor: "#263238",
-                                color: "#999",
-                                width: "100%",
-                                height: '100%',
-                                maxHeight: '24rem',
-                                overflow: 'auto'
-
+                                border: 1, p: 1, bgcolor: "#263238", color: "#999", width: "100%", height: '100%', maxHeight: '24rem', overflow: 'auto'
                             }}>
-                            {searchList[0]?.results?.map((item: any, index: any) => (
-                                <div className="mt-1 max-h-92 overflow-auto" key={index}
-                                >
-                                    <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
-                                        onClick={() => {
-                                            if (mediatype === 'multi') {
-                                                if (item?.media_type === 'person') {
-                                                    navigate(`/person/${item.id}`);
-                                                    setOpen(false)
-                                                } else if (item?.media_type === "movie") {
-                                                    navigate(`/movie/${item.id}`);
-                                                    setOpen(false)
+
+                            {searchList[0]?.results?.length > 0 ?
+                                searchList[0]?.results?.map((item: any, index: any) => (
+                                    <div className="mt-1 max-h-92 overflow-auto" key={index}
+                                    >
+                                        <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
+                                            onClick={() => {
+                                                if (mediatype === 'multi') {
+                                                    if (item?.media_type === 'person') {
+                                                        navigate(`/person/${item.id}`);
+                                                        setOpen(false)
+                                                    } else if (item?.media_type === "movie") {
+                                                        navigate(`/movie/${item.id}`);
+                                                        setOpen(false)
+                                                    } else {
+                                                        navigate(`/tv/${item.id}`);
+                                                        setOpen(false)
+                                                    }
                                                 } else {
-                                                    navigate(`/tv/${item.id}`);
-                                                    setOpen(false)
+                                                    if (mediatype === 'person') {
+                                                        navigate(`/person/${item.id}`);
+                                                        setOpen(false)
+                                                    } else if (mediatype === "movie") {
+                                                        navigate(`/movie/${item.id}`);
+                                                        setOpen(false)
+                                                    } else {
+                                                        navigate(`/tv/${item.id}`);
+                                                        setOpen(false)
+                                                    }
                                                 }
-                                            } else {
-                                                if (mediatype === 'person') {
-                                                    navigate(`/person/${item.id}`);
-                                                    setOpen(false)
-                                                } else if (mediatype === "movie") {
-                                                    navigate(`/movie/${item.id}`);
-                                                    setOpen(false)
-                                                } else {
-                                                    navigate(`/tv/${item.id}`);
-                                                    setOpen(false)
-                                                }
-                                            }
-                                        }}>
-                                        <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
-                                            className="w-20 h-28"
-                                            onError={handleImageError} />
-                                        <div>
-                                            <p className="text-white text-lg"> {item?.original_name ? item.original_name : item?.original_title}</p>
-                                            {item?.media_type !== 'person' && (
-                                                <p> {item?.first_air_date ? item.first_air_date?.slice(0, 4) : item.release_date?.slice(0, 4)}</p>
-                                            )}
-                                            <div className="items-center flex flex-wrap  ">
-                                                <p>
-                                                    {item?.known_for_department}
-                                                </p>
+                                            }}>
+                                            <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
+                                                className="w-20 h-28"
+                                                onError={handleImageError} />
+                                            <div>
+                                                <p className="text-white text-lg"> {item?.original_name ? item.original_name : item?.original_title}</p>
+                                                {item?.media_type !== 'person' && (
+                                                    <p> {item?.first_air_date ? item.first_air_date?.slice(0, 4) : item.release_date?.slice(0, 4)}</p>
+                                                )}
+                                                <div className="items-center flex flex-wrap  ">
+                                                    <p>
+                                                        {item?.known_for_department}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                )):(
+                                    <div>
+                                        No result available for "{query}"
+                                    </div>
+                                )
+                            }
                         </Box>
                     </Fade>
                 )}

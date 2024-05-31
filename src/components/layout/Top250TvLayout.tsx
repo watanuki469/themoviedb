@@ -64,7 +64,33 @@ export default function Top250TvLayout() {
     type GenreID = number;
     type GenreName = string;
     const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
+        28: 'Action',
+        12: 'Adventure',
+        16: 'Animation',
+        35: 'Comedy',
+        80: 'Crime',
+        99: 'Documentary',
+        18: 'Drama',
+        10751: 'Family',
+        14: 'Fantasy',
+        36: 'History',
+        27: 'Horror',
+        10402: 'Music',
+        9648: 'Mystery',
+        10749: 'Romance',
+        878: 'Science Fiction',
+        10770: 'TV Movie',
+        53: 'Thriller',
+        10752: 'War',
+        37: 'Western',
+        10759: 'Action & Adventure',
+        10762: 'Kids',
+        10763: 'News',
+        10764: 'Reality',
+        10765: 'Sci-Fi & Fantasy',
+        10766: 'Soap',
+        10767: 'Talk',
+        10768: 'War & Politics'
     };
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
@@ -815,14 +841,13 @@ export default function Top250TvLayout() {
                                         <FilterListIcon />
                                     </button>
                                     {selectedGenres?.map((genre, index) => (
-                                        <div key={index} className="flex items-center gap-2">
-                                            <p className="font-bold">
+                                        <div key={index} className="flex items-center gap-2 border-2 border-black px-2 py-2 rounded-xl hover:bg-gray-300">
+                                            <p className="">
                                                 {genre}
                                             </p>
-                                            <i className="fa-solid fa-xmark" onClick={() => handleRemoveGenreFilter(genre)}></i>
+                                            <i className="fa-solid fa-xmark text-xl" onClick={() => handleRemoveGenreFilter(genre)}></i>
                                         </div>
-                                    ))
-                                    }
+                                    ))}
                                 </div>
                                 <div className="ml-auto flex items-center gap-4">
                                     <p className="text-gray-500">Sort by</p>

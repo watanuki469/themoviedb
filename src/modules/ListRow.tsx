@@ -31,8 +31,6 @@ export default function ListRow({
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-
-
     return (
         <div className="relative">
             <Swiper

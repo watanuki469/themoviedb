@@ -17,7 +17,7 @@ export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const [mediatype, setMediaType] = useState('movie');
-   
+
     const topRatedMovies = useAppSelector((state) => state.search.listSearch)
 
     const [searchParams, setSearchParams] = useSearchParams()
@@ -25,7 +25,7 @@ export default function AdvancedSearchLayout() {
     const [votesFrom, setVotesFrom] = useState('');
     const [votesTo, setVotesTo] = useState('');
     const [query, setQuery] = useState('');
-    
+
 
     const fetchSearch = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -77,7 +77,33 @@ export default function AdvancedSearchLayout() {
     type GenreID = number;
     type GenreName = string;
     const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
+        28: 'Action',
+        12: 'Adventure',
+        16: 'Animation',
+        35: 'Comedy',
+        80: 'Crime',
+        99: 'Documentary',
+        18: 'Drama',
+        10751: 'Family',
+        14: 'Fantasy',
+        36: 'History',
+        27: 'Horror',
+        10402: 'Music',
+        9648: 'Mystery',
+        10749: 'Romance',
+        878: 'Science Fiction',
+        10770: 'TV Movie',
+        53: 'Thriller',
+        10752: 'War',
+        37: 'Western',
+        10759: 'Action & Adventure',
+        10762: 'Kids',
+        10763: 'News',
+        10764: 'Reality',
+        10765: 'Sci-Fi & Fantasy',
+        10766: 'Soap',
+        10767: 'Talk',
+        10768: 'War & Politics'
     };
     type Genre = | ' ';
 
@@ -90,7 +116,7 @@ export default function AdvancedSearchLayout() {
     };
     const handleClickMedia = (media: any) => {
         setMediaType(media)
-        setSearchParams('mediaType='+media)
+        setSearchParams('mediaType=' + media)
     };
     const handleGenreClick = (selectedGenre: Genre) => {
         if (selectedGenres.includes(selectedGenre)) {
@@ -641,21 +667,21 @@ export default function AdvancedSearchLayout() {
         const titleParam = searchParams.get("title");
         if (titleParam) {
             setQuery(titleParam);
-            setSearchParams('title='+titleParam)
+            setSearchParams('title=' + titleParam)
         }
     }, []);
     useEffect(() => {
         const mediaParam = searchParams.get("mediaType");
         let params = [];
-       
+
         if (mediaParam) {
             setMediaType(mediaParam);
             params.push('mediaType=' + mediaParam);
         }
-        else(
-            params.push('mediaType='+mediatype)
+        else (
+            params.push('mediaType=' + mediatype)
         )
-        
+
         if (query.trim().length > 0) {
             params.push('title=' + query.trim());
         }
@@ -722,12 +748,11 @@ export default function AdvancedSearchLayout() {
                         {selectedGenres?.map((genre, index) => (
                             <div key={index} className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                 <p className="">
-                                    Genres: {genre}
+                                    {genre}
                                 </p>
-                                <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => handleRemoveGenreFilter(genre)}></i>
+                                <i className="fa-solid fa-xmark text-2xl" onClick={() => handleRemoveGenreFilter(genre)}></i>
                             </div>
-                        ))
-                        }
+                        ))}
                         {
                             query ? (
                                 <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">

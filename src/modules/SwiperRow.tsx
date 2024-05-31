@@ -124,21 +124,11 @@ export default function SwiperRow({
         const email = userInfoList[0];
         try {
             const response = await favoriteMongoApi(
-                email,
-                movieId,
-                mediaType,
-                movieName,
-                movieImg,
-                movieReleaseDay,
-                movieGenre,
-                movieReview,
-                moviePopularity,
-                movieVoteAverage,
-                movieVoteCount
+                email, movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
             );
-            dispatch(setFavorite(response));     
+            dispatch(setFavorite(response));
             console.log(response);
-                 
+
             if (response) {
                 await dispatch(fetchGetFavorites());
 
@@ -353,7 +343,7 @@ export default function SwiperRow({
                                     <button
                                         onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count
                                         )}
-                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 text-blue-500 border-none"
+                                        className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full hover:bg-gray-500 justify-center bg-gray-800 text-blue-500 border-none"
                                     >
                                         <div>
                                             {
@@ -391,7 +381,7 @@ export default function SwiperRow({
                                     </button>
                                     <button
                                         onClick={() => navigate(`/${mediaType === 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
-                                        className="flex items-center px-4 py-2 border rounded-lg w-full justify-center border-none text-white">
+                                        className="flex items-center px-4 py-2 border rounded-lg w-full hover:bg-gray-600 justify-center border-none text-white">
                                         <i className="fa-solid fa-play mr-2"></i>
                                         <p>Trailer</p>
                                     </button>
