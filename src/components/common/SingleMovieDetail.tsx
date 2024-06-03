@@ -29,8 +29,10 @@ export default function SingleMovieDetail({
     const [writer, setWriter] = useState<any[]>([])
     const [isRating, setIsRating] = useState(false);
     const [value, setValue] = useState<number | null>(0);
+    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
 
-    const handleClick = (value:any) => {
+
+    const handleClick = (value: any) => {
         setIsRating(true);
         setValue(value)
     };
@@ -171,8 +173,8 @@ export default function SingleMovieDetail({
         itemId: string,
         itemType: string,
         itemRating: string,
-        itemImg:any,
-        itemName:any
+        itemImg: any,
+        itemName: any
     ) => async (dispatch: AppDispatch) => {
         const email = userInfoList[0];
         try {
@@ -196,8 +198,8 @@ export default function SingleMovieDetail({
         }
     };
 
-    const handleRating = async (itemRating: any, itemImg:any,
-        itemName:any
+    const handleRating = async (itemRating: any, itemImg: any,
+        itemName: any
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
         await dispatch(fetchRating(
@@ -240,14 +242,14 @@ export default function SingleMovieDetail({
         movieId: any,
         movieType: any,
     ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
         await dispatch(fetchRemove(
             movieId,
             movieType,
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
         toast.info('Remove rating success')
     };
 
@@ -259,7 +261,6 @@ export default function SingleMovieDetail({
                 setDirector(directors);
                 const writers = movie.credits.crew.filter((item: any) => item.job === 'Story');
                 const screenplayWriters = movie.credits.crew.filter((item: any) => item.job === 'Screenplay');
-
                 const writerses = writers.length > 0 ? writers : screenplayWriters;
                 setWriter(writerses);
             }
@@ -304,28 +305,6 @@ export default function SingleMovieDetail({
                 console.error('Error copying link:', error);
             });
     };
-
-    // const handleWatchList = (movie: any) => {
-    //     const storedDataString = localStorage.getItem('watchList');
-    //     console.log(storedDataString);
-
-    //     let storedData: { [key: string]: any } = {};
-    //     if (storedDataString !== null) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     if (storedData[movie?.id]) {
-    //         delete storedData[movie?.id];
-    //         localStorage.setItem('watchList', JSON.stringify(storedData));
-    //         setCheckLog(!checkLog)
-    //         toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
-
-    //     } else {
-    //         storedData[movie?.id] = movie;
-    //         setCheckLog(!checkLog)
-    //         localStorage.setItem('watchList', JSON.stringify(storedData));
-    //         toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
-    //     }
-    // }
     function formatNumber(num: any) {
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'm';
@@ -377,12 +356,30 @@ export default function SingleMovieDetail({
                                         }} />
                                     <br />
                                     <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRating(value,singleMovieList[0]?.poster_path,singleMovieList[0]?.title ? singleMovieList[0]?.title : singleMovieList[0]?.name)}>
-                                        Rate
+                                        onClick={() => handleRating(value, singleMovieList[0]?.poster_path, singleMovieList[0]?.title ? singleMovieList[0]?.title : singleMovieList[0]?.name)}>
+                                        {loading2[0] ? (
+                                            <div>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            </div>
+                                        ) : (
+                                            <div className="">
+                                                <div>Rate</div>
+                                            </div>
+                                        )
+                                        }
                                     </button>
                                     <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
                                         onClick={() => handleRemoveRating(0, singleMovieList[0]?.id, 'Movie')}>
-                                        Remove Rating
+                                        {loading3[0] ? (
+                                            <div>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            </div>
+                                        ) : (
+                                            <div className="">
+                                                <div>Remove Rating</div>
+                                            </div>
+                                        )
+                                        }
                                     </button>
                                 </div>
                             </div>
@@ -396,7 +393,6 @@ export default function SingleMovieDetail({
                     position: "absolute", width: "100%", height: "100%", opacity: "0.5",
                     backgroundSize: "cover", backgroundPosition: "center",
                     backgroundColor: 'black'
-
                 }}>
 
                 </div>
@@ -417,13 +413,7 @@ export default function SingleMovieDetail({
                             aria-haspopup="true"
                             aria-expanded={openShare ? 'true' : undefined}
                         >
-                            {/* <Avatar sx={{
-                                bgcolor: 'none', color: 'white', ":hover": {
-                                    bgcolor: 'gray', opacity: '50%'
-                                }
-                            }}> */}
                             <ShareIcon sx={{ color: 'white', mr: '10px' }} />
-                            {/* </Avatar> */}
                         </IconButton>
                         <Menu
                             anchorEl={anchorShareEl}
@@ -438,22 +428,10 @@ export default function SingleMovieDetail({
                                     filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                     mt: 1.5,
                                     '& .MuiAvatar-root': {
-                                        width: 32,
-                                        height: 32,
-                                        ml: -0.5,
-                                        mr: 1,
+                                        width: 32, height: 32, ml: -0.5, mr: 1,
                                     },
                                     '&::before': {
-                                        content: '""',
-                                        display: 'block',
-                                        position: 'absolute',
-                                        top: 0,
-                                        right: 14,
-                                        width: 10,
-                                        height: 10,
-                                        bgcolor: 'background.paper',
-                                        transform: 'translateY(-50%) rotate(45deg)',
-                                        zIndex: 0,
+                                        content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                     },
                                 },
                             }}

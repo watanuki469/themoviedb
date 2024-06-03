@@ -51,22 +51,15 @@ export default function FourSwiperRow({
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
     };
-
-    // const [numberIndex, setNumberIndex] = useState(0);
-    // const handleClose = () => {
-    //     setIsRating(false)
-    //     setNumberIndex(0);
-    //     setValue(0)
-    // };
     const handleClickImg = (id: any) => {
         window.scrollTo(0, 0)
         navigate(`/${mediaType}/${id}`)
     };
-    // let navigate = useNavigate()
 
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
     const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
+    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
@@ -109,7 +102,7 @@ export default function FourSwiperRow({
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
-        if (userInfoList.length > 0) {
+        if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
@@ -129,11 +122,6 @@ export default function FourSwiperRow({
     };
 
     const [value, setValue] = useState<number | null>(0);
-    const handleClose = () => {
-        setIsRating(false)
-        setNumberIndex(0);
-        setValue(0)
-    };
 
     const fetchFavorite = (
         movieId: string,
@@ -187,13 +175,13 @@ export default function FourSwiperRow({
         itemId: string,
         itemType: string,
         itemRating: string,
-        itemImg:string,
-        itemName:string
+        itemImg: string,
+        itemName: string
     ) => async (dispatch: AppDispatch) => {
         const email = userInfoList[0];
         try {
             const response = await ratingMongoApi(
-                email, itemId, itemType, itemRating,itemImg,itemName
+                email, itemId, itemType, itemRating, itemImg, itemName
             );
             dispatch(setRating(response));
             if (response) {
@@ -212,12 +200,12 @@ export default function FourSwiperRow({
         itemId: any,
         itemType: any,
         itemRating: any,
-        itemImg:any,
-        itemName:any
+        itemImg: any,
+        itemName: any
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
         await dispatch(fetchRating(
-            itemId, itemType, itemRating,itemImg,itemName
+            itemId, itemType, itemRating, itemImg, itemName
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
@@ -249,13 +237,13 @@ export default function FourSwiperRow({
         movieId: any,
         movieType: any,
     ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
         await dispatch(fetchRemove(
             movieId, movieType,
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
         toast.info('Remove rating success')
     };
 
@@ -288,18 +276,35 @@ export default function FourSwiperRow({
                                             max={10} sx={{
                                                 color: 'blue', mt: 1,
                                                 '& .MuiRating-iconEmpty': {
-                                                    borderColor: 'red',
-                                                    color: 'gray'
+                                                    borderColor: 'red', color: 'gray'
                                                 },
                                             }} />
                                         <br />
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, fourSwiperRowList[numberIndex]?.id, mediaType, value,fourSwiperRowList[numberIndex]?.poster_path,fourSwiperRowList[numberIndex]?.name?fourSwiperRowList[numberIndex]?.name:fourSwiperRowList[numberIndex]?.title)}>
-                                            Rate
+                                            onClick={() => handleRating(numberIndex, fourSwiperRowList[numberIndex]?.id, mediaType, value, fourSwiperRowList[numberIndex]?.poster_path, fourSwiperRowList[numberIndex]?.name ? fourSwiperRowList[numberIndex]?.name : fourSwiperRowList[numberIndex]?.title)}>
+                                            {loading2[numberIndex] ? (
+                                                <div>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                </div>
+                                            ) : (
+                                                <div className="">
+                                                    <div>Rate</div>
+                                                </div>
+                                            )
+                                            }
                                         </button>
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
                                             onClick={() => handleRemoveRating(numberIndex, fourSwiperRowList[numberIndex]?.id, mediaType)}>
-                                            Remove Rating
+                                            {loading3[numberIndex] ? (
+                                                <div>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                </div>
+                                            ) : (
+                                                <div className="">
+                                                    <div>Remove Rating</div>
+                                                </div>
+                                            )
+                                            }
                                         </button>
                                     </div>
                                 </div>
@@ -320,7 +325,7 @@ export default function FourSwiperRow({
             >
                 {fourSwiperRowList?.map((item: any, index: any) => {
                     const existingIndex = favoriteList.findIndex(fav => fav?.itemId == item?.id);
-                    const existingRating = ratingList.find(rating => rating?.itemId == item?.id); 
+                    const existingRating = ratingList.find(rating => rating?.itemId == item?.id);
 
                     return (
                         <SwiperSlide key={index} className="bg-white px-2 w-full">

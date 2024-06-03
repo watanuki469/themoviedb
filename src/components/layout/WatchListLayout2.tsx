@@ -311,10 +311,6 @@ export function WatchListLayout2() {
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         // Implement rendering logic based on the currentView (detail, grid, compact)
-        if (movieIndex >= 50) {
-            return null;
-        }
-
         switch (currentView) {
             case 'Detail':
                 return (
@@ -347,7 +343,6 @@ export function WatchListLayout2() {
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <div className="ml-auto" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.mediaType, movie?.itemImg, movie?.itemReleaseDay, movie?.itemGenre, movie?.itemReview, movie?.itemPopularity, movie?.itemVoteAverage, movie?.itemVoteCount)} >
@@ -362,10 +357,8 @@ export function WatchListLayout2() {
                                     </Tooltip>
                                 </div>
                             </div>
-
                         </div>
                     </section>
-
                 )
             case 'Grid':
                 return (
@@ -383,16 +376,15 @@ export function WatchListLayout2() {
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.itemVoteAverage?.slice(0,3)} ({shortenNumber(movie?.itemVoteCount)})</p>
+                                                    <p>{movie?.itemVoteAverage?.slice(0, 3)} ({shortenNumber(movie?.itemVoteCount)})</p>
                                                 </div>
 
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
                                                 </div>
                                                 <div className="flex flex-wrap">
-                                                    {movie?.itemReleaseDay?.slice(0,10)}
+                                                    {movie?.itemReleaseDay?.slice(0, 10)}
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -400,7 +392,6 @@ export function WatchListLayout2() {
 
                                 <div className="px-2 py-2" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.mediaType, movie?.itemImg, movie?.itemReleaseDay, movie?.itemGenre, movie?.itemReview, movie?.itemPopularity, movie?.itemVoteAverage, movie?.itemVoteCount)} >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-
                                         {loading[movieIndex] ? (
                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                         ) :
@@ -423,7 +414,6 @@ export function WatchListLayout2() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
@@ -467,22 +457,10 @@ export function WatchListLayout2() {
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                             mt: 1.5,
                                             '& .MuiAvatar-root': {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
+                                                width: 32, height: 32, ml: -0.5, mr: 1,
                                             },
                                             '&::before': {
-                                                content: '""',
-                                                display: 'block',
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 14,
-                                                width: 10,
-                                                height: 10,
-                                                bgcolor: 'background.paper',
-                                                transform: 'translateY(-50%) rotate(45deg)',
-                                                zIndex: 0,
+                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                             },
                                         },
                                     }}

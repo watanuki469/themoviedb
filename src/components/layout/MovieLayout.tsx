@@ -23,6 +23,7 @@ import TopBar from "../common/TopBar";
 import { toast } from "react-toastify";
 import { addRecentlyViewed, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
 import { setRecentlyView } from "../../redux/reducers/login.reducer";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 
 export default function MovieLayout() {
     const { id } = useParams()
@@ -161,19 +162,6 @@ export default function MovieLayout() {
         };
     }, []);
 
-    // useEffect(() => {
-    //     const storedDataString = localStorage.getItem('activity');
-    //     let storedData: { [key: string]: any } = {};
-    //     if (storedDataString !== null) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     if (storedData[singleMovieList[0]?.id]) {
-    //     } else {
-    //         storedData[singleMovieList[0]?.id] = singleMovieList[0];
-    //         localStorage.setItem('activity', JSON.stringify(storedData));
-    //     }
-    // })
-
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
@@ -305,6 +293,14 @@ export default function MovieLayout() {
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500"> See our picks</p>
+                            </div>
+                            <div>
+                                <div className="flex items-center py-3">
+                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                </div>
+                                <div className="lg:max-w-full md:w-screen">
+                                    <TopRatedMovieByGenre />
+                                </div>
                             </div>
                         </div>
 

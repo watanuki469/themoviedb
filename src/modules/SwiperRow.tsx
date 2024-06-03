@@ -22,6 +22,7 @@ export default function SwiperRow({
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
     const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
+    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
@@ -226,13 +227,13 @@ export default function SwiperRow({
     const handleRemoveRating = async (
         index: number, movieId: any, movieType: any,
     ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
         await dispatch(fetchRemove(
             movieId, movieType,
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
+        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
 
 
@@ -272,11 +273,29 @@ export default function SwiperRow({
                                         <br />
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
                                             onClick={() => handleRating(numberIndex, searchItemList[numberIndex]?.id, mediaType, value, searchItemList[numberIndex]?.poster_path, searchItemList[numberIndex]?.name ? searchItemList[numberIndex]?.name : searchItemList[numberIndex]?.title)}>
-                                            Rate
+                                            {loading2[numberIndex] ? (
+                                                <div>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                </div>
+                                            ) : (
+                                                <div className="">
+                                                    <div>Rate</div>
+                                                </div>
+                                            )
+                                            }
                                         </button>
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
                                             onClick={() => handleRemoveRating(numberIndex, searchItemList[numberIndex]?.id, mediaType)}>
-                                            Remove Rating
+                                            {loading3[numberIndex] ? (
+                                                <div>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                </div>
+                                            ) : (
+                                                <div className="">
+                                                    <div>Remove Rating</div>
+                                                </div>
+                                            )
+                                            }
                                         </button>
                                     </div>
                                 </div>

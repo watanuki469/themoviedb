@@ -35,7 +35,6 @@ export default function PopularCelebLayout() {
 
     useEffect(() => {
         // dispatch(setGlobalLoading(true));        
-
         axiosBornToday.get('', {
             params: {
                 month: currentMonth2,
@@ -76,10 +75,6 @@ export default function PopularCelebLayout() {
 
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
-        // Implement rendering logic based on the currentView (detail, grid, compact)
-        if (movieIndex >= 50) {
-            return null;
-        }
 
         switch (currentView) {
             case 'Detail':
@@ -129,7 +124,7 @@ export default function PopularCelebLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/4 px-2 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 " key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
@@ -138,7 +133,7 @@ export default function PopularCelebLayout() {
                                         <div className="px-2">{movieIndex}</div>
                                         <a href={`${movie?.primaryImage?.imageUrl}`}>
                                             <img src={`${movie?.primaryImage?.imageUrl}`} alt="product images"
-                                                onError={handleImageError} className="w-full h-52  hover:opacity-80" />
+                                                onError={handleImageError} className="w-full h-60  hover:opacity-80" />
                                         </a>
 
                                         <div className="px-2 py-2 w-full">

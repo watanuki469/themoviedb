@@ -280,12 +280,6 @@ export default function Top250MovieLayout() {
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
 
-        // Implement rendering logic based on the currentView (detail, grid, compact)
-        if (movieIndex >= 50) {
-            return null;
-        }
-
-
         switch (currentView) {
             case 'Detail':
                 return (

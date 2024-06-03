@@ -23,6 +23,7 @@ import { addRecentlyViewed, getListRecentlyViewMongoApi, recentlyViewMongoApi } 
 import { setRecentlyView } from "../../redux/reducers/login.reducer";
 import { toast } from "react-toastify";
 import axios from "axios";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 
 export default function TvLayout() {
     const { id } = useParams()
@@ -97,22 +98,6 @@ export default function TvLayout() {
             setTotalEpisodes(sum);
         }
     }, [tvList]);
-    // const timezoneResponse = axios.get("http://worldtimeapi.org/api/timezone/Asia/Ho_Chi_Minh");
-    // const createdTime = timezoneResponse.data.datetime;
-
-    // useEffect(() => {
-    //     const storedDataString = localStorage.getItem('activity');
-    //     let storedData: { [key: string]: any } = {};
-    //     if (storedDataString !== null) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     if (storedData[tvList[0]?.id]) {
-    //     } else {
-    //         storedData[tvList[0]?.id] = tvList[0];
-    //         localStorage.setItem('activity', JSON.stringify(storedData));
-    //     }
-    // })
-
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
@@ -244,6 +229,14 @@ export default function TvLayout() {
                             </div>
                             <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                             <p className="text-red w-full text-blue-500"> See our picks</p>
+                            <div>
+                                <div className="flex items-center py-3">
+                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                </div>
+                                <div className="lg:max-w-full md:w-screen">
+                                    <TopRatedMovieByGenre />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

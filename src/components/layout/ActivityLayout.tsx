@@ -189,22 +189,16 @@ export function ActivityLayout() {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
 
-    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
-        if (movieIndex >= 50) {
-            return null;
-        }
+    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {      
 
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
-                    >
-                    </section>
-
+                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}></section>
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/6 md:w-1/3 px-2 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3" key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
@@ -214,7 +208,7 @@ export function ActivityLayout() {
 
                                         <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)} 
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError} className="w-full hover:opacity-80" />
+                                            onError={handleImageError} className="w-full h-60  hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="h-12 w-full ">

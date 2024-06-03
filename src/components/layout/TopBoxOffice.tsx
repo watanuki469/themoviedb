@@ -1,31 +1,27 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ListRow from "../../modules/ListRow";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import Footer from "../common/Footer";
-import TopBar from "../common/TopBar";
 import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import Charts from "../../modules/Charts";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AppDispatch } from "../../redux/store";
+import Charts from "../../modules/Charts";
+import ListRow from "../../modules/ListRow";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { setDeleteRating, setListRating, setRating } from "../../redux/reducers/login.reducer";
-
+import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { AppDispatch } from "../../redux/store";
+import Footer from "../common/Footer";
+import TopBar from "../common/TopBar";
 
 export default function TopBoxOffice() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.discoverMovies)
-    console.log(topRatedMovies);
+    const topRatedTV = useAppSelector((state) => state.movies.discoverTv)
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
@@ -41,8 +37,10 @@ export default function TopBoxOffice() {
 
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
+    const preMonth = (currentMonth === 0) ? 11 : currentMonth - 1; // Xác định tháng trước đó
     const currenDateToday = currentDate.getDate();
     const currentMonthName = monthNames[currentMonth];
+    const preMonthName = monthNames[preMonth];
     // Lấy ngày 5 ngày trước
     const currentDatePre = new Date(currentDate);
     currentDatePre.setDate(currentDatePre.getDate() - 5);
@@ -202,16 +200,11 @@ export default function TopBoxOffice() {
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
 
-        // Implement rendering logic based on the currentView (detail, grid, compact)
-        if (movieIndex >= 50) {
-            return null;
-        }
-
         switch (currentView) {
             case 'Detail':
                 return (
                     <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
-                    >                        
+                    >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
@@ -222,7 +215,7 @@ export default function TopBoxOffice() {
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <p>Weaken Gross: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
-                                            <p>Total Gross: <span className="font-semibold">${movie?.popularity?.toFixed(1)}M</span> </p>
+                                            <p>Total Gross: <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
@@ -278,18 +271,22 @@ export default function TopBoxOffice() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/4 px-2 " key={movieIndex}
+                    <section className=" w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
-                                        <div className="px-2">{movieIndex}</div>
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full h-60  hover:opacity-80" />
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
+                                                <div className="h-12 w-full ">
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
+                                                </div>
+                                                <p>Weaken: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                                <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
@@ -351,7 +348,7 @@ export default function TopBoxOffice() {
             case 'Compact':
                 return (
                     <section className="px-2 border-t border-r border-l border-gray-500 w-full " key={movieIndex}
-                    >                       
+                    >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
@@ -363,7 +360,7 @@ export default function TopBoxOffice() {
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <div>
                                                 <p>Weaken : <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
-                                                <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(1)}M</span> </p>
+                                                <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
 
                                             </div>
                                             <div className="flex flex-wrap items-center gap-2">
@@ -444,7 +441,7 @@ export default function TopBoxOffice() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-             {isRating &&
+            {isRating &&
                 (
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
                         <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
@@ -594,7 +591,7 @@ export default function TopBoxOffice() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">IMDb Top Box Office</h2>
                             </div>
-                            <p className="text-gray-500 py-2">Weekend of {currentMonthName} {currenDatePre}-{currenDateToday}</p>
+                            <p className="text-gray-500 py-2">Weekend of {currenDatePre > 28 ? preMonthName:currentMonthName } {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
                         </div>
 
                     </div>
@@ -645,24 +642,13 @@ export default function TopBoxOffice() {
 
                         </div>
                         <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
-                            {/* <p className="text-2xl font-bold" >You have rated</p>
-                            <p className="mt-3"><span className="text-green-500">0</span>/250 (0%)</p>
-                            <div className="flex items-center gap-3 mt-3 ">
-                                {isChecked ? (
-                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
-                                ) : (
-                                    <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
-                                )}
-                                <p>Hide titles you have rated</p>
-
-                            </div> */}
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250Movie`)}>
-                                    <ListRow listRowList={topRatedMovies} />
+                                <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250TV`)}>
+                                    <ListRow listRowList={topRatedTV} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>

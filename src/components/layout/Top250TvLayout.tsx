@@ -283,11 +283,6 @@ export default function Top250TvLayout() {
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
-        // Implement rendering logic based on the currentView (detail, grid, compact)
-        if (movieIndex >= 50) {
-            return null;
-        }
-
         switch (currentView) {
             case 'Detail':
                 return (
@@ -357,7 +352,7 @@ export default function Top250TvLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/4 px-2 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
@@ -570,7 +565,7 @@ export default function Top250TvLayout() {
     };
 
     return (
-        <div className=" min-h-screen cursor-pointer">
+        <div className=" min-h-screen cursor-pointer w-full">
             {isRating &&
                 (
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
@@ -683,12 +678,12 @@ export default function Top250TvLayout() {
                 </DialogContent>
             </Dialog>
             <div className="bg-black pb-1">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+                <div className="w-full lg:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                 </div>
             </div>
             <div className="bg-white">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
+                <div className="w-full lg:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full md:w-screen ">
                         <div className="flex mt-3 ">
                             <div className="items-center ">
@@ -783,8 +778,8 @@ export default function Top250TvLayout() {
                         </div>
 
                     </div>
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-12 md-col-span-12  w-full ">
+                    <div className="grid grid-cols-12 gap-2 w-full">
+                        <div className="lg:col-span-12 col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">
@@ -904,21 +899,8 @@ export default function Top250TvLayout() {
                             </div>
 
                         </div>
-                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
-                            <p className="text-2xl font-bold" >You have rated</p>
-                            <p className="mt-3"><span className="text-green-500">
-                                {ratingList?.filter((movie: any) => movie?.itemType === 'TV')?.length}
-                            </span>/{mostPopularTv?.length} ({ratingList?.length / mostPopularTv?.length * 100}%)</p>
-                            <div className="flex items-center gap-3 mt-3 " onClick={handleChecked}>
-                                {isChecked ? (
-                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} ></i>
-                                ) : (
-                                    <i className={`fa-regular fa-square }`}></i>
-                                )}
-                                <p>Hide titles you have rated</p>
-                            </div>
-                        </div> */}
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
+                       
+                        <div className="lg:col-span-8 col-span-12 w-full ">
                             <div className="lg:max-w-full md:w-screen py-4 px-2 ">
                                 <div
                                     style={{
@@ -1029,7 +1011,7 @@ export default function Top250TvLayout() {
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl mx-auto aligns-center mt-10 ">
                     <Footer />
                 </div>
             </div>
