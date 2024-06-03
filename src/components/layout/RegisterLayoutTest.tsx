@@ -17,26 +17,27 @@ const RegisterLayoutTest = () => {
   let navigate = useNavigate()
 
   const fetchRegister = () => (dispatch: AppDispatch) => {
+    dispatch(setGlobalLoading(true))
     Promise.all([
       registerMongoApi(displayName, email, password, confirmPassword),
     ])
       .then((response: any) => {
-        dispatch(setGlobalLoading(true))
         dispatch(setRegister(response));
         navigate('/login2')
         toast.success('Register Successfully')
-        setTimeout(() => {
-          dispatch(setGlobalLoading(false));
-        }, 4000);
       })
       .catch((e) => {
         console.log("Register Failed" + e);
+        toast.error("Register failed"+e)
       })
+    setTimeout(() => {
+      dispatch(setGlobalLoading(false));
+    }, 4000);
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(fetchRegister())   
+    dispatch(fetchRegister())
   };
 
   return (
@@ -138,7 +139,7 @@ const RegisterLayoutTest = () => {
             </label>
           </div>
         </div>
-        <button type="submit" className="bth w-full px-4 mt-6 py-2 font-bold text-center bg-black text-white rounded-lg">Login</button>
+        <button type="submit" className="bth w-full px-4 mt-6 py-2 font-bold text-center bg-black text-white rounded-lg">Register</button>
         <div className="login-register text-center mt-3">
           <p>Already have an account? <a href="/login2" className="login-link hover:underline font-extrabold">Login</a></p>
         </div>

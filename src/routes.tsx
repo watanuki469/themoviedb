@@ -3,6 +3,7 @@ import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import CastCrewLayout from "./components/layout/CastCrewLayout";
 import CelebNewLayout from "./components/layout/CelebNewLayout";
+import ChangeLayoutTest from "./components/layout/ChangePasswordLayout";
 import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import LoginLayoutTest from "./components/layout/LoginLayoutTest";
@@ -173,6 +174,12 @@ const routes = [
     element: <LoginLayoutTest/>,
     state: "test"
   },
+  {
+    path: "/changePassword",
+    element: <ChangeLayoutTest/>,
+    state: "test"
+  },
+  
 
   //not have api suitable
   // {

@@ -20,11 +20,9 @@ export default function VideoDetail({
     console.log(singleMovieList);
     let navigate = useNavigate()
 
-
     const usRelease = singleMovieList[numberIndex]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === "US");
     const certification =
         usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
-
 
     return (
         <section className="min-h-screen cursor-pointer" style={{ position: "relative" }}>

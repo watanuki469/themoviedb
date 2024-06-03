@@ -122,7 +122,7 @@ export default function UserReviewLayout() {
                     <TopBar />
                 </div>
 
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
+                <div className="w-full lg:max-w-5xl mx-auto aligns-center  ">
                     <section className='relative overflow-hidden min-h-screen'>
                         <div className="w-full ">
                             <div>

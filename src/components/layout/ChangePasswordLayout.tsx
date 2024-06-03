@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import bg from '../../assets/home-background.jpg';
@@ -9,9 +9,34 @@ import { AppDispatch } from "../../redux/store";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 const ChangeLayoutTest = () => {
+  const [userInfoList, setUserInfoList] = useState<any[]>([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+
+  useEffect(() => {
+    const storedDataString = localStorage.getItem('user');
+    let storedData = [];
+
+    if (storedDataString) {
+      try {
+        storedData = JSON.parse(storedDataString);
+      } catch (error) {
+        console.error('Error parsing stored data:', error);
+      }
+    }
+
+    if (Array.isArray(storedData)) {
+      setUserInfoList(storedData);
+    } else if (typeof storedData === 'object' && storedData !== null) {
+      setUserInfoList(Object.values(storedData));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userInfoList.length > 0) {
+      setEmail(userInfoList[0]);
+    }
+  }, [userInfoList]);
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const dispatch = useAppDispatch()
@@ -24,10 +49,11 @@ const ChangeLayoutTest = () => {
       .then((response: any) => {
         dispatch(setRegister(response));
         navigate('/login2')
-        toast.success('Register Successfully')
+        toast.success('Change password successfully')
       })
       .catch((e) => {
-        console.log("Register Failed" + e);
+        console.log("Change password Failed" + e);
+        toast.error("Change password failed" + e)
       })
   }
 
@@ -54,12 +80,12 @@ const ChangeLayoutTest = () => {
             <input
               type="text"
               required
-              value={email}
+              value={userInfoList[0]}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full h-full bg-transparent border-none outline-none text-lg font-semibold px-1 peer focus:ring-0"
             />
             <label className={`absolute left-1 transform transition-all duration-500 pointer-events-none
-                            ${email ? 'top-[-20px] text-sm' : 'top-1/2 -translate-y-1/2'} font-medium`}
+                            ${userInfoList[0] ? 'top-[-20px] text-sm' : 'top-1/2 -translate-y-1/2'} font-medium`}
             >
               Email
             </label>
@@ -95,7 +121,11 @@ const ChangeLayoutTest = () => {
         </div>
         <div className="relative w-full h-12 border-b-2  mt-8">
           <span className="absolute right-2 text-xl leading-[3rem]">
-            <i className="fa-solid fa-lock"></i>
+            {newPassword != password ? (
+              <i className="fa-solid fa-circle-check"></i>
+            ) : (
+              <i className="fa-solid fa-circle-xmark"></i>
+            )}
           </span>
           <div className="relative">
             <style>
@@ -131,7 +161,7 @@ const ChangeLayoutTest = () => {
           </span>
           <div className="relative">
             <style>
-              {`  input[type="password"]::-ms-reveal {    display: none;  }   `}
+              {`  input[type="password"]::-ms-reveal { display: none; }   `}
             </style>
             <input
               type="password"
@@ -149,9 +179,14 @@ const ChangeLayoutTest = () => {
             </label>
           </div>
         </div>
-        <button type="submit" className="bth w-full px-4 mt-6 py-2 font-bold text-center bg-black text-white rounded-lg">Login</button>
+        <button
+          type="submit"
+          className={`w-full px-4 mt-6 py-2 font-bold text-center text-white rounded-lg  hover:opacity-80
+    ${!email || !password || !newPassword || !confirmNewPassword || password === newPassword ? 'bg-gray-500' : 'bg-black'}`}        >
+          Login
+        </button>
         <div className="login-register text-center mt-3">
-          <p>Already have an account? <a href="/login2" className="login-link hover:underline font-extrabold">Login</a></p>
+          <p>Back to homepage? <a href="/" className="login-link hover:underline font-extrabold">Click here</a></p>
         </div>
 
       </form>

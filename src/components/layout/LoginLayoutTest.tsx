@@ -7,6 +7,7 @@ import { setListLogin, setUser } from "../../redux/reducers/login.reducer";
 import { AppDispatch } from "../../redux/store";
 import { toast } from "react-toastify";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { error } from "console";
 
 const LoginLayoutTest = () => {
     const [email, setEmail] = useState('');
@@ -21,28 +22,31 @@ const LoginLayoutTest = () => {
     }, []);
 
     const fetchLogin = () => (dispatch: AppDispatch) => {
+        dispatch(setGlobalLoading(true));
         Promise.all([
             loginMongoApi(email, password),
         ])
             .then((response: any) => {
                 if (response && response[0].token) {
-                    dispatch(setGlobalLoading(true));
+
                     dispatch(setListLogin(response));
                     dispatch(setUser(response));
                     localStorage.setItem("token", response[0].token);
                     localStorage.setItem("user", JSON.stringify(response[0])); // Save user data as JSON string
                     navigate('/'); // Navigate to the desired route
                     toast.success('Login successfully');
-                    setTimeout(() => {
-                        dispatch(setGlobalLoading(false));
-                    }, 3000);
+
                 } else {
-                    throw toast.error('Login failed')
+                    throw toast.error('Login failed'
+                    )
                 }
             })
             .catch((e) => {
                 console.log("login failed" + e);
             })
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -51,7 +55,7 @@ const LoginLayoutTest = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-transparent bg-cover"
+        <div className="min-h-screen flex items-center justify-center bg-transparent bg-cover cursor-pointer"
             style={{ backgroundImage: `url(${bg})` }}>
             <form onSubmit={handleSubmit} className="rounded px-8 pt-6 pb-8 mb-4 border-2 border-white backdrop-blur-xl w-96">
                 <h2 className="text-2xl font-bold text-center">Login</h2>
@@ -80,7 +84,7 @@ const LoginLayoutTest = () => {
                     </span>
                     <div className="relative">
                         <style>
-                            {`  input[type="password"]::-ms-reveal {    display: none;  }   `}
+                            {`  input[type="password"]::-ms-reveal {  display: none;  }   `}
                         </style>
                         <input
                             type="password"
@@ -102,7 +106,7 @@ const LoginLayoutTest = () => {
                         <label>
                             <input type="checkbox" className='accent-pink-500 mr-2 font-light text-sm ' />Remember me
                         </label>
-                        <div className='font-semibold hover:underline ml-auto'>
+                        <div className='font-semibold hover:underline ml-auto hover:opacity-80' onClick={() => navigate('/changePassword')}>
                             Forgot password?
                         </div>
                     </div>

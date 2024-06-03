@@ -31,7 +31,6 @@ export default function SingleMovieDetail({
     const [value, setValue] = useState<number | null>(0);
     const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
 
-
     const handleClick = (value: any) => {
         setIsRating(true);
         setValue(value)
@@ -94,17 +93,7 @@ export default function SingleMovieDetail({
         const email = userInfoList[0];
         try {
             const response = await favoriteMongoApi(
-                email,
-                movieId,
-                mediaType,
-                movieName,
-                movieImg,
-                movieReleaseDay,
-                movieGenre,
-                movieReview,
-                moviePopularity,
-                movieVoteAverage,
-                movieVoteCount
+                email, movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
             );
             dispatch(setFavorite(response));
             if (response) {
@@ -139,16 +128,7 @@ export default function SingleMovieDetail({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            movieId,
-            mediaType,
-            movieName,
-            movieImg,
-            movieReleaseDay,
-            movieGenre,
-            movieReview,
-            moviePopularity,
-            movieVoteAverage,
-            movieVoteCount
+            movieId,  mediaType,  movieName,  movieImg,  movieReleaseDay,  movieGenre,  movieReview,  moviePopularity,  movieVoteAverage,  movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
@@ -179,12 +159,7 @@ export default function SingleMovieDetail({
         const email = userInfoList[0];
         try {
             const response = await ratingMongoApi(
-                email,
-                itemId,
-                itemType,
-                itemRating,
-                itemImg,
-                itemName
+                email, itemId, itemType, itemRating, itemImg, itemName
             );
             dispatch(setRating(response));
             if (response) {
@@ -222,9 +197,7 @@ export default function SingleMovieDetail({
         const email = userInfoList[0];
         try {
             const response = await removeRatingMongoApi(
-                email,
-                movieId,
-                movieType,
+                email,    movieId,    movieType,
             );
             dispatch(setDeleteRating(response));
             if (response) {

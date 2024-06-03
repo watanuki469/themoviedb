@@ -650,7 +650,7 @@ export default function TopBar() {
                 color: '#ffc107',
               }
             }}
-            // onClick={() => toast.success('meow meow')}
+            onClick={() =>navigate('/changePassword')}
             >
               <Avatar
                 sx={{

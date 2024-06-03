@@ -10,7 +10,7 @@ const registerMongoApi = (displayName: any, email: any, password: any, confirmPa
 }
 
 const updateMongoPasswordApi = (email: any, password: any, newPassword: any, confirmNewPassword: any) => {
-    return axiosMongo.put("/api/users", { email, password, newPassword, confirmNewPassword })
+    return axiosMongo.post("/api/user/updatePassword", { email, password, newPassword, confirmNewPassword })
 }
 
 const deleteMongoUser = (id: any) => {
