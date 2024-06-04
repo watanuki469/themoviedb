@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -8,9 +9,11 @@ export interface TwoMovieRowProps {
 
 export default function TwoMovieRow({
     twoMovieRowList,
+    
 }: TwoMovieRowProps) {
 
     const [activeSlider, setActiveSlider] = useState(2);
+    let navigate=useNavigate()
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
@@ -38,20 +41,17 @@ export default function TwoMovieRow({
                 className="mySwiper text-white"
             >
                 {twoMovieRowList?.map((item: any, index: any) => {
-                    return (
-                        <SwiperSlide key={index} >
-                            <div className="w-full h-42 hover:opacity-80">
-                                <iframe
-                                    key={item.key}
-                                    src={`https://www.youtube.com/embed/${item.key}?controls=0&&autoplay=1`}
-                                    width="100%"
-                                    height={"100%"}
-                                    title={item.name}
-                                    style={{ border: 0 ,height:'160px'}}
-                                    className="h-full w-full"
-                                >
-                                </iframe>
-                                <p className="text-red w-full text-black">Watch {item?.name}</p>
+                    return (                       
+                        <SwiperSlide key={index}>
+                            <div className="w-full hover:opacity-80 " >
+                                <img
+                                    src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
+                                    className="h-40 w-full object-cover "
+                                    title={item?.name}
+                                />
+                                <div className="absolute inset-0 w-full h-full text-center top-14">
+                                    <i className="fa-solid fa-circle-play text-white text-5xl "></i>
+                                </div>
                             </div>
                         </SwiperSlide>
                     )

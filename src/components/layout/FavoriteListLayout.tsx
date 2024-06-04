@@ -11,7 +11,6 @@ import { AppDispatch } from '../../redux/store';
 import { favoriteActorMongoApi, getFavoriteActorMongoApi } from '../../redux/client/api.LoginMongo';
 import { setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
 
-
 export function FavoriteListLayout() {
     const dispatch = useAppDispatch()
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
@@ -44,7 +43,7 @@ export function FavoriteListLayout() {
    const favoriteActorList2=[...favoriteActorList]
 
     useEffect(() => {
-        if (userInfoList.length > 0) {
+        if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites());
         }
     }, [userInfoList]);
@@ -146,8 +145,8 @@ export function FavoriteListLayout() {
     const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
 
     function compareReleaseDates(a: any, b: any) {
-        const releaseDateA = new Date(a.birthday);
-        const releaseDateB = new Date(b.birthday);
+        const releaseDateA = new Date(a?.itemReleaseDay)
+        const releaseDateB = new Date(b?.itemReleaseDay)
         return releaseDateA.getTime() - releaseDateB.getTime();
     }
     const handleMenuItemClick = (option: any) => {
@@ -223,13 +222,13 @@ export function FavoriteListLayout() {
 
                                 </div>
                                 <div className="ml-auto" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.itemImg, movie?.itemReleaseDay, movie?.itemReview, movie?.itemPopularity, movie?.itemKnowFor)} >
-                                    <Tooltip title="Click here to remove from watchlist">
+                                    <Tooltip title="Click here to remove from favorite actor list">
                                         {loading[movieIndex] ? (
-                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            // <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            <i className="fa-solid fa-user-slash fa-spin-pulse  py-2 px-3 bg-red-500 text-white"></i>
                                         ) :
                                             (
-                                                <i className="fa-solid fa-trash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
-
+                                                <i className="fa-solid fa-user-slash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
                                             )}
                                     </Tooltip>
                                 </div>

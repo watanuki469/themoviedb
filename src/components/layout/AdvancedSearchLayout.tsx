@@ -310,7 +310,7 @@ export default function AdvancedSearchLayout() {
                                                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                         </div>
                                                                     ) : (
-                                                                        <div className="flex items-center  gap-2 hover:bg-gray-500 w-fit px-2 py-2 rounded-lg">
+                                                                        <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
                                                                             <i className="fa-solid fa-star text-blue-500"></i>
                                                                             <div>{existingRating?.itemRating}</div>
                                                                         </div>
@@ -321,7 +321,7 @@ export default function AdvancedSearchLayout() {
                                                                         {loading2[movieIndex] ? (
                                                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                         ) : (
-                                                                            <div className="hover:bg-gray-500  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
+                                                                            <div className="hover:bg-gray-200  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
                                                                                 <i className="fa-regular fa-star text-blue-500"></i>
                                                                                 <div>Rate</div>
                                                                             </div>
@@ -823,7 +823,7 @@ export default function AdvancedSearchLayout() {
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white w-full">
+            <div className="bg-white w-full px-2">
                 <div className="w-full lg:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full w-screen ">
                         <div className="mt-3 ">
@@ -841,7 +841,7 @@ export default function AdvancedSearchLayout() {
                         </div>
 
                         <div className="mt-3">
-                            <div className="flex items-center gap-2" >
+                            <div className="flex items-center gap-2 flex-wrap" >
                                 <button onClick={() => handleClickMedia('movie')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'movie' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
                                     <i className="fa-brands fa-youtube text-lg font-bold"></i>
                                     <p className="font-bold">Movie</p>
@@ -1172,7 +1172,7 @@ export default function AdvancedSearchLayout() {
                                             </MenuItem>
                                         </Menu>
                                     </div>
-                                    <div className="flex items-center gap-4 " >
+                                    <div className="flex items-center gap-4 flex-wrap " >
                                         <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
                                             <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
                                         </Tooltip>

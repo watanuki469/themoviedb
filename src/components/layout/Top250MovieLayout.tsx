@@ -11,20 +11,20 @@ import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
 import TopNew from "../../modules/TopNew";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/login.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
-import { AppDispatch } from '../../redux/store';
-import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/login.reducer';
 
 export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
+    const mostDiscoverTv = useAppSelector((state) => state.movies.discoverTv)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
 
     useEffect(() => {

@@ -117,7 +117,7 @@ export default function TvLayout() {
             movieImg: tvList[0]?.poster_path,
             movieType: "TV",
         }))
-    }, [userInfoList, tvList,dispatch])
+    }, [userInfoList, tvList, dispatch])
 
     return (
         <div className=" min-h-screen cursor-pointer max-w-full overflow-hidden">
@@ -152,7 +152,9 @@ export default function TvLayout() {
                                             onClick={() => navigate(`/videoTv/${id}`)} ></i>
                                     </div>
                                 </div>
-                                <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results} />
+                                <div onClick={() => navigate(`/videoTv/${id}`)}>
+                                    <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results} />
+                                </div>
                             </div>
                             <div className="flex items-center py-4 px-2 w-screen">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

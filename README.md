@@ -5,13 +5,35 @@ project using
 +https://rapidapi.com/DataCrawler/api/imdb188/
 +https://rapidapi.com/apidojo/api/imdb8/
 
+-Configuration Setup:
+Vite Configuration,Tailwind CSS Configuration
 
-+vite
-+tailwind
-+flowbite
-+redux toolkit
-+axios
-+swiper 
-+React router v6
-+mui
-+radix
+-State Management:
+Redux Toolkit
+
+-Component Setup:
+Flowbite and Flowbite-React,Radix UI Dialog
+
+-Routing:
+React Router v6
+
+-Axios Configuration:
+Axios
+
+-UI Components:
+Tailwind CSS,Swiper,Material-UI (MUI)
+
+-Database and ORM:
+MongoDB
+
+-Environment Variables:
+dotenv
+
+-Authentication and Validation:
+jsonwebtoken,express-validator
+
+-Middleware and Server Setup:
+Express,TS-Node
+
+-Styling and Linting:
+ESLint and Prettier,TailwindCSS

@@ -183,7 +183,7 @@ const ChangeLayoutTest = () => {
           type="submit"
           className={`w-full px-4 mt-6 py-2 font-bold text-center text-white rounded-lg  hover:opacity-80
     ${!email || !password || !newPassword || !confirmNewPassword || password === newPassword ? 'bg-gray-500' : 'bg-black'}`}        >
-          Login
+          Change Password
         </button>
         <div className="login-register text-center mt-3">
           <p>Back to homepage? <a href="/" className="login-link hover:underline font-extrabold">Click here</a></p>

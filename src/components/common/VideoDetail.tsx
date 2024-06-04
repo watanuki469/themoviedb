@@ -1,8 +1,6 @@
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { useNavigate } from "react-router-dom";
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface TwoMovieRowProps {
@@ -13,6 +11,20 @@ export default function VideoDetail({
     singleMovieList
 }: TwoMovieRowProps) {
     const [numberIndex, setNumberIndex] = useState(0);
+
+    const [activeSlider, setActiveSlider] = useState(3);
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setActiveSlider(2);
+            } else {
+                setActiveSlider(3);
+            }
+        };
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -130,7 +142,7 @@ export default function VideoDetail({
 
                 <Swiper
                     spaceBetween={10}
-                    slidesPerView={3}
+                    slidesPerView={activeSlider}
                     autoplay={{
                         delay: 3500,
                         disableOnInteraction: false,
@@ -141,22 +153,21 @@ export default function VideoDetail({
                 >
                     {singleMovieList[0]?.videos?.results?.map((item: any, index: any) => {
                         return (
-                            <div key={index}>
+                            <div key={index} className="relative">
                                 <SwiperSlide key={index}>
-                                    <div className="w-full h-42" onClick={() => { setNumberIndex(index) }}  >
-                                        <div className=''  >
-                                            <iframe
-                                                src={`https://www.youtube.com/embed/${item?.key}?controls=0&&autoplay=0`}
-                                                width="100%"
-                                                height={"100%"}
-                                                title={item?.name}
-                                                className="h-full w-full"
-                                            ></iframe>
-                                        </div>
-
+                                    <div className="w-full hover:opacity-80" onClick={() => { setNumberIndex(index) }}  >
+                                        <img
+                                            src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
+                                            className="h-40 w-full object-cover"
+                                            title={item?.name}
+                                        />
                                         <p className="text-red w-full text-white font-bold">Watch {item?.name}</p>
                                         <p className="text-red w-full text-gray-500 ">{singleMovieList[0]?.original_title}</p>
+                                        <div className="absolute inset-0 w-full h-full text-center top-14">
+                                            <i className="fa-solid fa-circle-play text-white text-5xl "></i>
+                                        </div>
                                     </div>
+
                                 </SwiperSlide>
                             </div>
                         )

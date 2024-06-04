@@ -30,6 +30,8 @@ export default function MovieLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
+    const mostDiscoverTv = useAppSelector((state) => state.movies.discoverTv)
+
 
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -173,7 +175,7 @@ export default function MovieLayout() {
         setUserInfoList(Object.values(storedData));
 
     }, []);
-    
+
     useEffect(() => {
         dispatch(addRecentlyViewed({
             email: userInfoList[0],
@@ -203,7 +205,7 @@ export default function MovieLayout() {
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList?.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full md:w-screen"  onClick={() => navigate(`/video/${id}`)}>
                                 <TwoMovieRow twoMovieRowList={movieVideoList} />
                             </div>
                             <div className="flex items-center py-4">
@@ -277,6 +279,7 @@ export default function MovieLayout() {
                             <div className="lg:max-w-full md:w-screen">
                                 <SingleMovieReview singleMovieList={singleMovieList} />
                             </div>
+
                         </div>
                         <div className="hidden lg:block col-span-4 h-full px-2 py-2 ">
                             <div
@@ -294,7 +297,7 @@ export default function MovieLayout() {
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500"> See our picks</p>
                             </div>
-                            <div>
+                            <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
@@ -303,7 +306,6 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                 </div>

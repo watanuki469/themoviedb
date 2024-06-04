@@ -290,11 +290,11 @@ export default function TopPopularTvLayout() {
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
-        
+
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
+                    <section className="border-t border-r border-l border-gray-500  w-full" key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
@@ -311,8 +311,8 @@ export default function TopPopularTvLayout() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                <button className="flex items-center gap-2  hover:text-black text-blue-500">
+                                                    <div className="grow ml-auto" onClick={() => handleClick(movie, existingRating?.itemRating)}>
                                                         {
                                                             existingRating ? (
                                                                 loading2[movieIndex] ? (
@@ -350,7 +350,7 @@ export default function TopPopularTvLayout() {
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/tv/${movie.id}`)} >
+                                <div className="ml-auto" onClick={() => navigate(`/tv/${movie?.id}`)} >
                                     <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                 </div>
                             </div>
@@ -694,15 +694,15 @@ export default function TopPopularTvLayout() {
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white">
+            <div className="bg-white px-2">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full md:w-screen ">
-                        <div className="flex mt-3 ">
+                        <div className="flex items-center flex-wrap">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold text-black ">IMDb Charts</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -731,22 +731,10 @@ export default function TopPopularTvLayout() {
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                             mt: 1.5,
                                             '& .MuiAvatar-root': {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
+                                                width: 32, height: 32, ml: -0.5, mr: 1,
                                             },
                                             '&::before': {
-                                                content: '""',
-                                                display: 'block',
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 14,
-                                                width: 10,
-                                                height: 10,
-                                                bgcolor: 'background.paper',
-                                                transform: 'translateY(-50%) rotate(45deg)',
-                                                zIndex: 0,
+                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                             },
                                         },
                                     }}
@@ -796,7 +784,7 @@ export default function TopPopularTvLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">IMDb Top 250 Tv</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top 250 Tv</h2>
                             </div>
                             <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
                         </div>
@@ -805,7 +793,7 @@ export default function TopPopularTvLayout() {
                     <div className="md:grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="lg:max-w-full md:w-screen py-4 px-2 ">
-                                <div className="flex ">
+                                <div className="flex flex-wrap items-center ">
                                     <div className="items-center ">
                                         <h2 className="text-2xl text-black ">
                                             {mostPopularTv
@@ -911,7 +899,6 @@ export default function TopPopularTvLayout() {
                                                 Runtime
                                             </MenuItem>
                                         </Menu>
-                                        <SwapVertIcon className="hover:text-blue-500" />
                                     </div>
                                 </div>
                                 <div
@@ -1004,7 +991,7 @@ export default function TopPopularTvLayout() {
                                     <Charts />
                                 </div>
                             </div>
-                            <div>
+                            <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>

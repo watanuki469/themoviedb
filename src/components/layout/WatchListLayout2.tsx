@@ -245,33 +245,7 @@ export function WatchListLayout2() {
     type GenreID = number;
     type GenreName = string;
     const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action',
-        12: 'Adventure',
-        16: 'Animation',
-        35: 'Comedy',
-        80: 'Crime',
-        99: 'Documentary',
-        18: 'Drama',
-        10751: 'Family',
-        14: 'Fantasy',
-        36: 'History',
-        27: 'Horror',
-        10402: 'Music',
-        9648: 'Mystery',
-        10749: 'Romance',
-        878: 'Science Fiction',
-        10770: 'TV Movie',
-        53: 'Thriller',
-        10752: 'War',
-        37: 'Western',
-        10759: 'Action & Adventure',
-        10762: 'Kids',
-        10763: 'News',
-        10764: 'Reality',
-        10765: 'Sci-Fi & Fantasy',
-        10766: 'Soap',
-        10767: 'Talk',
-        10768: 'War & Politics'
+        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
     };
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
@@ -310,6 +284,9 @@ export function WatchListLayout2() {
     }, [favoriteList]);
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
+        const dateTimeString = movie?.createdTime
+        const date = new Date(dateTimeString);
+        const formattedTime = date.toTimeString().split(' ')[0];
         // Implement rendering logic based on the currentView (detail, grid, compact)
         switch (currentView) {
             case 'Detail':
@@ -341,17 +318,20 @@ export function WatchListLayout2() {
                                             <div className="mt-1 lg:line-clamp-none line-clamp-4">
                                                 <p>{movie?.itemReview}</p>
                                             </div>
+                                            <div className="mt-1 lg:line-clamp-none line-clamp-4">
+                                                <p>Added to watchlist at {movie?.createdTime?.slice(0, 10)} :{formattedTime} </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.mediaType, movie?.itemImg, movie?.itemReleaseDay, movie?.itemGenre, movie?.itemReview, movie?.itemPopularity, movie?.itemVoteAverage, movie?.itemVoteCount)} >
-                                    <Tooltip title="Click here to remove from userInfoList">
+                                <div className="ml-auto px-2" onClick={() => removeFromWatchList(movieIndex, movie?.itemId, movie?.itemName, movie?.mediaType, movie?.itemImg, movie?.itemReleaseDay, movie?.itemGenre, movie?.itemReview, movie?.itemPopularity, movie?.itemVoteAverage, movie?.itemVoteCount)} >
+                                    <Tooltip title="Click here to remove from watchlist">
                                         {loading[movieIndex] ? (
-                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                            <i className="fa-solid fa-video-slash fa-spin-pulse py-2 px-3 bg-red-500 text-xl text-white"></i>
                                         ) :
                                             (
-                                                <i className="fa-solid fa-trash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
+                                                <i className="fa-solid fa-video-slash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
 
                                             )}
                                     </Tooltip>
@@ -362,16 +342,15 @@ export function WatchListLayout2() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/6 md:w-1/3 px-2 " key={movieIndex}
+                    <section className=" w-1/2 lg:w-1/6 md:w-1/4 px-2 " key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <div className="px-2">{movieIndex}</div>
                                         <img onClick={() => navigate(`/${movie?.mediaType}/${movie?.movieId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError} className="w-full  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="flex items-center gap-2">
@@ -380,7 +359,7 @@ export function WatchListLayout2() {
                                                 </div>
 
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
                                                 </div>
                                                 <div className="flex flex-wrap">
                                                     {movie?.itemReleaseDay?.slice(0, 10)}
@@ -411,7 +390,6 @@ export function WatchListLayout2() {
         }
     }
 
-
     return (
         <div className=" min-h-screen cursor-pointer">
             <div className="bg-black pb-1">
@@ -422,13 +400,13 @@ export function WatchListLayout2() {
             <div className="bg-white text-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full md:w-screen ">
-                        <div className="flex mt-3 border-b-2 border-gray py-4">
+                        <div className="flex mt-3 border-b-2 border-gray px-2 py-4">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold ">Your WatchList</h2>
-                                <p className="text-xl font-semibold text-gray-500">Public</p>
+                                <h2 className="lg:text-2xl text-lg font-bold ">Your WatchList</h2>
+                                <p className="lg:text-xl text-lg font-semibold text-gray-500">Public</p>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -507,33 +485,36 @@ export function WatchListLayout2() {
                                 </Menu>
                             </div>
                         </div>
-                        <div className="flex border-b-2 border-gray py-2 items-center ">
+                        <div className="flex border-b-2 border-gray py-2 items-center px-2 ">
                             <div className="items-center ">
                                 <h2 className="lg:text-2xl text-lg font-bold ">{favoriteList?.length} Title</h2>
                             </div>
-                            <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
-                                <Button
-                                    id="demo-customized-button"
-                                    aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
-                                    aria-haspopup="true"
-                                    variant="contained"
-                                    disableElevation
-                                    onClick={handleRankingClick}
-                                    endIcon={<i className="fa-solid fa-caret-down"></i>}
-                                    sx={{
-                                        bgcolor: anchorRankingEl ? 'blue' : 'white',
-                                        color: anchorRankingEl ? 'white' : 'blue',
-                                        border: anchorRankingEl ? '2px dashed' : '',
-                                        ":hover": {
-                                            // border: '2px dashed',
-                                            backgroundColor: 'blue'
-                                            , color: 'white'
-                                        },
-                                    }}
-                                >
-                                    {selectedRankingOption ? selectedRankingOption : 'Options'}
-                                </Button>
+                            <div className=" items-center ml-auto gap-2 flex" >
+                                <p className="items-center text-lg text-gray-400 hidden lg:flex ">Sort by </p>
+                                <div className='hidden lg:block'>
+                                    <Button
+                                        id="demo-customized-button"
+                                        aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
+                                        aria-haspopup="true"
+                                        variant="contained"
+                                        disableElevation
+                                        onClick={handleRankingClick}
+                                        endIcon={<i className="fa-solid fa-caret-down"></i>}
+                                        sx={{
+                                            bgcolor: anchorRankingEl ? 'blue' : 'white',
+                                            color: anchorRankingEl ? 'white' : 'blue',
+                                            border: anchorRankingEl ? '2px dashed' : '',
+                                            ":hover": {
+                                                // border: '2px dashed',
+                                                backgroundColor: 'blue'
+                                                , color: 'white'
+                                            },
+                                        }}
+                                    >
+                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                    </Button>
+                                </div>
+
                                 <Menu
                                     id="demo-customized-menu"
                                     anchorEl={anchorRankingEl}
@@ -591,6 +572,7 @@ export function WatchListLayout2() {
                                 </div>
                             </div>
                         </div>
+
                         <div className="w-full">
                             {handleRefine ? (
                                 <div className="flex border-b-2 border-gray py-2 items-center w-full">
@@ -738,6 +720,60 @@ export function WatchListLayout2() {
                                 </div>)}
 
                         </div>
+                        <div className="flex border-b-2 border-gray py-2 items-center lg:hidden">
+                            <div className="flex items-center ml-auto gap-2" >
+                                <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
+                                <Button
+                                    id="demo-customized-button"
+                                    aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
+                                    aria-haspopup="true"
+                                    variant="contained"
+                                    disableElevation
+                                    onClick={handleRankingClick}
+                                    endIcon={<i className="fa-solid fa-caret-down"></i>}
+                                    sx={{
+                                        bgcolor: anchorRankingEl ? 'blue' : 'white',
+                                        color: anchorRankingEl ? 'white' : 'blue',
+                                        border: anchorRankingEl ? '2px dashed' : '',
+                                        ":hover": {
+                                            // border: '2px dashed',
+                                            backgroundColor: 'blue'
+                                            , color: 'white'
+                                        },
+                                    }}
+                                >
+                                    {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                </Button>
+                                <Menu
+                                    id="demo-customized-menu"
+                                    anchorEl={anchorRankingEl}
+                                    open={Boolean(anchorRankingEl)}
+                                    onClose={handleRankingClose}
+                                >
+                                    <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
+                                        Ranking
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
+                                        IMDb Rating
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
+                                        Release Day
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
+                                        Number Of Rating
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
+                                        Alphabetical
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
+                                        Popularity
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
+                                        Runtime
+                                    </MenuItem>
+                                </Menu>
+                            </div>
+                        </div>
                         <div>
                             <div className="lg:max-w-full md:w-screen py-4 px-2 ">
                                 <div
@@ -807,17 +843,25 @@ export function WatchListLayout2() {
 
                                             }
                                             else if (menuItemNum === '4') {
-                                                return b?.vote_count - a?.vote_count;
+                                                return a?.itemVoteAverage - b?.itemVoteAverage;
 
                                             }
                                             else if (menuItemNum === '7') {
                                                 return compareReleaseDates(b, a);
                                             }
                                             else if (menuItemNum === '6') {
-                                                return b?.popularity - a?.popularity;
+                                                return b?.itemPopularity - a?.itemPopularity;
                                             }
                                             else {
-                                                return 0
+                                                const titleA = a?.createdTime;
+                                                const titleB = b?.createdTime;
+                                                if (titleA < titleB) {
+                                                    return -1;
+                                                }
+                                                if (titleA > titleB) {
+                                                    return 1;
+                                                }
+                                                return 0;
                                             }
                                         })
                                         .map((m: any, index: any) => renderMovieItem(m, index, currentView))}

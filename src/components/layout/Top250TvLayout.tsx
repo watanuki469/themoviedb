@@ -684,13 +684,13 @@ export default function Top250TvLayout() {
             </div>
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
-                        <div className="flex mt-3 ">
+                    <div className="lg:max-w-full md:w-screen px-2">
+                        <div className="flex items-center flex-wrap">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold text-black ">IMDb Charts</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
                             </div>
-                            <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                            <div className="flex items-center ml-auto gap-2 px-2" >
+                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -699,7 +699,7 @@ export default function Top250TvLayout() {
                                     aria-expanded={openShare ? 'true' : undefined}
                                 >
                                     <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
+                                        width: 32, height: 32, bgcolor: 'white', color: 'black', ":hover": {
                                             bgcolor: 'gray', opacity: '50%'
                                         }
                                     }}>
@@ -717,7 +717,6 @@ export default function Top250TvLayout() {
                                         sx: {
                                             overflow: 'visible',
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
                                             '& .MuiAvatar-root': {
                                                 width: 32, height: 32, ml: -0.5, mr: 1,
                                             },
@@ -772,7 +771,7 @@ export default function Top250TvLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">IMDb Top 250 Tv</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top 250 Tv</h2>
                             </div>
                             <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
                         </div>
@@ -780,41 +779,39 @@ export default function Top250TvLayout() {
                     </div>
                     <div className="grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-12 col-span-12  w-full ">
-                            <div className="flex ">
-                                <div className="items-center ">
-                                    <h2 className="text-2xl text-black ">
-                                        {mostPopularTv
-                                            .filter((movie: any) => {
-                                                if (selectedGenres?.length === 0) return true; // No genre filter
-                                                const hasAllGenres = selectedGenres.every((genre) =>
-                                                    movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                                );
-                                                return hasAllGenres;
-                                            })
-                                            .filter((movie: any) => {
-                                                if (!applyFilter) return true; // No filter
-                                                if (filterType === 'none') return true; // No filter
-                                                if (filterType === 'inTheaters') {
-                                                    return null;
-                                                }
-                                                if (filterType === 'In theaters with online ticketing') {
-                                                    return null;
-                                                }
-                                                return true;
-                                            })
-                                            .filter((movie) => {
-                                                const existingRating = ratingList?.find(rating =>
-                                                    movie?.id == rating?.itemId &&
-                                                    rating?.itemType === 'TV'
-                                                );
-                                                if (filterRatedMovie === false) return true
-                                                return existingRating == undefined;
-                                            })
+                            <div className="flex px-2 flex-wrap ">
+                                <h2 className="lg:text-2xl text-lg text-black ">
+                                    {mostPopularTv
+                                        .filter((movie: any) => {
+                                            if (selectedGenres?.length === 0) return true; // No genre filter
+                                            const hasAllGenres = selectedGenres.every((genre) =>
+                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                            );
+                                            return hasAllGenres;
+                                        })
+                                        .filter((movie: any) => {
+                                            if (!applyFilter) return true; // No filter
+                                            if (filterType === 'none') return true; // No filter
+                                            if (filterType === 'inTheaters') {
+                                                return null;
+                                            }
+                                            if (filterType === 'In theaters with online ticketing') {
+                                                return null;
+                                            }
+                                            return true;
+                                        })
+                                        .filter((movie) => {
+                                            const existingRating = ratingList?.find(rating =>
+                                                movie?.id == rating?.itemId &&
+                                                rating?.itemType === 'TV'
+                                            );
+                                            if (filterRatedMovie === false) return true
+                                            return existingRating == undefined;
+                                        })
 
-                                            .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
-                                        /{mostPopularTv?.length} Titles</h2>
-
-                                </div>
+                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
+                                    /{mostPopularTv?.length} Titles
+                                </h2>
 
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
@@ -829,7 +826,7 @@ export default function Top250TvLayout() {
                                 </div>
                             </div>
                             {/* filter icon */}
-                            <div className=" flex items-center gap-2">
+                            <div className=" flex items-center gap-2 flex-wrap">
                                 <div className=" flex flex-wrap items-center gap-2">
                                     <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
                                         onClick={handleDiaGenlogOpen}>
@@ -844,7 +841,7 @@ export default function Top250TvLayout() {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="ml-auto flex items-center gap-4">
+                                <div className="ml-auto flex items-center gap-2 ">
                                     <p className="text-gray-500">Sort by</p>
                                     <Button
                                         id="demo-customized-button"
@@ -894,12 +891,11 @@ export default function Top250TvLayout() {
                                             Runtime
                                         </MenuItem>
                                     </Menu>
-                                    <SwapVertIcon className="hover:text-blue-500" />
                                 </div>
                             </div>
 
                         </div>
-                       
+
                         <div className="lg:col-span-8 col-span-12 w-full ">
                             <div className="lg:max-w-full md:w-screen py-4 px-2 ">
                                 <div
@@ -995,18 +991,15 @@ export default function Top250TvLayout() {
                                     <Charts />
                                 </div>
                             </div>
-                            <div>
-                                <div className="flex items-center py-3">
+                            <div className="sticky top-0 right-0 left-0">
+                                <div className="flex items-center py-3 ">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
                                 <div className="lg:max-w-full md:w-screen">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
