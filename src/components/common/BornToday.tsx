@@ -16,7 +16,6 @@ export default function BornToday() {
     const currentDay = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày hiện tại, thêm 0 ở trước nếu cần 
     const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
 
-
     useEffect(() => {
         axiosBornToday.get('', {
             params: {
@@ -33,7 +32,6 @@ export default function BornToday() {
                 setErr(true)
             })
     }, []);
-
 
     const [activeSlider, setActiveSlider] = useState(3);
     useEffect(() => {

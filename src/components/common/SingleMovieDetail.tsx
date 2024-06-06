@@ -54,14 +54,14 @@ export default function SingleMovieDetail({
     }, []);
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 3000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 3000);
     }, [userInfoList]);
     const existingIndex = favoriteList?.findIndex((fav: any) => fav?.itemId == singleMovieList[0]?.id);
     const existingRating = ratingList?.find((rating: any) => rating?.itemId == singleMovieList[0]?.id); // Find the rating object for the item
@@ -128,7 +128,7 @@ export default function SingleMovieDetail({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            movieId,  mediaType,  movieName,  movieImg,  movieReleaseDay,  movieGenre,  movieReview,  moviePopularity,  movieVoteAverage,  movieVoteCount
+            movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
@@ -197,7 +197,7 @@ export default function SingleMovieDetail({
         const email = userInfoList[0];
         try {
             const response = await removeRatingMongoApi(
-                email,    movieId,    movieType,
+                email, movieId, movieType,
             );
             dispatch(setDeleteRating(response));
             if (response) {
@@ -738,9 +738,10 @@ export default function SingleMovieDetail({
                                 </div>
                                 <div>
                                     <p className="py-2 ">
-                                        {singleMovieList[0]?.overview && singleMovieList[0]?.overview.length > 120 ?
+                                        {/* {singleMovieList[0]?.overview && singleMovieList[0]?.overview.length > 120 ?
                                             singleMovieList[0]?.overview.slice(0, 120) + "..." :
-                                            singleMovieList[0]?.overview}
+                                            singleMovieList[0]?.overview} */}
+                                        {singleMovieList[0]?.overview}
                                     </p>
                                 </div>
                             </div>
@@ -857,26 +858,21 @@ export default function SingleMovieDetail({
                                     <i className="fa-solid fa-chevron-down"></i>
                                 </div>
                             </button>
-                            <div>
-                                <div className="grid grid-cols-3 gap-2 w-full">
-                                    <div className="w-full">
-                                        <button className="py-2 px-3 items-center gap-2 text-sm">
-                                            <p>{formatNumber(singleMovieList[0]?.reviews?.results?.length)}</p>
-                                            <p>User Review</p>
-                                        </button>
-                                    </div>
-                                    <div className="w-full">
-                                        <button className="py-2 px-3 items-center gap-2 text-sm">
-                                            {isNaN(singleMovieList[0]?.reviews?.results?.length) ? 'N/A' : Math.floor(singleMovieList[0]?.reviews?.results?.length / 20) * 2}
-                                            <p>Critic Review</p>
-                                        </button>
-                                    </div>
-                                    <div className="w-full">
-                                        <button className="py-2 px-3 items-center gap-2 text-sm">
-                                            <span className="bg-yellow-300 h-6 w-6 items-center justify-center text-center">{isNaN(Math.floor(singleMovieList[0]?.vote_average * 10 + 2)) ? 'N/A' : Math.floor(singleMovieList[0]?.vote_average * 10 + 2)}</span>
-                                            <p>Metascore</p>
-                                        </button>
-                                    </div>
+                            <div className='w-full'>
+                                <div className=" -mx-2 flex flex-wrap gap-2 w-full justify-left">
+                                    <button className="py-2 px-3 flex  items-center gap-2 text-sm">
+                                        <p>{formatNumber(singleMovieList[0]?.reviews?.results?.length)}</p>
+                                        <p>User Review</p>
+                                    </button>
+                                    <button className="py-2 px-3 flex  items-center gap-2 text-sm">
+                                        {isNaN(singleMovieList[0]?.reviews?.results?.length) ? 'N/A' : Math.floor(singleMovieList[0]?.reviews?.results?.length / 20) * 2}
+                                        <p>Critic Review</p>
+                                    </button>
+                                    <button className="py-2 px-3 flex  items-center gap-2 text-sm">
+                                        <span className="bg-yellow-300 h-6 w-6 items-center justify-center text-center">{isNaN(Math.floor(singleMovieList[0]?.vote_average * 10 + 2)) ? 'N/A' : Math.floor(singleMovieList[0]?.vote_average * 10 + 2)}</span>
+                                        <p>Metascore</p>
+                                    </button>
+
 
                                 </div>
                             </div>

@@ -35,9 +35,9 @@ export default function SingleMoviePerson({
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
-            } else if (window.innerWidth < 1024) {
+            } else if (window.innerWidth < 768) {
                 setActiveSlider(3);
             } else {
                 setActiveSlider(4);

@@ -117,16 +117,16 @@ export default function MovieLayout() {
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         dispatch(fetchSingleMovies());
         dispatch(fetchMovieVideos());
         dispatch(fetchMovieImage());
         dispatch(fetchMovieCredit());
         dispatch(fetchMovieSimilar());
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
     }, [id]);
     const currentDate = new Date();
 
@@ -187,8 +187,8 @@ export default function MovieLayout() {
     }, [userInfoList, singleMovieList, dispatch])
 
     return (
-        <div className=" min-h-screen cursor-pointer w-full">
-            <div className="bg-black">
+        <div className=" min-h-screen cursor-pointer overflow-hidden w-full">
+            <div className="bg-black w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
                     <SingleMovieDetail singleMovieList={singleMovieList} movieVideoList={movieVideoList}
@@ -197,15 +197,15 @@ export default function MovieLayout() {
             </div>
             <div className="bg-white w-full ">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="md:grid grid-cols-12 gap-2 w-full px-2">
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
+                    <div className="grid grid-cols-12 gap-2 w-full px-2">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Videos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList?.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen"  onClick={() => navigate(`/video/${id}`)}>
+                            <div className="lg:max-w-full w-full"  onClick={() => navigate(`/video/${id}`)}>
                                 <TwoMovieRow twoMovieRowList={movieVideoList} />
                             </div>
                             <div className="flex items-center py-4">
@@ -215,73 +215,52 @@ export default function MovieLayout() {
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"
                                     onClick={() => navigate(`/image/movie/${id}`)}></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/image/movie/${id}`)}>
+                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/image/movie/${id}`)}>
                                 <FourPhotos fourPhotosList={movieImageList} />
                             </div>
-                            <div className="text-white flex py-4 " onClick={() => navigate(`/fullcredits/movie/${id}`)}>
+                            <div className="items-center text-white flex py-4 w-screen " onClick={() => navigate(`/fullcredits/movie/${id}`)}>
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
-                                </div>
-                                <div className="flex items-center ml-auto gap-2 hover:bg-opacity-80 hover:bg-gray-500 px-2 py-2" >
-                                    <i className="fa-solid fa-pencil text-black text-xl ml-2"></i>
-                                    <p className="flex items-center text-xl font-bold text-black ">
-                                        Edit
-                                    </p>
-                                </div>
+                                </div>                               
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full w-full">
                                 <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
                             </div>
-                            <div className="text-white flex py-4 mt-4 w-full items-center"  >
+                            <div className="text-white py-4 mt-4 w-screen items-center"  >
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More Like This</h2>
                                 </div>
-                                <div className=" ml-auto gap-2" >
-                                    <i className="fa-regular fa-circle-question text-black text-2xl ml-2"></i>
-                                </div>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full w-full">
                                 <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'Movie'} />
                             </div>
-                            <div className="text-white flex py-4 ">
+                            <div className="text-white flex py-4 w-screen ">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieTrivia">Story Line</h2>
                                 </div>
-                                <div className="flex items-center ml-auto gap-2" >
-                                    <i className="fa-solid fa-pencil text-black text-2xl ml-2"></i>
-                                    <p className="flex items-center text-2xl font-bold text-black ">
-                                        Edit
-                                    </p>
-                                </div>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full w-full">
                                 <SingleMovieStoryLine singleMovieList={singleMovieList} />
                             </div>
-                            <div className="text-white flex py-4 ">
+                            <div className="text-white py-4 w-screen ">
                                 <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/movie/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black" id="movieReview">User Reviews</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{singleMovieList[0]?.reviews?.results?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
-                                <div className="flex items-center ml-auto gap-2" >
-                                    <i className="fa-solid fa-plus text-blue-500 text-sm ml-2"></i>
-                                    <p className="flex items-center text-sm text-blue-500 ">
-                                        Review
-                                    </p>
-                                </div>
                             </div>
-                            <div className="lg:max-w-full md:w-screen">
+                            <div className="lg:max-w-full  w-full ">
                                 <SingleMovieReview singleMovieList={singleMovieList} />
                             </div>
 
                         </div>
-                        <div className="hidden lg:block col-span-4 h-full px-2 py-2 ">
+                        <div className="hidden lg:block col-span-4">
                             <div
                                 ref={moreToExploreRef}
                                 style={{ height: moreToExploreHeight, overflow: 'auto' }}
@@ -291,7 +270,7 @@ export default function MovieLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen overflow-y-auto">
+                                <div className="lg:max-w-ful w-full">
                                     <ListRow listRowList={topRatedMovies} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
@@ -301,7 +280,7 @@ export default function MovieLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>

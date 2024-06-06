@@ -11,8 +11,11 @@ import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/
 import { setListSearch } from "../../redux/reducers/search.reducer";
 import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
+import SolarSystem from '../common/SolarSystem';
 import TopBar from "../common/TopBar";
 import { ListMoviesPopular } from "../models/ListMoviesPopular";
+import './earth.css'; // Assuming you have a styles.css file for custom styles
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
@@ -26,6 +29,7 @@ export default function AdvancedSearchLayout() {
     const [votesFrom, setVotesFrom] = useState('');
     const [votesTo, setVotesTo] = useState('');
     const [query, setQuery] = useState('');
+    const [loadingQuery, setLoadingQuery] = useState(false);
 
     const fetchSearch = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -45,15 +49,20 @@ export default function AdvancedSearchLayout() {
 
     useEffect(() => {
         let timerId: ReturnType<typeof setTimeout>;
-
+        setLoadingQuery(true)
         if (query.trim().length === 0) {
             setQuery('');
 
         } else {
+
             timerId = setTimeout(() => {
                 dispatch(fetchSearch());
             }, 2000);
+
         }
+        timerId = setTimeout(() => {
+            setLoadingQuery(false)
+        }, 2000);
 
         return () => {
             clearTimeout(timerId); // Hủy timeout nếu component unmounts hoặc effect chạy lại trước khi timeout được kích hoạt
@@ -150,15 +159,9 @@ export default function AdvancedSearchLayout() {
     const [isRating, setIsRating] = useState(false);
 
     const [selectedStudent, setSelectedStudent] = useState<ListMoviesPopular | any>();
-    // const handleClick = (index: any) => {
-    //     setIsRating(true)
-    //     setSelectedStudent(index);
-    // };
+
     const [value, setValue] = useState<number | null>(0);
-    const handleClose = () => {
-        setIsRating(false)
-        setValue(0)
-    };
+
     const [numberIndex, setNumberIndex] = useState(0);
     const [checkLog, setCheckLog] = useState(false)
 
@@ -196,13 +199,13 @@ export default function AdvancedSearchLayout() {
     }
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetRating())
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 3000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -279,11 +282,11 @@ export default function AdvancedSearchLayout() {
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item    
-
+        
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
+                    <section className="px-2 border-t border-r border-l border-gray-500 bg-white  w-full" key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
@@ -299,7 +302,7 @@ export default function AdvancedSearchLayout() {
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <div className="flex items-center gap-2">
                                                         <i className="fa-solid fa-star text-yellow-300"></i>
-                                                        <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                        <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                     </div>
                                                     <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
                                                         <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
@@ -458,7 +461,7 @@ export default function AdvancedSearchLayout() {
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <div className="flex items-center gap-2">
                                                         <i className="fa-solid fa-star text-yellow-300"></i>
-                                                        <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
+                                                        <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                     </div>
                                                     <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
                                                         <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
@@ -516,16 +519,23 @@ export default function AdvancedSearchLayout() {
         }
     }
     const [applyFilter, setApplyFilter] = useState(true);
-    const [filterType, setFilterType] = useState('none');
-
 
     const [selectedOption, setSelectedOption] = useState<string | null>('none');
 
     const handleOptionClick = (option: any) => {
         setApplyFilter(option === 'none' ? (true) : (false));
-        setFilterType(option);
         setSelectedOption(option === selectedOption ? null : option);
     };
+
+    const [genderFilter, setGenderFilter] = useState(true);
+
+    const [genderOption, setGenderOption] = useState<string | null>('none');
+
+    const handleOptionGenderClick = (option: any) => {
+        setGenderFilter(option === 'none' ? (true) : (false));
+        setGenderOption(option === genderOption ? null : option);
+    };
+
     const handleRankingClose = () => {
         setAnchorRankingEl(null);
     };
@@ -534,8 +544,8 @@ export default function AdvancedSearchLayout() {
     const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
 
     function compareReleaseDates(a: any, b: any) {
-        const releaseDateA = new Date(a.release_date);
-        const releaseDateB = new Date(b.release_date);
+        const releaseDateA = new Date(a?.release_date || a?.first_air_date);
+        const releaseDateB = new Date(b?.release_date || b?.first_air_date);
         return releaseDateA.getTime() - releaseDateB.getTime();
     }
     const handleMenuItemClick = (option: any) => {
@@ -578,6 +588,7 @@ export default function AdvancedSearchLayout() {
     const [votesExpanded, setVotesExpanded] = useState(false);
     const [genreExpanded, setGenreExpanded] = useState(false);
     const [theaterExpanded, setTheaterExpanded] = useState(false);
+    const [genderExpanded, setGenderExpanded] = useState(false);
 
     const toggleExpand = () => {
         setExpanded(true);
@@ -587,6 +598,7 @@ export default function AdvancedSearchLayout() {
         setVotesExpanded(true)
         setGenreExpanded(true)
         setTheaterExpanded(true)
+        setGenderExpanded(true)
     };
     const toggleSwapExpand = () => {
         setExpanded(false);
@@ -596,6 +608,7 @@ export default function AdvancedSearchLayout() {
         setVotesExpanded(false)
         setGenreExpanded(false)
         setTheaterExpanded(false)
+        setGenderExpanded(false)
     };
     const handleClickExpand = () => {
         if (changeExpand) {
@@ -624,6 +637,9 @@ export default function AdvancedSearchLayout() {
     };
     const toggleTheaterExpand = () => {
         setTheaterExpanded(!theaterExpanded);
+    };
+    const toggleGenderExpand = () => {
+        setGenderExpanded(!genderExpanded);
     };
 
     const onQueryChange = (e: any) => {
@@ -965,7 +981,7 @@ export default function AdvancedSearchLayout() {
                                         </div>
                                     ) : (<div></div>)}
                                 </div>
-                                {mediatype != 'person' ? (
+                                {mediatype !== 'person' ? (
                                     <div>
                                         <div className="flex items-center gap-2 mt-1">
                                             <p className="font-bold">Release Day </p>
@@ -1039,7 +1055,6 @@ export default function AdvancedSearchLayout() {
                                                 </div>
                                             ) : (<div></div>)}
                                         </div>
-
                                         <div className="flex items-center gap-2 mt-1">
                                             <p className="font-bold">Number of votes </p>
                                             <i onClick={toggleVotesExpand} className={`fa-solid ${votesExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
@@ -1065,7 +1080,6 @@ export default function AdvancedSearchLayout() {
                                                 </div>
                                             ) : (<div></div>)}
                                         </div>
-
                                         <div className="flex items-center gap-2 mt-1">
                                             <p className="font-bold">Genre </p>
                                             <i onClick={toggleGenreExpand} className={`fa-solid ${genreExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
@@ -1108,7 +1122,32 @@ export default function AdvancedSearchLayout() {
                                     </div>
                                 ) : (
                                     <div>
-
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <p className="font-bold">Gender Identity </p>
+                                            <i onClick={toggleGenderExpand} className={`fa-solid ${genderExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
+                                        </div>
+                                        <div className="border-b-2 px-1 py-1">
+                                            {genderExpanded ? (
+                                                <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
+                                                    <div onClick={() => handleOptionGenderClick('none')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${genderOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p>None</p>
+                                                    </div>
+                                                    <div onClick={() => handleOptionGenderClick('Male')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${genderOption === 'Male' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p> Male</p>
+                                                    </div>
+                                                    <div onClick={() => handleOptionGenderClick('Female')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${genderOption === 'Female' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p>Female</p>
+                                                    </div>
+                                                    <div onClick={() => handleOptionGenderClick('Non-Binary')} className="flex gap-2 items-center">
+                                                        <i className={`fa-regular ${genderOption === 'Non-Binary' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                                        <p>Non Binary</p>
+                                                    </div>
+                                                </div>
+                                            ) : (<div></div>)}
+                                        </div>
                                     </div>
                                 )}
 
@@ -1185,75 +1224,108 @@ export default function AdvancedSearchLayout() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
-                                <div
-                                    style={{
-                                        position: "relative", backgroundSize: "cover", backgroundPosition: "center",
-                                        display: 'flex', flexWrap: 'wrap'
-                                    }}>
-                                    {topRatedMovies?.length === 0 && (
-                                        <div style={{
-                                            backgroundImage: `url(https://filmfair.in/website/images/error_screens/no-result.png')`,
-                                            position: "absolute", width: "100%", height: "100%", opacity: "0.5",
-                                            backgroundSize: "cover", backgroundPosition: "center", backgroundColor: 'black'
-                                        }}>
-                                        </div>
-                                    )}
-                                    {topRatedMovies[0]?.results
-                                        .filter((movie: any) => {
-                                            if (selectedGenres?.length === 0) return true; // No genre filter
-                                            // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres.every((genre) =>
-                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                            );
-                                            return hasAllGenres;
-                                        })
-                                        .filter((movie: any) => {
-                                            const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId && rating?.itemType === 'TV');
-                                            if (filterRatedMovie === false) return true
-                                            return existingRating == undefined;
-                                        })
-                                        .filter(() => {
-                                            if (applyFilter === true) return true; // No filter
-                                            return null
-                                        })
-                                        .sort((a: any, b: any) => {
-                                            if (menuItemNum === '5') {
-                                                // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
-                                                if (titleA < titleB) {
-                                                    return -1;
+                            <div className="lg:max-w-full md:w-screen  py-4 px-2 "
+                                style={{
+                                    position: "relative", backgroundSize: "cover", backgroundPosition: "center",
+                                    display: 'flex', flexWrap: 'wrap',
+                                    // backgroundImage: 'url("https://i.pinimg.com/236x/f5/41/c8/f541c8895baaa36ff0c79b7730999c93.jpg")'
+                                }}>
+
+                                {
+                                    loadingQuery ? (
+                                        <section className='w-full min-h-80'>
+                                            {/* <div className="earth absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-cover bg-repeat-x rounded-full shadow-inner custom-shadow"></div> */}
+                                            <SolarSystem />
+                                        </section>
+                                    )
+                                        :
+                                        (
+                                            <div className='lg:max-w-full md:w-screen flex flex-wrap'>
+                                                {
+                                                    topRatedMovies[0]?.results
+                                                        .filter((movie: any) => {
+                                                            if (selectedGenres?.length === 0) return true; // No genre filter
+                                                            // Check if every selected genre is present in the movie's genres
+                                                            const hasAllGenres = selectedGenres.every((genre) =>
+                                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                                            );
+                                                            return hasAllGenres;
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId && rating?.itemType === 'TV');
+                                                            if (filterRatedMovie === false) return true
+                                                            return existingRating == undefined;
+                                                        })
+                                                        .filter(() => {
+                                                            if (applyFilter === true) return true; // No filter
+                                                            return null
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            if (genderOption === 'Female') return movie?.gender == '1';
+                                                            if (genderOption === 'Male') return movie?.gender == '2';
+                                                            if (genderOption === 'Non-Binary') return movie?.gender == '0';
+                                                            return true; // If 'none' or no filter is selected, include all gender
+                                                        })
+                                                        .filter(() => {
+                                                            if (query !== '') return true; // No filter
+                                                            return null
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            // Check if both imdbImdbRatingFrom and imdbImdbRatingTo are defined and not empty strings
+                                                            if (imdbImdbRatingFrom !== '' && imdbImdbRatingTo !== '') {
+                                                                return movie?.vote_average >= imdbImdbRatingFrom && movie?.vote_average <= imdbImdbRatingTo;
+                                                            }
+                                                            // If no filter, include all movies
+                                                            return true;
+                                                        })
+                                                        .filter((movie: any) => {
+                                                            // Check if both imdbImdbRatingFrom and imdbImdbRatingTo are defined and not empty strings
+                                                            if (votesFrom !== '' && votesTo !== '') {
+                                                                return movie?.vote_count >= votesFrom && movie?.vote_count <= votesTo;
+                                                            }
+                                                            // If no filter, include all movies
+                                                            return true;
+                                                        })
+                                                        .sort((a: any, b: any) => {
+                                                            if (menuItemNum === '5') {
+                                                                // Sắp xếp theo thứ tự alphabet của title
+                                                                const titleA = (a?.title || a?.name || '').toUpperCase();
+                                                                const titleB = (b?.title || b?.name || '').toUpperCase();
+                                                                if (titleA < titleB) {
+                                                                    return -1;
+                                                                }
+                                                                if (titleA > titleB) {
+                                                                    return 1;
+                                                                }
+                                                                return 0;
+                                                            }
+                                                            else if (menuItemNum === '1') {
+                                                                return b?.vote_average - a?.vote_average;
+                                                            }
+                                                            else if (menuItemNum === '2') {
+                                                                return a?.id - b?.id;
+                                                            }
+                                                            else if (menuItemNum === '3') {
+                                                                return compareReleaseDates(a, b);
+                                                            }
+                                                            else if (menuItemNum === '4') {
+                                                                return b?.vote_count - a?.vote_count;
+                                                            }
+                                                            else if (menuItemNum === '7') {
+                                                                return compareReleaseDates(b, a);
+                                                            }
+                                                            else if (menuItemNum === '6') {
+                                                                return b?.popularity - a?.popularity;
+                                                            }
+                                                            else {
+                                                                return 0
+                                                            }
+                                                        })
+                                                        .map((m: any, index: any) => renderMovieItem(m, index, currentView, sortOrder))
                                                 }
-                                                if (titleA > titleB) {
-                                                    return 1;
-                                                }
-                                                return 0;
-                                            }
-                                            else if (menuItemNum === '1') {
-                                                return b?.vote_average - a?.vote_average;
-                                            }
-                                            else if (menuItemNum === '2') {
-                                                return a?.id - b?.id;
-                                            }
-                                            else if (menuItemNum === '3') {
-                                                return compareReleaseDates(a, b);
-                                            }
-                                            else if (menuItemNum === '4') {
-                                                return b?.vote_count - a?.vote_count;
-                                            }
-                                            else if (menuItemNum === '7') {
-                                                return compareReleaseDates(b, a);
-                                            }
-                                            else if (menuItemNum === '6') {
-                                                return b?.popularity - a?.popularity;
-                                            }
-                                            else {
-                                                return 0
-                                            }
-                                        })
-                                        .map((m: any, index: any) => renderMovieItem(m, index, currentView, sortOrder))}
-                                </div>
+                                            </div>
+                                        )
+                                }
                             </div>
                         </div>
 

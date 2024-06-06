@@ -375,7 +375,7 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p onClick={() => navigate('/whatOnTv')}  className="mt-2 hover:underline">
+                          <p onClick={() => navigate('/whatOnTv')} className="mt-2 hover:underline">
                             Whats on TV & Streaming
                           </p>
                           <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">Top 250 TV Shows</p>
@@ -650,7 +650,7 @@ export default function TopBar() {
                 color: '#ffc107',
               }
             }}
-            onClick={() =>navigate('/changePassword')}
+              onClick={() => navigate('/changePassword')}
             >
               <Avatar
                 sx={{
@@ -717,7 +717,9 @@ export default function TopBar() {
 
 
           </Menu>
-          <button onClick={() => navigate("/")}
+          <button
+            onClick={() => window.open('https://apps.apple.com/us/app/imdb-movies-tv-shows/id342792525?_branch_match_id=1303228076714752528&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXL86pTNJLLCjQy8nMy9YP9k6pDDRzNDGxBABVqlN1IAAAAA%3D%3D&utm_campaign=mdot+sitewide+footer+Branch+update&utm_medium=marketing&utm_source=IMDb+Mdot', '_blank')}
+
             className=" bg-yellow-400 text-black text-center border-none font-bold text-sm  rounded-lg
             whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2 mr-2"
           >

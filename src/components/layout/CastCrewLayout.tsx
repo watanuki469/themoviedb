@@ -120,12 +120,17 @@ export default function CastCrewLayout() {
                         <div className="items-center w-full grid lg:grid-cols-2 text-black">
                             {mediaList[0]?.credits?.crew?.map((item: any, index: any) => (
                                 <div key={index} className="flex items-center w-full border-b-2 py-2">
-                                    <div className="h-44 w-28 bg-cover mr-4 hover:opacity-80"
+                                    {/* <div className="h-44 w-28 bg-cover mr-4 hover:opacity-80"
                                         style={{
                                             backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                         }}
                                         onClick={() => navigate(`/person/${item?.id}`)}>
-                                    </div>
+                                    </div> */}
+                                    <img
+                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
+                                        onClick={() => navigate(`/person/${item?.id}`)}
+                                        className="h-44 w-32 flex-shrink-0 object-cover"
+                                    />
 
                                     <div className="ml-4 flex-1">
                                         <p className="font-bold">{item?.name}</p>
@@ -140,12 +145,17 @@ export default function CastCrewLayout() {
                             {mediaList[0]?.credits?.cast?.map((item: any, index: any) => (
                                 <div key={index} className="flex items-center  border-b-2 py-2 w-full">
                                     <div className="flex items-center w-full">
-                                        <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
+                                        {/* <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
                                             style={{
                                                 backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                             }}
                                             onClick={() => navigate(`/person/${item?.id}`)}>
-                                        </div>
+                                        </div> */}
+                                        <img
+                                            src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
+                                            onClick={() => navigate(`/person/${item?.id}`)}
+                                            className="h-44 w-32 flex-shrink-0 object-cover"
+                                        />
 
                                         <div className="">
                                             <p className="font-bold">{item?.name}</p>
@@ -163,7 +173,7 @@ export default function CastCrewLayout() {
                                     <img
                                         src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
                                         onClick={() => navigate(`/person/${item?.id}`)}
-                                        className="h-44 w-28 flex-shrink-0"
+                                        className="h-44 w-32 flex-shrink-0 object-cover"
                                     />
                                     <div className="ml-4 flex-1">
                                         <p className="font-bold">{item?.name}</p>
@@ -188,7 +198,7 @@ export default function CastCrewLayout() {
                                     <img
                                         src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
                                         onClick={() => navigate(`/person/${item?.id}`)}
-                                        className="h-44 w-28 flex-shrink-0"
+                                        className="h-44 w-32 flex-shrink-0"
                                     />
 
                                     <div className="ml-4 flex-1">

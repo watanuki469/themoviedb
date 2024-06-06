@@ -12,20 +12,25 @@ export default function TwoMovieRow({
     
 }: TwoMovieRowProps) {
 
-    const [activeSlider, setActiveSlider] = useState(2);
-    let navigate=useNavigate()
+    const [activeSlider, setActiveSlider] = useState(4);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
-                setActiveSlider(1);
-            } else {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
+            } else if (window.innerWidth < 600) {
+                setActiveSlider(3);
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(4);           
+            } else {
+                setActiveSlider(3);
             }
         };
+
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
 
     return (
         <div className=" ">
@@ -43,14 +48,14 @@ export default function TwoMovieRow({
                 {twoMovieRowList?.map((item: any, index: any) => {
                     return (                       
                         <SwiperSlide key={index}>
-                            <div className="w-full hover:opacity-80 " >
-                                <img
-                                    src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
+                            <div className="w-full hover:opacity-90 hover:text-yellow text-white " >
+                                <img 
+                                    src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`}                                      
                                     className="h-40 w-full object-cover "
                                     title={item?.name}
                                 />
                                 <div className="absolute inset-0 w-full h-full text-center top-14">
-                                    <i className="fa-solid fa-circle-play text-white text-5xl "></i>
+                                    <i className="fa-solid fa-circle-play text-5xl "></i>
                                 </div>
                             </div>
                         </SwiperSlide>

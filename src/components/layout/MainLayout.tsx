@@ -164,7 +164,7 @@ export default function MainLayout() {
                     <div className="lg:max-w-full md:w-screen mt-2  ">
                         <div
                             onClick={() => navigate('/top250Movie')}
-                            className="lg:grid lg:grid-cols-3 grid-cols-2 grid gap-2 text-white ">
+                            className="lg:grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 grid gap-2 text-white ">
                             <div>
                                 <ListRow listRowList={topRatedMovies} />
                                 <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>
@@ -258,7 +258,7 @@ export default function MainLayout() {
                     <div className="lg:max-w-full md:w-screen mt-6  ">
                         <div
                             onClick={() => navigate('/top250Movie')}
-                            className="grid grid-cols-3 gap-2 text-white ">
+                            className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 text-white ">
                             <div>
                                 <ListRow listRowList={topRatedMovies?.slice(3)} />
                                 <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>

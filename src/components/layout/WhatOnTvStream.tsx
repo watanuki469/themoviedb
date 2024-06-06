@@ -277,7 +277,7 @@ export default function WhatOnTvStream() {
                                     <Charts />
                                 </div>
                             </div>
-                            <div>
+                            <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>

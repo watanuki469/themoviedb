@@ -32,7 +32,7 @@ export default function SingleMovieStoryLine({
         return randomText.trim(); // Remove trailing space
     }
 
-    const languageString = localStorage.getItem('language');    
+    const languageString = localStorage.getItem('language');
     const usRelease = singleMovieList[0]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === `${languageString?.slice(3)}`);
     const certification =
         usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
@@ -68,16 +68,16 @@ export default function SingleMovieStoryLine({
                 <div style={{ position: "relative", zIndex: "1" }}>
                     <div className="bg-white">
                         <div className="mb-1">
-                            <div className="">{generateRandomText(50)}</div>
-                            <div></div>
+                            {/* <div className="">{generateRandomText(50)}</div> */}
+                            <div>{singleMovieList[0]?.overview}</div>
                         </div>
                         <div className="flex gap-2 mb-1 flex-wrap">
-                            {singleMovieList[0]?.keywords?.keywords?.slice(0,4).map((item: any) => (
+                            {singleMovieList[0]?.keywords?.keywords?.slice(0, 4).map((item: any) => (
                                 <button key={item.id} className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
                                     {item.name}
                                 </button>
                             ))}
-                             {singleMovieList[0]?.keywords?.keywords?.length > 4 ? (
+                            {singleMovieList[0]?.keywords?.keywords?.length > 4 ? (
                                 <button className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
                                     {singleMovieList[0]?.keywords?.keywords?.length - 4} More
 
@@ -85,7 +85,7 @@ export default function SingleMovieStoryLine({
                             ) : (
                                 <div></div>
                             )}
-                    
+
                         </div>
 
 
@@ -97,38 +97,28 @@ export default function SingleMovieStoryLine({
 
                             </div>
                             <div className=" border-b border-gray-300 flex gap-2 py-2 items-center aligns-center">
-                                <div className="font-bold">Tag line</div>
-                                <div className="flex gap-3 justify-center text-center aligns-center">
-                                    <p className="hover:underline flex gap-2">
-                                        <span className="text-blue-600">{singleMovieList[0]?.tagline}</span>
-                                    </p>
+                                <div className="font-bold">Tag line:
+                                    <span className="font-normal ml-2">{singleMovieList[0]?.tagline}</span>
                                 </div>
                             </div>
-                            <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
+                            <div className=" border-b border-gray-300 flex flex-wrap gap-3 py-2 items-center aligns-center">
                                 <div className="font-bold">Genres</div>
-                                <div className="flex gap-3">
+                                <div className="flex gap-3 flex-wrap">
                                     {singleMovieList[0]?.genres.slice(0, 4).map((item: any, index: number) => (
-                                        <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className="hover:underline flex gap-2">
-                                            <span className="text-blue-600">{item?.name}</span>
+                                        <p key={index} onClick={() => navigate(`/actor/${item?.id}`)} className=" flex gap-2">
+                                            <span className="text-blue-600 hover:underline">{item?.name}</span>
                                             <span>{index < Math.min(singleMovieList[0]?.genres.slice(0, 4)?.length) - 1 ? '•' : ''}</span>
                                         </p>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center">
-                                <div className='flex'>
-                                    <div className="font-bold">Motion Picture Rating (MPA)</div>
-                                    <div className='ml-2 flex gap-2' >{certification ? certification : "NR"}{mpaaRate()}</div>
+                            <div className="justify-between border-b border-gray-300 gap-3 py-2 items-center">
+                                <div className="font-bold">Motion Picture Rating (MPA)
+                                    <span className="font-normal ml-2">{certification ? certification : "NR"}{mpaaRate()}</span>
                                 </div>
-                                <i className="fa-solid fa-chevron-right"></i>
                             </div>
-                            <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center">
-                                <div className='flex'>
-                                    <div className="font-bold">Parent Guide</div>
-                                </div>
-                                <i className="fa-solid fa-chevron-right"></i>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>

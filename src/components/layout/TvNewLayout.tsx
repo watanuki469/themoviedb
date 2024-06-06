@@ -25,7 +25,7 @@ export default function TvNewLayout() {
         })
             .then((response) => {
                 console.log(response);
-                
+
                 setMovieNews(response?.data?.news?.edges || []);
             })
             .catch((error) => {
@@ -192,7 +192,10 @@ export default function TvNewLayout() {
 
                                 <TopNew />
                                 <TvNew />
-                                <CelebrityNew />
+                                <div className="sticky top-0 right-0 left-0">
+                                    <CelebrityNew />
+                                </div>
+
                             </div>
 
                         </div>

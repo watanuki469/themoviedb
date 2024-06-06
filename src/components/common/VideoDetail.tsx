@@ -155,16 +155,17 @@ export default function VideoDetail({
                         return (
                             <div key={index} className="relative">
                                 <SwiperSlide key={index}>
-                                    <div className="w-full hover:opacity-80" onClick={() => { setNumberIndex(index) }}  >
+                                    <div className="w-full hover:text-yellow-300 text-white hover:opacity-90" onClick={() => { setNumberIndex(index) }}  >
                                         <img
-                                            src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
+                                            // src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
+                                            src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`}                                            
                                             className="h-40 w-full object-cover"
                                             title={item?.name}
                                         />
                                         <p className="text-red w-full text-white font-bold">Watch {item?.name}</p>
                                         <p className="text-red w-full text-gray-500 ">{singleMovieList[0]?.original_title}</p>
                                         <div className="absolute inset-0 w-full h-full text-center top-14">
-                                            <i className="fa-solid fa-circle-play text-white text-5xl "></i>
+                                            <i className="fa-solid fa-circle-play text-5xl "></i>
                                         </div>
                                     </div>
 

@@ -1,39 +1,48 @@
+This project uses the TMDB API but is not endorsed or certified by TMDB.
+
 project using
-- api:
-+https://developer.themoviedb.org/
-+https://reqres.in/
-+https://rapidapi.com/DataCrawler/api/imdb188/
-+https://rapidapi.com/apidojo/api/imdb8/
 
--Configuration Setup:
-Vite Configuration,Tailwind CSS Configuration
+# 1. #api:
++ [The Movie Database (TMDb) API](https://developer.themoviedb.org/)
++ [Reqres API](https://reqres.in/)
++ [IMDB Data Crawler API (RapidAPI)](https://rapidapi.com/DataCrawler/api/imdb188/)
++ [IMDB API (RapidAPI)](https://rapidapi.com/apidojo/api/imdb8/)
 
--State Management:
-Redux Toolkit
+# 2. #Configuration Setup:
++ Vite Configuration
++ Tailwind CSS Configuration
 
--Component Setup:
-Flowbite and Flowbite-React,Radix UI Dialog
+# 3. #State Management:
++ Redux Toolkit
 
--Routing:
-React Router v6
-
--Axios Configuration:
-Axios
-
--UI Components:
-Tailwind CSS,Swiper,Material-UI (MUI)
-
--Database and ORM:
-MongoDB
-
--Environment Variables:
-dotenv
-
--Authentication and Validation:
-jsonwebtoken,express-validator
-
--Middleware and Server Setup:
-Express,TS-Node
-
--Styling and Linting:
-ESLint and Prettier,TailwindCSS
+# 4. #:Component Setup
++ Flowbite and Flowbite-React
++ Radix UI Dialog
+  
+# 5. #:Routing:
++ React Router v6
+  
+# 6. #:Axios Configuration
++ Axios
+# 7. #:UI Components
++ Tailwind CSS
++ SwiperJS
++ Material-UI (MUI)
+  
+# 8. #:Database and ORM
++ MongoDB
+  
+# 9. #:Environment Variables
++ dotenv
+  
+# 10. #:Authentication and Validation
++ jsonwebtoken
++ express-validator
+  
+# 11. #:Middleware and Server Setup:
++ Express
++ Node.js
++ TS-Node
+# 12. #:Styling and Linting
++ ESLint and Prettier
++ TailwindCSS

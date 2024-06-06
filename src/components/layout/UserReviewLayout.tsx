@@ -259,7 +259,6 @@ export default function UserReviewLayout() {
                                                             Copy Link
                                                         </MenuItem>
                                                     </Menu>
-
                                                 </div>
                                             </div>
                                         </div>

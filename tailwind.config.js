@@ -12,6 +12,18 @@ export default {
   plugins: [
     require("flowbite/plugin")
   ],
-  theme: {},
+  theme: {
+    extend: {
+      keyframes: {
+        orbit: {
+          to: { transform: 'rotate(360deg)' }
+        }
+      },
+      animation: {
+        orbit: 'orbit 30s linear infinite',
+        // Customize the duration for different elements if needed
+      }
+    }
+  }
 }
 

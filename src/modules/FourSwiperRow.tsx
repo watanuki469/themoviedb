@@ -27,9 +27,9 @@ export default function FourSwiperRow({
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 400) {
+            if (window.innerWidth < 500) {
                 setActiveSlider(2);
-            } else if (window.innerWidth < 550) {
+            } else if (window.innerWidth < 600) {
                 setActiveSlider(3);
             } else if (window.innerWidth < 768) {
                 setActiveSlider(4);
@@ -101,14 +101,14 @@ export default function FourSwiperRow({
     }
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 3000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 3000);
     }, [userInfoList]);
 
     let navigate = useNavigate();
@@ -386,8 +386,8 @@ export default function FourSwiperRow({
                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                     </div>
                                                 ) : (
-                                                    <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                        <i className="fas fa-check font-bold text-xl"></i>
+                                                    <div className="py-2 px-3 flex justify-center items-center text-black gap-2 grow  text-center h-full">
+                                                        <i className="fas fa-check font-bold "></i>
                                                         <div className="text-left">
                                                             <div className='font-bold'  >
                                                                 <p>WatchList</p>
@@ -400,8 +400,8 @@ export default function FourSwiperRow({
                                                     {loading[index] ? (
                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                     ) : (
-                                                        <div className="py-2 px-3 flex items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold text-xl"></i>
+                                                        <div className="py-2 px-3 flex justify-center items-center text-black gap-2 grow  text-center h-full">
+                                                            <i className="fas fa-plus font-bold "></i>
                                                             <div className="text-left">
                                                                 <div className='font-bold'  >
                                                                     <p>WatchList</p>

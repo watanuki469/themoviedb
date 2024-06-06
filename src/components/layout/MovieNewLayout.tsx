@@ -184,7 +184,10 @@ export default function MovieNewLayout() {
 
                                 <TopNew />
                                 <TvNew />
-                                <CelebrityNew />
+                                <div className="sticky top-0 right-0 left-0">
+                                    <CelebrityNew />
+                                </div>
+
                             </div>
 
                         </div>

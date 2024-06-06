@@ -1,0 +1,25 @@
+.earth {
+    background-image: url('../../assets/image2.jpg');
+    animation: animateEarth 15s linear infinite;
+}
+
+.custom-shadow {
+    box-shadow: 0 0 50px #4069ff;
+}
+
+@keyframes animateEarth {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: -750px 0;
+    }
+}
+
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    z-index: -1;
+}
