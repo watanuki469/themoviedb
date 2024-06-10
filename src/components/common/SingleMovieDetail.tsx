@@ -54,14 +54,14 @@ export default function SingleMovieDetail({
     }, []);
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 3000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
     }, [userInfoList]);
     const existingIndex = favoriteList?.findIndex((fav: any) => fav?.itemId == singleMovieList[0]?.id);
     const existingRating = ratingList?.find((rating: any) => rating?.itemId == singleMovieList[0]?.id); // Find the rating object for the item
@@ -466,7 +466,7 @@ export default function SingleMovieDetail({
                             <div className="flex">
                                 <div className="items-center justify-center">
                                     <div className="mr-4 text-stone-400" >IMDb Rating</div>
-                                    <div className="flex space-x-4 hover:bg-opacity-80 hover:bg-gray-500">
+                                    <div className="flex space-x-4 hover:opacity-80 hover:bg-gray-500">
                                         <div className="flex justify-center aligns-center items-center h-full gap-2">
                                             <i className="fa-solid fa-star h-full items-center text-2xl text-yellow-300"></i>
                                             <div className="">
@@ -484,7 +484,7 @@ export default function SingleMovieDetail({
                                                     </span>
                                                     <span className="text-stone-400">  /10</span>
                                                 </div>
-                                                <div className="text-stone-400">{singleMovieList[0]?.vote_count}k</div>
+                                                <div className="text-stone-400">{singleMovieList[0]?.vote_count}</div>
                                             </div>
                                         </div>
 
@@ -492,7 +492,7 @@ export default function SingleMovieDetail({
                                 </div>
                                 <div className="items-center text-center justify-center m-auto mr-4 aligns-center ">
                                     <div className="    text-stone-400">Your Rating</div>
-                                    <div className="flex hover:bg-opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
+                                    <div className="flex hover:opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
                                         <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
                                             {
                                                 existingRating ? (
@@ -533,7 +533,7 @@ export default function SingleMovieDetail({
                                 onError={handleImageError}
                                 src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" />
                         </div>
-                        <div className=" lg:col-span-7 md:col-span-12   lg:ml-2 bg-black hover:opacity-90">
+                        <div className=" lg:col-span-7 col-span-12   lg:ml-2 bg-black hover:opacity-90">
                             <iframe
                                 key={movieVideoList[0]?.name}
                                 src={`https://www.youtube.com/embed/${movieVideoList[0]?.key}?controls=0&&autoplay=1`}
@@ -549,7 +549,7 @@ export default function SingleMovieDetail({
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden ">
                             <div onClick={() => navigate(`/video/${singleMovieList[0]?.id}`)}
-                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:opacity-90 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -560,7 +560,7 @@ export default function SingleMovieDetail({
                                 </div>
                             </div>
                             <div onClick={() => navigate(`/image/movie/${singleMovieList[0]?.id}`)}
-                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:opacity-90">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -591,8 +591,8 @@ export default function SingleMovieDetail({
                                         <div>Director</div>
                                         <div className='flex flex-wrap gap-2'>
                                             {director.slice(0, 3).map((item: any, index: number) => (
-                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
-                                                    <span className="text-blue-600">{item?.name}</span>
+                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className=" flex gap-2">
+                                                    <span className="text-blue-600 hover:underline ">{item?.name}</span>
                                                     <span>{index < Math.min(director?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
@@ -603,8 +603,8 @@ export default function SingleMovieDetail({
                                         <div className="">Writers</div>
                                         <div className="flex flex-wrap gap-2 justify-center text-center aligns-center">
                                             {writer.slice(0, 3).map((item: any, index: number) => (
-                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
-                                                    <span className="text-blue-600">{item?.name}</span>
+                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="flex gap-2">
+                                                    <span className="text-blue-600 hover:underline ">{item?.name}</span>
                                                     <span>{index < Math.min(writer?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
@@ -614,8 +614,8 @@ export default function SingleMovieDetail({
                                         <div className="">Star</div>
                                         <div className="flex flex-wrap gap-2">
                                             {movieCreditList.slice(0, 3).map((item: any, index: number) => (
-                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
-                                                    <span className="text-blue-600">{item?.name}</span>
+                                                <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="flex gap-2">
+                                                    <span className="hover:underline  text-blue-600">{item?.name}</span>
                                                     <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
                                                 </p>
                                             ))}
@@ -624,7 +624,7 @@ export default function SingleMovieDetail({
                                     <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                         <div className="">IMDb<span className="text-blue-500">Pro</span></div>
                                         <div className="flex gap-3 items-center">
-                                            <p onClick={() => navigate(`/`)} className="hover:underline flex gap-2">
+                                            <p onClick={() => navigate(`/`)} className="flex gap-2">
                                                 <span className="text-blue-600">See production info at IMDbPro</span>
                                             </p>
                                             <i className="fa-solid fa-arrow-up-right-from-square"></i>

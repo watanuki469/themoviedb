@@ -101,14 +101,14 @@ export default function FourSwiperRow({
     }
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 3000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 3000);
     }, [userInfoList]);
 
     let navigate = useNavigate();
@@ -432,8 +432,8 @@ export default function FourSwiperRow({
                         </SwiperSlide>
                     )
                 })}
-                {/* <div className="custom-next swiper-button-next flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:bg-opacity-80 px-6 py-8  h-full"></div>
-                <div className="custom-prev swiper-button-prev flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:bg-opacity-80 px-6 py-8  h-full"></div> */}
+                {/* <div className="custom-next swiper-button-next flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:opacity-80 px-6 py-8  h-full"></div>
+                <div className="custom-prev swiper-button-prev flex  bg-black bg-opacity-50 rounded-none text-white cursor-pointer transition duration-300 hover:opacity-80 px-6 py-8  h-full"></div> */}
             </Swiper>
         </div >
     );

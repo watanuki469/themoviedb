@@ -289,7 +289,7 @@ export default function TopBar() {
         </div>
 
       ) : (
-        <div className="flex gap-x-3 items-center  justify-center ">
+        <div className="flex w-full gap-x-3 items-center  justify-center ">
           <div onClick={toggleDrawer} className=" lg:hidden font-extrabold text-xl text-white m-3">
             <i className="fa-sharp fa-solid fa-bars"></i>
           </div >
@@ -380,7 +380,7 @@ export default function TopBar() {
                           </p>
                           <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">Top 250 TV Shows</p>
                           <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">   Most Popular TV   </p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  Browse Movie By Genre</p>
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  Browse TV By Genre</p>
                           <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV News</p>
                         </div>
                       </div>
@@ -497,7 +497,7 @@ export default function TopBar() {
           <button
             onClick={() => navigate("/IMDbPro")}
             className=" hidden lg:flex bg-black text-white text-center 
-           font-extrabold text-lg font-sans whitespace-nowrap  hover:bg-opacity-90  rounded-md"
+           font-extrabold text-lg font-sans whitespace-nowrap  hover:opacity-90  rounded-md"
           >
             IMDb<span className="text-blue-600">Pro</span>
           </button>
@@ -726,12 +726,11 @@ export default function TopBar() {
             Use App
           </button>
         </div >
-      )
-      }
+      )}
 
       {/* drawer */}
       <div
-        className={`fixed  top-0 left-0 h-screen w-96 bg-black shadow z-40   rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed  top-0 left-0 h-screen w-fit bg-black shadow z-40 justify-start  rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Toolbar />
         <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif' }}>X</Button>
@@ -740,7 +739,7 @@ export default function TopBar() {
             <Fragment key={text} >
               <ListItem >
                 <ListItemButton onClick={() => toggleMenu(text)}>
-                  <ListItemIcon sx={{ color: 'white' }}>
+                  <ListItemIcon sx={{ color: 'white', left: '0' }}>
                     {index === 0 && <LocalMoviesIcon />}   {index === 1 && <TvIcon />}
                     {index === 2 && <VideoLibraryIcon />}     {index === 3 && <StarsIcon />}
                     {index === 4 && <PeopleAltIcon />}       {index === 5 && <PublicIcon />}

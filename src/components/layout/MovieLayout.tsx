@@ -117,16 +117,16 @@ export default function MovieLayout() {
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchSingleMovies());
         dispatch(fetchMovieVideos());
         dispatch(fetchMovieImage());
         dispatch(fetchMovieCredit());
         dispatch(fetchMovieSimilar());
         dispatch(fetchMovies());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
     const currentDate = new Date();
 

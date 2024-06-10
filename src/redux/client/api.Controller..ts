@@ -71,4 +71,11 @@ const apiUpComing = {
     },
 }
 
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing }
+const apiPeoplePopular = {
+    peoplePopular() {
+        const url = `person/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`;
+        return axiosClient.get(url)
+    },
+}
+
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing,apiPeoplePopular }

@@ -313,7 +313,7 @@ export default function PersonDetail({
                                 onError={handleImageError}
                                 alt="product1 images" />
                         </div>
-                        <div className="lg:col-span-7 md:col-span-12 lg:ml-2 bg-black relative"
+                        <div className="lg:col-span-7 col-span-12 lg:ml-2 bg-black relative"
                             onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}>
                             <div className='min-h-60'
                                 style={{
@@ -349,7 +349,7 @@ export default function PersonDetail({
 
                         <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden">
                             <div onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}
-                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:bg-opacity-90 ">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:opacity-90 ">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <VideoLibraryIcon />
@@ -360,7 +360,7 @@ export default function PersonDetail({
                                 </div>
                             </div>
                             <div onClick={() => navigate(`/image/person/${singleMovieList[0]?.id}`)}
-                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:bg-opacity-90">
+                                className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:opacity-90">
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
                                         <PhotoLibraryIcon />
@@ -470,7 +470,7 @@ export default function PersonDetail({
                             <div className='col-span-1'>
                                 <div
                                     onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}
-                                    className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center flex'>
+                                    className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center hover:opacity-90 flex'>
                                     <div>   <VideoLibraryIcon />   </div>
                                     {singleMovieList[0]?.combined_credits?.cast?.length > 99 ? "99+" : singleMovieList[0]?.combined_credits?.cast?.length} Videos
                                 </div>
@@ -478,7 +478,7 @@ export default function PersonDetail({
                             <div className='col-span-1'>
                                 <div
                                     onClick={() => navigate(`/image/person/${singleMovieList[0]?.id}`)}
-                                    className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center'>
+                                    className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 hover:opacity-90 text-center'>
                                     <div>   <PhotoLibraryIcon /></div>
                                     {singleMovieList[0]?.images?.profiles?.length > 99 ? "99+" : singleMovieList[0]?.images?.profiles?.length} Photos
                                 </div>

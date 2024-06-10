@@ -69,8 +69,8 @@ export default function Slider() {
     return (
         <div>
             <section className='relative overflow-hidden'>
-                <div className="md:grid md:grid-cols-12 text-white gap-3  items-end cursor-pointer w-full ">
-                    <div className="lg:col-span-8 md:col-span-12 flex items-stretch">
+                <div className="grid grid-cols-12 text-white gap-3  items-end cursor-pointer w-full ">
+                    <div className="lg:col-span-8 col-span-12 flex items-stretch">
                         <div id='1' className=" bg-cover bg-top relative w-screen hover:opacity-90"
                             style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${popularMovies[activeStep]?.backdrop_path})` }}>
                             <div className="flex flex-col h-full "  >
@@ -85,7 +85,7 @@ export default function Slider() {
                                                 top: '200%',
                                                 left: "0px",
                                                 background: "rgba(0, 0, 0, 0.35)",
-                                                border: '1px solid white',
+                                                border: '1px solid white ',
                                                 "&:hover": {
                                                     background: "rgba(0, 0, 0, 0.35)",
                                                 },
@@ -165,7 +165,7 @@ export default function Slider() {
                             </div>
                         </div>
                     </div>
-                    <div className="lg:col-span-4 w-screen flex">
+                    <div className="lg:col-span-4 col-span-12 w-screen flex">
                         <div className='hidden lg:block relative h-96 w-screen'>
                             <div id='6' className="h-8 text-red-500 hover:opacity-90">
                                 <div className="text-xl text-white text-left  duration-300 ease-in-out ">
@@ -249,7 +249,7 @@ export default function Slider() {
 
 
                             </div>
-                            <div id='4' className="h-24 mb-4 "
+                            <div id='4' className="h-24 mb-4 hover:opacity-90 "
                                 onClick={() => navigate(`/movie/${popularMovies[activeStep + 3]?.id}`)}>
                                 <div className='flex flex-row w-full'>
                                     <div >

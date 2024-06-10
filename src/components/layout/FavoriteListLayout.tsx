@@ -40,7 +40,7 @@ export function FavoriteListLayout() {
             console.log("Fetching favorites actor failed: " + e);
         }
     }
-   const favoriteActorList2=[...favoriteActorList]
+    const favoriteActorList2 = [...favoriteActorList]
 
     useEffect(() => {
         if (userInfoList?.length > 0) {
@@ -246,15 +246,14 @@ export function FavoriteListLayout() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <div className="px-2">{movieIndex}</div>
                                         <img onClick={() => navigate(`/movie/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
-                                            onError={handleImageError} className="w-full  h-60 hover:opacity-80" />
+                                            onError={handleImageError} className="w-full hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
-                                            <div className="flex flex-wrap items-center gap-2 justify-start text-left">
+                                            <div className="items-center gap-2 justify-start text-left w-full ">
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movieIndex}.{movie?.itemName}</p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     {movie?.itemKnowFor}
@@ -300,7 +299,7 @@ export function FavoriteListLayout() {
             </div>
             <div className="bg-white text-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                    <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 border-b-2 border-gray py-4">
                             <div className="items-center ">
                                 <h2 className="text-2xl font-bold ">Your Favorite Actor List</h2>
@@ -474,14 +473,14 @@ export function FavoriteListLayout() {
                         </div>
 
                         <div>
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                         display: 'flex', flexWrap: 'wrap'
                                     }}>
                                     {favoriteActorList2
-                                        .sort((a:any, b:any) => {
+                                        .sort((a: any, b: any) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
                                                 const titleA = a?.itemName?.toUpperCase();

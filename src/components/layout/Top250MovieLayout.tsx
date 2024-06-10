@@ -2,7 +2,6 @@ import AppsIcon from '@mui/icons-material/Apps';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,12 +12,12 @@ import TopNew from "../../modules/TopNew";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/login.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
@@ -43,11 +42,6 @@ export default function Top250MovieLayout() {
     const currentMonth = currentDate.getMonth();
     const currentMonthName = monthNames[currentMonth];
 
-    const [isChecked, setIsChecked] = useState(false);
-    const handleChecked = () => {
-        setIsChecked(!isChecked);
-    }
-
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorRankingEl(event.currentTarget);
@@ -58,38 +52,11 @@ export default function Top250MovieLayout() {
     const switchView = (view: any) => {
         setCurrentView(view);
     };
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     type GenreID = number;
     type GenreName = string;
     const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action',
-        12: 'Adventure',
-        16: 'Animation',
-        35: 'Comedy',
-        80: 'Crime',
-        99: 'Documentary',
-        18: 'Drama',
-        10751: 'Family',
-        14: 'Fantasy',
-        36: 'History',
-        27: 'Horror',
-        10402: 'Music',
-        9648: 'Mystery',
-        10749: 'Romance',
-        878: 'Science Fiction',
-        10770: 'TV Movie',
-        53: 'Thriller',
-        10752: 'War',
-        37: 'Western',
-        10759: 'Action & Adventure',
-        10762: 'Kids',
-        10763: 'News',
-        10764: 'Reality',
-        10765: 'Sci-Fi & Fantasy',
-        10766: 'Soap',
-        10767: 'Talk',
-        10768: 'War & Politics'
+        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
     };
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
@@ -285,7 +252,6 @@ export default function Top250MovieLayout() {
                 return (
                     <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
                     >
-
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
@@ -310,7 +276,7 @@ export default function Top250MovieLayout() {
                                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                     </div>
                                                                 ) : (
-                                                                    <div className="flex items-center  gap-2 hover:bg-gray-500 w-fit px-2 py-2 rounded-lg">
+                                                                    <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
                                                                         <i className="fa-solid fa-star text-blue-500"></i>
                                                                         <div>{existingRating?.itemRating}</div>
                                                                     </div>
@@ -321,7 +287,7 @@ export default function Top250MovieLayout() {
                                                                     {loading2[movieIndex] ? (
                                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                     ) : (
-                                                                        <div className="hover:bg-gray-500  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
+                                                                        <div className="hover:bg-gray-200  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
                                                                             <i className="fa-regular fa-star text-blue-500"></i>
                                                                             <div>Rate</div>
                                                                         </div>
@@ -609,7 +575,6 @@ export default function Top250MovieLayout() {
             });
     };
 
-
     return (
         <div className=" min-h-screen cursor-pointer">
             {isRating &&
@@ -689,7 +654,7 @@ export default function Top250MovieLayout() {
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
                             <button key={`genre-${genre}-${index}`}
-                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:bg-opacity-90'}`}
+                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-200 hover:opacity-90'}`}
                                 onClick={() => handleGenreClick(genre as Genre)}
                             >
                                 <p>{`${genre}: (${count})`}</p>
@@ -716,11 +681,11 @@ export default function Top250MovieLayout() {
                         </div>
                     </div>
 
-                    <Divider sx={{
+                    {/* <Divider sx={{
                         marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2,
                         border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
-                    }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle>
+                    }} /> */}
+                    {/* <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle> */}
                 </DialogContent>
             </Dialog>
             <div className="bg-black pb-1">
@@ -728,15 +693,13 @@ export default function Top250MovieLayout() {
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white ">
+            <div className="bg-white  px-2">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
-                        <div className="flex mt-3 ">
-                            <div className="items-center ">
-                                <h2 className="text-2xl font-bold text-black ">IMDb Charts</h2>
-                            </div>
+                    <div className="lg:max-w-full w-full ">
+                        <div className="flex mt-3 items-center  ">
+                            <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl  text-lg text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -818,17 +781,17 @@ export default function Top250MovieLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">IMDb Top 250 Movies</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top 250 Movies</h2>
                             </div>
                             <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
                         </div>
 
                     </div>
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-12 md-col-span-12  w-full ">
+                    <div className="grid grid-cols-12 gap-2 w-full">
+                        <div className="lg:col-span-12 col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
-                                    <h2 className="text-2xl text-black ">
+                                    <h2 className="lg:text-2xl text-lg text-black ">
                                         {topRatedMovies
                                             .filter((movie: any) => {
                                                 if (selectedGenres?.length === 0) return true; // No genre filter
@@ -858,7 +821,7 @@ export default function Top250MovieLayout() {
 
                                 </div>
 
-                                <div className="flex items-center ml-auto gap-4 px-2 py-2" >
+                                <div className="flex items-center ml-auto gap-4 px-2 py-2 " >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
                                         <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
                                     </Tooltip>
@@ -873,7 +836,7 @@ export default function Top250MovieLayout() {
                             {/* filter icon */}
                             <div className=" flex flex-wrap items-center gap-2">
                                 <div className=" flex flex-wrap items-center gap-2">
-                                    <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
+                                    <button className="hover:opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
                                         onClick={handleDiaGenlogOpen}>
                                         <FilterListIcon />
                                     </button>
@@ -937,7 +900,6 @@ export default function Top250MovieLayout() {
                                             Runtime
                                         </MenuItem>
                                     </Menu>
-                                    <SwapVertIcon className="hover:text-blue-500" />
                                 </div>
                             </div>
                         </div>
@@ -954,8 +916,8 @@ export default function Top250MovieLayout() {
 
                             </div>
                         </div> */}
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
+                            <div className="lg:max-w-full w-screen py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
@@ -990,8 +952,8 @@ export default function Top250MovieLayout() {
                                         .sort((a, b) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
+                                                const titleA = a?.title?.toUpperCase();
+                                                const titleB = b?.title?.toUpperCase();
                                                 if (titleA < titleB) {
                                                     return -1;
                                                 }
@@ -1034,7 +996,7 @@ export default function Top250MovieLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250Movie`)}>
+                                <div className="lg:max-w-full w-screen" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={mostPopularTv} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
@@ -1044,7 +1006,7 @@ export default function Top250MovieLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Charts</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-screen">
                                     <Charts />
                                 </div>
                             </div>
@@ -1055,7 +1017,7 @@ export default function Top250MovieLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-screen">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>

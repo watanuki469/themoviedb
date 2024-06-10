@@ -54,7 +54,6 @@ export default function AdvancedSearchLayout() {
             setQuery('');
 
         } else {
-
             timerId = setTimeout(() => {
                 dispatch(fetchSearch());
             }, 2000);
@@ -282,7 +281,7 @@ export default function AdvancedSearchLayout() {
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item    
-        
+
         switch (currentView) {
             case 'Detail':
                 return (
@@ -367,10 +366,10 @@ export default function AdvancedSearchLayout() {
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black mt-2  " >
                             <div className="items-center gap-2">
-                                {/* <div className="px-2">{movieIndex}</div> */}
+                                {/* <div className="px-2"></div> */}
                                 <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
                                     src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                    onError={handleImageError} className="w-full h-60 hover:opacity-80" />
+                                    onError={handleImageError} className="w-full hover:opacity-80" />
                                 <div className="px-2 py-2 ">
                                     {
                                         mediatype != 'person' ?
@@ -411,7 +410,7 @@ export default function AdvancedSearchLayout() {
                                                         </div>
                                                     </button>
                                                     <div className="h-12 w-full ">
-                                                        <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
+                                                        <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.name ? movie?.name : movie?.title}</p>
                                                     </div>
                                                     <div className="flex flex-wrap">
                                                         {movie?.first_air_date ? movie?.first_air_day?.slice(0, 4) : movie?.release_date?.slice(0, 4)}
@@ -421,7 +420,7 @@ export default function AdvancedSearchLayout() {
                                             ) : (
                                                 <div className="">
                                                     <div className="h-12 w-full ">
-                                                        <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title ? movie?.title : movie?.name}</p>
+                                                        <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                                     </div>
                                                     <p className="text-gray-500 "> {movie?.known_for_department}</p>
                                                     <div className="w-full " >
@@ -735,6 +734,12 @@ export default function AdvancedSearchLayout() {
         if (titleParam) {
             setQuery(titleParam);
             setSearchParams('title=' + titleParam)
+        }
+    }, []);
+    useEffect(() => {
+        const queryParams = searchParams.get("mediaType");
+        if (queryParams) {
+            console.log(queryParams.trim());
         }
     }, []);
     useEffect(() => {
@@ -1090,7 +1095,7 @@ export default function AdvancedSearchLayout() {
                                                     {
                                                         Object.values(genreMapping).map(genre => (
                                                             <div onClick={() => handleGenreClick(genre as Genre)}
-                                                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-gray-200 ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-300 hover:bg-opacity-90'}`}
+                                                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-gray-200 ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-300 hover:opacity-90'}`}
                                                                 key={genre}>{genre}</div>
                                                         ))
                                                     }

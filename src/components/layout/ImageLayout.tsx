@@ -102,7 +102,7 @@ export default function ImageLayout() {
             })
     }
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (mediaType === 'tv') {
             dispatch(fetchTv());
             dispatch(fetchTvImages());
@@ -396,7 +396,7 @@ export default function ImageLayout() {
                                     {isContentVisible ? (
                                         <div className='w-full'>
                                             <div className='border-t-2 border-gray-200 md:grid grid-cols-12 gap-2 relative'>
-                                                <div className="lg:col-span-8 md:col-span-12 text-lg">
+                                                <div className="lg:col-span-8 col-span-12 text-lg">
                                                     <p className='text-yellow-300'>{mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</p>
                                                     <div className='text-blue-500 flex gap-2 flex-wrap'>
                                                         <p className=''>
@@ -419,7 +419,7 @@ export default function ImageLayout() {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div className="lg:col-span-4 md:col-span-12 text-lg w-full ">
+                                                <div className="lg:col-span-4 col-span-12 text-lg w-full ">
                                                     <p className={`lg:flex hidden text-black `}>.</p>
                                                     <div className='border-l-2 border-gray-200 px-4 lg:block hidden'>
                                                         <div className='flex items-center gap-2 flex-wrap'>

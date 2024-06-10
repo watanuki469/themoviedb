@@ -226,15 +226,13 @@ export function RatingLayout() {
                     <div className=" items-center ">
                         <div className="mt-2">
                             <div className="items-center gap-2">
-                                <div className="px-2">{movieIndex}</div>
-
                                 <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                     src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
                                     onError={handleImageError} className="w-full hover:opacity-80" />
                                 <div className="px-2 py-2 w-full">
                                     <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                         <div className="h-12 w-full ">
-                                            <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
+                                            <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
                                         </div>
                                     </div>
                                 </div>

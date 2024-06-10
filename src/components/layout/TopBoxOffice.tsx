@@ -440,7 +440,7 @@ export default function TopBoxOffice() {
     };
 
     return (
-        <div className=" min-h-screen cursor-pointer">
+        <div className=" min-h-screen cursor-pointer px-2">
             {isRating &&
                 (
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
@@ -513,13 +513,13 @@ export default function TopBoxOffice() {
             </div>
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
-                        <div className="flex mt-3 ">
+                    <div className="lg:max-w-full w-full ">
+                        <div className="flex mt-3 items-center ">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold text-black ">IMDb Charts</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -589,24 +589,20 @@ export default function TopBoxOffice() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">IMDb Top Box Office</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top Box Office</h2>
                             </div>
                             <p className="text-gray-500 py-2">Weekend of {currenDatePre > 28 ? preMonthName:currentMonthName } {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
                         </div>
 
                     </div>
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
-                            <div className="flex ">
-                                <div className="items-center ">
-                                    <h2 className="text-2xl text-black ">
+                    <div className="grid grid-cols-12 gap-2 w-full">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
+                            <div className="flex items-center">
+                                    <h2 className="lg:text-2xl text-lg text-black ">
                                         {topRatedMovies
                                             .slice(0, 10)
                                             .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
                                         /10 Titles</h2>
-
-                                </div>
-
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
                                         <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
@@ -619,7 +615,7 @@ export default function TopBoxOffice() {
                                     </Tooltip>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full md:w-screen lg:px-2 lg:py-2 ">
+                            <div className="lg:max-w-full w-full lg:px-2 lg:py-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
@@ -647,7 +643,7 @@ export default function TopBoxOffice() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250TV`)}>
+                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250TV`)}>
                                     <ListRow listRowList={topRatedTV} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
@@ -657,7 +653,7 @@ export default function TopBoxOffice() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Charts</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
                             </div>
@@ -665,7 +661,7 @@ export default function TopBoxOffice() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>

@@ -643,7 +643,7 @@ export default function Top250TvLayout() {
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
                             <button key={`genre-${genre}-${index}`}
-                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:bg-opacity-90'}`}
+                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:opacity-90'}`}
                                 onClick={() => handleGenreClick(genre as Genre)}
                             >
                                 <p>{`${genre}: (${count})`}</p>
@@ -828,7 +828,7 @@ export default function Top250TvLayout() {
                             {/* filter icon */}
                             <div className=" flex items-center gap-2 flex-wrap">
                                 <div className=" flex flex-wrap items-center gap-2">
-                                    <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
+                                    <button className="hover:opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
                                         onClick={handleDiaGenlogOpen}>
                                         <FilterListIcon />
                                     </button>
@@ -932,8 +932,8 @@ export default function Top250TvLayout() {
                                         .sort((a, b) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
+                                                const titleA = a?.name?.toUpperCase();
+                                                const titleB = b?.name?.toUpperCase();
                                                 if (titleA < titleB) {
                                                     return -1;
                                                 }

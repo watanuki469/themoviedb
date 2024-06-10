@@ -50,12 +50,12 @@ export default function VideoTvLayout() {
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchTv());
         dispatch(fetchTvImages());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [id]);
 
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {

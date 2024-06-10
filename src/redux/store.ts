@@ -14,6 +14,7 @@ import tvImageReducer from './reducers/tvImage.reducer'
 import upComingReducer from './reducers/upComing.reducer'
 import fanfavoriteReducer from './reducers/fanfavorite.reducer'
 import loginReducer from './reducers/login.reducer'
+import peoplePopularReducer from './reducers/peoplePopular.reducer'
 
 export const store = configureStore({
     reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
         tv: tvReducer,
         tvImages: tvImageReducer,
         upComing: upComingReducer,
+        peoplePopular: peoplePopularReducer,
         fanFavorite:fanfavoriteReducer,
         login:loginReducer,
     },})

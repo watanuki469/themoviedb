@@ -1,24 +1,22 @@
+import AppsIcon from '@mui/icons-material/Apps';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import MenuIcon from '@mui/icons-material/Menu';
+import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { setDeleteRating, setListRating, setRating } from "../../redux/reducers/login.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import AppsIcon from '@mui/icons-material/Apps';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import Charts from "../../modules/Charts";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import ShareIcon from '@mui/icons-material/Share';
-import { toast } from "react-toastify";
-import { AppDispatch } from "../../redux/store";
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
-import { setDeleteRating, setListRating, setRating } from "../../redux/reducers/login.reducer";
 
 
 export default function TopPopularTvLayout() {
@@ -47,10 +45,6 @@ export default function TopPopularTvLayout() {
     const currentMonthName = monthNames[currentMonth];
 
     const [isChecked, setIsChecked] = useState(false);
-    const handleChecked = () => {
-        setIsChecked(!isChecked);
-    }
-
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorRankingEl(event.currentTarget);
@@ -655,7 +649,7 @@ export default function TopPopularTvLayout() {
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
                             <button key={`genre-${genre}-${index}`}
-                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-300 hover:bg-opacity-90'}`}
+                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-300 hover:opacity-90'}`}
                                 onClick={() => handleGenreClick(genre as Genre)}
                             >
                                 <p>{`${genre}: (${count})`}</p>
@@ -702,7 +696,7 @@ export default function TopPopularTvLayout() {
                                 <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg  text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -834,7 +828,7 @@ export default function TopPopularTvLayout() {
                                 </div>
                                 {/* filter icon */}
                                 <div className=" flex flex-wrap items-center gap-2">
-                                    <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
+                                    <button className="hover:opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
                                         onClick={handleDiaGenlogOpen}>
                                         <FilterListIcon />
                                     </button>
@@ -930,8 +924,8 @@ export default function TopPopularTvLayout() {
                                         .sort((a, b) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.original_title?.toUpperCase();
-                                                const titleB = b?.original_title?.toUpperCase();
+                                                const titleA = a?.name?.toUpperCase();
+                                                const titleB = b?.name?.toUpperCase();
                                                 if (titleA < titleB) {
                                                     return -1;
                                                 }

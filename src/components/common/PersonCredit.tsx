@@ -85,7 +85,7 @@ export default function PersonCredit({
                 }}>
 
                     {isOpen && (
-                        <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-20">
+                        <div className="fixed top-0 left-0 w-full text-white flex justify-center items-center z-20">
                             <div className="p-5 rounded-lg max-w-2xl ">
                                 <div className="flex justify-end">
                                     <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">

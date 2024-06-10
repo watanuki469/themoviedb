@@ -204,15 +204,13 @@ export function ActivityLayout() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <div className="px-2">{movieIndex}</div>
-
                                         <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)} 
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError} className="w-full h-60  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.itemName}</p>
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -286,22 +284,10 @@ export function ActivityLayout() {
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                             mt: 1.5,
                                             '& .MuiAvatar-root': {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
+                                                width: 32,   height: 32,   ml: -0.5,   mr: 1,
                                             },
                                             '&::before': {
-                                                content: '""',
-                                                display: 'block',
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 14,
-                                                width: 10,
-                                                height: 10,
-                                                bgcolor: 'background.paper',
-                                                transform: 'translateY(-50%) rotate(45deg)',
-                                                zIndex: 0,
+                                                content: '""',  display: 'block',  position: 'absolute',  top: 0,  right: 14,  width: 10,  height: 10,  bgcolor: 'background.paper',  transform: 'translateY(-50%) rotate(45deg)',  zIndex: 0,
                                             },
                                         },
                                     }}
@@ -466,7 +452,7 @@ export function ActivityLayout() {
 
                         </div>
                         <div>
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",

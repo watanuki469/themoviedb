@@ -31,11 +31,11 @@ export default function WhatOnTvStream() {
     const discoverMovie = useAppSelector((state) => state.movies.discoverMovies)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, []);
     const currentDate = new Date();
     const monthNames = [
@@ -194,8 +194,8 @@ export default function WhatOnTvStream() {
                                 </div>
                                 <div className="grid grid-cols-2 px-2 py-2 gap-4" >
                                     <div>
-                                        <p>Take a look at the best movies and series coming in May, including Furiosa, The Fall Guy, and more.</p>
-                                        <p className="w-full text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See out pick</p>
+                                        <p>Take a look at the best movies and series coming in {currentMonth}, including Furiosa, The Fall Guy, and more.</p>
+                                        <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See our pick</p>
                                     </div>
                                     <div className="max-w-full" onClick={() => navigate(`/top250Movie`)}>
                                         <ListRow listRowList={topRatedMovies?.slice(3)} />
@@ -207,8 +207,8 @@ export default function WhatOnTvStream() {
                                 </div>
                                 <div className="grid grid-cols-2 px-2 py-2 gap-4" >
                                     <div>
-                                        <p>The final season of "Evil" is one of the biggest TV and streaming premieres this month. Check out our May calendar for more!</p>
-                                        <p className="w-full text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Tv`)}>See out pick</p>
+                                        <p>The final season of "Evil" is one of the biggest TV and streaming premieres this month. Check out our {currentMonthName} calendar for more!</p>
+                                        <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Tv`)}>See our pick</p>
                                     </div>
                                     <div className="max-w-full" onClick={() => navigate(`/top250Tv`)}>
                                         <ListRow listRowList={topRatedTv?.slice(3)} />
@@ -221,7 +221,7 @@ export default function WhatOnTvStream() {
                                 <div className="grid grid-cols-2 px-2 py-2 gap-4" >
                                     <div>
                                         <p>Check out our list of renewals and cancellations to see if your favorite show made the cut.</p>
-                                        <p className="w-full text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Tv`)}>See out pick</p>
+                                        <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Tv`)}>See our pick</p>
                                     </div>
                                     <div className="max-w-full" onClick={() => navigate(`/top250Tv`)}>
                                         <ListRow listRowList={mostPopularTv?.slice(3)} />
@@ -234,7 +234,7 @@ export default function WhatOnTvStream() {
                                 <div className="grid grid-cols-2 px-2 py-2 gap-4" >
                                     <div>
                                         <p>Freshen up your Watchlist with the latest roster of streaming movies and TV shows coming to Disney+, featuring old favorites and top-notch newcomers.</p>
-                                        <p className="w-full text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See out pick</p>
+                                        <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See our pick</p>
                                     </div>
                                     <div className="max-w-full" onClick={() => navigate(`/top250Movie`)}>
                                         <ListRow listRowList={topRatedMovies?.slice(6)} />
@@ -247,7 +247,7 @@ export default function WhatOnTvStream() {
                                 <div className="grid grid-cols-2 px-2 py-2 gap-4" >
                                     <div>
                                         <p>We rounded up the kids' animated shows that transcend all age targets thanks to their brilliant writing and amazing visuals, from "Avatar: The Last Airbender" to "Adventure Time."</p>
-                                        <p className="w-full text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See out pick</p>
+                                        <p className="w-full text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See our pick</p>
                                     </div>
                                     <div className="max-w-full" onClick={() => navigate(`/tv/246`)}>
                                         <img src={`https://image.tmdb.org/t/p/w500//8RFAXPLs3qg5YVYbv5ME46syBKy.jpg`} alt="product images" className="w-full" />

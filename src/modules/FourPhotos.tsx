@@ -20,8 +20,10 @@ export default function FourPhotos({
                 setActiveSlider(3);
             } else if (window.innerWidth < 768) {
                 setActiveSlider(4);
-            } else if (window.innerWidth < 1024) {
+            } else if (window.innerWidth < 900) {
                 setActiveSlider(5);
+            } else if (window.innerWidth < 1024) {
+                setActiveSlider(6);
             } else {
                 setActiveSlider(4);
             }
@@ -63,7 +65,7 @@ export default function FourPhotos({
                 >
                     {fourPhotosList && Array.isArray(fourPhotosList) && fourPhotosList.map((item: any, index: any) => (
                         <SwiperSlide key={index}>
-                            <div className="w-40 h-40 mx-auto bg-cover items-center justify-center hover:opacity-80"
+                            <div className="w-40 h-40 object-cover mx-auto bg-cover bg-no-repeat bg-black bg-center  items-center justify-center hover:opacity-80"
                                 style={{
                                     backgroundImage: `url(${item.file_path ? `https://image.tmdb.org/t/p/w200/${item.file_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
                                 }}>
