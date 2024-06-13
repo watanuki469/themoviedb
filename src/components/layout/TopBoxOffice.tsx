@@ -279,7 +279,7 @@ export default function TopBoxOffice() {
                                     <div className="items-center gap-2 ">
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full h-60  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full lg:h-56 h-80  hover:opacity-80" />
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
                                                 <div className="h-12 w-full ">

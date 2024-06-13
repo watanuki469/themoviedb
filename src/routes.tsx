@@ -6,6 +6,7 @@ import CelebNewLayout from "./components/layout/CelebNewLayout";
 import ChangeLayoutTest from "./components/layout/ChangePasswordLayout";
 import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
 import ImageLayout from "./components/layout/ImageLayout";
+import KeywordLayout from "./components/layout/KeywordLayout";
 import LoginLayoutTest from "./components/layout/LoginLayoutTest";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
@@ -19,6 +20,7 @@ import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
 import TopPopularTvLayout from "./components/layout/TopPopularTvLayout";
+import TrendingLayout from "./components/layout/TrendingLayout";
 import TvLayout from "./components/layout/TvLayout";
 import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
@@ -27,6 +29,7 @@ import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
 import { WatchListLayout } from "./components/layout/WatchListLayout";
 import { WatchListLayout2 } from "./components/layout/WatchListLayout2";
+import WatchToWWatch from "./components/layout/WatchToWatchLayout";
 import WhatOnTvStream from "./components/layout/WhatOnTvStream";
 
 const routes = [
@@ -142,6 +145,16 @@ const routes = [
     element: <PopularCelebLayout/>,
     state: "popularCeleb"
   },
+  {
+    path: "/trending/:type",
+    element: <TrendingLayout />,
+    state: "trending"
+  },
+  {
+    path: "/keyword/:mediaType/:id/:keyword",
+    element: <KeywordLayout />,
+    state: "keyword"
+  },
 
   {
     path: "/watchList",
@@ -182,11 +195,11 @@ const routes = [
   
 
   //not have api suitable
-  // {
-  //   path: "/watchToWatch/:name",
-  //   element: <WatchToWWatch/>,
-  //   state: "watchToWatch"
-  // },
+  {
+    path: "/watchToWatch",
+    element: <WatchToWWatch/>,
+    state: "watchToWatch"
+  },
 
 ];
 

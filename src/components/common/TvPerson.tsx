@@ -11,8 +11,6 @@ export default function TvPerson({
     singleMovieList,
 }: TwoMovieRowProps) {
     let navigate = useNavigate()
-    console.log(singleMovieList);
-
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
@@ -103,7 +101,6 @@ export default function TvPerson({
                         )
                     })}
                 </Swiper>
-
             </div>
 
             <div className="text-black mt-5">

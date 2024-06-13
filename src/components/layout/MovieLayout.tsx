@@ -197,7 +197,7 @@ export default function MovieLayout() {
             </div>
             <div className="bg-white w-full ">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="grid grid-cols-12 gap-2 w-full px-2">
+                    <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -260,7 +260,7 @@ export default function MovieLayout() {
                             </div>
 
                         </div>
-                        <div className="hidden lg:block col-span-4">
+                        <div className="hidden lg:block h-full col-span-4">
                             <div
                                 ref={moreToExploreRef}
                                 style={{ height: moreToExploreHeight, overflow: 'auto' }}
@@ -276,7 +276,7 @@ export default function MovieLayout() {
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500"> See our picks</p>
                             </div>
-                            <div className="sticky top-0 right-0 left-0">
+                            <div className="sticky top-0 right-0 left-0 ">
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>

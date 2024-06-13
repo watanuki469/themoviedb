@@ -15,12 +15,15 @@ import upComingReducer from './reducers/upComing.reducer'
 import fanfavoriteReducer from './reducers/fanfavorite.reducer'
 import loginReducer from './reducers/login.reducer'
 import peoplePopularReducer from './reducers/peoplePopular.reducer'
+import trendingReducer from './reducers/trending.reducer'
+import keywordReducer from './reducers/keyword.reducer'
 
 export const store = configureStore({
     reducer: {
         globalLoading: globalLoadingReducer,
         appState: appStateSlice,
         movies: moviesReducer,
+        trending: trendingReducer,
         singleMovies: singleMovieReducer,
         movieVideo: movieVideoReducer,
         movieImage: movieImageReducer,
@@ -34,6 +37,7 @@ export const store = configureStore({
         peoplePopular: peoplePopularReducer,
         fanFavorite:fanfavoriteReducer,
         login:loginReducer,
+        keyword:keywordReducer
     },})
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

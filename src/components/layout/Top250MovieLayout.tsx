@@ -316,16 +316,17 @@ export default function Top250MovieLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/4 px-2 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
+                        // {/* mai fix grid responsive  */ }
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
-                                        <div className="px-2">{movieIndex}</div>
+                                        <div className="px-2"></div>
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
                                                 <div className="flex items-center gap-2">
@@ -363,7 +364,7 @@ export default function Top250MovieLayout() {
                                                     </div>
                                                 </button>
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title}</p>
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.title}</p>
                                                 </div>
                                                 <div className="flex flex-wrap">
                                                     {movie?.release_date?.slice(0, 4)}
@@ -917,7 +918,7 @@ export default function Top250MovieLayout() {
                             </div>
                         </div> */}
                         <div className="lg:col-span-8 col-span-12  w-full ">
-                            <div className="lg:max-w-full w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
@@ -996,7 +997,7 @@ export default function Top250MovieLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full w-screen" onClick={() => navigate(`/top250Movie`)}>
+                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={mostPopularTv} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
@@ -1006,7 +1007,7 @@ export default function Top250MovieLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Charts</h2>
                                 </div>
-                                <div className="lg:max-w-full w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
                             </div>
@@ -1017,7 +1018,7 @@ export default function Top250MovieLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
-                                <div className="lg:max-w-full w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>

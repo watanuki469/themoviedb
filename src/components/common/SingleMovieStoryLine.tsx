@@ -8,7 +8,7 @@ export interface TwoMovieRowProps {
 export default function SingleMovieStoryLine({
     singleMovieList,
 }: TwoMovieRowProps) {
-    let navigate = useNavigate()
+    let navigate = useNavigate()  
 
     const generateRandomText = (number: any) => {
         const words = [
@@ -68,13 +68,14 @@ export default function SingleMovieStoryLine({
                 <div style={{ position: "relative", zIndex: "1" }}>
                     <div className="bg-white">
                         <div className="mb-1">
-                            {/* <div className="">{generateRandomText(50)}</div> */}
                             <div>{singleMovieList[0]?.overview}</div>
                         </div>
                         <div className="flex gap-2 mb-1 flex-wrap">
                             {singleMovieList[0]?.keywords?.keywords?.slice(0, 4).map((item: any) => (
-                                <button key={item.id} className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
-                                    {item.name}
+                                <button key={item?.id} 
+                                onClick={()=>navigate(`/keyword/movies/${item?.id}/${item?.name}`)}
+                                className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
+                                    {item?.name}
                                 </button>
                             ))}
                             {singleMovieList[0]?.keywords?.keywords?.length > 4 ? (

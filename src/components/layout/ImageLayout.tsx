@@ -130,8 +130,6 @@ export default function ImageLayout() {
     } else if (mediaType === 'tv') {
         mediaList = tvList;
     }
-    console.log(mediaList);
-
 
     let mediaImageList = [];
 
@@ -143,8 +141,6 @@ export default function ImageLayout() {
     } else if (mediaType === 'tv') {
         mediaImageList = tvImageList;
     }
-    console.log(mediaImageList);
-
 
     let mediaLength = 0;
     // Xác định danh sách dựa trên mediaType
@@ -299,22 +295,10 @@ export default function ImageLayout() {
                                                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                                 mt: 1.5,
                                                 '& .MuiAvatar-root': {
-                                                    width: 32,
-                                                    height: 32,
-                                                    ml: -0.5,
-                                                    mr: 1,
+                                                    width: 32, height: 32, ml: -0.5, mr: 1,
                                                 },
                                                 '&::before': {
-                                                    content: '""',
-                                                    display: 'block',
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    right: 14,
-                                                    width: 10,
-                                                    height: 10,
-                                                    bgcolor: 'background.paper',
-                                                    transform: 'translateY(-50%) rotate(45deg)',
-                                                    zIndex: 0,
+                                                    content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                                 },
                                             },
                                         }}
@@ -402,7 +386,7 @@ export default function ImageLayout() {
                                                         <p className=''>
                                                             {mediaType != 'person' ? (
                                                                 <div >
-                                                                    <span className='hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.credits?.cast[activeStep]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.original_name} </span>
+                                                                    <span className='hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.credits?.cast[activeStep]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.name} </span>
                                                                     < span className='text-white'>as</span>
                                                                     <span className=''>  {mediaList[0]?.credits?.cast[activeStep]?.character}</span>
 
@@ -412,7 +396,7 @@ export default function ImageLayout() {
                                                                     <span className='hover:underline'>  {mediaList[0]?.name}</span>
                                                                     <span className='text-white p-2'>in</span>
                                                                     <span className='hover:underline' onClick={() => navigate(`/${mediaList[0]?.combined_credits?.cast[activeStep]?.media_type}/${mediaList[0]?.combined_credits?.cast[activeStep]?.id}`)}>
-                                                                        {mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}
+                                                                        {mediaList[0]?.combined_credits?.cast[activeStep]?.title}
                                                                     </span> ({mediaList[0]?.combined_credits?.cast[activeStep]?.release_date?.slice(0, 4)})
                                                                 </div>
                                                             )}
@@ -427,7 +411,7 @@ export default function ImageLayout() {
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>People
-                                                                        <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.original_name}</span>
+                                                                        <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.name}</span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
@@ -443,27 +427,29 @@ export default function ImageLayout() {
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}> {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>
+                                                                            {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}
                                                                         </span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}</span>
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaList[0]?.combined_credits?.cast[activeStep]?.media_type}/${mediaList[0]?.combined_credits?.cast[activeStep]?.id}`)}>
+                                                                            {mediaList[0]?.combined_credits?.cast[activeStep]?.title}</span>
                                                                     </p>
                                                                 </div>
                                                             )}
 
                                                         </div>
                                                     </div>
-                                                    <div className='lg:hidden block  '>
+                                                    <div className='lg:hidden block'>
                                                         <div >
                                                             <p>
                                                                 {mediaType != 'person' ? (
                                                                     <div className=''>
                                                                         <div>People
-                                                                            <span className='text-blue-500 ml-3 hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>  {mediaList[0]?.credits?.cast[activeStep]?.original_name} </span>
+                                                                            <span className='text-blue-500 ml-3 hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>  {mediaList[0]?.credits?.cast[activeStep]?.name} </span>
                                                                         </div>
                                                                     </div>
                                                                 ) : (
@@ -474,36 +460,30 @@ export default function ImageLayout() {
                                                                     </div>
                                                                 )}
                                                             </p>
-
-
                                                         </div>
                                                         <div className={`flex items-center gap-2`}>
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}> {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</span>
+                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>
+                                                                            {mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
                                                                 <div className=''>
                                                                     <p>Titles
-                                                                        <span className='text-blue-500 hover:underline ml-3 ' onClick={() => navigate(`/${mediaList[0]?.combined_credits?.cast[activeStep]?.media_type}/${mediaList[0]?.combined_credits?.cast[activeStep]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.original_title}</span>
+                                                                        <span className='text-blue-500 hover:underline ml-3 '
+                                                                            onClick={() => navigate(`/${mediaList[0]?.combined_credits?.cast[activeStep]?.media_type}/${mediaList[0]?.combined_credits?.cast[activeStep]?.id}`)}>
+                                                                            {mediaList[0]?.combined_credits?.cast[activeStep]?.title}</span>
                                                                     </p>
                                                                 </div>
                                                             )}
-
                                                         </div>
                                                     </div>
-
-
-
                                                 </div>
                                             </div>
                                         </div>
-
-                                    ) : (<div>
-
-                                    </div>)
+                                    ) : (<div></div>)
                                     }
                                 </div>
                             ) : (<div>
@@ -520,8 +500,8 @@ export default function ImageLayout() {
                                                     />
                                                     <div className='w-full px-2'>
                                                         <div className='flex items-center '
-                                                            onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id} `)}>
-                                                            <p className='py-2 flex-grow hover:text-blue-500'>{mediaList[0]?.original_title ? mediaList[0]?.original_title : mediaList[0]?.original_name} ({mediaList[0]?.release_date ? mediaList[0]?.release_date?.slice(0, 4) : mediaList[0]?.first_air_date?.slice(0, 4)})</p>
+                                                            onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}>
+                                                            <p className='py-2 flex-grow hover:text-blue-500'>{mediaList[0]?.title ? mediaList[0]?.title : mediaList[0]?.name} ({mediaList[0]?.release_date ? mediaList[0]?.release_date?.slice(0, 4) : mediaList[0]?.first_air_date?.slice(0, 4)})</p>
                                                             <i className="fa-solid fa-chevron-right ml-auto text-gray-200 hover:text-yellow-300"></i>
                                                         </div>
                                                         <div className='border-t-2 border-gray py-2'>
@@ -538,8 +518,8 @@ export default function ImageLayout() {
                                                         onError={handleImageError}
                                                         alt="movie-img"
                                                         className='h-24 w-24 object-cover bg-gray-200 '
-                                                        onClick={()=>handleSwitchImage(index)}
-                                                       
+                                                        onClick={() => handleSwitchImage(index)}
+
                                                     />
                                                 ))}
                                             </div>
@@ -575,7 +555,7 @@ export default function ImageLayout() {
                                                         alt="person-img"
                                                         className='h-24 w-24 object-cover bg-gray-200 '
                                                         key={index * 10}
-                                                        onClick={()=>handleSwitchImage(index)}
+                                                        onClick={() => handleSwitchImage(index)}
                                                     />
                                                 ))}
                                             </div>

@@ -134,16 +134,26 @@ export default function MainLayout() {
         }
     };
 
+    const [loadingQuery, setLoadingQuery] = useState(false);
+
     const handleWatchList = async (
         movieId: any,
         movieType: any,
         removeAll: any
     ) => {
+        setLoadingQuery(true)
         await dispatch(fetchRemove(
             movieId,
             movieType,
             removeAll,
         ));
+        // Scroll to the top of the page
+        window.scrollTo(0, 0);
+        // Reload the page
+        window.location.reload();
+        setTimeout(() => {
+            setLoadingQuery(false)
+        }, 1000);
     };
 
     return (
@@ -161,7 +171,7 @@ export default function MainLayout() {
                         </p>
                     </div>
 
-                    <div className="lg:max-w-full md:w-screen mt-2  ">
+                    <div className="lg:max-w-full w-full mt-2  ">
                         <div
                             onClick={() => navigate('/top250Movie')}
                             className="lg:grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 grid gap-2 text-white ">
@@ -185,7 +195,7 @@ export default function MainLayout() {
                             What to watch
                         </p>
                         <div className="flex items-center ml-auto flex-wrap" >
-                            <p className="mr-2 text-blue-500" onClick={() => navigate('/top250Movie')}>
+                            <p className="mr-2 text-blue-500" onClick={() => navigate('/watchToWatch')}>
                                 Get more recommendations
                             </p>
                             <i className="fa-solid fa-angle-right text-blue-500"></i>
@@ -230,8 +240,6 @@ export default function MainLayout() {
                         <SwiperRow searchItemList={topRatedTv} mediaType={'TV'} />
                     </div>
 
-                    <BornToday />
-
                     <div className=" overflow-hidden">
                         <div className="items-center mt-12">
                             <h2 className="text-xl font-bold text-white mt-10 ">More to watch</h2>
@@ -255,7 +263,7 @@ export default function MainLayout() {
                         </p>
                     </div>
 
-                    <div className="lg:max-w-full md:w-screen mt-6  ">
+                    <div className="lg:max-w-full w-full mt-6  ">
                         <div
                             onClick={() => navigate('/top250Movie')}
                             className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 text-white ">
@@ -287,7 +295,16 @@ export default function MainLayout() {
                         </p>
                         <div className="flex items-center ml-auto flex-wrap" >
                             <p className="mr-2 text-blue-500" onClick={() => handleWatchList('mro', 'meo', 'true')} >
-                                Clear all
+
+                                {
+                                    loadingQuery ? (
+                                        <i className="fa-solid fa-earth-americas fa-spin-pulse text-xl"></i>
+                                    ) : (
+                                        <div>
+                                            Clear all
+                                        </div>
+                                    )
+                                }
                             </p>
                             <i className="fa-solid fa-angle-right text-blue-500"></i>
                         </div>

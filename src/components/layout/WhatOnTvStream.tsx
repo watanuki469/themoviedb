@@ -1,25 +1,16 @@
+import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import AppsIcon from '@mui/icons-material/Apps';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { ListMoviesPopular } from "../models/ListMoviesPopular";
-import Charts from "../../modules/Charts";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import ShareIcon from '@mui/icons-material/Share';
-import { toast } from "react-toastify";
-import { AppDispatch } from "../../redux/store";
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
-import { setDeleteRating, setListRating, setRating } from "../../redux/reducers/login.reducer";
-
 
 export default function WhatOnTvStream() {
     const dispatch = useAppDispatch();
@@ -90,7 +81,7 @@ export default function WhatOnTvStream() {
             </div>
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                    <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 px-2 py-2 items-center">
                             <div className="items-center ">
                                 <h2 className="lg:text-5xl text-2xl font-bold text-black ">What on TV & Streaming</h2>
@@ -163,9 +154,9 @@ export default function WhatOnTvStream() {
                             </div>
                         </div>
                     </div>
-                    <div className="lg:grid grid-cols-12 gap-2 w-full">
+                    <div className="grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
-                            <div className="lg:max-w-full md:w-screen mt-6  ">
+                            <div className="lg:max-w-full w-full mt-6  ">
                                 <div
                                     className="grid grid-cols-3 gap-2 ">
                                     <div onClick={() => navigate('/top250Tv')}>
@@ -192,7 +183,7 @@ export default function WhatOnTvStream() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Staff Picks: What to Watch in {currentMonthName}</h2>
                                 </div>
-                                <div className="grid grid-cols-2 px-2 py-2 gap-4" >
+                                <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 px-2 py-2 gap-4" >
                                     <div>
                                         <p>Take a look at the best movies and series coming in {currentMonth}, including Furiosa, The Fall Guy, and more.</p>
                                         <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See our pick</p>
@@ -205,7 +196,7 @@ export default function WhatOnTvStream() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">{currentMonthName} 2024 TV and Streaming Premiere Dates</h2>
                                 </div>
-                                <div className="grid grid-cols-2 px-2 py-2 gap-4" >
+                                <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 px-2 py-2 gap-4" >
                                     <div>
                                         <p>The final season of "Evil" is one of the biggest TV and streaming premieres this month. Check out our {currentMonthName} calendar for more!</p>
                                         <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Tv`)}>See our pick</p>
@@ -218,7 +209,7 @@ export default function WhatOnTvStream() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Renewed, Canceled, or Ending?</h2>
                                 </div>
-                                <div className="grid grid-cols-2 px-2 py-2 gap-4" >
+                                <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 px-2 py-2 gap-4" >
                                     <div>
                                         <p>Check out our list of renewals and cancellations to see if your favorite show made the cut.</p>
                                         <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Tv`)}>See our pick</p>
@@ -231,7 +222,7 @@ export default function WhatOnTvStream() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Everything New on Disney+ in {currentMonthName}</h2>
                                 </div>
-                                <div className="grid grid-cols-2 px-2 py-2 gap-4" >
+                                <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 px-2 py-2 gap-4" >
                                     <div>
                                         <p>Freshen up your Watchlist with the latest roster of streaming movies and TV shows coming to Disney+, featuring old favorites and top-notch newcomers.</p>
                                         <p className="w-fit text-blue-500 hover:underline py-4" onClick={() => navigate(`/top250Movie`)}>See our pick</p>
@@ -263,7 +254,7 @@ export default function WhatOnTvStream() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/top250Movie`)}>
+                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={topRatedMovies} />
                                 </div>
                                 <p className=" w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
@@ -273,7 +264,7 @@ export default function WhatOnTvStream() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Charts</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
                             </div>
@@ -281,7 +272,7 @@ export default function WhatOnTvStream() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>

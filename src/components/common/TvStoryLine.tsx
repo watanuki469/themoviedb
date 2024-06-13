@@ -41,8 +41,10 @@ export default function TvStoryLine({
                         </div>
                         <div className="flex gap-2 mb-1 flex-wrap">
                             {tvList[0]?.keywords?.results?.slice(0, 4).map((item: any) => (
-                                <button key={item.id} className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
-                                    {item.name}
+                                <button 
+                                onClick={()=>navigate(`/keyword/movies/${item?.id}/${item?.name}`)}
+                                key={item.id} className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
+                                    {item?.name}
                                 </button>
                             ))}
                             {tvList[0]?.keywords?.results?.length > 5 ? (

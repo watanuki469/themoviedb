@@ -220,7 +220,7 @@ export function RatingLayout() {
         const existingRating = recentList.find(rating => rating?.itemId == movie?.itemId); // Find the rating object for the item
 
         return (
-            <section className=" w-1/2 lg:w-1/6 md:w-1/3 px-2 " key={movieIndex}
+            <section className=" w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:1/4 " key={movieIndex}
             >
                 <div className="text-black font-sans  shadow-sm shadow-black  " >
                     <div className=" items-center ">
@@ -228,7 +228,7 @@ export function RatingLayout() {
                             <div className="items-center gap-2">
                                 <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                     src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                    onError={handleImageError} className="w-full hover:opacity-80" />
+                                    onError={handleImageError} className="w-full h-60 hover:opacity-80" />
                                 <div className="px-2 py-2 w-full">
                                     <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                         <div className="h-12 w-full ">
@@ -340,7 +340,7 @@ export function RatingLayout() {
                 )}
             <div className="bg-white text-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                    <div className="lg:max-w-full  ">
                         <div className="flex mt-3 border-b-2 border-gray py-4">
                             <div className="items-center ">
                                 <h2 className="text-2xl font-bold ">Your Rating List</h2>
@@ -525,7 +525,7 @@ export function RatingLayout() {
 
                         </div>
                         <div>
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",

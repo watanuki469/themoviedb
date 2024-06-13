@@ -758,7 +758,7 @@ export default function SingleMovieDetail({
 
                                 </span>
                                 <span className="text-stone-400">  /10</span>
-                                <div className="text-stone-400">{singleMovieList[0]?.vote_count}k</div>
+                                <div className="text-stone-400">{singleMovieList[0]?.vote_count}</div>
                                 <div className="flex ">
                                     <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
                                         <i className="fa-regular fa-star "></i>

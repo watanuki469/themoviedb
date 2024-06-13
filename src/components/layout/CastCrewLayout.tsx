@@ -72,8 +72,6 @@ export default function CastCrewLayout() {
     } else if (mediaType === 'tv') {
         mediaList = tvList;
     }
-    console.log(mediaList);
-
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;

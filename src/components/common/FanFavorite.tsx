@@ -45,7 +45,6 @@ export default function FanFavorite() {
         window.scrollTo(0, 0)
         // navigate(`/${mediaType}/${id}`)
     };
-    console.log(fanFavorite);
     const [isRating, setIsRating] = useState(false);
     const [value, setValue] = useState<number | null>(0);
 
@@ -104,73 +103,7 @@ export default function FanFavorite() {
                 </div>
             )}
             <section className='relative overflow-hidden w-full'>
-                {/* <div className="md:grid md:grid-cols-12  gap-3  items-end cursor-pointer w-full "> */}
                 <div className={`grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4 w-full`}>
-                    <div className="w-full bg-white">
-                        {fanFavorite[0]?.data?.list?.slice(0, 12).map((item: any, index: any) => (
-                            <div>
-                                <div className=" object-cover">
-                                    <img src={`${item?.primaryImage?.imageUrl}`} alt="product images" className="h-60 w-full hover:opacity-80"
-                                        onError={handleImageError}
-
-                                        onClick={() => handleClickImg(`${item?.id}`)} />
-                                </div>
-                                <div className="bg-gray-600 shadow-xl ">
-                                    <div className="mx-3 ">
-                                        <div className="flex gap-x-4 items-center ">
-                                            <div className="flex items-center space-x-2">
-                                                <i className="fas fa-star text-yellow-300"></i>
-                                                <p className="leading-relaxed text-gray-200">{item?.ratingsSummary?.aggregateRating?.toFixed(1)}</p>
-                                            </div>
-                                            <div className="grow ml-auto" onClick={() => handleClick(item)}>
-                                                <i className="fa-regular fa-star text-blue-500"></i>
-                                            </div>
-                                        </div>
-                                        <div className="h-12 mt-2">
-                                            <p className="line-clamp-2"> {item?.titleText?.text}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => navigate(`/IMDbPro`)}
-                                            className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full justify-center bg-gray-800 hover:opacity-50 text-blue-500 border-none">
-                                            <i className="fas fa-plus mr-2"></i>
-                                            <p>Watchlists</p>
-                                        </button>
-                                        <button className="flex items-center px-4 py-2 hover:opacity-60 rounded-lg w-full justify-center border-none "
-                                            onClick={() => {
-                                                if (item?.media_type === 'person') {
-                                                    navigate(`/person/${item.id}`);
-                                                } else if (item?.media_type === "movie") {
-                                                    navigate(`/movie/${item.id}`);
-                                                }
-                                                else {
-                                                    navigate(`/tv/${item.id}`);
-                                                }
-                                            }}>
-                                            <i className="fa-solid fa-play mr-2"></i>
-                                            <p>Trailer</p>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        ))}
-                    </div>
-
-                    <div className="w-screen py-4" >
-                        Browse these IMDb collections to find the perfect next movie or TV show to watch
-                        <div className="grid grid-cols-3 gap-4 mt-4">
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">Watch Guide</button>
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">Top Picks</button>
-                            <button></button>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 mt-4">
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">From Your Watchlist</button>
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">Most Popular</button>
-                            <button></button>
-                        </div>
-
-                    </div>
-
                     {fanFavorite[0]?.data?.list?.slice(12).map((item: any, index: any) => (
                         <div>
                             <div className=" object-cover">
@@ -218,10 +151,20 @@ export default function FanFavorite() {
                         </div>
 
                     ))}
-
-
                 </div>
-                {/* </div> */}
+                <div className="w-screen py-4" >
+                    Browse these IMDb collections to find the perfect next movie or TV show to watch
+                    <div className="grid grid-cols-3 gap-4 mt-4">
+                        <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">Watch Guide</button>
+                        <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">Top Picks</button>
+                        <button></button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 mt-4">
+                        <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">From Your Watchlist</button>
+                        <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80">Most Popular</button>
+                        <button></button>
+                    </div>
+                </div>
             </section>
         </div>
     )

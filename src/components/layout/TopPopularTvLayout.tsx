@@ -23,10 +23,7 @@ export default function TopPopularTvLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const mostPopularTv = useAppSelector((state) => state.movies.discoverTv)
-    console.log(mostPopularTv);
-
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
-
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
@@ -364,7 +361,7 @@ export default function TopPopularTvLayout() {
                                         <div className="px-2">{movieIndex}</div>
                                         <img onClick={() => navigate(`/tv/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full h-60  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full lg:h-56 h-80  hover:opacity-80" />
                                         <div className="px-2 py-2 ">
                                             <div className="justify-start text-left">
                                                 <div className="flex items-center gap-2">
@@ -690,7 +687,7 @@ export default function TopPopularTvLayout() {
             </div>
             <div className="bg-white px-2">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                    <div className="lg:max-w-full w-full ">
                         <div className="flex items-center flex-wrap">
                             <div className="items-center ">
                                 <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
@@ -784,9 +781,9 @@ export default function TopPopularTvLayout() {
                         </div>
 
                     </div>
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
+                    <div className="grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div className="flex flex-wrap items-center ">
                                     <div className="items-center ">
                                         <h2 className="text-2xl text-black ">
@@ -968,7 +965,7 @@ export default function TopPopularTvLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <a href="/top250Movie">
                                         <ListRow listRowList={popularMovies} />
 
@@ -981,7 +978,7 @@ export default function TopPopularTvLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Charts</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
                             </div>
@@ -989,7 +986,7 @@ export default function TopPopularTvLayout() {
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
-                                <div className="lg:max-w-full md:w-screen">
+                                <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>

@@ -77,5 +77,11 @@ const apiPeoplePopular = {
         return axiosClient.get(url)
     },
 }
+const apiKeyword = {
+    keyword(query: any,mediaType:any) {
+        const url = `keyword/${query}/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&language=${language}&page=1`;
+        return axiosClient.get(url)
+    },
+}
 
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing,apiPeoplePopular }
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing,apiPeoplePopular ,apiKeyword}

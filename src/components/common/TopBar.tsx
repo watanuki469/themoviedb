@@ -120,7 +120,7 @@ export default function TopBar() {
         if (item === 'Release Calendar') {
           navigate(`/upComing`);
         } else if (item === 'Most Popular Movies') {
-          navigate('/Popular');
+          navigate('/top250Movie');
         } else if (item === 'Top Box Office') {
           navigate('/topBoxOffice');
         } else if (item === 'Movies News') {
@@ -150,15 +150,15 @@ export default function TopBar() {
 
       case 'Watch':
         if (item === 'What to Watch') {
-          navigate('/WhatToWatch');
+          navigate('/watchToWatch');
         } else if (item === 'Latest Trailers') {
-          navigate('/LatestTrailers');
+          // navigate('/LatestTrailers');
         } else if (item === 'IMDb Originals') {
-          navigate('/IMDbOriginals');
+          // navigate('/IMDbOriginals');
         } else if (item === 'IMDb Picks') {
-          navigate('/IMDbPicks');
+          // navigate('/IMDbPicks');
         } else if (item === 'IMDb Podcasts') {
-          navigate('/IMDbPodcasts');
+          // navigate('/IMDbPodcasts');
         } else {
           navigate('/NotFound');
         }
@@ -244,7 +244,7 @@ export default function TopBar() {
   };
   const menuItems = [
     { id: 1, label: 'en-US', name: 'English' },
-    { id: 2, label: 'vn-VI', name: 'Vietnamese' },
+    { id: 2, label: 'vi-VI', name: 'Vietnamese' },
     { id: 3, label: 'ja-JP', name: 'Japanese' },
     { id: 4, label: 'fr-FR', name: 'French' },
     { id: 4, label: 'de-DE', name: 'German' },

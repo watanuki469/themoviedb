@@ -15,6 +15,7 @@ import { setPeoplePopular } from '../../redux/reducers/peoplePopular.reducer';
 import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
 
 export default function PopularCelebLayout() {
@@ -41,7 +42,6 @@ export default function PopularCelebLayout() {
         ])
             .then((data: any) => {
                 if (data[0] && data[0].results) {
-                    console.log(data[0]?.results);
                     dispatch(setPeoplePopular(data[0]?.results));
                 } else {
                     console.error("API response structure is not as expected.", data);
@@ -53,13 +53,12 @@ export default function PopularCelebLayout() {
     }
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         dispatch(fetPopularCeleb())
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        setTimeout(() => {
+            dispatch(setGlobalLoading(false));
+        }, 1000);
     }, [dispatch]);
-    console.log(popularCeleb);
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -108,7 +107,7 @@ export default function PopularCelebLayout() {
                                         </div>
                                     </div>
                                     <div className="mt-1 line-clamp-4">
-                                        <p>{movie?.nameBio?.text?.plainText}</p>
+                                        <p>{movie?.overview}</p>
                                     </div>
                                 </div>
                             </div>
@@ -125,10 +124,10 @@ export default function PopularCelebLayout() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <a href={`${movie?.primaryImage?.imageUrl}`}>
+                                        <a href={`/person/${movie?.id}`}>
                                             <img
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="w-full h-60  hover:opacity-80" />
+                                                onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
                                         </a>
 
                                         <div className="px-2 py-2 w-full">
@@ -248,7 +247,7 @@ export default function PopularCelebLayout() {
                 </div>
             </div>
             <div className="bg-white ">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center px-2 ">
                     <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 ">
                             <div className="items-center ">
@@ -332,7 +331,7 @@ export default function PopularCelebLayout() {
 
                     </div>
                     <div className="md:grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-8 md-col-span-12  w-full ">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">

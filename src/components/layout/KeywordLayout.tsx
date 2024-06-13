@@ -4,33 +4,84 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
+import TopNew from "../../modules/TopNew";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
+import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { setDeleteRating, setListRating, setRating } from "../../redux/reducers/login.reducer";
+import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/login.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { AppDispatch } from "../../redux/store";
+import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import { fetchTrending } from '../../redux/reducers/trending.reducer';
+import apiController from '../../redux/client/api.Controller.';
+import { setlistKeyWord } from '../../redux/reducers/keyword.reducer';
 
-export default function Top250TvLayout() {
+export default function KeywordLayout() {
+    const { mediaType } = useParams()
+    const { keyword } = useParams()
+    const { id } = useParams<{ id: string }>();
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
+    const listNewNetflix = useAppSelector((state) => state.trending.listNewNetflix)
+    const listNewDisney = useAppSelector((state) => state.trending.listNewDisney)
+    const listNewHulu = useAppSelector((state) => state.trending.listNewHulu)
+    const listNewPrime = useAppSelector((state) => state.trending.listNewPrime)
+    const listNewStream = useAppSelector((state) => state.trending.listNewStream)
+    const listNewMax = useAppSelector((state) => state.trending.listNewMax)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
-    const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
+    const listKeywordMovie = useAppSelector((state) => state.keyword.listKeyWord)
+
+    const fetchKeyword = () => (dispatch: AppDispatch) => {
+        Promise.all([
+            apiController.apiKeyword.keyword(id, mediaType)
+        ])
+            .then((data: any) => {
+                if (data[0]&&data[0].results) {
+                    dispatch(setlistKeyWord(data[0].results));
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    const [mediaKeywordType, setMediaKeyWordType] = useState('');
 
     useEffect(() => {
+        switch (mediaType) {
+            case 'movies':
+                setMediaKeyWordType('movie')
+                break;
+            case 'movie':
+                setMediaKeyWordType('movie')
+                break;
+            case 'tvs':
+                setMediaKeyWordType('tv')
+                break;
+            case 'tv':
+                setMediaKeyWordType('tv')
+                break;
+            default:
+                setMediaKeyWordType('movie')
+                break;
+        }
+    }, [id, mediaType]);
+    useEffect(() => {
         dispatch(setGlobalLoading(true));
+        dispatch(fetchKeyword());
         dispatch(fetchMovies());
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
     }, []);
+    
     const currentDate = new Date();
     const monthNames = [
         "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -39,8 +90,6 @@ export default function Top250TvLayout() {
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
     const currentMonthName = monthNames[currentMonth];
-
-    const [isChecked, setIsChecked] = useState(false);
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -52,7 +101,6 @@ export default function Top250TvLayout() {
     const switchView = (view: any) => {
         setCurrentView(view);
     };
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     type GenreID = number;
     type GenreName = string;
@@ -64,9 +112,9 @@ export default function Top250TvLayout() {
     const [numberGen, setNumberGen] = useState(0);
     const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
-    function countGenres(mostPopularTv: any): Record<GenreName, number> {
+    function countGenres(listKeywordMovie: any): Record<GenreName, number> {
         const genreCounting: Record<GenreName, number> = {};
-        mostPopularTv?.forEach((movie: any) => {
+        listKeywordMovie?.forEach((movie: any) => {
             movie?.genre_ids?.forEach((id: GenreID) => {
                 // Lấy tên thể loại từ đối tượng ánh xạ
                 const genreName: GenreName = genreMapping[id];
@@ -76,15 +124,13 @@ export default function Top250TvLayout() {
         });
         return genreCounting;
     }
-
-
     useEffect(() => {
-        const genreCount = countGenres(mostPopularTv);
+        const genreCount = countGenres(listKeywordMovie);
         setGenreCount(genreCount);
         const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
         setNumberGen(totalGenreCount);
 
-    }, [mostPopularTv]);
+    }, [listKeywordMovie]);
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
@@ -110,6 +156,7 @@ export default function Top250TvLayout() {
 
     const handleRemoveGenreFilter = (removedGenre: any) => {
         setSelectedGenres(selectedGenres.filter((genre) => genre !== removedGenre));
+
     };
     function shortenNumber(number: any) {
         if (number >= 1000000000) {
@@ -129,12 +176,12 @@ export default function Top250TvLayout() {
     const [checkLog, setCheckLog] = useState(false)
     const [selectedStudent, setSelectedStudent] = useState<any>();
 
-    const handleClick = (index: any, value: any) => {
+    const handleClick = (movie: any, value: any) => {
         setIsRating(true)
-        setSelectedStudent(index);
+        setSelectedStudent(movie);
         setValue(value)
     };
-    const [filterRatedMovie, setFilterRatedMovie] = useState(false);
+
     const ratingList = useAppSelector((state) => state.login.listRating);
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
@@ -155,21 +202,21 @@ export default function Top250TvLayout() {
             if (response) {
                 dispatch(setListRating(response));
             } else {
-                throw new Error('Failed to fetch rating list');
+                throw new Error('Failed to fetch favorites');
             }
         } catch (e) {
-            console.log("Fetching rating list failed: " + e);
+            console.log("Fetching favorites failed: " + e);
         }
     }
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetRating())
         }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 3000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 3000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -244,8 +291,9 @@ export default function Top250TvLayout() {
         setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
 
-    const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
+    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
+
         switch (currentView) {
             case 'Detail':
                 return (
@@ -255,48 +303,64 @@ export default function Top250TvLayout() {
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/tv/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                        <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                             onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
-                                            <p>{movie?.first_air_date?.slice(0, 4)}</p>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
-                                                <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2 hover:bg-gray-500 w-fit px-2 py-2 rounded-lg">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
+                                            <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                            <p>{movie?.release_date?.slice(0, 4)}</p>
+                                            {
+                                                id != 'disney' && id != 'stream' ? (
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fa-solid fa-star text-yellow-300"></i>
+                                                            <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2  hover:text-black text-blue-500">
+                                                            <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                                {
+                                                                    existingRating ? (
+                                                                        loading2[movieIndex] ? (
+                                                                            <div>
+                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
+                                                                                <i className="fa-solid fa-star text-blue-500"></i>
+                                                                                <div>{existingRating?.itemRating}</div>
+                                                                            </div>
 
-                                                                )
-                                                            ) : (
-                                                                <div className="font-bold text-sm">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                        )
                                                                     ) : (
-                                                                        <div className="hover:bg-gray-500  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            <div>Rate</div>
+                                                                        <div className="font-bold text-sm">
+                                                                            {loading2[movieIndex] ? (
+                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                            ) : (
+                                                                                <div className="hover:bg-gray-200  flex gap-2 flex-wrap px-2 py-2 rounded-lg items-center">
+                                                                                    <i className="fa-regular fa-star text-blue-500"></i>
+                                                                                    <div>Rate</div>
+                                                                                </div>
+                                                                            )}
                                                                         </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </button>
-                                            </div>
+                                                ) : (
+                                                    <div className="h-20">
+                                                        <p className="text-gray-500 "> {movie?.known_for_department}</p>
+                                                        <div className="w-full " >
+                                                            <div className="line-clamp-2 h-12 text-blue-500 hover:underline flex gap-2 flex-wrap"
+                                                                onClick={() => navigate(`/${movie?.known_for[0]?.media_type}/${movie?.known_for[0]?.id}`)}>
+                                                                <div>{movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}</div>
+                                                                <div> {movie?.known_for && movie?.known_for?.length > 0 ? `(${movie?.known_for[0]?.release_date ? movie?.known_for[0]?.release_date?.slice(0, 4) : movie?.known_for[0]?.first_air_date?.slice(0, 4)})` : ''}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+
                                         </div>
                                     </div>
                                     <div className="mt-1 lg:line-clamp-none line-clamp-4">
@@ -304,7 +368,7 @@ export default function Top250TvLayout() {
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/tv/${movie?.id}`)} >
+                                <div className="ml-auto" onClick={() => navigate(`/${mediaKeywordType}/${movie.id}`)} >
                                     <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                 </div>
                             </div>
@@ -313,133 +377,170 @@ export default function Top250TvLayout() {
                     </section>
 
                 )
-            
-
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
+                    <section className=" w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                        <div className="text-black font-sans shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
-                                    <div className="items-center gap-2">
-                                        <img onClick={() => navigate(`/tv/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                    <div className="items-center gap-2 ">
+                                        <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                             onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
-                                        <div className="px-2 py-2 ">
-                                            <div className="justify-start text-left">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
 
-                                                                )
-                                                            ) : (
-                                                                <div className="text-black">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                                                    ) : (
-                                                                        <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            Rate
+                                        <div className="">
+                                            <div className="justify-start text-left px-2 py-2">
+                                                < div className="h-12 w-full ">
+                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
+                                                </div>
+                                                <div className="">
+                                                    {
+                                                        id != 'disney' && id != 'stream' ?
+                                                            (
+                                                                <div>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <i className="fa-solid fa-star text-yellow-300"></i>
+                                                                        <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                                    </div>
+                                                                    <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                                        <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                                            {
+                                                                                existingRating ? (
+                                                                                    loading2[movieIndex] ? (
+                                                                                        <div>
+                                                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="flex items-center  gap-2">
+                                                                                            <i className="fa-solid fa-star text-blue-500"></i>
+                                                                                            <div>{existingRating?.itemRating}</div>
+                                                                                        </div>
+
+                                                                                    )
+                                                                                ) : (
+                                                                                    <div className="text-black">
+                                                                                        {loading2[movieIndex] ? (
+                                                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
+                                                                                        ) : (
+                                                                                            <div className="">
+                                                                                                <i className="fa-regular fa-star text-blue-500"></i>
+                                                                                                Rate
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                )
+                                                                            }
                                                                         </div>
-                                                                    )}
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="h-20">
+                                                                    <p className="text-gray-500 "> {movie?.known_for_department}</p>
+                                                                    <div className="w-full " >
+                                                                        <div className="line-clamp-2 text-blue-500 hover:underline flex gap-2 flex-wrap"
+                                                                            onClick={() => navigate(`/${movie?.known_for[0]?.media_type}/${movie?.known_for[0]?.id}`)}>
+                                                                            {movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             )
-                                                        }
-                                                    </div>
-                                                </button>
-                                                <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movieIndex}.{movie?.name}</p>
-                                                </div>
-                                                <div className="flex flex-wrap">
-                                                    {movie?.first_air_date?.slice(0, 4)}
-                                                </div>
+                                                    }
 
+
+                                                    <div className="flex flex-wrap">
+                                                        {movie?.release_date?.slice(0, 4)}
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div className="px-2 py-2" onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}   >
+                                        <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
+                                            Details
+                                        </button>
+
+                                    </div>
                                 </div>
 
-                                <div className="px-2 py-2" onClick={() => navigate(`/tv/${movie?.id}`)}   >
-                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        Details
-                                    </button>
-
-                                </div>
                             </div>
-
                         </div>
                     </section>
 
                 )
             case 'Compact':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500 w-full " key={movieIndex}
+                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/tv/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                        <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
+                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                             onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name}</p>
-                                            <p>{movie?.first_air_date?.slice(0, 4)}</p>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
-                                                                )
-                                                            ) : (
-                                                                <div className="text-black">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
+                                            <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                            <p>{movie?.release_date?.slice(0, 4)}</p>
+                                            {
+                                                id != 'disney' && id != 'stream' ? (
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fa-solid fa-star text-yellow-300"></i>
+                                                            <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2  hover:text-black text-blue-500">
+                                                            <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                                {
+                                                                    existingRating ? (
+                                                                        loading2[movieIndex] ? (
+                                                                            <div>
+                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
+                                                                                <i className="fa-solid fa-star text-blue-500"></i>
+                                                                                <div>{existingRating?.itemRating}</div>
+                                                                            </div>
+
+                                                                        )
                                                                     ) : (
-                                                                        <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            Rate
+                                                                        <div className="font-bold text-sm">
+                                                                            {loading2[movieIndex] ? (
+                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                            ) : (
+                                                                                <div className="hover:bg-gray-200  flex gap-2 px-2 py-2  flex-wrap items-center">
+                                                                                    <i className="fa-regular fa-star text-blue-500"></i>
+                                                                                    <div>Rate</div>
+                                                                                </div>
+                                                                            )}
                                                                         </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </button>
-                                            </div>
+                                                ) : (
+                                                    <div className="h-20">
+                                                        <p className="text-gray-500 "> {movie?.known_for_department}</p>
+                                                        <div className="w-full " >
+                                                            <div className="line-clamp-2 h-12 text-blue-500 hover:underline flex gap-2 flex-wrap"
+                                                                onClick={() => navigate(`/${movie?.known_for[0]?.media_type}/${movie?.known_for[0]?.id}`)}>
+                                                                <div>{movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}</div>
+                                                                <div> {movie?.known_for && movie?.known_for?.length > 0 ? `(${movie?.known_for[0]?.release_date ? movie?.known_for[0]?.release_date?.slice(0, 4) : movie?.known_for[0]?.first_air_date?.slice(0, 4)})` : ''}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/tv/${movie.id}`)} >
+                                <div className="ml-auto" onClick={() => navigate(`/${mediaKeywordType}/${movie.id}`)} >
                                     <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                 </div>
                             </div>
@@ -450,6 +551,7 @@ export default function Top250TvLayout() {
         }
     }
     const [applyFilter, setApplyFilter] = useState(true);
+    const [filterRatedMovie, setFilterRatedMovie] = useState(false);
     const [filterType, setFilterType] = useState('none');
 
 
@@ -468,8 +570,8 @@ export default function Top250TvLayout() {
     const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
 
     function compareReleaseDates(a: any, b: any) {
-        const releaseDateA = new Date(a.first_air_date);
-        const releaseDateB = new Date(b.first_air_date);
+        const releaseDateA = new Date(a.release_date);
+        const releaseDateB = new Date(b.release_date);
         return releaseDateA.getTime() - releaseDateB.getTime();
     }
     const handleMenuItemClick = (option: any) => {
@@ -527,9 +629,15 @@ export default function Top250TvLayout() {
                 console.error('Error copying link:', error);
             });
     };
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleChecked = () => {
+        setIsChecked(!isChecked);
+    }
+
 
     return (
-        <div className=" min-h-screen cursor-pointer w-full">
+        <div className=" min-h-screen cursor-pointer">
             {isRating &&
                 (
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
@@ -607,7 +715,7 @@ export default function Top250TvLayout() {
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
                             <button key={`genre-${genre}-${index}`}
-                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:bg-opacity-90'}`}
+                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-200 hover:opacity-90'}`}
                                 onClick={() => handleGenreClick(genre as Genre)}
                             >
                                 <p>{`${genre}: (${count})`}</p>
@@ -633,28 +741,26 @@ export default function Top250TvLayout() {
                             <p>In Theaters With Online Ticketing</p>
                         </div>
                     </div>
-
-                    <Divider sx={{
-                        marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2,
-                        border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
-                    }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle>
                 </DialogContent>
             </Dialog>
             <div className="bg-black pb-1">
-                <div className="w-full lg:max-w-5xl mx-auto aligns-center  ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
-                </div>
-            </div>
-            <div className="bg-white">
-                <div className="w-full lg:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full w-full px-2">
-                        <div className="flex items-center flex-wrap">
-                            <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
-                            </div>
-                            <div className="flex items-center ml-auto gap-2 px-2" >
-                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
+                    <div className="w-full bg-black mt-5 text-white ">
+                        <div className="flex mt-3 items-center  ">
+                            <h2 className="lg:text-2xl text-lg font-bold  capitalize">Keyword: {keyword}
+                            </h2>
+                            <div className="flex items-center ml-auto gap-2 text-gray-400" >
+                                <div className="text-md justify-center  text-right">
+                                    <p className='font-bold'> LIST ACTIVITY</p>
+                                    <div className='flex items-center gap-2 font-semibold'>
+                                        <i className="fa-regular fa-eye text-xl text-white"></i>
+                                        <div>
+                                            <div> <span className='text-lg text-white'>107K</span> views</div>
+                                            <div>18K this week</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -663,8 +769,8 @@ export default function Top250TvLayout() {
                                     aria-expanded={openShare ? 'true' : undefined}
                                 >
                                     <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', ":hover": {
-                                            bgcolor: 'gray', opacity: '50%'
+                                        width: 32, height: 32, bgcolor: 'black', padding: '20px', ":hover": {
+                                            bgcolor: 'gray', opacity: '90%'
                                         }
                                     }}>
                                         <ShareIcon />
@@ -681,6 +787,7 @@ export default function Top250TvLayout() {
                                         sx: {
                                             overflow: 'visible',
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                            mt: 1.5,
                                             '& .MuiAvatar-root': {
                                                 width: 32, height: 32, ml: -0.5, mr: 1,
                                             },
@@ -722,7 +829,6 @@ export default function Top250TvLayout() {
                                             Email Link
                                         </a>
                                     </MenuItem>
-
                                     <MenuItem onClick={handleCopyLink}>
                                         <ListItemIcon>
                                             <i className="fa-solid fa-link text-2xl"></i>
@@ -732,52 +838,58 @@ export default function Top250TvLayout() {
                                 </Menu>
                             </div>
                         </div>
-                        <div className="">
-                            <div className="flex items-center ">
-                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top 250 Tv</h2>
-                            </div>
-                            <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
+                        <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
+                            <div>by</div>
+                            <a target='_blank' href='https://github.com/watanuki469?tab=repositories'
+                                className='text-blue-500 hover:underline'>
+                                Vasiliev-Editors
+                            </a>
+                            <div>•</div>
+                            <div>Created 1 year ago</div>
+                            <div>•</div>
+                            <div>Modified 1 month ago</div>
                         </div>
 
                     </div>
-                    <div className="grid grid-cols-12 gap-2 w-full">
-                        <div className="lg:col-span-12 col-span-12  w-full ">
-                            <div className="flex px-2 flex-wrap ">
-                                <h2 className="lg:text-2xl text-lg text-black ">
-                                    {mostPopularTv
-                                        .filter((movie: any) => {
-                                            if (selectedGenres?.length === 0) return true; // No genre filter
-                                            const hasAllGenres = selectedGenres.every((genre) =>
-                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                            );
-                                            return hasAllGenres;
-                                        })
-                                        .filter((movie: any) => {
-                                            if (!applyFilter) return true; // No filter
-                                            if (filterType === 'none') return true; // No filter
-                                            if (filterType === 'inTheaters') {
-                                                return null;
-                                            }
-                                            if (filterType === 'In theaters with online ticketing') {
-                                                return null;
-                                            }
-                                            return true;
-                                        })
-                                        .filter((movie) => {
-                                            const existingRating = ratingList?.find(rating =>
-                                                movie?.id == rating?.itemId &&
-                                                rating?.itemType === 'TV'
-                                            );
-                                            if (filterRatedMovie === false) return true
-                                            return existingRating == undefined;
-                                        })
+                </div>
+            </div>
+            <div className="bg-white px-2">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
+                    <div className="grid grid-cols-12 gap-2 w-full items-center px-2 py-2">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
+                            <div className="flex ">
+                                <div className="items-center ">
+                                    <h2 className="lg:text-2xl text-lg text-black ">
+                                        {listKeywordMovie
+                                            .filter((movie: any) => {
+                                                if (selectedGenres?.length === 0) return true; // No genre filter
+                                                const hasAllGenres = selectedGenres.every((genre) =>
+                                                    movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                                );
+                                                return hasAllGenres;
+                                            })
+                                            .filter((movie) => {
+                                                const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId);
+                                                if (filterRatedMovie === false) return true
+                                                return existingRating == undefined;
+                                            })
+                                            .filter((movie: any) => {
+                                                if (!applyFilter) return true; // No filter
+                                                if (filterType === 'none') return true; // No filter
+                                                if (filterType === 'inTheaters') {
+                                                    return null;
+                                                }
+                                                if (filterType === 'In theaters with online ticketing') {
+                                                    return null;
+                                                }
+                                                return true;
+                                            })
+                                            .map((m, index) => renderMovieItem(m, index, currentView)).length}
+                                        /{listKeywordMovie?.length} Titles</h2>
 
-                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
-                                    /{mostPopularTv?.length} Titles
-                                </h2>
+                                </div>
 
-                                <div className="flex items-center ml-auto gap-4 px-2 py-2" >
+                                <div className="flex items-center ml-auto gap-4 px-2 py-2 " >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
                                         <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
                                     </Tooltip>
@@ -790,12 +902,13 @@ export default function Top250TvLayout() {
                                 </div>
                             </div>
                             {/* filter icon */}
-                            <div className=" flex items-center gap-2 flex-wrap">
+                            <div className=" flex flex-wrap items-center gap-2">
                                 <div className=" flex flex-wrap items-center gap-2">
-                                    <button className="hover:bg-opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
+                                    <button className="hover:opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
                                         onClick={handleDiaGenlogOpen}>
                                         <FilterListIcon />
                                     </button>
+
                                     {selectedGenres?.map((genre, index) => (
                                         <div key={index} className="flex items-center gap-2 border-2 border-black px-2 py-2 rounded-xl hover:bg-gray-300">
                                             <p className="">
@@ -805,7 +918,7 @@ export default function Top250TvLayout() {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="ml-auto flex items-center gap-2 ">
+                                <div className="ml-auto flex items-center gap-4">
                                     <p className="text-gray-500">Sort by</p>
                                     <Button
                                         id="demo-customized-button"
@@ -857,47 +970,53 @@ export default function Top250TvLayout() {
                                     </Menu>
                                 </div>
                             </div>
-
                         </div>
+                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
+                            <p className="text-2xl font-bold" >You have rated</p>
+                            <p className="mt-3"><span className="text-green-500">{ratingList?.length}</span>/{listKeywordMovie?.length} ({ratingList?.length / listKeywordMovie?.length * 100}%)</p>
+                            <div className="flex items-center gap-3 mt-3 " onClick={() => setFilterRatedMovie(!filterRatedMovie)}>
+                                {isChecked ? (
+                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
+                                ) : (
+                                    <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
+                                )}
+                                <p>Hide titles you have rated</p>
 
-                        <div className="lg:col-span-8 col-span-12 w-full ">
+                            </div>
+                        </div> */}
+                    </div>
+                    <div className="grid grid-cols-12 gap-2 w-full">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                         display: 'flex', flexWrap: 'wrap'
                                     }}>
-                                    {mostPopularTv?.length === 0 && (
-                                        <div style={{
-                                            backgroundImage: `url(https://filmfair.in/website/images/error_screens/no-result.png')`,
-                                            position: "absolute", width: "100%", height: "100%", opacity: "0.5",
-                                            backgroundSize: "cover", backgroundPosition: "center", backgroundColor: 'black'
-                                        }}>
-                                        </div>
-                                    )}
-                                    {mostPopularTv
+                                 
+                                    {listKeywordMovie
                                         .filter((movie: any) => {
                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                             // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres.every((genre) =>
+                                            const hasAllGenres = selectedGenres?.every((genre) =>
                                                 movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                             );
                                             return hasAllGenres;
-                                        })
-                                        .filter((movie) => {
-                                            const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId && rating?.itemType === 'TV');
-                                            if (filterRatedMovie === false) return true
-                                            return existingRating == undefined;
                                         })
                                         .filter(() => {
                                             if (applyFilter === true) return true; // No filter
                                             return null
                                         })
-                                        .sort((a, b) => {
+                                        .filter((movie:any) => {
+                                            const existingRating = ratingList?.find((rating:any) => movie?.name ? movie?.name : movie?.title == rating?.itemName);
+                                            if (filterRatedMovie === false) return true
+                                            return existingRating == undefined;
+                                        })
+                                        .sort((a:any, b:any) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
-                                                const titleA = a?.name?.toUpperCase();
-                                                const titleB = b?.name?.toUpperCase();
+                                                const titleA = a?.title?.toUpperCase() || a?.name?.toUpperCase()
+                                                const titleB = b?.title?.toUpperCase() || b?.name?.toUpperCase()
                                                 if (titleA < titleB) {
                                                     return -1;
                                                 }
@@ -914,9 +1033,11 @@ export default function Top250TvLayout() {
                                             }
                                             else if (menuItemNum === '3') {
                                                 return compareReleaseDates(a, b);
+
                                             }
                                             else if (menuItemNum === '4') {
                                                 return b?.vote_count - a?.vote_count;
+
                                             }
                                             else if (menuItemNum === '7') {
                                                 return compareReleaseDates(b, a);
@@ -928,7 +1049,7 @@ export default function Top250TvLayout() {
                                                 return 0
                                             }
                                         })
-                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))}
+                                        .map((m:any, index:any) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>
                         </div>
@@ -938,11 +1059,8 @@ export default function Top250TvLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More to explore</h2>
                                 </div>
-                                <div className="lg:max-w-full w-full">
-                                    <a href="/top250Movie">
-                                        <ListRow listRowList={popularMovies} />
-
-                                    </a>
+                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
+                                    <ListRow listRowList={mostPopularTv} />
                                 </div>
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
@@ -955,8 +1073,8 @@ export default function Top250TvLayout() {
                                     <Charts />
                                 </div>
                             </div>
-                            <div className="sticky top-0 right-0 left-0">
-                                <div className="flex items-center py-3 ">
+                            <div className='sticky top-0 right-0 left-0'>
+                                <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
@@ -968,7 +1086,7 @@ export default function Top250TvLayout() {
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
                     <Footer />
                 </div>
             </div>

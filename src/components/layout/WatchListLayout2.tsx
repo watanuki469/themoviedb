@@ -350,7 +350,7 @@ export function WatchListLayout2() {
                                     <div className="items-center gap-2">
                                         <img onClick={() => navigate(`/${movie?.mediaType}/${movie?.movieId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError} className="w-full hover:opacity-80" />
+                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="flex items-center gap-2">
@@ -399,7 +399,7 @@ export function WatchListLayout2() {
             </div>
             <div className="bg-white text-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                    <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 border-b-2 border-gray px-2 py-4">
                             <div className="items-center ">
                                 <h2 className="lg:text-2xl text-lg font-bold ">Your WatchList</h2>
@@ -775,7 +775,7 @@ export function WatchListLayout2() {
                             </div>
                         </div>
                         <div>
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
@@ -790,7 +790,6 @@ export function WatchListLayout2() {
                                             );
                                             return hasAllGenres;
                                         })
-
                                         .filter(() => {
                                             if (applyFilter === true) return true; // No filter
                                             return null

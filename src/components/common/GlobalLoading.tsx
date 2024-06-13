@@ -18,8 +18,6 @@ export default function GlobalLoading() {
         }
     }, [globalLoading]);
 
-
-
     return (
         <>
             <Paper sx={{

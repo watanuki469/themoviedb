@@ -65,6 +65,7 @@ export function ActivityLayout() {
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.style.objectFit = 'cover'; // Ensure the fallback image covers the container
     };
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
@@ -189,7 +190,7 @@ export function ActivityLayout() {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
 
-    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {      
+    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
 
         switch (currentView) {
             case 'Detail':
@@ -198,18 +199,19 @@ export function ActivityLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3" key={movieIndex}
+                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)} 
+                                        <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError} className="w-full hover:opacity-80" />
+                                            onError={handleImageError}
+                                            className="w-full lg:h-56 h-80 hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
-                                                <div className="h-12 w-full ">
+                                                <div className="h-12 w-full">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
                                                 </div>
                                             </div>
@@ -247,15 +249,15 @@ export function ActivityLayout() {
                 </div>
             </div>
             <div className="bg-white text-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center px-2">
+                    <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 border-b-2 border-gray py-4">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold ">Your History List</h2>
-                                <p className="text-xl font-semibold text-gray-500">Private</p>
+                                <h2 className="lg:text-2xl text-lg font-bold ">Your History List</h2>
+                                <p className="text-lg font-semibold text-gray-500">Private</p>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg  font-bold text-black ">Share </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -284,10 +286,10 @@ export function ActivityLayout() {
                                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                             mt: 1.5,
                                             '& .MuiAvatar-root': {
-                                                width: 32,   height: 32,   ml: -0.5,   mr: 1,
+                                                width: 32, height: 32, ml: -0.5, mr: 1,
                                             },
                                             '&::before': {
-                                                content: '""',  display: 'block',  position: 'absolute',  top: 0,  right: 14,  width: 10,  height: 10,  bgcolor: 'background.paper',  transform: 'translateY(-50%) rotate(45deg)',  zIndex: 0,
+                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                             },
                                         },
                                     }}

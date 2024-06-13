@@ -7,9 +7,7 @@ export interface TwoMovieRowProps {
 export default function TvDetailExternal({
     tvDetailExList
 }: TwoMovieRowProps) {
-    let navigate = useNavigate()
-    console.log(tvDetailExList);
-    
+    let navigate = useNavigate()    
     return (
         <section className="" style={{
             position: "relative",

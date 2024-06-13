@@ -6,7 +6,7 @@ export interface FourSwiperRowProps {
     listRowList: any
 }
 
-export default function ListRow({
+export default function OneRow({
     listRowList,
 }: FourSwiperRowProps) {
 
@@ -35,14 +35,15 @@ export default function ListRow({
         <div className="relative">
             <Swiper
                 spaceBetween={2}
-                slidesPerView={3}
+                slidesPerView={1}
                 // direction="horizontal"
                 className="mySwiper text-white w-full h-auto flex"
             >
                 {listRowList?.slice(3).map((item: any, index: any) => (
-                    <SwiperSlide key={index} className="w-full h-auto">
+                    <SwiperSlide key={index} className="w-full">
                         <div className="relative hover:opacity-90">
-                            <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path?item?.poster_path:item?.profile_path}`} alt="product images" className="" />
+                            <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path?item?.poster_path:item?.profile_path}`} alt="product images" 
+                            className="h-40 w-full object-cover object-center" />
                             {index === 0 && (
                                 <div className="absolute bottom-0 left-0 p-4 flex gap-2 text-white">
                                     <FilterIcon className="w-6 h-6" />
@@ -54,8 +55,5 @@ export default function ListRow({
                 ))}
             </Swiper>
         </div>
-
-
-
     );
 }

@@ -45,7 +45,7 @@ export default function VideoLayout() {
             <div className="">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
-                    <div className="lg:max-w-full md:w-screen mt-2">
+                    <div className="lg:max-w-full w-screen mt-2">
                         <VideoDetail singleMovieList={singleMovieList} />
                     </div>
                     <Footer />

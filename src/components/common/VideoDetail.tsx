@@ -29,7 +29,6 @@ export default function VideoDetail({
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [numberIndex]);
-    console.log(singleMovieList);
     let navigate = useNavigate()
 
     const usRelease = singleMovieList[numberIndex]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === "US");

@@ -57,10 +57,10 @@ export default function MovieNewLayout() {
                 </div>
             </div>
 
-            <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center py-2">
+            <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center py-2 px-2">
                 <section className='relative overflow-hidden min-h-screen'>
                     <div className="md:grid grid-cols-12 gap-3  w-full">
-                        <div className="lg:col-span-8 md-col-span-12 w-full ">
+                        <div className="lg:col-span-8 col-span-12 w-full ">
                             <div className="">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

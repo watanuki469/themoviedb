@@ -34,8 +34,6 @@ export function WatchListLayout() {
         if (storedDataString) {
             storedData = JSON.parse(storedDataString);
         }
-        console.log('Stored data:', storedData);
-
         // Lưu dữ liệu vào state
         setWatchList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
     }, []);
@@ -310,7 +308,7 @@ export function WatchListLayout() {
                                         <div className="px-2">{movieIndex}</div>
                                         <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full  hover:opacity-80" />
+                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="flex items-center gap-2">
@@ -354,7 +352,7 @@ export function WatchListLayout() {
             </div>
             <div className="bg-white text-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <div className="lg:max-w-full md:w-screen ">
+                    <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 border-b-2 border-gray py-4">
                             <div className="items-center ">
                                 <h2 className="text-2xl font-bold ">Your Watchlist</h2>
@@ -691,7 +689,7 @@ export function WatchListLayout() {
 
                         </div>
                         <div>
-                            <div className="lg:max-w-full md:w-screen py-4 px-2 ">
+                            <div className="lg:max-w-full w-full py-4 px-2 ">
                                 <div
                                     style={{
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",

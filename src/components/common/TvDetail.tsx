@@ -487,7 +487,7 @@ export default function TvDetail({
                                                     </span>
                                                     <span className="text-stone-400">  /10</span>
                                                 </div>
-                                                <div className="text-stone-400">{singleTvList[0]?.vote_count}k</div>
+                                                <div className="text-stone-400">{singleTvList[0]?.vote_count}</div>
                                             </div>
                                         </div>
 
@@ -773,7 +773,7 @@ export default function TvDetail({
 
                                 </span>
                                 <span className="text-stone-400">  /10</span>
-                                <div className="text-stone-400">{singleTvList[0]?.vote_count}k</div>
+                                <div className="text-stone-400">{singleTvList[0]?.vote_count}</div>
                                 <div className="flex ">
                                     <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
                                         <i className="fa-regular fa-star "></i>

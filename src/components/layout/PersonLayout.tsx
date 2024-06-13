@@ -107,7 +107,7 @@ export default function PersonLayout() {
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
                     <div className="md:grid grid-cols-12 gap-2 ">
-                        <div className="lg:col-span-8 md-col-span-12  max-w-full ">
+                        <div className="lg:col-span-8 col-span-12  max-w-full ">
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 id="personPhotos" className="text-2xl font-bold text-black ">Photos</h2>
@@ -116,17 +116,17 @@ export default function PersonLayout() {
                                     onClick={() => navigate(`/image/person/${personList[0]?.id}`)}
                                     className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
-                            <div className="lg:max-w-full md:w-screen" onClick={() => navigate(`/image/person/${id}`)}>
+                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/image/person/${id}`)}>
                                 <FourPhotos fourPhotosList={personList[0]?.images?.profiles}></FourPhotos>
                             </div>
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 id="personKnowFor" className="text-2xl font-bold text-black ">Know For</h2>
                             </div>
-                            <div className="lg:max-w-full md:w-screen ">
+                            <div className="lg:max-w-full w-full ">
                                 <PersonCredit personCreditList={personList[0]?.combined_credits?.cast} />
                             </div>
-                            <div className="lg:max-w-full md:w-screen ">
+                            <div className="lg:max-w-full w-full ">
                                 <div className="flex items-center py-4"  >
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="personVideos" className="text-2xl font-bold text-black ">Videos</h2>
@@ -137,7 +137,7 @@ export default function PersonLayout() {
                                 </div>
                                 <PersonMovie personMovieList={personList[0]?.combined_credits?.cast} />
                             </div>
-                            <div className="lg:max-w-full md:w-screen ">
+                            <div className="lg:max-w-full w-full ">
                                 <div className="text-white flex py-4 ">
                                     <div className="flex items-center ">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

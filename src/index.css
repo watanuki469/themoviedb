@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .aspect-w-2 {
+        width: 2;
+    }
+    .aspect-h-3 {
+        height: 3;
+    }
+}

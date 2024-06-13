@@ -49,7 +49,7 @@ export default function AdvancedSearchLayout() {
 
     useEffect(() => {
         let timerId: ReturnType<typeof setTimeout>;
-        setLoadingQuery(true)
+        // setLoadingQuery(true)
         if (query.trim().length === 0) {
             setQuery('');
 
@@ -59,9 +59,9 @@ export default function AdvancedSearchLayout() {
             }, 2000);
 
         }
-        timerId = setTimeout(() => {
-            setLoadingQuery(false)
-        }, 2000);
+        // timerId = setTimeout(() => {
+        //     setLoadingQuery(false)
+        // }, 2000);
 
         return () => {
             clearTimeout(timerId); // Hủy timeout nếu component unmounts hoặc effect chạy lại trước khi timeout được kích hoạt
@@ -198,13 +198,13 @@ export default function AdvancedSearchLayout() {
     }
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetRating())
         }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 3000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 3000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -278,6 +278,8 @@ export default function AdvancedSearchLayout() {
         setIsRating(false)
         setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
+    console.log(topRatedMovies);
+    
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item    
@@ -338,9 +340,12 @@ export default function AdvancedSearchLayout() {
                                                 <div className="h-16">
                                                     <p className="text-gray-500 "> {movie?.known_for_department}</p>
                                                     <div className="w-full " >
-                                                        <p className="line-clamp-2 h-12">
-                                                            {movie?.known_for && movie?.known_for.length > 0 ? movie?.known_for[0]?.title : ''}
-                                                        </p>                                                        </div>
+                                                        <div className="line-clamp-2 h-12 text-blue-500 hover:underline flex gap-2 flex-wrap"
+                                                            onClick={() => navigate(`/${mediatype}/${movie?.known_for[0]?.id}`)}>
+                                                            <div>{movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}</div>
+                                                            <div> {movie?.known_for && movie?.known_for.length > 0 ? `(${movie?.known_for[0]?.release_date ? movie?.known_for[0]?.release_date?.slice(0, 4) : movie?.known_for[0]?.first_air_date?.slice(0, 4)})` : ''}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
 
@@ -369,7 +374,7 @@ export default function AdvancedSearchLayout() {
                                 {/* <div className="px-2"></div> */}
                                 <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
                                     src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                    onError={handleImageError} className="w-full hover:opacity-80" />
+                                    onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
                                 <div className="px-2 py-2 ">
                                     {
                                         mediatype != 'person' ?
@@ -736,12 +741,12 @@ export default function AdvancedSearchLayout() {
             setSearchParams('title=' + titleParam)
         }
     }, []);
-    useEffect(() => {
-        const queryParams = searchParams.get("mediaType");
-        if (queryParams) {
-            console.log(queryParams.trim());
-        }
-    }, []);
+    // useEffect(() => {
+    //     const queryParams = searchParams.get("mediaType");
+    //     if (queryParams) {
+    //         console.log(queryParams.trim());
+    //     }
+    // }, []);
     useEffect(() => {
         const mediaParam = searchParams.get("mediaType");
         let params = [];
@@ -1229,7 +1234,7 @@ export default function AdvancedSearchLayout() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full md:w-screen  py-4 px-2 "
+                            <div className="lg:max-w-full w-full  py-4 px-2 "
                                 style={{
                                     position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                     display: 'flex', flexWrap: 'wrap',
@@ -1245,14 +1250,17 @@ export default function AdvancedSearchLayout() {
                                     )
                                         :
                                         (
-                                            <div className='lg:max-w-full md:w-screen flex flex-wrap'>
+                                            <div className='lg:max-w-full w-full flex flex-wrap'>
                                                 {
                                                     topRatedMovies[0]?.results
+                                                    // bug
+                                                    // http://127.0.0.1:5173/search?mediaType=movie&title=Planet&genres=empire
                                                         .filter((movie: any) => {
                                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                                             // Check if every selected genre is present in the movie's genres
                                                             const hasAllGenres = selectedGenres.every((genre) =>
-                                                                movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                                                movie?.genre_ids?.some((mGenre: any) => 
+                                                                    genreMapping[mGenre]===genre)
                                                             );
                                                             return hasAllGenres;
                                                         })

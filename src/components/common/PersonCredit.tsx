@@ -272,7 +272,7 @@ export default function PersonCredit({
                                                         <p className="line-clamp-1"> {item.title ? item.title : item.name}</p>
                                                     </div>
                                                     <div className="items-center  mb-1">
-                                                        <div className="flex items-center ">
+                                                        <div className="flex items-center gap-2 ">
                                                             <i className="fas fa-star text-yellow-300"></i>
                                                             <p className="leading-relaxed text-gray-500">{item?.vote_average.toFixed(1)}</p>
                                                         </div>
