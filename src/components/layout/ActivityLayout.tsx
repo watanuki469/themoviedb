@@ -199,7 +199,7 @@ export function ActivityLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
+                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3" key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
@@ -208,7 +208,7 @@ export function ActivityLayout() {
                                         <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
                                             onError={handleImageError}
-                                            className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                            className="w-full md:h-56 h-64 hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="h-12 w-full">

@@ -15,7 +15,7 @@ import OneRow from "../../modules/OneRow";
 import Fullitem from "../../modules/FullItem";
 
 export default function WatchToWWatch() {
-    const [currentView, setCurrentView] = useState('FanFavorite');
+    const [currentView, setCurrentView] = useState('WatchGuide');
     const switchView = (view: any) => {
         setCurrentView(view);
     };

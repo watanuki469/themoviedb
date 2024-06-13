@@ -152,13 +152,13 @@ export default function TopBar() {
         if (item === 'What to Watch') {
           navigate('/watchToWatch');
         } else if (item === 'Latest Trailers') {
-          // navigate('/LatestTrailers');
+          navigate('/upComing');
         } else if (item === 'IMDb Originals') {
-          // navigate('/IMDbOriginals');
+          navigate('/whatOnTv');
         } else if (item === 'IMDb Picks') {
-          // navigate('/IMDbPicks');
+          navigate('/whatOnTv');
         } else if (item === 'IMDb Podcasts') {
-          // navigate('/IMDbPodcasts');
+          navigate('/search');
         } else {
           navigate('/NotFound');
         }
@@ -194,11 +194,11 @@ export default function TopBar() {
 
       case 'Community':
         if (item === 'Help Center') {
-          navigate('/');
+          window.location.href = 'https://help.imdb.com/imdb?ref_=cons_nb_hlp';
         } else if (item === 'Contributor Zone') {
-          navigate('/');
+          window.location.href = ' https://contribute.imdb.com/czone?ref_=nv_cm_cz';
         } else if (item === 'Polls') {
-          navigate('/');
+          window.location.href = 'https://www.imdb.com/poll/?ref_=nv_cm_pl';
         } else {
           navigate('/');
         }
@@ -449,12 +449,12 @@ export default function TopBar() {
                         <div className="aligns-start text-black">
                           <i className="fa-solid fa-film "></i>
                         </div>
-                        <div className="cursor-not-allowed">
-                          <p className="mt-2 hover:underline">What to Watch</p>
-                          <p className="mt-2 hover:underline">Latest Trailers</p>
-                          <p className="mt-2 hover:underline">IMDb Originals</p>
-                          <p className="mt-2 hover:underline">IMDb Picks</p>
-                          <p className="mt-2 hover:underline">IMDb Podcasts'</p>
+                        <div className="">
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/watchToWatch`)}>What to Watch</p>
+                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/upComing`)}>Latest Trailers</p>
+                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/whatOnTv`)}>IMDb Originals</p>
+                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/whatOnTv`)}>IMDb Picks</p>
+                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/search`)}>IMDb Podcasts'</p>
                         </div>
                       </div>
                     </div>
@@ -475,10 +475,16 @@ export default function TopBar() {
                         <div className="aligns-start text-black">
                           <i className="fa-solid fa-film "></i>
                         </div>
-                        <div className="cursor-not-allowed">
-                          <p className="mt-2 hover:underline">Help Center</p>
-                          <p className="mt-2 hover:underline">Contributor Zone</p>
-                          <p className="mt-2 hover:underline">Polls</p>
+                        <div className="">
+                          <a href='https://help.imdb.com/imdb?ref_=cons_nb_hlp'>
+                            <p className="mt-2 hover:underline">Help Center</p>
+                          </a>
+                          <a href='https://contribute.imdb.com/czone?ref_=nv_cm_cz'>
+                            <p className="mt-2 hover:underline">Contributor Zone</p>
+                          </a>
+                          <a href='https://www.imdb.com/poll/?ref_=nv_cm_pl'>
+                            <p className="mt-2 hover:underline">Polls</p>
+                          </a>
                         </div>
                       </div>
                     </div>

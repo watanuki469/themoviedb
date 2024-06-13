@@ -744,7 +744,7 @@ export default function TrendingLayout() {
                     <TopBar />
                     <div className="w-full bg-black mt-5 text-white ">
                         <div className="flex mt-3 items-center  ">
-                            <h2 className="lg:text-2xl text-lg font-bold  capitalize">What New On {type} in  {currentMonth}
+                            <h2 className="lg:text-2xl text-lg font-bold  capitalize">What New On {type} in  {currentMonthName}
                             </h2>
                             <div className="flex items-center ml-auto gap-2 text-gray-400" >
                                 <div className="text-md justify-center  text-right">

@@ -75,9 +75,7 @@ export default function WatchGuide({
                         <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
                     </div>
                     <div onClick={() => navigate(`/trending/hulu`)}>
-                        <a href="/top250Tv">
-                            <ListRow listRowList={listNewHulu} />
-                        </a>
+                        <ListRow listRowList={listNewHulu} />
                         <p className="mt-2 hover:underline">Everything New On Hulu In {currentMonthName}</p>
                         <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
                     </div>
@@ -92,9 +90,8 @@ export default function WatchGuide({
                         <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
                     </div>
                     <div onClick={() => navigate(`/trending/hulu`)}>
-                        <a href="/top250Tv">
-                            <ListRow listRowList={listNewMax} />
-                        </a>
+
+                        <ListRow listRowList={listNewMax} />
                         <p className="mt-2 hover:underline">Everything New On Max In {currentMonthName}</p>
                         <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
                     </div>
@@ -115,37 +112,33 @@ export default function WatchGuide({
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
                     <div onClick={() => navigate(`/trending/netflix`)}>
                         <OneRow listRowList={topRatedMovies} />
-                        <p className="mt-2 hover:underline">Everything New On Disney In {currentMonthName}</p>
-                        <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
+                        <p className="mt-2 hover:underline">5 Top Rated Will Ferrell Movies</p>
+                        <p className="mt-2 text-blue-500 hover:underline">See what made the list</p>
                     </div>
                     <div onClick={() => navigate(`/trending/disney`)}>
                         <OneRow listRowList={popularMovie} />
-                        <p className="mt-2 hover:underline">Everything New On Netflix In {currentMonthName}</p>
-                        <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                        <p className="mt-2 hover:underline">5 Must-See Sequels and Prequels in {currentMonthName}</p>
+                        <p className="mt-2 text-blue-500 hover:underline" >See out picks</p>
                     </div>
                     <div onClick={() => navigate(`/trending/hulu`)}>
-                        <a href="/top250Tv">
-                            <OneRow listRowList={mostPopularTv} />
-                        </a>
-                        <p className="mt-2 hover:underline">Everything New On Hulu In {currentMonthName}</p>
-                        <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                        <OneRow listRowList={mostPopularTv} />
+                        <p className="mt-2 hover:underline">5 Award-Winning Sci-Fi Picks</p>
+                        <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
                     </div>
                     <div onClick={() => navigate(`/trending/prime`)}>
                         <OneRow listRowList={topRatedTv} />
-                        <p className="mt-2 hover:underline">Everything New On Prime Video In {currentMonthName}</p>
-                        <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
+                        <p className="mt-2 hover:underline">5 Anime Top Rated on Netflix</p>
+                        <p className="mt-2 text-blue-500 hover:underline">Stream these now</p>
                     </div>
                     <div onClick={() => navigate(`/trending/stream`)}>
                         <OneRow listRowList={discoverTv} />
-                        <p className="mt-2 hover:underline">Everything New On Stream Premiere In {currentMonthName}</p>
-                        <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                        <p className="mt-2 hover:underline">5 Top-Rated Pixar Movies to Watch</p>
+                        <p className="mt-2 text-blue-500 hover:underline" >What the video</p>
                     </div>
                     <div onClick={() => navigate(`/trending/hulu`)}>
-                        <a href="/top250Tv">
-                            <OneRow listRowList={discoverMovie} />
-                        </a>
-                        <p className="mt-2 hover:underline">Everything New On Max In {currentMonthName}</p>
-                        <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                        <OneRow listRowList={discoverMovie} />
+                        <p className="mt-2 hover:underline">5 Most Unhinged Villains</p>
+                        <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
                     </div>
                 </div>
             </div>

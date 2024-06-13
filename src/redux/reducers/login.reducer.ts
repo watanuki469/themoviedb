@@ -46,7 +46,7 @@ const setUserState = (state: ILoginState, action: any) => {
 }
 
 const setRegisterState = (state: ILoginState, action: any) => {
-    state.register = action.payload;
+    state.register = action.payload.email;
 }
 const setFavoriteState = (state: ILoginState, action: any) => {
     state.favorite = action.payload;

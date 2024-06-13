@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import bg from '../../assets/home-background.jpg';
 import { registerMongoApi } from "../../redux/client/api.LoginMongo";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setRegister } from "../../redux/reducers/login.reducer";
 import { AppDispatch } from "../../redux/store";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
@@ -21,25 +21,23 @@ const RegisterLayoutTest = () => {
     Promise.all([
       registerMongoApi(displayName, email, password, confirmPassword),
     ])
-      .then((response: any) => {
+      .then((response: any) => {        
         dispatch(setRegister(response));
-        navigate('/login2')
-        toast.success('Register Successfully')
       })
       .catch((e) => {
         console.log("Register Failed" + e);
-        toast.error("Register failed"+e)
+        toast.error("Register failed" + e)
       })
     setTimeout(() => {
       dispatch(setGlobalLoading(false));
-    }, 4000);
+    }, 1000);
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(fetchRegister())
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-transparent bg-cover text-white"
       style={{ backgroundImage: `url(${bg})` }}>
@@ -139,7 +137,9 @@ const RegisterLayoutTest = () => {
             </label>
           </div>
         </div>
-        <button type="submit" className="bth w-full px-4 mt-6 py-2 font-bold text-center bg-black text-white rounded-lg">Register</button>
+        <button type="submit" className="bth w-full px-4 mt-6 py-2 font-bold text-center bg-black text-white rounded-lg">
+          Register
+        </button>
         <div className="login-register text-center mt-3">
           <p>Already have an account? <a href="/login2" className="login-link hover:underline font-extrabold">Login</a></p>
         </div>

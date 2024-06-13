@@ -7,6 +7,7 @@ import LoginLayoutTest from './components/layout/LoginLayoutTest';
 import RegisterLayoutTest from './components/layout/RegisterLayoutTest';
 import HomePage from "./pages/HomePage";
 import routes from "./routes";
+import RegisterLayout from './components/layout/RegisterLayout';
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
       <GlobalLoading />
       <Routes>
         <Route path="/login" element={<LoginLayout />}></Route>
-        <Route path="/register" element={<RegisterLayoutTest />}></Route>
+        {/* <Route path="/register1" element={<RegisterLayoutTest />}></Route> */}
+        <Route path="/register" element={<RegisterLayout />}></Route>
         <Route path="/login2" element={<LoginLayoutTest />}></Route>
         <Route path="/" element={<PrivateRoute />} >
           <Route path="/" element={<HomePage />} />

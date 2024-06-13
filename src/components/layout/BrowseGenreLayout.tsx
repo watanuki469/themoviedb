@@ -223,25 +223,44 @@ export default function BrowseGenreLayout() {
                             </div>
                             <div>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-blue-500">
-                                    <li className="hover:underline">Anime</li> •
-                                    <li className="hover:underline">Avant Garde</li> •
-                                    <li className="hover:underline">B Movie</li> •
-                                    <li className="hover:underline">Chick Flick</li> •
-                                    <li className="hover:underline">Coming of Age</li> •
-                                    <li className="hover:underline">Cult Film</li> •
-                                    <li className="hover:underline">Dystopia</li> •
-                                    <li className="hover:underline">Epic</li> •
-                                    <li className="hover:underline">Espionage</li> •
-                                    <li className="hover:underline">Femme Fatale</li> •
-                                    <li className="hover:underline">High School</li> •
-                                    <li className="hover:underline">Kung Fu</li> •
-                                    <li className="hover:underline">Mockumentary</li> •
-                                    <li className="hover:underline">Post Apocalypse</li> •
-                                    <li className="hover:underline">Spoof</li> •
-                                    <li className="hover:underline">Superhero</li> •
-                                    <li className="hover:underline">Time Travel</li> •
-                                    <li className="hover:underline">Vampire</li> •
-                                    <li className="hover:underline">Zombie</li>
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/210024/anime`)}>Anime</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/308818/Avant Garde`)}>Avant Garde</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/11034/B Movie`)}>B Movie</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/288601/chick`)}>Chick Flick</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/10683/Coming of Age`)}>Coming of Age</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/328003/Cult Film`)}>Cult Film</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/4565/Dystopia`)}>Dystopia</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/6917/Epic`)}>Epic</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/5265/Espionage`)}>Espionage</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/9016/Femme Fatale`)}>Femme Fatale</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/6270/High School`)}>High School</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/780/Kung Fu`)}>Kung Fu</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/11800/Mockumentary`)}>Mockumentary</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/272793/Post Apocalypse`)}>Post Apocalypse</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/11931/Spoof`)}>Spoof</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/9715/Superhero`)}>Superhero</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/4379/Time Travel`)}>Time Travel</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/3133/Vampire`)}>Vampire</li> •
+                                    <li className="hover:underline"
+                                        onClick={() => navigate(`/keyword/movies/12377/zombie`)}>Zombie</li>
                                 </ul>
                             </div>
                             <div className="py-2 mt-2">

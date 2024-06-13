@@ -7,19 +7,16 @@ import { setListLogin, setUser } from "../../redux/reducers/login.reducer";
 import { AppDispatch } from "../../redux/store";
 import { toast } from "react-toastify";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { error } from "console";
 
 const LoginLayoutTest = () => {
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState<any>('');
     const [password, setPassword] = useState('');
     const dispatch = useAppDispatch()
     let navigate = useNavigate()
+
     const registerUser = useAppSelector((state) => state.login.register)
-    useEffect(() => {
-        if (registerUser) {
-            setEmail(registerUser[0]?.email || '');
-        }
-    }, []);
+    console.log(registerUser);
+    
 
     const fetchLogin = () => (dispatch: AppDispatch) => {
         dispatch(setGlobalLoading(true));
@@ -28,14 +25,12 @@ const LoginLayoutTest = () => {
         ])
             .then((response: any) => {
                 if (response && response[0].token) {
-
                     dispatch(setListLogin(response));
                     dispatch(setUser(response));
                     localStorage.setItem("token", response[0].token);
                     localStorage.setItem("user", JSON.stringify(response[0])); // Save user data as JSON string
                     navigate('/'); // Navigate to the desired route
                     toast.success('Login successfully');
-
                 } else {
                     throw toast.error('Login failed'
                     )
@@ -53,6 +48,12 @@ const LoginLayoutTest = () => {
         event.preventDefault();
         dispatch(fetchLogin())
     };
+    useEffect(() => {
+        if (registerUser) {
+            setEmail(registerUser)
+        }
+    }, [registerUser]);
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-transparent bg-cover cursor-pointer"
@@ -115,7 +116,6 @@ const LoginLayoutTest = () => {
                 <div className="login-register text-center mt-3">
                     <p>Not have an account? <a href="/register" className="login-link hover:underline font-extrabold">Register</a></p>
                 </div>
-
             </form>
         </div>
     );

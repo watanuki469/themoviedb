@@ -249,7 +249,7 @@ export function FavoriteListLayout() {
                                         <img onClick={() => navigate(`/movie/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
-                                            onError={handleImageError} className="w-full h-68 hover:opacity-80" />
+                                            onError={handleImageError} className="w-full h-64 hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="items-center gap-2 justify-start text-left w-full ">
                                                 <div className="h-12 w-full ">
