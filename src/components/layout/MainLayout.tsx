@@ -13,6 +13,7 @@ import { getListRecentlyViewMongoApi, removeListRecentlyViewMongoApi } from "../
 import { setDeleteRecentlyView, setListRecentlyView } from "../../redux/reducers/login.reducer";
 import { toast } from "react-toastify";
 
+
 export default function MainLayout() {
     const dispatch = useAppDispatch()
     let navigate = useNavigate()
@@ -35,27 +36,7 @@ export default function MainLayout() {
 
     // Lấy tên của tháng hiện tại từ mảng monthNames
     const currentMonthName = monthNames[currentMonth];
-    // const [watchList, setWatchList] = useState<any[]>([]);
-    // useEffect(() => {
-    //     // Lấy dữ liệu từ local storage
-    //     const storedDataString = localStorage.getItem('activity');
-    //     let storedData = [];
 
-    //     if (storedDataString) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     // console.log('Stored data:', storedData);
-
-    //     // Lưu dữ liệu vào state
-    //     setWatchList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
-    // }, []);
-    // const removeFromWatchList = () => {
-    //     // Xóa dữ liệu với key 'activity' khỏi local storage
-    //     localStorage.removeItem('activity');
-
-    //     // Cập nhật state để render lại (nếu cần)
-    //     setWatchList([]);
-    // };
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
@@ -155,9 +136,11 @@ export default function MainLayout() {
             setLoadingQuery(false)
         }, 1000);
     };
+   
 
     return (
-        <div className=" min-h-screen cursor-pointer">
+        <div className=" min-h-screen ">
+             
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />

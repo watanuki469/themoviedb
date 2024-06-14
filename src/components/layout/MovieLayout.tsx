@@ -187,7 +187,7 @@ export default function MovieLayout() {
     }, [userInfoList, singleMovieList, dispatch])
 
     return (
-        <div className=" min-h-screen cursor-pointer overflow-hidden w-full">
+        <div className=" min-h-screen overflow-hidden w-full">
             <div className="bg-black w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />

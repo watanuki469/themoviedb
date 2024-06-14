@@ -21,7 +21,6 @@ export default {
       },
       animation: {
         orbit: 'orbit 30s linear infinite',
-        // Customize the duration for different elements if needed
       }
     }
   }
