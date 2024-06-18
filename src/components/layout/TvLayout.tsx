@@ -3,8 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import FourSwiperRow from "../../modules/FourSwiperRow";
 import ListRow from "../../modules/ListRow";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import TwoMovieRow from "../../modules/TwoMovieRow";
 import apiController from "../../redux/client/api.Controller.";
+import { addRecentlyViewed } from "../../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { setListTv } from "../../redux/reducers/tv.reducer";
 import { setListTvImage } from "../../redux/reducers/tvImage.reducer";
@@ -12,18 +16,11 @@ import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import TvDetail from "../common/TvDetail";
+import TvDetailExternal from "../common/TvDetailExternal";
 import TvEpisode from "../common/TvEpisode";
 import TvPerson from "../common/TvPerson";
-import TvStoryLine from "../common/TvStoryLine";
-import TwoMovieRow from "../../modules/TwoMovieRow";
 import TvReview from "../common/TvReview";
-import TvDetailExternal from "../common/TvDetailExternal";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { addRecentlyViewed, getListRecentlyViewMongoApi, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
-import { setRecentlyView } from "../../redux/reducers/login.reducer";
-import { toast } from "react-toastify";
-import axios from "axios";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import TvStoryLine from "../common/TvStoryLine";
 
 export default function TvLayout() {
     const { id } = useParams()
@@ -119,8 +116,16 @@ export default function TvLayout() {
         }))
     }, [userInfoList, tvList, dispatch])
 
+    const normalizeText = (text: string) => {
+        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')//bỏ dấu
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')  // Loại bỏ các ký tự đặc biệt ngoại trừ dấu gạch ngang
+            .replace(/[\s-]+/g, '-')       // Thay thế khoảng trắng hoặc nhiều dấu gạch ngang liên tiếp bằng một dấu gạch ngang
+            .trim();                       // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+    };
+
     return (
-        <div className=" min-h-screen cursor-pointer max-w-full overflow-hidden">
+        <div className=" min-h-screen cursor-pointer max-w-full ">
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -132,11 +137,12 @@ export default function TvLayout() {
                     <div className="grid grid-cols-12 gap-2 ">
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
                             <div className="lg:max-w-full w-full">
-                                <div className="text-white py-4 px-2 w-screen ">
-                                    <div className="flex items-center ">
+                                <div className="text-white py-4 px-2 w-full ">
+                                    <div className="flex items-center"
+                                        onClick={() => navigate(`/film/tv/${id}/${normalizeText(tvList[0]?.name)}`)} >
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-black ">Episodes</h2>
-                                        <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p>
+                                        {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
                                         <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                     </div>
                                 </div>
@@ -156,7 +162,7 @@ export default function TvLayout() {
                                     <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results} />
                                 </div>
                             </div>
-                            <div className="flex items-center py-4 px-2 w-screen">
+                            <div className="flex items-center py-4 px-2 w-full">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">Photos</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
@@ -166,7 +172,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full" onClick={() => navigate(`/image/tv/${id}`)}>
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
                             </div>
-                            <div className="text-white flex py-4 w-screen px-2 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
+                            <div className="text-white flex py-4 w-full px-2 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
                                 <div className="flex items-center w-full ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvCast" className="text-2xl font-bold text-black ">Top Cast</h2>
@@ -177,7 +183,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full">
                                 <TvPerson singleMovieList={tvList} />
                             </div>
-                            <div className="text-white flex py-4 mt-4 px-2 w-screen">
+                            <div className="text-white flex py-4 mt-4 px-2 w-full">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">More Like This</h2>
@@ -187,7 +193,7 @@ export default function TvLayout() {
                                 <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'TV'} />
                             </div>
 
-                            <div className="text-white flex py-2 w-screen px-2">
+                            <div className="text-white flex py-2 w-full px-2">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black ">Story Line</h2>
@@ -196,7 +202,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full">
                                 <TvStoryLine tvList={tvList} />
                             </div>
-                            <div className="text-white flex py-4 px-2 w-screen">
+                            <div className="text-white flex py-4 px-2 w-full">
                                 <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/tv/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvReview" className="text-2xl font-bold text-black ">User Reviews</h2>
@@ -207,7 +213,7 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full">
                                 <TvReview singleTvList={tvList} />
                             </div>
-                            <div className="text-white flex py-4  px-2 w-screen">
+                            <div className="text-white flex py-4  px-2 w-full">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 id="tvTrvia" className="text-2xl font-bold text-black ">Detail</h2>

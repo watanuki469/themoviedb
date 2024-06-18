@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { AppDispatch } from '../../redux/store';
 import { favoriteActorMongoApi, getFavoriteActorMongoApi } from '../../redux/client/api.LoginMongo';
-import {  setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
+import { setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
 
 
 export interface TwoMovieRowProps {
@@ -52,7 +52,7 @@ export default function PersonDetail({
     };
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)

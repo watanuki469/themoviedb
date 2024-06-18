@@ -39,8 +39,12 @@ export default function FanFavorite() {
     }, []);
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
+    // onError={(e) => {
+    //     e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+    //     e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+    // }}
     const handleClickImg = (id: any) => {
         window.scrollTo(0, 0)
         // navigate(`/${mediaType}/${id}`)
@@ -108,7 +112,10 @@ export default function FanFavorite() {
                         <div>
                             <div className=" object-cover">
                                 <img src={`${item?.primaryImage?.imageUrl}`} alt="product images" className="h-60 w-full hover:opacity-80"
-                                    onError={handleImageError}
+                                    onError={(e) => {
+                                        e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                        e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                    }}
 
                                     onClick={() => handleClickImg(`${item?.id}`)} />
                             </div>

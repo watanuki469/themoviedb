@@ -76,7 +76,12 @@ export default function MovieNewLayout() {
                                                 <i className="fa-solid fa-arrow-up-right-from-square ml-2"></i>
 
                                             </a>
-                                            <img className="py-2" src={`${article?.node?.image.url}`}>
+                                            <img className="py-2" src={`${article?.node?.image.url}`}
+                                              onError={(e) => {
+                                                e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                                e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                            }}>
+
                                             </img>
                                             <div className="py-2">
                                                 {splitTextIntoParagraphs(article?.node?.text?.plainText)}

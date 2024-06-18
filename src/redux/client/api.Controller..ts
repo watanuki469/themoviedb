@@ -83,5 +83,10 @@ const apiKeyword = {
         return axiosClient.get(url)
     },
 }
-
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing,apiPeoplePopular ,apiKeyword}
+const apiGenre = {
+    genre(mediaType:any) {
+        const url = `genre/${mediaType}/list?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`;
+        return axiosClient.get(url)
+    },
+}
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing,apiPeoplePopular ,apiKeyword,apiGenre}

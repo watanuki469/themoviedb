@@ -75,7 +75,7 @@ export default function CastCrewLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     // đang thực hiện trang cast & crew cho movie và tv
 
@@ -115,17 +115,11 @@ export default function CastCrewLayout() {
                         </div>
                     </div>
                     <div className="w-full border-t-2 border-gray-500  flex flex-wrap">
-                        <div className="items-center w-full grid lg:grid-cols-2 text-black">
+                        <div className="items-center w-full grid md:grid-cols-2 text-black">
                             {mediaList[0]?.credits?.crew?.map((item: any, index: any) => (
                                 <div key={index} className="flex items-center w-full border-b-2 py-2">
-                                    {/* <div className="h-44 w-28 bg-cover mr-4 hover:opacity-80"
-                                        style={{
-                                            backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
-                                        }}
-                                        onClick={() => navigate(`/person/${item?.id}`)}>
-                                    </div> */}
                                     <img
-                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
+                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://via.placeholder.com/500x750`)}`}
                                         onClick={() => navigate(`/person/${item?.id}`)}
                                         className="h-44 w-32 flex-shrink-0 object-cover"
                                     />
@@ -139,18 +133,12 @@ export default function CastCrewLayout() {
                                 </div>
                             ))}
                         </div>
-                        <div className="items-center w-full grid lg:grid-cols-2 text-black">
+                        <div className="items-center w-full grid md:grid-cols-2 text-black">
                             {mediaList[0]?.credits?.cast?.map((item: any, index: any) => (
                                 <div key={index} className="flex items-center  border-b-2 py-2 w-full">
                                     <div className="flex items-center w-full">
-                                        {/* <div className="h-32 w-28 bg-cover mr-4 hover:opacity-80"
-                                            style={{
-                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
-                                            }}
-                                            onClick={() => navigate(`/person/${item?.id}`)}>
-                                        </div> */}
                                         <img
-                                            src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
+                                            src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://via.placeholder.com/500x750`)}`}
                                             onClick={() => navigate(`/person/${item?.id}`)}
                                             className="h-44 w-32 flex-shrink-0 object-cover"
                                         />
@@ -165,11 +153,11 @@ export default function CastCrewLayout() {
                                 </div>
                             ))}
                         </div>
-                        <div className="items-center w-full grid lg:grid-cols-2 text-black h-full">
+                        <div className="items-center w-full grid md:grid-cols-2 text-black h-full">
                             {mediaList[0]?.aggregate_credits?.cast?.map((item: any, index: any) => (
                                 <div key={index} className="flex items-center border-b-2 py-2">
                                     <img
-                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
+                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://via.placeholder.com/500x750`)}`}
                                         onClick={() => navigate(`/person/${item?.id}`)}
                                         className="h-44 w-32 flex-shrink-0 object-cover"
                                     />
@@ -194,7 +182,7 @@ export default function CastCrewLayout() {
                                 <div key={index} className="flex items-center  border-b-2 py-2">
 
                                     <img
-                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://www.dtcvietnam.com.vn/web/images/noimg.jpg`)}`}
+                                        src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://via.placeholder.com/500x750`)}`}
                                         onClick={() => navigate(`/person/${item?.id}`)}
                                         className="h-44 w-32 flex-shrink-0"
                                     />

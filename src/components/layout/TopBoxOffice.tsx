@@ -60,7 +60,7 @@ export default function TopBoxOffice() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
 
 
@@ -591,18 +591,18 @@ export default function TopBoxOffice() {
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top Box Office</h2>
                             </div>
-                            <p className="text-gray-500 py-2">Weekend of {currenDatePre > 28 ? preMonthName:currentMonthName } {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
+                            <p className="text-gray-500 py-2">Weekend of {currenDatePre > 28 ? preMonthName : currentMonthName} {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
                         </div>
 
                     </div>
                     <div className="grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex items-center">
-                                    <h2 className="lg:text-2xl text-lg text-black ">
-                                        {topRatedMovies
-                                            .slice(0, 10)
-                                            .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
-                                        /10 Titles</h2>
+                                <h2 className="lg:text-2xl text-lg text-black ">
+                                    {topRatedMovies
+                                        .slice(0, 10)
+                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
+                                    /10 Titles</h2>
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
                                         <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>

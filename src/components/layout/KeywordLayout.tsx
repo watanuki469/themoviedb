@@ -21,6 +21,7 @@ import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import { fetchTrending } from '../../redux/reducers/trending.reducer';
 import apiController from '../../redux/client/api.Controller.';
 import { setlistKeyWord } from '../../redux/reducers/keyword.reducer';
+import { setListGenre } from '../../redux/reducers/genre.reducer';
 
 export default function KeywordLayout() {
     const { mediaType } = useParams()
@@ -42,7 +43,7 @@ export default function KeywordLayout() {
             apiController.apiKeyword.keyword(id, mediaType)
         ])
             .then((data: any) => {
-                if (data[0]&&data[0].results) {
+                if (data[0] && data[0].results) {
                     dispatch(setlistKeyWord(data[0].results));
                 } else {
                     console.error("API response structure is not as expected.", data);
@@ -81,7 +82,7 @@ export default function KeywordLayout() {
             dispatch(setGlobalLoading(false));
         }, 1000);
     }, []);
-    
+
     const currentDate = new Date();
     const monthNames = [
         "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -102,11 +103,34 @@ export default function KeywordLayout() {
         setCurrentView(view);
     };
 
+    const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
+    const fetchGenre = () => (dispatch: AppDispatch) => {
+        apiController.apiGenre.genre('movie')
+            .then((data: any) => {
+                if (data && data?.genres) {
+                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+    useEffect(() => {
+        dispatch(fetchGenre());
+    }, [dispatch]);
+
+
     type GenreID = number;
     type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
-    };
+    // const genreMapping: Record<GenreID, GenreName> = {
+    //     28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
+    // };
+    const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
+        acc[genre?.id] = genre?.name;
+        return acc;
+    }, {});
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
     const [numberGen, setNumberGen] = useState(0);
@@ -115,10 +139,8 @@ export default function KeywordLayout() {
     function countGenres(listKeywordMovie: any): Record<GenreName, number> {
         const genreCounting: Record<GenreName, number> = {};
         listKeywordMovie?.forEach((movie: any) => {
-            movie?.genre_ids?.forEach((id: GenreID) => {
-                // Lấy tên thể loại từ đối tượng ánh xạ
-                const genreName: GenreName = genreMapping[id];
-                // Nếu thể loại đã tồn tại, tăng giá trị đếm lên 1; ngược lại, tạo mới với giá trị 1.
+            movie?.genre_ids?.forEach((id: any) => {
+                const genreName = genreMapping[id];
                 genreCounting[genreName] = (genreCounting[genreName] || 0) + 1;
             });
         });
@@ -130,11 +152,11 @@ export default function KeywordLayout() {
         const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
         setNumberGen(totalGenreCount);
 
-    }, [listKeywordMovie]);
+    }, [listKeywordMovie, listGenreFromApi]);
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [openGenDialog, setOpenGenDialog] = useState(false);
     const handleDiaGenlogOpen = () => {
@@ -385,9 +407,11 @@ export default function KeywordLayout() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
-                                        <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                        <div className="relative w-full pb-[150%] hover:opacity-80" >
+                                            <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                        </div>
 
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
@@ -863,7 +887,7 @@ export default function KeywordLayout() {
                                         {listKeywordMovie
                                             .filter((movie: any) => {
                                                 if (selectedGenres?.length === 0) return true; // No genre filter
-                                                const hasAllGenres = selectedGenres.every((genre) =>
+                                                const hasAllGenres = selectedGenres.every((genre: any) =>
                                                     movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                                 );
                                                 return hasAllGenres;
@@ -993,12 +1017,12 @@ export default function KeywordLayout() {
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                         display: 'flex', flexWrap: 'wrap'
                                     }}>
-                                 
+
                                     {listKeywordMovie
                                         .filter((movie: any) => {
                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                             // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres?.every((genre) =>
+                                            const hasAllGenres = selectedGenres?.every((genre: any) =>
                                                 movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                             );
                                             return hasAllGenres;
@@ -1007,12 +1031,12 @@ export default function KeywordLayout() {
                                             if (applyFilter === true) return true; // No filter
                                             return null
                                         })
-                                        .filter((movie:any) => {
-                                            const existingRating = ratingList?.find((rating:any) => movie?.name ? movie?.name : movie?.title == rating?.itemName);
+                                        .filter((movie: any) => {
+                                            const existingRating = ratingList?.find((rating: any) => movie?.name ? movie?.name : movie?.title == rating?.itemName);
                                             if (filterRatedMovie === false) return true
                                             return existingRating == undefined;
                                         })
-                                        .sort((a:any, b:any) => {
+                                        .sort((a: any, b: any) => {
                                             if (menuItemNum === '5') {
                                                 // Sắp xếp theo thứ tự alphabet của title
                                                 const titleA = a?.title?.toUpperCase() || a?.name?.toUpperCase()
@@ -1049,7 +1073,7 @@ export default function KeywordLayout() {
                                                 return 0
                                             }
                                         })
-                                        .map((m:any, index:any) => renderMovieItem(m, index, currentView))}
+                                        .map((m: any, index: any) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>
                         </div>

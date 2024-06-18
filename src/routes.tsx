@@ -5,6 +5,7 @@ import CastCrewLayout from "./components/layout/CastCrewLayout";
 import CelebNewLayout from "./components/layout/CelebNewLayout";
 import ChangeLayoutTest from "./components/layout/ChangePasswordLayout";
 import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
+import FilmLayout from "./components/layout/FilmLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import KeywordLayout from "./components/layout/KeywordLayout";
 import LoginLayoutTest from "./components/layout/LoginLayoutTest";
@@ -50,99 +51,99 @@ const routes = [
   },
   {
     path: "/video/:id",
-    element: <VideoLayout/>,
+    element: <VideoLayout />,
     state: "video"
   },
   {
     path: "/videoTv/:id",
-    element: <VideoTvLayout/>,
+    element: <VideoTvLayout />,
     state: "videoTv"
   },
   {
     path: "/tv/:id",
-    element: <TvLayout/>,
+    element: <TvLayout />,
     state: "video"
   },
   {
     path: "/upComing",
-    element: <UpComingMovieLayout/>,
+    element: <UpComingMovieLayout />,
     state: "upComing"
   },
   {
     path: "/top250Movie",
-    element: <Top250MovieLayout/>,
+    element: <Top250MovieLayout />,
     state: "top250Movie"
   },
   {
     path: "/top250Tv",
-    element: <Top250TvLayout/>,
+    element: <Top250TvLayout />,
     state: "top250Tv"
   },
   {
     path: "/topPopularTv",
-    element: <TopPopularTvLayout/>,
+    element: <TopPopularTvLayout />,
     state: "topPopularTv"
   },
   {
     path: "/whatOnTv",
-    element: <WhatOnTvStream/>,
+    element: <WhatOnTvStream />,
     state: "whatOnTv"
   },
   {
     path: "/topBoxOffice",
-    element: <TopBoxOffice/>,
+    element: <TopBoxOffice />,
     state: "topBoxOffice"
   },
   {
     path: "/search",
-    element: <AdvancedSearchLayout/>,
+    element: <AdvancedSearchLayout />,
     state: "search"
   },
   {
     path: "/features/genre",
-    element: <BrowseGenreLayout/>,
+    element: <BrowseGenreLayout />,
     state: "genre"
   },
   {
     path: "/IMDbPro",
-    element: <ProLayout/>,
+    element: <ProLayout />,
     state: "IMDbPro"
   },
   {
     path: "/image/:mediaType/:id",
-    element: <ImageLayout/>,
+    element: <ImageLayout />,
     state: "image"
   },
   {
     path: "/fullcredits/:mediaType/:id",
-    element: <CastCrewLayout/>,
+    element: <CastCrewLayout />,
     state: "fullcredits"
   },
   {
     path: "/fullReview/:mediaType/:id",
-    element: <UserReviewLayout/>,
+    element: <UserReviewLayout />,
     state: "fullReview"
   },
   {
     path: "/news/movie",
-    element: <MovieNewLayout/>,
+    element: <MovieNewLayout />,
     state: "movieNew"
   },
-  
+
   {
     path: "/news/tv",
-    element: <TvNewLayout/>,
+    element: <TvNewLayout />,
     state: "tvNew"
   },
-  
+
   {
     path: "/news/celeb",
-    element: <CelebNewLayout/>,
+    element: <CelebNewLayout />,
     state: "celebNew"
   },
   {
     path: "/popularCeleb",
-    element: <PopularCelebLayout/>,
+    element: <PopularCelebLayout />,
     state: "popularCeleb"
   },
   {
@@ -158,47 +159,49 @@ const routes = [
 
   {
     path: "/watchList",
-    element: <WatchListLayout/>,
+    element: <WatchListLayout />,
     state: "watchList"
   },
   {
     path: "/watchList2",
-    element: <WatchListLayout2/>,
+    element: <WatchListLayout2 />,
     state: "watchList"
   },
   {
     path: "/favoriteList",
-    element: <FavoriteListLayout/>,
+    element: <FavoriteListLayout />,
     state: "FavoriteList"
   },
 
   {
     path: "/activity",
-    element: <ActivityLayout/>,
+    element: <ActivityLayout />,
     state: "activity"
   },
   {
     path: "/rating",
-    element: <RatingLayout/>,
+    element: <RatingLayout />,
     state: "rating"
   },
   {
     path: "/test",
-    element: <LoginLayoutTest/>,
+    element: <LoginLayoutTest />,
     state: "test"
   },
   {
     path: "/changePassword",
-    element: <ChangeLayoutTest/>,
+    element: <ChangeLayoutTest />,
     state: "test"
   },
-  
-
-  //not have api suitable
   {
     path: "/watchToWatch",
-    element: <WatchToWWatch/>,
+    element: <WatchToWWatch />,
     state: "watchToWatch"
+  },
+  {
+    path: "/film/:mediaType/:id/:name",
+    element: <FilmLayout />,
+    state: "film"
   },
 
 ];

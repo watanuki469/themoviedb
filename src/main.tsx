@@ -11,7 +11,7 @@ import { store } from './redux/store.ts'
 ReactDOM.createRoot(document.getElementById('root')!).render(
 
   // <React.StrictMode>
-  <div>
+  <div>  
     <Provider store={store}>
       <BrowserRouter>
         <App />

@@ -49,11 +49,54 @@ function App() {
     const coords = { x: 0, y: 0 };
     const circles = document.querySelectorAll<CircleElement>(".circle");
 
+    // const colors = [
+    //   "#ffb56b",
+    //   "#fdaf69",
+    //   "#f89d63",
+    //   "#f59761",
+    //   "#ef865e",
+    //   "#ec805d",
+    //   "#e36e5c",
+    //   "#df685c",
+    //   "#d5585c",
+    //   "#d1525c",
+    //   "#c5415d",
+    //   "#c03b5d",
+    //   "#b22c5e",
+    //   "#ac265e",
+    //   "#9c155f",
+    //   "#950f5f",
+    //   "#830060",
+    //   "#7c0060",
+    //   "#680060",
+    //   "#60005f",
+    //   "#48005f",
+    //   "#3d005e"
+    // ];
     const colors = [
-      "#ffb56b", "#fdaf69", "#f89d63", "#f59761", "#ef865e", "#ec805d",
-      "#e36e5c", "#df685c", "#d5585c", "#d1525c", "#c5415d", "#c03b5d",
-      "#b22c5e", "#ac265e", "#9c155f", "#950f5f", "#830060", "#7c0060",
-      "#680060", "#60005f", "#48005f", "#3d005e"
+      "#a3d5ff",
+      "#99cfff",
+      "#8fc9ff",
+      "#85c3ff",
+      "#7bbdff",
+      "#71b7ff",
+      "#67b1ff",
+      "#5dabff",
+      "#53a5ff",
+      "#499fff",
+      "#3f99ff",
+      "#3593ff",
+      "#2b8dff",
+      "#2187ff",
+      "#1781ff",
+      "#0d7bff",
+      "#0375ff",
+      "#006fff",
+      "#0069e6",
+      "#0063cc",
+      "#005db3",
+      "#005799",
+      "#005180"
     ];
 
     circles.forEach(function (circle: any, index: any) {
@@ -95,7 +138,7 @@ function App() {
   return (
     <div>
       {/* <div className="cursor"></div> */}
-      
+            
         {[...Array(20)].map((_, i) => (
           <div key={i} className="circle"></div>
         ))}

@@ -16,6 +16,7 @@ import TopBar from "../common/TopBar";
 import { ListMoviesPopular } from "../models/ListMoviesPopular";
 import './earth.css'; // Assuming you have a styles.css file for custom styles
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import { setListGenre } from '../../redux/reducers/genre.reducer';
 
 export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ export default function AdvancedSearchLayout() {
     const [mediatype, setMediaType] = useState('movie');
 
     const topRatedMovies = useAppSelector((state) => state.search.listSearch)
+    const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
 
     const [searchParams, setSearchParams] = useSearchParams()
     const genreParam = searchParams.get("genres");
@@ -46,10 +48,27 @@ export default function AdvancedSearchLayout() {
                 console.log(e);
             })
     }
+    const fetchGenre = () => (dispatch: AppDispatch) => {
+        apiController.apiGenre.genre(mediatype)
+            .then((data: any) => {
+                if (data && data?.genres) {
+                    console.log(data);
+                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+    useEffect(() => {
+        dispatch(fetchGenre());
+    }, [dispatch]);
 
     useEffect(() => {
         let timerId: ReturnType<typeof setTimeout>;
-        // setLoadingQuery(true)
+        setLoadingQuery(true)
         if (query.trim().length === 0) {
             setQuery('');
 
@@ -59,9 +78,9 @@ export default function AdvancedSearchLayout() {
             }, 2000);
 
         }
-        // timerId = setTimeout(() => {
-        //     setLoadingQuery(false)
-        // }, 2000);
+        timerId = setTimeout(() => {
+            setLoadingQuery(false)
+        }, 2000);
 
         return () => {
             clearTimeout(timerId); // Hủy timeout nếu component unmounts hoặc effect chạy lại trước khi timeout được kích hoạt
@@ -84,35 +103,40 @@ export default function AdvancedSearchLayout() {
 
     type GenreID = number;
     type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action',
-        12: 'Adventure',
-        16: 'Animation',
-        35: 'Comedy',
-        80: 'Crime',
-        99: 'Documentary',
-        18: 'Drama',
-        10751: 'Family',
-        14: 'Fantasy',
-        36: 'History',
-        27: 'Horror',
-        10402: 'Music',
-        9648: 'Mystery',
-        10749: 'Romance',
-        878: 'Science Fiction',
-        10770: 'TV Movie',
-        53: 'Thriller',
-        10752: 'War',
-        37: 'Western',
-        10759: 'Action & Adventure',
-        10762: 'Kids',
-        10763: 'News',
-        10764: 'Reality',
-        10765: 'Sci-Fi & Fantasy',
-        10766: 'Soap',
-        10767: 'Talk',
-        10768: 'War & Politics'
-    };
+    // const genreMapping: Record<GenreID, GenreName> = {
+    //     28: 'Action',
+    //     12: 'Adventure',
+    //     16: 'Animation',
+    //     35: 'Comedy',
+    //     80: 'Crime',
+    //     99: 'Documentary',
+    //     18: 'Drama',
+    //     10751: 'Family',
+    //     14: 'Fantasy',
+    //     36: 'History',
+    //     27: 'Horror',
+    //     10402: 'Music',
+    //     9648: 'Mystery',
+    //     10749: 'Romance',
+    //     878: 'Science Fiction',
+    //     10770: 'TV Movie',
+    //     53: 'Thriller',
+    //     10752: 'War',
+    //     37: 'Western',
+    //     10759: 'Action & Adventure',
+    //     10762: 'Kids',
+    //     10763: 'News',
+    //     10764: 'Reality',
+    //     10765: 'Sci-Fi & Fantasy',
+    //     10766: 'Soap',
+    //     10767: 'Talk',
+    //     10768: 'War & Politics'
+    // };
+    const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
+        acc[genre?.id] = genre?.name;
+        return acc;
+    }, {});
+
     type Genre = | ' ';
 
     const initialSelectedGenres: Genre[] = genreParam ? [genreParam as Genre] : [];
@@ -120,7 +144,7 @@ export default function AdvancedSearchLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const handleClickMedia = (media: any) => {
         setMediaType(media)
@@ -278,11 +302,9 @@ export default function AdvancedSearchLayout() {
         setIsRating(false)
         setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
-    console.log(topRatedMovies);
-    
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
-        const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item    
+        const existingRating = ratingList.find((rating: any) => rating?.itemId == movie?.id); // Find the rating object for the item    
 
         switch (currentView) {
             case 'Detail':
@@ -372,9 +394,12 @@ export default function AdvancedSearchLayout() {
                         <div className="text-black font-sans  shadow-sm shadow-black mt-2  " >
                             <div className="items-center gap-2">
                                 {/* <div className="px-2"></div> */}
-                                <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
-                                    src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                    onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                <div className="relative w-full pb-[150%] hover:opacity-80">
+                                    <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
+                                        src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
+                                        onError={handleImageError}
+                                        className="absolute top-0 left-0 w-full h-full object-cover" />
+                                </div>
                                 <div className="px-2 py-2 ">
                                     {
                                         mediatype != 'person' ?
@@ -1244,8 +1269,8 @@ export default function AdvancedSearchLayout() {
                                 {
                                     loadingQuery ? (
                                         <section className='w-full min-h-80'>
-                                            {/* <div className="earth absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-cover bg-repeat-x rounded-full shadow-inner custom-shadow"></div> */}
-                                            <SolarSystem />
+                                            <div className="earth absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-cover bg-repeat-x rounded-full shadow-inner custom-shadow"></div>
+                                            {/* <SolarSystem /> */}
                                         </section>
                                     )
                                         :
@@ -1253,14 +1278,14 @@ export default function AdvancedSearchLayout() {
                                             <div className='lg:max-w-full w-full flex flex-wrap'>
                                                 {
                                                     topRatedMovies[0]?.results
-                                                    // bug
-                                                    // http://127.0.0.1:5173/search?mediaType=movie&title=Planet&genres=empire
+                                                        // bug
+                                                        // http://127.0.0.1:5173/search?mediaType=movie&title=Planet&genres=empire
                                                         .filter((movie: any) => {
                                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                                             // Check if every selected genre is present in the movie's genres
                                                             const hasAllGenres = selectedGenres.every((genre) =>
-                                                                movie?.genre_ids?.some((mGenre: any) => 
-                                                                    genreMapping[mGenre]===genre)
+                                                                movie?.genre_ids?.some((mGenre: any) =>
+                                                                    genreMapping[mGenre] === genre)
                                                             );
                                                             return hasAllGenres;
                                                         })

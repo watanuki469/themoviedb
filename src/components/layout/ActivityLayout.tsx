@@ -64,7 +64,7 @@ export function ActivityLayout() {
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
         imgElement.style.objectFit = 'cover'; // Ensure the fallback image covers the container
     };
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
@@ -207,8 +207,12 @@ export function ActivityLayout() {
                                     <div className="items-center gap-2">
                                         <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError}
-                                            className="w-full md:h-56 h-64 hover:opacity-80" />
+                                            onError={(e) => {
+                                                e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                                e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                            }}
+                                            className="hover:opacity-80"
+                                        />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="h-12 w-full">

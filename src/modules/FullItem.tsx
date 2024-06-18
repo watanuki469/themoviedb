@@ -309,9 +309,16 @@ export default function Fullitem({
                     const existingRating = ratingList.find(rating => rating?.itemId == item?.id); // Find the rating object for the item
 
                     return (
-                        <div key={index} className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:1/5 py-2">
-                            <div className="w-full h-auto hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images " className=" w-full" />
+                        <div key={index} className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:w-1/5 py-2">
+                            <div className="relative w-full pb-[150%] hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
+                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`}
+                                    alt="product images"
+                                    className="absolute top-0 left-0 w-full h-full object-cover"
+                                    onError={(e) => {
+                                        e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                        e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                    }}
+                                />
                             </div>
                             <div className="bg-gray-900">
                                 <div className="mx-3 ">

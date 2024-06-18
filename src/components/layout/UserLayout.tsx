@@ -45,7 +45,7 @@ export default function UserLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
 
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);

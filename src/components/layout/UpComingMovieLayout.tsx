@@ -7,6 +7,7 @@ import { AppDispatch } from "../../redux/store";
 import apiController from "../../redux/client/api.Controller.";
 import { setListUpComing } from "../../redux/reducers/upComing.reducer";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { setListGenre } from "../../redux/reducers/genre.reducer";
 
 export default function UpComingMovieLayout() {
     const dispatch = useAppDispatch();
@@ -41,13 +42,36 @@ export default function UpComingMovieLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
+    const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
+    const fetchGenre = () => (dispatch: AppDispatch) => {
+        apiController.apiGenre.genre(mediatype)
+            .then((data: any) => {
+                if (data && data?.genres) {
+                    console.log(data);
+                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+    useEffect(() => {
+        dispatch(fetchGenre());
+    }, [dispatch]);
+
     type GenreID = number;
     type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
-    };
+    // const genreMapping: Record<GenreID, GenreName> = {
+    //     28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
+    // };
+    const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
+        acc[genre?.id] = genre?.name;
+        return acc;
+    }, {});
 
     return (
         <div className=" min-h-screen cursor-pointer px-2 py-2">
@@ -67,14 +91,14 @@ export default function UpComingMovieLayout() {
                         <div onClick={() => setMediaType('tv')} className={`px-4 py-2 min-w-20 text-center ${mediatype === 'tv' ? 'border-b-2 border-blue-500' : ''} bg-white hover:bg-gray-300 text-black`}>TV</div>
                         <div onClick={() => setMediaType('tvEspisode')} className={`px-4 py-2 text-center ${mediatype === 'tvEspisode' ? 'border-b-2 border-blue-500' : ''} bg-white hover:bg-gray-300 text-black`}>Tv Episode</div>
                     </div>
-                    
+
                     <div className="mt-2">
                         {mediatype === 'movie' && upComingList[0]?.results
                             .filter((item: any) => {
-                                const releaseDate = new Date(item.release_date);
+                                const releaseDate = new Date(item?.release_date);
                                 return releaseDate >= new Date();
                             })
-                            .sort((a: any, b: any) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime())
+                            .sort((a: any, b: any) => new Date(a?.release_date).getTime() - new Date(b?.release_date).getTime())
                             .map((item: any, index: any) => (
                                 <div key={index}>
                                     <p className="text-2xl font-bold">
@@ -101,14 +125,27 @@ export default function UpComingMovieLayout() {
                                                     <p>Original Language: {item?.original_language}</p>
                                                     <div className="flex flex-wrap items-center gap-2 mt-2">
                                                         Genre: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
+
                                                             <div key={genreIndex + genreId} className="flex items-center flex-wrap gap-2">
                                                                 <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)} key={genreIndex}>
                                                                     {genreMapping[genreId]}
                                                                 </div>
-                                                                {genreIndex < array.length - 1 && <span> • </span>}
+                                                                {genreIndex < array?.length - 1 && <span> • </span>}
                                                             </div>
                                                         ))}
                                                     </div>
+                                                    {/* <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                        Genre: {item?.genre_ids?.map((genreId: any, genreIndex: any) => {
+                                                            return (
+                                                                <div key={genreIndex} className="flex items-center flex-wrap gap-2">
+                                                                    <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)}>
+                                                                        {genreMapping[genreId]}
+                                                                    </div>
+                                                                    {genreIndex < item?.genre_ids?.length - 1 && <span> • </span>}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>

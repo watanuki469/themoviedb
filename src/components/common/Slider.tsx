@@ -15,11 +15,11 @@ export default function Slider() {
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
+        // dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
 
     }, []);
 
@@ -34,12 +34,12 @@ export default function Slider() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const handleBackgroundImageError = (e: any) => {
-        e.target.style.backgroundImage = 'url(https://www.dtcvietnam.com.vn/web/images/noimg.jpg)';
+        e.target.style.backgroundImage = 'url(https://via.placeholder.com/500x750)';
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     useEffect(() => {
         const boxElement = document.getElementById('1234567');
@@ -123,7 +123,8 @@ export default function Slider() {
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className="h-full w-52 "
+                                            className="h-full w-52 top-0 left-0  "
+                                            // className='absolute top-0 left-0 w-full h-full object-cover'
                                         />
                                     </div>
                                     <div className='flex-col w-full'>
@@ -298,7 +299,7 @@ export default function Slider() {
                                 </div>
 
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

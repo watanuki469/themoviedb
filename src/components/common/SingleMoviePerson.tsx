@@ -30,7 +30,7 @@ export default function SingleMoviePerson({
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
@@ -59,7 +59,7 @@ export default function SingleMoviePerson({
                         <div key={index} className="flex items-center">
                             <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80"
                                 style={{
-                                    backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                    backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}
                                 onClick={() => navigate(`/person/${item?.id}`)}>
                             </div>
@@ -92,7 +92,7 @@ export default function SingleMoviePerson({
                                     <div key={index} className="items-center justify-center text-center">
                                         <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center hover:opacity-80"
                                             style={{
-                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                             }}
                                             onClick={() => navigate(`/person/${item?.id}`)}>
                                         </div>
@@ -117,7 +117,7 @@ export default function SingleMoviePerson({
                         {director?.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
-                                <span>{index < Math.min(director?.slice(0,3).length) - 1 ? '•' : ''}</span>
+                                <span>{index < Math.min(director?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                             </p>
                         ))}
 
@@ -129,7 +129,7 @@ export default function SingleMoviePerson({
                         {writer.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                 <span className="text-blue-600">{item?.name}</span>
-                                <span>{index < Math.min(writer?.slice(0,3).length) - 1 ? '•' : ''}</span>
+                                <span>{index < Math.min(writer?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                             </p>
                         ))}
                     </div>
@@ -152,8 +152,8 @@ export default function SingleMoviePerson({
                 </div>
 
                 <div
-                onClick={()=>navigate('/IMDbPro')}
-                className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
+                    onClick={() => navigate('/IMDbPro')}
+                    className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
                     <div className="font-bold">Production, box office & more at IMDbPro</div>
                     <i className="fa-solid fa-chevron-right"></i>
                 </div>

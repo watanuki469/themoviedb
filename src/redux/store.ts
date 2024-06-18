@@ -17,6 +17,8 @@ import loginReducer from './reducers/login.reducer'
 import peoplePopularReducer from './reducers/peoplePopular.reducer'
 import trendingReducer from './reducers/trending.reducer'
 import keywordReducer from './reducers/keyword.reducer'
+import genreReducer from './reducers/genre.reducer'
+import filmReducer from './reducers/film.reducer'
 
 export const store = configureStore({
     reducer: {
@@ -37,7 +39,9 @@ export const store = configureStore({
         peoplePopular: peoplePopularReducer,
         fanFavorite:fanfavoriteReducer,
         login:loginReducer,
-        keyword:keywordReducer
+        keyword:keywordReducer,
+        genre:genreReducer,
+        film:filmReducer
     },})
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

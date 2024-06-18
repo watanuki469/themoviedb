@@ -107,7 +107,7 @@ export function FavoriteListLayout() {
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
@@ -246,20 +246,20 @@ export function FavoriteListLayout() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <img onClick={() => navigate(`/movie/${movie?.itemId}`)}
+                                        <img onClick={() => navigate(`/person/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
-                                            onError={handleImageError} className="w-full h-64 hover:opacity-80" />
+                                            onError={handleImageError} className=" hover:opacity-80" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="items-center gap-2 justify-start text-left w-full ">
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movieIndex}.{movie?.itemName}</p>
                                                 </div>
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center h-12 gap-2">
                                                     {movie?.itemKnowFor}
                                                 </div>
 
-                                                <div className="line-clamp-1">
+                                                <div className="line-clamp-1 h-12">
                                                     {movie?.itemReleaseDay &&
                                                         new Date(movie?.itemReleaseDay).toLocaleDateString('en-US', {
                                                             month: 'long',

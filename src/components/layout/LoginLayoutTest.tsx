@@ -73,9 +73,9 @@ const LoginLayoutTest = () => {
                             className="w-full h-full bg-transparent border-none outline-none text-lg text-[#162938] font-semibold px-1 peer focus:ring-0"
                         />
                         <label className={`absolute left-1 transform transition-all duration-500 pointer-events-none
-                            ${email ? 'top-[-20px] text-sm' : 'top-1/2 -translate-y-1/2'} text-[#162938] font-medium`}
+                            ${email?.length>0 ? 'top-[-20px] text-sm' : 'top-1/2 -translate-y-1/2'} text-[#162938] font-medium`}
                         >
-                            Email
+                            Email 
                         </label>
                     </div>
                 </div>
@@ -97,7 +97,7 @@ const LoginLayoutTest = () => {
                         <label className={`absolute left-1 transform transition-all duration-500 pointer-events-none
                             ${password ? 'top-[-20px] text-sm' : 'top-1/2 -translate-y-1/2'} text-[#162938] font-medium`}
                         >
-                            Password
+                            Password 
                         </label>
                     </div>
                 </div>

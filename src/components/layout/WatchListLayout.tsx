@@ -59,7 +59,7 @@ export function WatchListLayout() {
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
@@ -344,7 +344,7 @@ export function WatchListLayout() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-          
+
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />

@@ -38,7 +38,7 @@ export default function VideoDetail({
     return (
         <section className="min-h-screen cursor-pointer" style={{ position: "relative" }}>
             <div className="text-white font-sans font-medium " >
-                <div className="md:grid md:grid-cols-12 gap-y-4 h-full gap-2">
+                <div className="grid grid-cols-12 gap-y-4 h-full gap-2">
                     <div className="lg:col-span-8 col-span-12 lg:ml-2 bg-black relative">
                         <div className='min-h-60 w-full h-full bg-black bg-cover'                            >
                             <iframe

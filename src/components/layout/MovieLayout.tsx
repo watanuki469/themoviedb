@@ -185,9 +185,17 @@ export default function MovieLayout() {
             movieType: "Movie",
         }))
     }, [userInfoList, singleMovieList, dispatch])
+    const normalizeText = (text: string) => {
+        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')  // Loại bỏ các ký tự đặc biệt ngoại trừ dấu gạch ngang
+            .replace(/[\s-]+/g, '-')       // Thay thế khoảng trắng hoặc nhiều dấu gạch ngang liên tiếp bằng một dấu gạch ngang
+            .trim();                       // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+    };
+
 
     return (
-        <div className=" min-h-screen overflow-hidden w-full">
+        <div className="min-h-screen w-full">
             <div className="bg-black w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -195,7 +203,7 @@ export default function MovieLayout() {
                         movieCreditList={movieCreditList} movieImageList={movieImageList} />
                 </div>
             </div>
-            <div className="bg-white w-full ">
+            {/* <div className="bg-white w-full ">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
@@ -205,7 +213,7 @@ export default function MovieLayout() {
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{movieVideoList?.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                             </div>
-                            <div className="lg:max-w-full w-full"  onClick={() => navigate(`/video/${id}`)}>
+                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/video/${id}`)}>
                                 <TwoMovieRow twoMovieRowList={movieVideoList} />
                             </div>
                             <div className="flex items-center py-4">
@@ -224,7 +232,7 @@ export default function MovieLayout() {
                                     <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{movieCreditList?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
-                                </div>                               
+                                </div>
                             </div>
                             <div className="lg:max-w-full w-full">
                                 <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
@@ -276,9 +284,9 @@ export default function MovieLayout() {
                                 <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
                                 <p className="text-red w-full text-blue-500"> See our picks</p>
                             </div>
-                            <div className="sticky top-0 right-0 left-0 ">
+                            <div className="sticky top-0">
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black">Top Rated Movies by Genre</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
@@ -286,9 +294,110 @@ export default function MovieLayout() {
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div> */}
+            <div className="bg-white w-full">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
+                    <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
+                        <div className="lg:col-span-8 col-span-12 w-full">
+                            <div className="text-white py-2 w-full ">
+                                <div className="flex items-center"
+                                    onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} >
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">Episodes</h2>
+                                    {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                </div>
+                                <div  onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)}  className="px-4 py-2 bg-yellow-300 rounded-md hover:opacity-90 w-fit mt-2">Watch Episodes</div>
+                            </div>
+                            <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
+                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                <h2 className="text-2xl font-bold text-black">Videos</h2>
+                                <p className="text-lg font-bold text-gray-500 ml-4">{movieVideoList?.length}</p>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                            </div>
+                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/video/${id}`)}>
+                                <TwoMovieRow twoMovieRowList={movieVideoList} />
+                            </div>
+                            <div className="flex items-center py-4">
+                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                <h2 className="text-2xl font-bold text-black">Photos</h2>
+                                <p className="text-lg font-bold text-gray-500 ml-4">{singleMovieList[0]?.images?.backdrops?.length}</p>
+                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300" onClick={() => navigate(`/image/movie/${id}`)}></i>
+                            </div>
+                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/image/movie/${id}`)}>
+                                <FourPhotos fourPhotosList={movieImageList} />
+                            </div>
+                            <div className="flex items-center text-white py-4 w-full" onClick={() => navigate(`/fullcredits/movie/${id}`)}>
+                                <div className="flex items-center">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black" id="movieCast">Top Cast</h2>
+                                    <p className="text-lg font-bold text-gray-500 ml-4">{movieCreditList?.length}</p>
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                </div>
+                            </div>
+                            <div className="lg:max-w-full w-full">
+                                <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
+                            </div>
+                            <div className="text-white py-4 mt-4 w-full">
+                                <div className="flex items-center">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black">More Like This</h2>
+                                </div>
+                            </div>
+                            <div className="lg:max-w-full w-full">
+                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'Movie'} />
+                            </div>
+                            <div className="text-white flex py-4 w-full">
+                                <div className="flex items-center">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black" id="movieTrivia">Story Line</h2>
+                                </div>
+                            </div>
+                            <div className="lg:max-w-full w-full">
+                                <SingleMovieStoryLine singleMovieList={singleMovieList} />
+                            </div>
+                            <div className="text-white py-4 w-full">
+                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/movie/${id}`)}>
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black" id="movieReview">User Reviews</h2>
+                                    <p className="text-lg font-bold text-gray-500 ml-4">{singleMovieList[0]?.reviews?.results?.length}</p>
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                </div>
+                            </div>
+                            <div className="lg:max-w-full w-full">
+                                <SingleMovieReview singleMovieList={singleMovieList} />
+                            </div>
+                        </div>
+                        <div className="hidden lg:block col-span-4">
+                            <div
+                                ref={moreToExploreRef}
+                                style={{ height: moreToExploreHeight, overflow: 'auto' }}
+                                className="bg-white flex flex-col"
+                            >
+                                <div className="flex items-center py-3">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black">More to explore</h2>
+                                </div>
+                                <div className="lg:max-w-full w-full">
+                                    <ListRow listRowList={topRatedMovies} />
+                                </div>
+                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
+                                <p className="text-red w-full text-blue-500"> See our picks</p>
+                            </div>
+                            <div className="sticky top-0">
+                                <div className="flex items-center py-3">
+                                    <h2 className="text-2xl font-bold text-black">Top Rated Movies by Genre</h2>
+                                </div>
+                                <div className="lg:max-w-full w-full">
+                                    <TopRatedMovieByGenre />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
                     <Footer />

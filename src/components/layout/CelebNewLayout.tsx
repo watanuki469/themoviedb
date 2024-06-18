@@ -86,7 +86,12 @@ export default function CelebNewLayout() {
                                             <div className="grid grid-cols-12 gap-4">
                                                 <img
                                                     onClick={() => window.location.href = article?.node?.source?.homepage?.url}
-                                                    className="py-2 col-span-3" src={`${article?.node?.image.url}`}></img>
+                                                    className="py-2 col-span-3" src={`${article?.node?.image.url}`}
+                                                    onError={(e) => {
+                                                        e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                                        e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                                    }}
+                                                ></img>
                                                 <div className="py-2 col-span-9">
                                                     {splitTextIntoParagraphs(article?.node?.text?.plainText)}
                                                 </div>

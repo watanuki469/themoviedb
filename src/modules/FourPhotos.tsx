@@ -54,7 +54,7 @@ export default function FourPhotos({
                     spaceBetween={10}
                     slidesPerView={activeSlider}
                     grabCursor={true}
-                    style={{ width: "100%", height: "max-content",maxWidth:'100%' }}
+                    style={{ width: "100%", height: "max-content", maxWidth: '100%' }}
                     autoplay={{
                         delay: 3500,
                         disableOnInteraction: false,
@@ -67,7 +67,7 @@ export default function FourPhotos({
                         <SwiperSlide key={index}>
                             <div className="w-40 h-40 object-cover mx-auto bg-cover bg-no-repeat bg-black bg-center  items-center justify-center hover:opacity-80"
                                 style={{
-                                    backgroundImage: `url(${item.file_path ? `https://image.tmdb.org/t/p/w200/${item.file_path}` : 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'})`
+                                    backgroundImage: `url(${item.file_path ? `https://image.tmdb.org/t/p/w200/${item.file_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}>
                             </div>
                         </SwiperSlide>

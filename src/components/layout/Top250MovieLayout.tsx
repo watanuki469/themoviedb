@@ -18,6 +18,8 @@ import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import apiController from '../../redux/client/api.Controller.';
+import { setListGenre } from '../../redux/reducers/genre.reducer';
 
 export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
@@ -53,11 +55,36 @@ export default function Top250MovieLayout() {
         setCurrentView(view);
     };
 
+    const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
+    const fetchGenre = () => (dispatch: AppDispatch) => {
+        apiController.apiGenre.genre('movie')
+            .then((data: any) => {
+                if (data && data?.genres) {
+                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
+                } else {
+                    console.error("API response structure is not as expected.", data);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+    useEffect(() => {
+        dispatch(fetchGenre());
+    }, [dispatch]);
+
     type GenreID = number;
     type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
-    };
+    // const genreMapping: Record<GenreID, GenreName> = {
+    //     28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
+    // };
+    console.log(listGenreFromApi);
+
+    const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
+        acc[genre?.id] = genre?.name;
+        return acc;
+    }, {});
+
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
     const [numberGen, setNumberGen] = useState(0);
@@ -81,11 +108,11 @@ export default function Top250MovieLayout() {
         const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
         setNumberGen(totalGenreCount);
 
-    }, [topRatedMovies]);
+    }, [topRatedMovies, listGenreFromApi]);
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [openGenDialog, setOpenGenDialog] = useState(false);
     const handleDiaGenlogOpen = () => {
@@ -242,8 +269,6 @@ export default function Top250MovieLayout() {
         setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
 
-
-
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
 
@@ -317,7 +342,7 @@ export default function Top250MovieLayout() {
             case 'Grid':
                 return (
                     <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
-                        // {/* mai fix grid responsive  */ }
+                    // {/* mai fix grid responsive  */ }
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
@@ -796,7 +821,7 @@ export default function Top250MovieLayout() {
                                         {topRatedMovies
                                             .filter((movie: any) => {
                                                 if (selectedGenres?.length === 0) return true; // No genre filter
-                                                const hasAllGenres = selectedGenres.every((genre) =>
+                                                const hasAllGenres = selectedGenres.every((genre: any) =>
                                                     movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                                 );
                                                 return hasAllGenres;
@@ -936,7 +961,7 @@ export default function Top250MovieLayout() {
                                         .filter((movie: any) => {
                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                             // Check if every selected genre is present in the movie's genres
-                                            const hasAllGenres = selectedGenres?.every((genre) =>
+                                            const hasAllGenres = selectedGenres?.every((genre: any) =>
                                                 movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
                                             );
                                             return hasAllGenres;

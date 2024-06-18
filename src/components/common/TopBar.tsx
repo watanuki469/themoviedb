@@ -260,8 +260,7 @@ export default function TopBar() {
     if (languageString) {
       setMediaType(languageString);
     }
-  }, []);;
-
+  }, []);
   const openUser = Boolean(anchorUserEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorUserEl(event.currentTarget);
@@ -277,8 +276,7 @@ export default function TopBar() {
       localStorage.setItem("language", index.join(","));
       window.location.reload();
     }
-  };
-
+  };  
 
   return (
     <section className=" w-full bg-black mx-auto h-12 py-2 mb-4 static ">
@@ -451,10 +449,10 @@ export default function TopBar() {
                         </div>
                         <div className="">
                           <p className="mt-2 hover:underline" onClick={() => navigate(`/watchToWatch`)}>What to Watch</p>
-                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/upComing`)}>Latest Trailers</p>
-                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/whatOnTv`)}>IMDb Originals</p>
-                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/whatOnTv`)}>IMDb Picks</p>
-                          <p className="mt-2 hover:underline" onClick={()=>navigate(`/search`)}>IMDb Podcasts'</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/upComing`)}>Latest Trailers</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb Originals</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb Picks</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/search`)}>IMDb Podcasts'</p>
                         </div>
                       </div>
                     </div>
@@ -524,6 +522,7 @@ export default function TopBar() {
             <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
           </div>
           {/*change language */}
+
           <Button
             id="demo-customized-button"
             aria-controls={openUser ? 'demo-customized-menu' : undefined}
@@ -680,6 +679,7 @@ export default function TopBar() {
                 <p>Favorite Actor List</p>
               </MenuItem>
             </div>
+        
             <div className='hover:text-yellow-300'>
               <MenuItem onClick={() => navigate('/rating')}>
                 <Avatar

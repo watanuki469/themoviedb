@@ -318,8 +318,15 @@ export default function SwiperRow({
 
                     return (
                         <SwiperSlide key={index} className="bg-gray-200">
-                            <div className="w-full h-auto hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images " className="h-60 w-full" />
+                            <div className="relative w-full pb-[150%] hover:opacity-80">
+                                <img
+                                    onClick={() => navigate(`/${mediaType}/${item?.id}`)}
+                                    onError={(e) => {
+                                        e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                        e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                    }}
+                                    src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images "
+                                    className="absolute top-0 left-0 w-full h-full object-cover hover:opacity-80" />
                             </div>
                             <div className="bg-gray-900">
                                 <div className="mx-3 ">

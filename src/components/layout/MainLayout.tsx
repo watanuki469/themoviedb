@@ -39,7 +39,7 @@ export default function MainLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
     const [activeSlider, setActiveSlider] = useState(3);
     useEffect(() => {
@@ -136,11 +136,11 @@ export default function MainLayout() {
             setLoadingQuery(false)
         }, 1000);
     };
-   
+
 
     return (
         <div className=" min-h-screen ">
-             
+
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -309,9 +309,12 @@ export default function MainLayout() {
                                         <div className="font-sans shadow-sm shadow-black  " >
                                             <div className="mt-2">
                                                 <div className="items-center gap-2">
-                                                    <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
-                                                        src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                                        onError={handleImageError} className="w-full h-60 hover:opacity-80" />
+                                                    <div className="relative w-full pb-[150%] hover:opacity-80">
+                                                        <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
+                                                            src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
+                                                            onError={handleImageError}
+                                                            className="absolute top-0 left-0 w-full h-full object-cover" />
+                                                    </div>
                                                     <div className="px-2 py-2 w-full">
                                                         <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                             <div className="h-12 w-full ">

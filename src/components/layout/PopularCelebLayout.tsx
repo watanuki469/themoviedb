@@ -74,7 +74,7 @@ export default function PopularCelebLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://www.dtcvietnam.com.vn/web/images/noimg.jpg'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
 
 
@@ -118,7 +118,7 @@ export default function PopularCelebLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 py-2 " key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black  " >
                             <div className=" items-center ">
@@ -127,7 +127,7 @@ export default function PopularCelebLayout() {
                                         <a href={`/person/${movie?.id}`}>
                                             <img
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                                onError={handleImageError} className="w-full hover:opacity-80" />
                                         </a>
 
                                         <div className="px-2 py-2 w-full">
@@ -335,7 +335,7 @@ export default function PopularCelebLayout() {
                             <div className="flex ">
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">
-                                       {popularCeleb2?.length} Titles</h2>
+                                        {popularCeleb2?.length} Titles</h2>
 
                                 </div>
 

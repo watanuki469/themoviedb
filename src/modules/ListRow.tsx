@@ -41,8 +41,14 @@ export default function ListRow({
             >
                 {listRowList?.slice(3).map((item: any, index: any) => (
                     <SwiperSlide key={index} className="w-full h-auto">
-                        <div className="relative hover:opacity-90">
-                            <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path?item?.poster_path:item?.profile_path}`} alt="product images" className="" />
+                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                            <img
+                                onError={(e) => {
+                                    e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                    e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
+                                }}
+                                src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
+                                className="absolute top-0 left-0 w-full h-full object-cover hover:opacity-80" />
                             {index === 0 && (
                                 <div className="absolute bottom-0 left-0 p-4 flex gap-2 text-white">
                                     <FilterIcon className="w-6 h-6" />

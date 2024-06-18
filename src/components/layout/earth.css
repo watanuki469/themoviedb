@@ -27,13 +27,14 @@
 .cursor {
     z-index: 999;
     position: absolute;
-    background: #e81fab;
-    width: 20px;
-    height: 20px;
+    background: #e733b1;
+    opacity: 50%;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     pointer-events: none;
     /* box-shadow: */
-        /* 0 0 10px #e311ab,
+    /* 0 0 10px #e311ab,
         0 0 20px #e311ab,
         0 0 50px #e311ab; */
     animation: 10s infinite;
@@ -53,7 +54,7 @@
 .cursor:before {
     content: '';
     position: absolute;
-    /* background: #122de0; */
+    background: #122de0;
     /* width: 30px;
     height: 30px; */
     opacity: 0.2;
@@ -62,13 +63,74 @@
 }
 
 .circle {
-  height: 24px;
-  width: 24px;
-  border-radius: 24px;
-  background-color: black;
-  position: fixed; 
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 99999999; /* so that it stays on top of all other elements */
+    height: 24px;
+    width: 24px;
+    border-radius: 50% 50% 50% 50%;
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 99999999;
+    animation: 10s colors infinite; 
 }
+
+/* .snowflake {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 24px;
+    width: 24px;
+    pointer-events: none;
+    z-index: 99999999;
+}
+
+.snowflake::before, 
+.snowflake::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 24px;
+    background-color: black;
+    transform-origin: center center;
+}
+
+.snowflake::before {
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.snowflake::after {
+    transform: translate(-50%, -50%) rotate(60deg);
+}
+
+.snowflake::before::before,
+.snowflake::before::after,
+.snowflake::after::before,
+.snowflake::after::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 24px;
+    background-color: black;
+    transform-origin: center center;
+}
+
+.snowflake::before::before {
+    transform: translate(-50%, 0) rotate(60deg);
+}
+
+.snowflake::before::after {
+    transform: translate(-50%, 0) rotate(-60deg);
+}
+
+.snowflake::after::before {
+    transform: translate(-50%, 0) rotate(60deg);
+}
+
+.snowflake::after::after {
+    transform: translate(-50%, 0) rotate(-60deg);
+} */
