@@ -192,6 +192,8 @@ export default function MovieLayout() {
             .replace(/[\s-]+/g, '-')       // Thay thế khoảng trắng hoặc nhiều dấu gạch ngang liên tiếp bằng một dấu gạch ngang
             .trim();                       // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
     };
+    const languageString = localStorage.getItem('language');
+
 
 
     return (
@@ -300,16 +302,21 @@ export default function MovieLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12 w-full">
-                            <div className="text-white py-2 w-full ">
-                                <div className="flex items-center"
-                                    onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} >
-                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">Episodes</h2>
-                                    {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
-                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                            {languageString === 'vi-VI' ? (
+                                <div className="text-white py-2 w-full ">
+                                    <div className="flex items-center"
+                                        onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} >
+                                        <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                        <h2 className="text-2xl font-bold text-black ">Episodes</h2>
+                                        {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
+                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                    </div>
+                                    <div onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} className="px-4 py-2 bg-yellow-300 rounded-md hover:opacity-90 w-fit mt-2">Watch Episodes</div>
                                 </div>
-                                <div  onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)}  className="px-4 py-2 bg-yellow-300 rounded-md hover:opacity-90 w-fit mt-2">Watch Episodes</div>
-                            </div>
+                            ) : (
+                                <div></div>
+                            )}
+
                             <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black">Videos</h2>

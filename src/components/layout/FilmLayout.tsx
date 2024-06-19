@@ -323,9 +323,17 @@ export default function FilmLayout() {
                     )
                         : (
                             <div className="text-white">
-                                <p>  Something went wrong.
-                                    <span className="text-blue-500 hover:underline" onClick={() => navigate('/')}>   Go to the homepage »</span>
-                                </p>
+                                <img src="https://m.media-amazon.com/images/G/01/IMDbPro/images/Test/AnthemV2/upsellDesktop_v1.jpg"></img>
+                                <div className="bg-white text-black">
+                                    <div className="grid grid-cols-3 gap-4 px-2 py-2 min-h-40 text-center justify-center items-center lg:text-2xl text-lg">
+                                        <div>Find contact info for agents and management</div>
+                                        <div>View connections to industry professionals</div>
+                                        <div>See who's working on titles in development</div>
+                                    </div>
+                                    <div className="py-4" onClick={()=>navigate(`/IMDbPro`)}> 
+                                        <div className="px-2 py-2 bg-yellow-300 hover:opacity-80 text-black justify-center text-center items-center w-fit ml-auto mr-auto rounded-md">Become Pro Member</div>
+                                    </div>
+                                </div>
                             </div>
                         )}
 

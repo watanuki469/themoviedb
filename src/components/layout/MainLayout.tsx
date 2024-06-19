@@ -277,7 +277,7 @@ export default function MainLayout() {
                             Recently viewed
                         </p>
                         <div className="flex items-center ml-auto flex-wrap" >
-                            <p className="mr-2 text-blue-500" onClick={() => handleWatchList('mro', 'meo', 'true')} >
+                            <div className="mr-2 text-blue-500" onClick={() => handleWatchList('mro', 'meo', 'true')} >
 
                                 {
                                     loadingQuery ? (
@@ -288,7 +288,7 @@ export default function MainLayout() {
                                         </div>
                                     )
                                 }
-                            </p>
+                            </div>
                             <i className="fa-solid fa-angle-right text-blue-500"></i>
                         </div>
                     </div>
