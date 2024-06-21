@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -34,6 +35,13 @@ export default function VideoDetail({
     const usRelease = singleMovieList[numberIndex]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === "US");
     const certification =
         usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <section className="min-h-screen cursor-pointer" style={{ position: "relative" }}>
@@ -101,7 +109,7 @@ export default function VideoDetail({
                                         className="max-w-32 h-full max-h-32" />
                                     <div className=' px-2 py-2 w-full items-center'>
                                         <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)} >
-                                            <p className='text-lg'>{singleMovieList[0]?.title ? singleMovieList[0]?.tile : singleMovieList[0]?.name}({singleMovieList[0]?.release_date ? singleMovieList[0]?.release_date?.slice(numberIndex, 4):singleMovieList[0]?.first_air_date?.slice(numberIndex,4)} )</p>
+                                            <p className='text-lg'>{singleMovieList[0]?.title ? singleMovieList[0]?.tile : singleMovieList[0]?.name}({singleMovieList[0]?.release_date ? singleMovieList[0]?.release_date?.slice(numberIndex, 4) : singleMovieList[0]?.first_air_date?.slice(numberIndex, 4)} )</p>
                                             <i className="fa-solid fa-chevron-right mr-4"></i>
                                         </div>
                                         <div className='flex gap-2 flex-wrap text-gray-500  text-sm'>
@@ -134,7 +142,7 @@ export default function VideoDetail({
                 </div>
                 <div className="flex items-center py-3 mt-3">
                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                    <h2 className="text-2xl font-bold text-white ">Related Video</h2>
+                    <h2 className="text-2xl font-bold text-white capitalize">{translations[language]?.moreExplore} Video</h2>
                 </div>
 
                 <Swiper

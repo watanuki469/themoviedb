@@ -11,11 +11,12 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { Avatar, Box, Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import * as Dialog from "@radix-ui/react-dialog";
 import "flowbite";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import SearchBar from "./SearchBar";
+import { LanguageContext } from '../../pages/LanguageContext';
 
 
 export default function TopBar() {
@@ -99,17 +100,19 @@ export default function TopBar() {
   const getMenuContent = (menu: any) => {
     switch (menu) {
       case 'Movies':
-        return ['Release Calendar', 'Most Popular Movies', 'Top Box Office', 'Movies News', 'Browse Movie By Genre'];
+        return [`${translations[language]?.releaseCalendar}`, `${translations[language]?.top250Movie}`, `${translations[language]?.topBoxOffice}`, `Movie ${translations[language]?.news}`, `${translations[language]?.browseMovieByGenre}`];
       case 'TV Shows':
-        return ['Whats on TV & Streaming', 'Top 250 TV Shows', 'Most Popular TV Shows', 'Browse Tv By Genre', 'TV News'];
+        return [`${translations[language]?.whatOnTvStream}`,`${translations[language]?.top250Tv}`, `${translations[language]?.topRatedTV}`, `${translations[language]?.browseTVByGenre}`,`TV ${translations[language]?.news}`];
       case 'Watch':
-        return ['What to Watch', 'Latest Trailers', 'IMDb Originals', 'IMDb Picks', 'IMDb Podcasts'];
+        return [`${translations[language]?.whatToWatch}`, `${translations[language]?.latest} Trailers`, `IMDb ${translations[language]?.originals}`,  `IMDb ${translations[language]?.editorPick}`, 'IMDb Podcasts'];
       case 'Awards & Events':
-        return ['Oscars', 'Emmys', 'Best Of 2024', 'Holiday Picks', 'Starmeter Awards', 'All Event'];
+        return ['Oscars', 'ABFF', 'Best Of 2024', `${translations[language]?.holidayPicks}`, 'Starmeter Awards', `${translations[language]?.total} Event`];
       case 'Celebs':
-        return ['Most Popular Celebs', 'Celebrity News'];
+        return [`${translations[language]?.popularCeleb}`,`${translations[language]?.popularCeleb} ${translations[language]?.news}`];
       case 'Community':
-        return ['Help Center', 'Contributor Zone', 'Polls'];
+        return [`${translations[language]?.helpCenter}`, `${translations[language]?.contributeZone}`, `${translations[language]?.polls}`];
+      case 'Language':
+        return ['English (En-US)', 'VietNamese (Vi-VI)', 'French (Fr-FR)', 'German (De-DE)', 'Hindi (Hi-IN)', 'Indonesian (Id-ID)', 'Italian (It-IT)', 'Korean (Ko-KR)'];
       default:
         return [];
     }
@@ -117,15 +120,15 @@ export default function TopBar() {
   const handleItemClick = (item: string) => {
     switch (selectedMenu) {
       case 'Movies':
-        if (item === 'Release Calendar') {
+        if (item === `${translations[language]?.releaseCalendar}`) {
           navigate(`/upComing`);
-        } else if (item === 'Most Popular Movies') {
+        } else if (item ===`${translations[language]?.top250Movie}`) {
           navigate('/top250Movie');
-        } else if (item === 'Top Box Office') {
+        } else if (item ===`${translations[language]?.topBoxOffice}`) {
           navigate('/topBoxOffice');
-        } else if (item === 'Movies News') {
+        } else if (item === `Movie ${translations[language]?.news}`) {
           navigate('/news/movie');
-        } else if (item === 'Browse Movie By Genre') {
+        } else if (item === `${translations[language]?.browseMovieByGenre}`) {
           navigate('/features/genre');
         } else {
           navigate('/NotFound');
@@ -133,15 +136,15 @@ export default function TopBar() {
         break;
 
       case 'TV Shows':
-        if (item === 'Whats on TV & Streaming') {
+        if (item === `${translations[language]?.whatOnTvStream}`) {
           navigate('/whatOnTv');
-        } else if (item === 'Top 250 TV Shows') {
+        } else if (item === `${translations[language]?.top250Tv}`) {
           navigate('/Top250Tv');
-        } else if (item === 'Most Popular TV Shows') {
+        } else if (item === `${translations[language]?.topRatedTV}`) {
           navigate('/topPopularTv');
-        } else if (item === 'Browse Tv By Genre') {
+        } else if (item === `${translations[language]?.browseTVByGenre}`) {
           navigate('/features/genre');
-        } else if (item === 'TV News') {
+        } else if (item === `TV ${translations[language]?.news}`) {
           navigate('/news/tv');
         } else {
           navigate('/NotFound');
@@ -149,13 +152,13 @@ export default function TopBar() {
         break;
 
       case 'Watch':
-        if (item === 'What to Watch') {
+        if (item === `${translations[language]?.whatToWatch}`) {
           navigate('/watchToWatch');
-        } else if (item === 'Latest Trailers') {
+        } else if (item === `${translations[language]?.latest} Trailers`) {
           navigate('/upComing');
-        } else if (item === 'IMDb Originals') {
+        } else if (item === `IMDb ${translations[language]?.originals}`) {
           navigate('/whatOnTv');
-        } else if (item === 'IMDb Picks') {
+        } else if (item ===  `IMDb ${translations[language]?.editorPick}`) {
           navigate('/whatOnTv');
         } else if (item === 'IMDb Podcasts') {
           navigate('/search');
@@ -167,15 +170,15 @@ export default function TopBar() {
       case 'Awards & Events':
         if (item === 'Oscars') {
           navigate('/');
-        } else if (item === 'Emmys') {
+        } else if (item === 'ABFF') {
           navigate('/');
         } else if (item === 'Best Of 2024') {
           navigate('/');
-        } else if (item === 'Holiday Picks') {
+        } else if (item === `${translations[language]?.holidayPicks}`) {
           navigate('/');
         } else if (item === 'Starmeter Awards') {
           navigate('/');
-        } else if (item === 'All Event') {
+        } else if (item === `${translations[language]?.total} Event`) {
           navigate('/');
         } else {
           navigate('/');
@@ -183,9 +186,9 @@ export default function TopBar() {
         break;
 
       case 'Celebs':
-        if (item === 'Most Popular Celebs') {
+        if (item === `${translations[language]?.popularCeleb}`) {
           navigate('/popularCeleb');
-        } else if (item === 'Celebrity News') {
+        } else if (item === `${translations[language]?.popularCeleb} ${translations[language]?.news}`) {
           navigate('/news/celeb');
         } else {
           navigate('/NotFound');
@@ -193,14 +196,42 @@ export default function TopBar() {
         break;
 
       case 'Community':
-        if (item === 'Help Center') {
+        if (item ===`${translations[language]?.helpCenter}`) {
           window.location.href = 'https://help.imdb.com/imdb?ref_=cons_nb_hlp';
-        } else if (item === 'Contributor Zone') {
+        } else if (item ===`${translations[language]?.contributeZone}`) {
           window.location.href = ' https://contribute.imdb.com/czone?ref_=nv_cm_cz';
-        } else if (item === 'Polls') {
+        } else if (item ===`${translations[language]?.polls}`) {
           window.location.href = 'https://www.imdb.com/poll/?ref_=nv_cm_pl';
         } else {
           navigate('/');
+        }
+        break;
+      case 'Language':
+        if (item === 'English (En-US)') {
+          handleClose('en-US')
+        }
+        else if (item === 'VietNamese (Vi-VI)') {
+          handleClose('vi-VI')
+        }
+        else if (item === 'French (Fr-FR)') {
+          handleClose('fr-FR')
+        }
+        else if (item === 'German (De-DE)') {
+          handleClose('de-DE')
+        }
+        else if (item === 'Hindi (Hi-IN)') {
+          handleClose('hi-IN')
+        }
+        else if (item === 'Indonesian (Id-ID)') {
+          handleClose('id-ID')
+        }
+        else if (item === 'Italian (It-IT)') {
+          handleClose('it-IT')
+        }
+        else if (item === 'Korean (Ko-KR)') {
+          handleClose('ko-KR')
+        }
+        else {
         }
         break;
       default:
@@ -247,11 +278,11 @@ export default function TopBar() {
     { id: 2, label: 'vi-VI', name: 'Vietnamese' },
     { id: 3, label: 'ja-JP', name: 'Japanese' },
     { id: 4, label: 'fr-FR', name: 'French' },
-    { id: 4, label: 'de-DE', name: 'German' },
-    { id: 4, label: 'hi-IN', name: 'Hindi' },
-    { id: 4, label: 'id-ID', name: 'Indonesian' },
-    { id: 4, label: 'it-IT', name: 'Italian' },
-    { id: 4, label: 'ko-KR', name: 'Korean' },
+    { id: 5, label: 'de-DE', name: 'German' },
+    { id: 6, label: 'hi-IN', name: 'Hindi' },
+    { id: 7, label: 'id-ID', name: 'Indonesian' },
+    { id: 8, label: 'it-IT', name: 'Italian' },
+    { id: 9, label: 'ko-KR', name: 'Korean' },
   ];
 
   const [mediatype, setMediaType] = useState('EN');
@@ -276,10 +307,17 @@ export default function TopBar() {
       localStorage.setItem("language", index.join(","));
       window.location.reload();
     }
-  };  
+  };
+  const context = useContext(LanguageContext);
+
+  if (!context) {
+    return null;
+  }
+
+  const { language, translations, handleLanguageChange } = context;
 
   return (
-    <section className=" w-full bg-black mx-auto h-12 py-2 mb-4 static ">
+    <section className=" w-full bg-black mx-auto py-4 h-full static ">
       {isSearchOpen ? (
         <div className='items-center h-10 mt-1 px-2 w-full flex gap-2'>
           <SearchBar />
@@ -311,7 +349,7 @@ export default function TopBar() {
                 className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
                rounded-md bg-black  p-8 shadow w-full  items-center justify-center aligns-center z-30 "
               >
-                <div className="max-w-4xl ml-auto mr-auto ">
+                <div className="max-w-4xl ml-auto mr-auto capitalize">
                   <div className="flex items-center">
                     <button
                       onClick={() => navigate("/")}
@@ -345,14 +383,14 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/upComing'))}>Release Calendar</p>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/upComing'))}>{translations[language]?.releaseCalendar}</p>
                           <p className="mt-2 hover:underline " onClick={() => (navigate('/top250Movie'))}>
-                            Most Popular Movies
+                            {translations[language]?.top250Movie}
                           </p>
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/topBoxOffice'))}>Top Box Office</p>
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/news/movie'))}>Movies News</p>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/topBoxOffice'))}>{translations[language]?.topBoxOffice}</p>
+                          <p className="mt-2 hover:underline" onClick={() => (navigate('/news/movie'))}>Movies {translations[language]?.news}</p>
                           <p className="mt-2 hover:underline" onClick={() => (navigate('/features/genre'))}>
-                            Browse Movie By Genre
+                            {translations[language]?.browseMovieByGenre}
                           </p>
                         </div>
                       </div>
@@ -374,12 +412,12 @@ export default function TopBar() {
                         </div>
                         <div className="">
                           <p onClick={() => navigate('/whatOnTv')} className="mt-2 hover:underline">
-                            Whats on TV & Streaming
+                            {translations[language]?.whatOnTvStream}
                           </p>
-                          <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">Top 250 TV Shows</p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">   Most Popular TV   </p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  Browse TV By Genre</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV News</p>
+                          <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">{translations[language]?.top250Tv}</p>
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  {translations[language]?.topRatedTV}   </p>
+                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  {translations[language]?.browseTVByGenre}</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV {translations[language]?.news}</p>
                         </div>
                       </div>
                     </div>
@@ -398,11 +436,11 @@ export default function TopBar() {
                         </div>
                         <div className="cursor-not-allowed ">
                           <p className="mt-2 hover:underline">Oscars</p>
-                          <p className="mt-2 hover:underline">Emmys</p>
+                          <p className="mt-2 hover:underline">ABFF</p>
                           <p className="mt-2 hover:underline">Best Of 2024</p>
-                          <p className="mt-2 hover:underline">Holiday Picks</p>
+                          <p className="mt-2 hover:underline">{translations[language]?.holidayPicks}</p>
                           <p className="mt-2 hover:underline">Starmeter Awards</p>
-                          <p className="mt-2 hover:underline">All Event</p>
+                          <p className="mt-2 hover:underline"> {translations[language]?.total} Event</p>
                         </div>
                       </div>
                     </div>
@@ -414,7 +452,7 @@ export default function TopBar() {
                         <div>
                           <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
                             {" "}
-                            Celebs
+                            {translations[language]?.popularCeleb?.slice(0,15)}
                           </p>
                         </div>
                       </div>
@@ -425,9 +463,9 @@ export default function TopBar() {
                         <div className="">
 
                           <p className="mt-2 hover:underline" onClick={() => navigate('/popularCeleb')}>
-                            Most Popular Celebs
+                          {translations[language]?.popularCeleb}
                           </p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/celeb')}>Celebrity News</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/celeb')}>{translations[language]?.popularCeleb} {translations[language]?.news}</p>
                         </div>
                       </div>
                     </div>
@@ -448,11 +486,11 @@ export default function TopBar() {
                           <i className="fa-solid fa-film "></i>
                         </div>
                         <div className="">
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/watchToWatch`)}>What to Watch</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/upComing`)}>Latest Trailers</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb Originals</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb Picks</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/search`)}>IMDb Podcasts'</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/watchToWatch`)}>{translations[language]?.whatToWatch}</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/upComing`)}>{translations[language]?.latest} Trailers</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb {translations[language]?.originals}</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb {translations[language]?.editorPick}</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate(`/search?mediaType=tv&title=podcast`)}>IMDb Podcasts</p>
                         </div>
                       </div>
                     </div>
@@ -465,7 +503,7 @@ export default function TopBar() {
                         <div>
                           <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
                             {" "}
-                            Community
+                            {translations[language]?.community}
                           </p>
                         </div>
                       </div>
@@ -475,13 +513,13 @@ export default function TopBar() {
                         </div>
                         <div className="">
                           <a href='https://help.imdb.com/imdb?ref_=cons_nb_hlp'>
-                            <p className="mt-2 hover:underline">Help Center</p>
+                            <p className="mt-2 hover:underline"> {translations[language]?.helpCenter}</p>
                           </a>
                           <a href='https://contribute.imdb.com/czone?ref_=nv_cm_cz'>
-                            <p className="mt-2 hover:underline">Contributor Zone</p>
+                            <p className="mt-2 hover:underline">{translations[language]?.contributeZone}</p>
                           </a>
                           <a href='https://www.imdb.com/poll/?ref_=nv_cm_pl'>
-                            <p className="mt-2 hover:underline">Polls</p>
+                            <p className="mt-2 hover:underline">{translations[language]?.polls}</p>
                           </a>
                         </div>
                       </div>
@@ -571,47 +609,83 @@ export default function TopBar() {
               <div key={index} className=''>
                 {item?.name === 'English' ? (
                   <div>
-                    <MenuItem disableRipple sx={{
-                      borderBottom: '2px solid gray', '&:hover': {
-                        backgroundColor: 'blue'
-                      }
-                    }} key={index} onClick={() => handleClose(item?.label)}>
-                      <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white font-extrabold' : ''} `}>
+                    <MenuItem
+                      disableRipple
+                      sx={{
+                        borderBottom: '2px solid gray',
+                        '&:hover': {
+                          backgroundColor: 'blue'
+                        }
+                      }}
+                      key={index}
+                      onClick={() => handleClose(item?.label)}
+                    >
+                      <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white font-extrabold' : ''}`}>
                         {mediatype === item?.label ? (
                           <i className="fa-brands fa-gg-circle text-yellow-300 text-2xl"></i>
                         ) : (
                           <i className="fa-regular fa-circle text-2xl"></i>
                         )}
-
                         <p className="capitalize flex items-center font-bold px-2 py-2" role="menuitem">
                           {item?.name} ({item?.label})
                         </p>
                       </div>
                     </MenuItem>
-                    <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Partially Supported</MenuItem>
+                    <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>
+                      Film  Supported
+                    </MenuItem>
                   </div>
-
-                ) :
-                  (
-                    <MenuItem disableRipple key={index} sx={{
-                      '&:hover': {
-                        backgroundColor: 'blue'
-                      }
-                    }} onClick={() => handleClose(item?.label)}>
-                      <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white' : ''} `}>
+                ) : item?.name === 'Vietnamese' ? (
+                  <div>
+                    <MenuItem
+                      disableRipple
+                      sx={{
+                        borderBottom: '2px solid gray',
+                        '&:hover': {
+                          backgroundColor: 'blue'
+                        }
+                      }}
+                      key={index}
+                      onClick={() => handleClose(item?.label)}
+                    >
+                      <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white font-extrabold' : ''}`}>
                         {mediatype === item?.label ? (
                           <i className="fa-brands fa-gg-circle text-yellow-300 text-2xl"></i>
                         ) : (
                           <i className="fa-regular fa-circle text-2xl"></i>
                         )}
-
-                        <p className="capitalize flex items-center font-bold px-2 py-2 " role="menuitem">
+                        <p className="capitalize flex items-center font-bold px-2 py-2" role="menuitem">
                           {item?.name} ({item?.label})
                         </p>
                       </div>
                     </MenuItem>
-                  )
-                }
+                    <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>
+                      Partially Supported
+                    </MenuItem>
+                  </div>
+                ) : (
+                  <MenuItem
+                    disableRipple
+                    key={index}
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: 'blue'
+                      }
+                    }}
+                    onClick={() => handleClose(item?.label)}
+                  >
+                    <div className={`flex items-center text-gray-200 gap-3 ${mediatype === item?.label ? 'text-white' : ''}`}>
+                      {mediatype === item?.label ? (
+                        <i className="fa-brands fa-gg-circle text-yellow-300 text-2xl"></i>
+                      ) : (
+                        <i className="fa-regular fa-circle text-2xl"></i>
+                      )}
+                      <p className="capitalize flex items-center font-bold px-2 py-2" role="menuitem">
+                        {item?.name} ({item?.label})
+                      </p>
+                    </div>
+                  </MenuItem>
+                )}
               </div>
             ))}
           </Menu>
@@ -679,7 +753,7 @@ export default function TopBar() {
                 <p>Favorite Actor List</p>
               </MenuItem>
             </div>
-        
+
             <div className='hover:text-yellow-300'>
               <MenuItem onClick={() => navigate('/rating')}>
                 <Avatar
@@ -736,12 +810,12 @@ export default function TopBar() {
 
       {/* drawer */}
       <div
-        className={`fixed  top-0 left-0 h-screen w-fit bg-black shadow z-40 justify-start  rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed overflow-auto  top-0 left-0 h-screen w-fit bg-black shadow z-40 justify-start  rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Toolbar />
         <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif' }}>X</Button>
         <List>
-          {['Movies', 'TV Shows', 'Watch', 'Awards & Events', 'Celebs', 'Community'].map((text, index) => (
+          {['Movies', 'TV Shows', 'Watch', 'Awards & Events', 'Celebs', 'Community', 'Language'].map((text, index) => (
             <Fragment key={text} >
               <ListItem >
                 <ListItemButton onClick={() => toggleMenu(text)}>
@@ -749,6 +823,7 @@ export default function TopBar() {
                     {index === 0 && <LocalMoviesIcon />}   {index === 1 && <TvIcon />}
                     {index === 2 && <VideoLibraryIcon />}     {index === 3 && <StarsIcon />}
                     {index === 4 && <PeopleAltIcon />}       {index === 5 && <PublicIcon />}
+                    {index === 6 && <i className="fa-solid fa-language"></i>}
                   </ListItemIcon>
                   <ListItemText primary={text} sx={{ color: 'white' }} />
                   {menuOpen && selectedMenu === text ? <ArrowDropUpIcon

@@ -212,7 +212,7 @@ export default function SearchBar() {
                                                 className="w-20 h-28"
                                                 onError={handleImageError} />
                                             <div>
-                                                <p className="text-white text-lg"> {item?.original_name ? item.original_name : item?.original_title}</p>
+                                                <p className="text-white text-lg"> {item?.name ? item?.name : item?.title}</p>
                                                 {item?.media_type !== 'person' && (
                                                     <p> {item?.first_air_date ? item.first_air_date?.slice(0, 4) : item.release_date?.slice(0, 4)}</p>
                                                 )}

@@ -197,59 +197,26 @@ export default function ImageLayout() {
     };
 
     return (
-        <div className=" min-h-screen cursor-pointer bg-black  ">
-            <div className="text-white text-xl">
+        <div className=" min-h-screen cursor-pointer bg-black relative ">
+            <div className="text-white text-xl px-2">
                 {currentView == 'table' ? (
-                    <div className='flex absolute w-full '>
-                        <div className='grow text-left' >
-                            <IconButton
-                                onClick={handleBack}
-                                disabled={activeStep === 0 || mediaLength === 0}
-                                size="medium"
-                                sx={{
-                                    top: '400%',
-                                    left: "0px",
-                                    background: "rgba(0, 0, 0, 0.35)",
-                                    border: '1px solid white',
-                                    "&:hover": {
-                                        background: "rgba(0, 0, 0, 0.35)",
-                                    },
-                                    display: activeStep === 0 || mediaLength === 0 ? 'none' : 'inline-flex', // Ẩn khi disabled
-
-                                }}
-                            >
-                                <KeyboardArrowLeftIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
-                            </IconButton>
-                        </div>
-                        <div className='justify-end'>
-                            <IconButton
-                                onClick={handleNext}
-                                disabled={activeStep === mediaLength - 1} // Disable khi activeStep = popularMovies.length hoặc popularMovies.length = 0
-                                size="medium"
-                                sx={{
-                                    justifyContent: 'flex-end', alignItems: 'center', right: '0', top: '400%',
-                                    background: "rgba(0, 0, 0, 0.35)",
-                                    border: '1px solid white',
-                                    "&:hover": {
-                                        background: "rgba(0, 0, 0, 0.35)",
-                                    },
-                                    display: activeStep === mediaLength - 1 ? 'none' : 'inline-flex', // Ẩn khi disabled
-
-                                }}
-                            >
-                                <KeyboardArrowRightIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
-                            </IconButton>
-                        </div>
+                    <div className='p'>
+                        <button onClick={handleNext} className={`absolute top-1/2 right-0  p-2 border-2 border-white mr-2 px-2 py-2 h-20 w-12 text-white bg-black z-20 hover:text-yellow-300 ${activeStep === mediaLength - 1 || mediaLength === 0 ? 'hidden' : ''}`}>
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <button onClick={handleBack} className={`absolute top-1/2  p-2 border-2 border-white px-2 py-2  h-20 w-12 bg-black hover:text-yellow-300  text-white z-20 ${activeStep === 0 || mediaLength === 0 ? 'hidden' : ''}`}>
+                            <i className="fa-solid fa-chevron-left"></i>
+                        </button>
                     </div>
                 ) : (<div></div>)}
+
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center font-semibold  ">
                     <section className='relative overflow-hidden min-h-screen'>
                         <div className="w-full ">
                             <div className="items-center flex">
-                                <div className="flex items-center gap-2 "
+                                <div className=" "
                                     onClick={() => navigate(`/${mediaType}/${id}`)}>
                                     <i className="fa-solid fa-xmark"></i>
-                                    <p className="text-center">Close {mediaType}</p>
                                 </div>
                                 <div className="ml-auto flex items-center">
                                     {currentView == 'table' ? (
@@ -383,7 +350,7 @@ export default function ImageLayout() {
                                                 <div className="lg:col-span-8 col-span-12 text-lg">
                                                     <p className='text-yellow-300'>{mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</p>
                                                     <div className='text-blue-500 flex gap-2 flex-wrap'>
-                                                        <p className=''>
+                                                        <div className=''>
                                                             {mediaType != 'person' ? (
                                                                 <div >
                                                                     <span className='hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.credits?.cast[activeStep]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.name} </span>
@@ -400,7 +367,7 @@ export default function ImageLayout() {
                                                                     </span> ({mediaList[0]?.combined_credits?.cast[activeStep]?.release_date?.slice(0, 4)})
                                                                 </div>
                                                             )}
-                                                        </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="lg:col-span-4 col-span-12 text-lg w-full ">
@@ -411,7 +378,7 @@ export default function ImageLayout() {
                                                             {mediaType != 'person' ? (
                                                                 <div className=''>
                                                                     <p>People
-                                                                        <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.name}</span>
+                                                                        <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.credits?.cast[activeStep]?.id}`)}> {mediaList[0]?.credits?.cast[activeStep]?.name}</span>
                                                                     </p>
                                                                 </div>
                                                             ) : (
@@ -445,21 +412,19 @@ export default function ImageLayout() {
                                                     </div>
                                                     <div className='lg:hidden block'>
                                                         <div >
-                                                            <p>
-                                                                {mediaType != 'person' ? (
-                                                                    <div className=''>
-                                                                        <div>People
-                                                                            <span className='text-blue-500 ml-3 hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>  {mediaList[0]?.credits?.cast[activeStep]?.name} </span>
-                                                                        </div>
+                                                            {mediaType != 'person' ? (
+                                                                <div className=''>
+                                                                    <div>People
+                                                                        <span className='text-blue-500 ml-3 hover:underline' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>  {mediaList[0]?.credits?.cast[activeStep]?.name} </span>
                                                                     </div>
-                                                                ) : (
-                                                                    <div className=''>
-                                                                        <div>People
-                                                                            <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.character}</span>
-                                                                        </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className=''>
+                                                                    <div>People
+                                                                        <span className='text-blue-500 ml-3 hover:underline ' onClick={() => navigate(`/person/${mediaList[0]?.id}`)}>{mediaList[0]?.combined_credits?.cast[activeStep]?.character}</span>
                                                                     </div>
-                                                                )}
-                                                            </p>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                         <div className={`flex items-center gap-2`}>
                                                             {mediaType != 'person' ? (

@@ -2,7 +2,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -16,6 +16,7 @@ import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function TopBoxOffice() {
     const dispatch = useAppDispatch();
@@ -214,8 +215,8 @@ export default function TopBoxOffice() {
                                             onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
-                                            <p>Weaken Gross: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
-                                            <p>Total Gross: <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
+                                            <p>{translations[language]?.weekend}: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                            <p>{translations[language]?.total}: <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
@@ -277,16 +278,18 @@ export default function TopBoxOffice() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
-                                        <img onClick={() => navigate(`/movie/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full lg:h-56 h-80  hover:opacity-80" />
+                                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                                            <img onClick={() => navigate(`/movie/${movie?.id}`)}
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                        </div>
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
                                                 </div>
-                                                <p>Weaken: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
-                                                <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
+                                                <p>{translations[language]?.weekend}: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                                <p>{translations[language]?.total} : <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
@@ -359,8 +362,8 @@ export default function TopBoxOffice() {
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <div>
-                                                <p>Weaken : <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
-                                                <p>Total : <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
+                                                <p>{translations[language]?.weekend} : <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
+                                                <p>{translations[language]?.total} : <span className="font-semibold">${movie?.popularity?.toFixed(0.2)}M</span> </p>
 
                                             </div>
                                             <div className="flex flex-wrap items-center gap-2">
@@ -439,6 +442,13 @@ export default function TopBoxOffice() {
             });
     };
 
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
     return (
         <div className=" min-h-screen cursor-pointer px-2">
             {isRating &&
@@ -516,7 +526,7 @@ export default function TopBoxOffice() {
                     <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 items-center ">
                             <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">{translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center lg:text-2xl text-lg text-black ">Share </p>
@@ -558,25 +568,37 @@ export default function TopBoxOffice() {
                                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                 >
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-facebook text-2xl"></i>
-                                        </ListItemIcon>
-                                        Facebook
-                                    </MenuItem>
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-twitter text-2xl"></i>
-                                        </ListItemIcon>
-                                        Twitter
+                                    <MenuItem>
+                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
+                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
+                                                <ListItemIcon>
+                                                    <i className="fa-brands fa-facebook text-2xl"></i>
+                                                </ListItemIcon>
+                                                Facebook
+                                            </a>
+                                        </div>
                                     </MenuItem>
 
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-regular fa-envelope text-2xl"></i>
-                                        </ListItemIcon>
-                                        Email Link
+                                    <MenuItem>
+                                        <blockquote className="twitter-tweet items-center">
+                                            <ListItemIcon>
+                                                <i className="fa-brands fa-twitter text-2xl"></i>
+                                            </ListItemIcon>
+                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
+                                                Twitter
+                                            </a>
+                                        </blockquote>
                                     </MenuItem>
+                                    <MenuItem>
+                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
+                                            title="Share by Email">
+                                            <ListItemIcon>
+                                                <i className="fa-regular fa-envelope text-2xl"></i>
+                                            </ListItemIcon>
+                                            Email Link
+                                        </a>
+                                    </MenuItem>
+
                                     <MenuItem onClick={handleCopyLink}>
                                         <ListItemIcon>
                                             <i className="fa-solid fa-link text-2xl"></i>
@@ -589,9 +611,9 @@ export default function TopBoxOffice() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top Box Office</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.topBoxOffice}</h2>
                             </div>
-                            <p className="text-gray-500 py-2">Weekend of {currenDatePre > 28 ? preMonthName : currentMonthName} {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
+                            <p className="text-gray-500 py-2">{translations[language]?.weekend} {currenDatePre > 28 ? preMonthName : currentMonthName} {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
                         </div>
 
                     </div>
@@ -602,7 +624,7 @@ export default function TopBoxOffice() {
                                     {topRatedMovies
                                         .slice(0, 10)
                                         .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
-                                    /10 Titles</h2>
+                                    /10 Office</h2>
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
                                         <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
@@ -641,17 +663,17 @@ export default function TopBoxOffice() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250TV`)}>
                                     <ListRow listRowList={topRatedTV} />
                                 </div>
-                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className="text-red w-full text-black"> {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -659,7 +681,7 @@ export default function TopBoxOffice() {
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

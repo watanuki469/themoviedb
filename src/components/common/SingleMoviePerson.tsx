@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -51,6 +52,13 @@ export default function SingleMoviePerson({
         // Clean up event listener on unmount
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
     return (
         <section className="px-2 py-2">
             <div className="hidden lg:grid relative">
@@ -112,7 +120,7 @@ export default function SingleMoviePerson({
 
             <div className="text-black mt-5">
                 <div className="py-2 border-b border-gray-300 flex gap-2">
-                    <div className="font-bold">Director</div>
+                    <div className="font-bold">{translations[language]?.director}</div>
                     <div className='items-center flex flex-wrap gap-1 justify-start '>
                         {director?.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
@@ -124,7 +132,7 @@ export default function SingleMoviePerson({
                     </div>
                 </div>
                 <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center">
-                    <div className="font-bold">Writers</div>
+                    <div className="font-bold">{translations[language]?.writer}</div>
                     <div className="flex flex-wrap gap-1 justify-left text-center aligns-center items-center">
                         {writer.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
@@ -135,7 +143,7 @@ export default function SingleMoviePerson({
                     </div>
                 </div>
                 <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center ">
-                    <div className="font-bold">Star</div>
+                    <div className="font-bold">{translations[language]?.star}</div>
                     <div className="flex gap-1  items-center flex-wrap">
                         {movieCreditList.slice(0, 3).map((item: any, index: number) => (
                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
@@ -145,8 +153,9 @@ export default function SingleMoviePerson({
                         ))}
                     </div>
                 </div>
-                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
-                    <div className="font-bold">All Cast & Crew</div>
+                <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300"
+                onClick={()=>navigate(`/fullcredits/movie/${movieCreditList[0]?.id}`)}>
+                    <div className="font-bold capitalize">{translations[language]?.moreExplore} {translations[language]?.star}</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 
                 </div>
@@ -154,7 +163,7 @@ export default function SingleMoviePerson({
                 <div
                     onClick={() => navigate('/IMDbPro')}
                     className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
-                    <div className="font-bold">Production, box office & more at IMDbPro</div>
+                    <div className="font-bold">{translations[language]?.seePro}</div>
                     <i className="fa-solid fa-chevron-right"></i>
                 </div>
             </div>

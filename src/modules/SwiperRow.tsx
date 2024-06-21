@@ -1,5 +1,5 @@
 import { Rating } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Navigation, Pagination } from 'swiper/modules';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from "../redux/reducers/login.reducer";
 import { AppDispatch } from "../redux/store";
 import { setGlobalLoading } from "../redux/reducers/globalLoading.reducer";
+import { LanguageContext } from "../pages/LanguageContext";
 
 export interface SwiperRowProps {
     searchItemList: any
@@ -235,8 +236,14 @@ export default function SwiperRow({
         setIsRating(false)
         setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
+    const context = useContext(LanguageContext);
 
+    if (!context) {
+        return null;
+    }
 
+    const { language, translations, handleLanguageChange } = context;
+    
     return (
         <div className="h-full ">
             {isRating &&
@@ -257,7 +264,7 @@ export default function SwiperRow({
                                         <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                     </div>
                                     <p className="text-yellow-300 font-bold">Rate this</p>
-                                    <p className="text-2xl ">{searchItemList[numberIndex]?.original_title ? (searchItemList[numberIndex]?.original_title) : (searchItemList[numberIndex]?.title ? (searchItemList[numberIndex]?.title) : (searchItemList[numberIndex]?.name))}</p>
+                                    <p className="text-2xl ">{searchItemList[numberIndex]?.title ? (searchItemList[numberIndex]?.title) : (searchItemList[numberIndex]?.name)}</p>
                                     <div className="gap-2 px-2 py-2">
                                         <Rating name="customized-10" value={value} size="large"
                                             onChange={(event, newValue) => {

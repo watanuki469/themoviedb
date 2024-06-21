@@ -23,17 +23,14 @@ export default function LoginLayout() {
             const res = await loginApi(email.trim(), password);
             if (res && (res as any).token) {
                 localStorage.setItem("token", (res as any).token);
-                // localStorage.setItem("email", email); // Assuming email is defined elsewhere
                 localStorage.setItem("user", JSON.stringify(email))
                 navigate("/");
                 console.log(res);                
                 toast.success(`Welcome to Vasiliev movie web `)
             } else {
-                // Handle unexpected response format
                 toast.error("Unexpected response from server");
             }
         } catch (error) {
-            // Handle network errors or other exceptions
             toast.error("Your account not exsis");
         }
         setLoadingAPI(false);

@@ -89,18 +89,18 @@ export default function TvEpisode({
                                 </div>
                                 <div>
                                     <div className='items-center gap-2 flex-wrap h-20'>
-                                        <p className='font-bold line-clamp-3 hover:underline mt-2'onClick={() => navigate(`/tv/${singleTvList[0]?.last_episode_to_air?.id}`)}>
+                                        <p className='font-bold line-clamp-3 hover:underline mt-2' onClick={() => navigate(`/tv/${singleTvList[0]?.last_episode_to_air?.id}`)}>
                                             S{singleTvList[0]?.last_episode_to_air?.season_number}.E{singleTvList[0]?.last_episode_to_air?.episode_number}
                                             <span className='px-2'>•</span>
                                             {singleTvList[0]?.last_episode_to_air?.name}
                                         </p>
-                                        <p className='text-blue-500 hover:underline mt-1'>Add a plot</p>
                                     </div>
                                 </div>
                                 <div>
                                     <div className="justify-start items-center  w-fit flex gap-2 hover:bg-gray-300  py-2 mt-3" onClick={() => handleClick(0)}>
                                         <i className="fa-regular fa-star text-blue-500"></i>
                                         <p className='text-blue-500 '>Rate</p>
+                                        
                                     </div>
                                 </div>
 
@@ -111,28 +111,23 @@ export default function TvEpisode({
                                     <div>
                                         <div className='uppercase bg-yellow-300 px-1 py-1 font-bold text-sm'>Top-Rated</div>
                                         <div>
-                                            {formattedNextDate}
+                                            {formattedDate}
                                         </div>
                                     </div>
                                 </div>
                                 <div>
                                     <div className='items-center gap-2 h-20 mt-2'>
                                         <p className='font-bold line-clamp-3 hover:underline' onClick={() => navigate(`/tv/${singleTvList[0]?.next_episode_to_air?.id}`)}>
-                                            S{singleTvList[0]?.next_episode_to_air?.season_number}.E{singleTvList[0]?.next_episode_to_air?.episode_number}
+                                            S{singleTvList[0]?.last_episode_to_air?.season_number - 1}.E{singleTvList[0]?.last_episode_to_air?.episode_number - 1}
                                             <span className='px-2'>•</span>
-                                            {singleTvList[0]?.next_episode_to_air?.name}
+                                            Episode 1
                                         </p>
-                                        <p className='text-blue-500 hover:underline mt-1'>Add a plot</p>
                                     </div>
                                 </div>
-                                <div className='flex items-center gap-2 mt-3'>
-                                    <div className='flex items-center gap-1'>
-                                        <i className="fa-solid fa-star text-yellow-300"></i>
-                                        <p className='text-gray-500'>{singleTvList[0]?.next_episode_to_air?.vote_average}/10</p>
-                                    </div>
-                                    <div className="justify-start gap-2 items-center flex hover:bg-gray-300 px-2 py-2 " onClick={() => handleClick(2)}>
+                                <div>
+                                    <div className="justify-start items-center  w-fit flex gap-2 hover:bg-gray-300  py-2 mt-3" onClick={() => handleClick(0)}>
                                         <i className="fa-regular fa-star text-blue-500"></i>
-                                        <p className='text-blue-500'>Rate</p>
+                                        <p className='text-blue-500 '>Rate</p>
                                     </div>
                                 </div>
 

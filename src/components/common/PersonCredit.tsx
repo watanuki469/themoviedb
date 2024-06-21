@@ -88,7 +88,7 @@ export default function PersonCredit({
                         <div className="fixed top-0 left-0 w-full text-white flex justify-center items-center z-20">
                             <div className="p-5 rounded-lg max-w-2xl ">
                                 <div className="flex justify-end">
-                                    <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                    <button onClick={() => setIsOpen(false)} className="text-white hover:opacity-80 px-2 py-2 rounded-full border-2 border-blue-500 bg-black h-12 w-12  ">
                                         <i className="fa-solid fa-times text-xl"></i>
                                     </button>
                                 </div>
@@ -118,11 +118,11 @@ export default function PersonCredit({
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p> {personCreditList[numberIndex]?.vote_average.toString().slice(0, 3)}/10</p>
                                                 </div>
-                                                <div className="flex gap-2 flex-wrap items-center text-blue-500 hover:text-white hover:bg-gray-500 px-2 py-2"
+                                                {/* <div className="flex gap-2 flex-wrap items-center text-blue-500 hover:text-white hover:bg-gray-500 px-2 py-2"
                                                     onClick={() => setIsRating(true)} >
                                                     <i className="fa-regular fa-star"></i>
                                                     <p>Rate</p>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>

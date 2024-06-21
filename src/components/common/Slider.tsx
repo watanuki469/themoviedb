@@ -3,11 +3,12 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { IconButton } from '@mui/material';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function Slider() {
     const dispatch = useAppDispatch();
@@ -15,12 +16,7 @@ export default function Slider() {
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
-
     }, []);
 
     const [activeStep, setActiveStep] = useState(0);
@@ -65,6 +61,13 @@ export default function Slider() {
         const formattedTime = `${firstTwoDigits}:${nextTwoDigits}`
         return formattedTime
     }
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div>
@@ -124,7 +127,6 @@ export default function Slider() {
                                             onError={handleImageError}
                                             alt="movie-img"
                                             className="h-full w-52 top-0 left-0  "
-                                            // className='absolute top-0 left-0 w-full h-full object-cover'
                                         />
                                     </div>
                                     <div className='flex-col w-full'>
@@ -136,7 +138,7 @@ export default function Slider() {
                                                 },
                                             }} />
 
-                                            <div className="p-2 text-red ">
+                                            <div className="p-2 text-white">
                                                 {popularMovies[activeStep]?.vote_count} min
                                             </div>
                                         </div>
@@ -153,7 +155,7 @@ export default function Slider() {
                                             <div className="p-4 text-xl text-white text-left  mb-3  transition duration-300 ease-in-out lg:col-span-6">
                                                 {popularMovies[activeStep]?.title}
                                                 <p className="text-gray-400 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                    Watch The Trailer
+                                                    {translations[language]?.watchTrailer}
                                                 </p>
 
                                             </div>
@@ -171,7 +173,7 @@ export default function Slider() {
                             <div id='6' className="h-8 text-red-500 hover:opacity-90">
                                 <div className="text-xl text-white text-left  duration-300 ease-in-out ">
                                     <p className="text-yellow-400 font-bold text-left  whitespace-nowrap  ">
-                                        Up next
+                                        {translations[language]?.upNext}
                                     </p>
                                 </div>
                             </div>
@@ -206,7 +208,7 @@ export default function Slider() {
                                                 {popularMovies[activeStep + 1]?.title}
                                             </p>
                                             <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                Watch The Trailer
+                                                {translations[language]?.watchTrailer}
                                             </p>
                                         </div>
                                     </div>
@@ -242,13 +244,11 @@ export default function Slider() {
                                                 {popularMovies[activeStep + 2]?.title}
                                             </p>
                                             <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                Watch The Trailer
+                                                {translations[language]?.watchTrailer}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div id='4' className="h-24 mb-4 hover:opacity-90 "
                                 onClick={() => navigate(`/movie/${popularMovies[activeStep + 3]?.id}`)}>
@@ -279,7 +279,7 @@ export default function Slider() {
                                                 {popularMovies[activeStep + 3]?.title}
                                             </p>
                                             <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                Watch The Trailer
+                                                {translations[language]?.watchTrailer}
                                             </p>
                                         </div>
                                     </div>
@@ -288,7 +288,7 @@ export default function Slider() {
                                     onClick={() => navigate(`/Popular`)}
                                 >
                                     <div className="text-white font-semibold text-lg text-left  whitespace-nowrap  overflow-ellipsis ">
-                                        Browse Trailer
+                                        {translations[language]?.moreRecommendation}
                                     </div>
                                     <ArrowForwardIosIcon sx={{
                                         height: '20px', color: 'white', width: '20px', margin: '6px', alignSelf: 'center'

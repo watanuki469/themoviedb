@@ -1,6 +1,6 @@
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -11,6 +11,7 @@ import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function WhatOnTvStream() {
     const dispatch = useAppDispatch();
@@ -71,6 +72,13 @@ export default function WhatOnTvStream() {
                 console.error('Error copying link:', error);
             });
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -84,7 +92,7 @@ export default function WhatOnTvStream() {
                     <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 px-2 py-2 items-center">
                             <div className="items-center ">
-                                <h2 className="lg:text-5xl text-2xl font-bold text-black ">What on TV & Streaming</h2>
+                                <h2 className="lg:text-5xl text-2xl font-bold text-black ">{translations[language]?.whatOnTvStream}</h2>
                             </div>
                             <div className="flex items-center ml-auto" >
                                 <IconButton
@@ -125,25 +133,37 @@ export default function WhatOnTvStream() {
                                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                 >
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-facebook text-2xl"></i>
-                                        </ListItemIcon>
-                                        Facebook
-                                    </MenuItem>
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-twitter text-2xl"></i>
-                                        </ListItemIcon>
-                                        Twitter
+                                    <MenuItem>
+                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
+                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
+                                                <ListItemIcon>
+                                                    <i className="fa-brands fa-facebook text-2xl"></i>
+                                                </ListItemIcon>
+                                                Facebook
+                                            </a>
+                                        </div>
                                     </MenuItem>
 
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-regular fa-envelope text-2xl"></i>
-                                        </ListItemIcon>
-                                        Email Link
+                                    <MenuItem>
+                                        <blockquote className="twitter-tweet items-center">
+                                            <ListItemIcon>
+                                                <i className="fa-brands fa-twitter text-2xl"></i>
+                                            </ListItemIcon>
+                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
+                                                Twitter
+                                            </a>
+                                        </blockquote>
                                     </MenuItem>
+                                    <MenuItem>
+                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
+                                            title="Share by Email">
+                                            <ListItemIcon>
+                                                <i className="fa-regular fa-envelope text-2xl"></i>
+                                            </ListItemIcon>
+                                            Email Link
+                                        </a>
+                                    </MenuItem>
+
                                     <MenuItem onClick={handleCopyLink}>
                                         <ListItemIcon>
                                             <i className="fa-solid fa-link text-2xl"></i>

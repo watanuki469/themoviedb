@@ -7,14 +7,17 @@ import 'react-toastify/dist/ReactToastify.css'
 import App from './App.tsx'
 import './index.css'
 import { store } from './redux/store.ts'
+import { LanguageProvider } from './pages/LanguageContext.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 
   // <React.StrictMode>
-  <div>  
+  <div>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
       </BrowserRouter>
     </Provider>
     <ToastContainer

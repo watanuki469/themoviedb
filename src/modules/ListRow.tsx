@@ -1,6 +1,7 @@
 import FilterIcon from '@mui/icons-material/Filter';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { LanguageContext } from '../pages/LanguageContext';
 
 export interface FourSwiperRowProps {
     listRowList: any
@@ -30,6 +31,14 @@ export default function ListRow({
     //     handleResize();
     //     return () => window.removeEventListener('resize', handleResize);
     // }, []);
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
+
 
     return (
         <div className="relative">
@@ -52,7 +61,7 @@ export default function ListRow({
                             {index === 0 && (
                                 <div className="absolute bottom-0 left-0 p-4 flex gap-2 text-white">
                                     <FilterIcon className="w-6 h-6" />
-                                    <div>Photos</div>
+                                    <div>  {translations[language]?.photos}</div>
                                 </div>
                             )}
                         </div>

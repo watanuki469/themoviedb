@@ -2,7 +2,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -16,9 +16,18 @@ import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
+import { fetchMovies } from '../../redux/reducers/movies.reducer';
 
 
 export default function PopularCelebLayout() {
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
     const dispatch = useAppDispatch();
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     let navigate = useNavigate()
@@ -55,6 +64,7 @@ export default function PopularCelebLayout() {
     useEffect(() => {
         dispatch(setGlobalLoading(true));
         dispatch(fetPopularCeleb())
+        dispatch(fetchMovies())
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
@@ -251,7 +261,7 @@ export default function PopularCelebLayout() {
                     <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 ">
                             <div className="items-center ">
-                                <h2 className="text-2xl font-bold text-black ">IMDb Charts</h2>
+                                <h2 className="text-2xl font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center text-2xl font-bold text-black ">Share </p>
@@ -293,25 +303,37 @@ export default function PopularCelebLayout() {
                                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                 >
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-facebook text-2xl"></i>
-                                        </ListItemIcon>
-                                        Facebook
-                                    </MenuItem>
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-twitter text-2xl"></i>
-                                        </ListItemIcon>
-                                        Twitter
+                                    <MenuItem>
+                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
+                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
+                                                <ListItemIcon>
+                                                    <i className="fa-brands fa-facebook text-2xl"></i>
+                                                </ListItemIcon>
+                                                Facebook
+                                            </a>
+                                        </div>
                                     </MenuItem>
 
-                                    <MenuItem onClick={() => toast.success('meow meow')}>
-                                        <ListItemIcon>
-                                            <i className="fa-regular fa-envelope text-2xl"></i>
-                                        </ListItemIcon>
-                                        Email Link
+                                    <MenuItem>
+                                        <blockquote className="twitter-tweet items-center">
+                                            <ListItemIcon>
+                                                <i className="fa-brands fa-twitter text-2xl"></i>
+                                            </ListItemIcon>
+                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
+                                                Twitter
+                                            </a>
+                                        </blockquote>
                                     </MenuItem>
+                                    <MenuItem>
+                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
+                                            title="Share by Email">
+                                            <ListItemIcon>
+                                                <i className="fa-regular fa-envelope text-2xl"></i>
+                                            </ListItemIcon>
+                                            Email Link
+                                        </a>
+                                    </MenuItem>
+
                                     <MenuItem onClick={handleCopyLink}>
                                         <ListItemIcon>
                                             <i className="fa-solid fa-link text-2xl"></i>
@@ -324,18 +346,18 @@ export default function PopularCelebLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">IMDb Most Popular Celebs</h2>
+                                <h2 className="text-2xl font-bold text-black ">IMDb {translations[language]?.popularCeleb}</h2>
                             </div>
-                            <p className="text-gray-500 py-2">As determined by IMDb user</p>
+                            {/* <p className="text-gray-500 py-2">As determined by IMDb user</p> */}
                         </div>
 
                     </div>
-                    <div className="md:grid grid-cols-12 gap-2 w-full">
+                    <div className="grid grid-cols-12 gap-2 w-full py-2">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">
-                                        {popularCeleb2?.length} Titles</h2>
+                                        {popularCeleb2?.length} People</h2>
 
                                 </div>
 
@@ -355,7 +377,7 @@ export default function PopularCelebLayout() {
                             <div className="flex  px-2 py-2">
                                 <div></div>
                                 <div className="ml-auto flex items-center gap-4">
-                                    <p className="text-gray-500">Sort by</p>
+                                    <p className="text-gray-500">{translations[language]?.sortBy}</p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -384,7 +406,7 @@ export default function PopularCelebLayout() {
                                         onClose={handleRankingClose}
                                     >
                                         <MenuItem sx={{ width: '100%' }} onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                            Alphabetical
+                                            {translations[language]?.alphabet}
                                         </MenuItem>
                                         <MenuItem sx={{ width: '100%' }} onClick={() => handleMenuItemClick('StarMETER')} disableRipple>
                                             StarMETER
@@ -441,17 +463,17 @@ export default function PopularCelebLayout() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={topRatedMovies} />
                                 </div>
-                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className="text-red w-full text-black capitalize"> {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline capitalize"> {translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -462,7 +484,7 @@ export default function PopularCelebLayout() {
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

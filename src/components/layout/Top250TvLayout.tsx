@@ -3,7 +3,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -19,6 +19,7 @@ import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import apiController from '../../redux/client/api.Controller.';
 import { setListGenre } from '../../redux/reducers/genre.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function Top250TvLayout() {
     const dispatch = useAppDispatch();
@@ -357,9 +358,11 @@ export default function Top250TvLayout() {
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <img onClick={() => navigate(`/tv/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                                            <img onClick={() => navigate(`/tv/${movie?.id}`)}
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                        </div>
                                         <div className="px-2 py-2 ">
                                             <div className="justify-start text-left">
                                                 <div className="flex items-center gap-2">
@@ -561,6 +564,13 @@ export default function Top250TvLayout() {
                 console.error('Error copying link:', error);
             });
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
@@ -652,7 +662,9 @@ export default function Top250TvLayout() {
                     <Divider sx={{
                         marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
                     }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>IN THEATERS</DialogTitle>
+                </DialogContent>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold',marginTop:'-20px' }}>IN THEATERS</DialogTitle>
+                <DialogContent>
                     <div className="flex gap-4 flex-wrap items-center">
                         <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
@@ -667,12 +679,6 @@ export default function Top250TvLayout() {
                             <p>In Theaters With Online Ticketing</p>
                         </div>
                     </div>
-
-                    <Divider sx={{
-                        marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2,
-                        border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
-                    }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Movie Key</DialogTitle>
                 </DialogContent>
             </Dialog>
             <div className="bg-black pb-1">
@@ -685,7 +691,7 @@ export default function Top250TvLayout() {
                     <div className="lg:max-w-full w-full px-2">
                         <div className="flex items-center flex-wrap">
                             <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2 px-2" >
                                 <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
@@ -769,9 +775,9 @@ export default function Top250TvLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top 250 Tv</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.top250Tv}</h2>
                             </div>
-                            <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
+                            <p className="text-gray-500 py-2">{translations[language]?.voter}</p>
                         </div>
 
                     </div>
@@ -840,7 +846,7 @@ export default function Top250TvLayout() {
                                     ))}
                                 </div>
                                 <div className="ml-auto flex items-center gap-2 ">
-                                    <p className="text-gray-500">Sort by</p>
+                                    <p className="text-gray-500">{translations[language]?.sortBy}</p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -868,25 +874,25 @@ export default function Top250TvLayout() {
                                         onClose={handleRankingClose}
                                     >
                                         <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                            Ranking
+                                            {translations[language]?.ranking}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                            IMDb Rating
+                                            IMDb {translations[language]?.rating}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                            Release Day
+                                            {translations[language]?.releaseDay}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                            Number Of Rating
+                                            {translations[language]?.numberRating}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                            Alphabetical
+                                            {translations[language]?.alphabet}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                            Popularity
+                                            {translations[language]?.popularity}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                            Runtime
+                                            {translations[language]?.runTime}
                                         </MenuItem>
                                     </Menu>
                                 </div>
@@ -970,7 +976,7 @@ export default function Top250TvLayout() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <a href="/top250Movie">
@@ -978,12 +984,12 @@ export default function Top250TvLayout() {
 
                                     </a>
                                 </div>
-                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
+                                <p className="text-red w-full text-black"> {translations[language]?.staffPick}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -991,7 +997,7 @@ export default function Top250TvLayout() {
                             </div>
                             <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3 ">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

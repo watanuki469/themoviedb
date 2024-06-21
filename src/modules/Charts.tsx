@@ -1,11 +1,16 @@
-import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { LanguageContext } from "../pages/LanguageContext";
 
 export default function Charts() {
     let navigate=useNavigate()
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
     return (
         <div className="pt-2">
             <div>
@@ -24,17 +29,9 @@ export default function Charts() {
                     <i className="fa-solid fa-chevron-right "></i>
                 </div>
                 <p className="text-gray-500 text-lg">As rated by regular IMDb voters.</p>
-
-                <div 
-                 onClick={()=>navigate('/top250Movie')}
-                className="flex items-center flex-wrap gap-2 font-bold text-xl hover:text-yellow-300 mt-2">
-                    <p className="hover:text-black">Top Rated English Movies</p>
-                    <i className="fa-solid fa-chevron-right "></i>
-                </div>
-                <p className="text-gray-500 text-lg">English-language movies as rated by IMDb users</p>
-
+                
                 <div
-                 onClick={()=>navigate('/top250Tv')}
+                 onClick={()=>navigate('/topPopularTv')}
                 className="flex items-center flex-wrap gap-2 font-bold text-xl hover:text-yellow-300 mt-2">
                     <p className="hover:text-black">Most Popular TV Shows</p>
                     <i className="fa-solid fa-chevron-right "></i>

@@ -33,7 +33,7 @@ const apiMovieCredits = {
 
 const apiMovieSimilar = {
     movieSimilar(query: any) {
-        const url = `movie/${query}/similar?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}`
+        const url = `movie/${query}/similar?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`
         return axiosClient.get(url)
     },
 }

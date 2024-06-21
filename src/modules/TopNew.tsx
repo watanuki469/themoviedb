@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import FilterIcon from '@mui/icons-material/Filter';
 import axiosTopNew from "../redux/axios/axiosTopNew";
 import { useNavigate } from "react-router-dom";
+import { LanguageContext } from "../pages/LanguageContext";
 
 export default function TopNew() {
 
@@ -24,12 +25,20 @@ export default function TopNew() {
     }, []);
     let navigate=useNavigate()
 
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
+
 
     return (
         <div className="relative">
             <div className="w-full">
                 <div className="flex items-center flex-wrap gap-2 font-bold text-xl w-fit hover:text-yellow-300">
-                    <p className="hover:text-black">Top New</p>
+                    <p className="hover:text-black">{translations[language]?.moreRecommendation}</p>
                     <i className="fa-solid fa-chevron-right "></i>
                 </div>
                 <div onClick={()=>navigate('/news/movie')}>

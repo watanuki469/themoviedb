@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import ListRow from "../../modules/ListRow";
@@ -16,6 +16,7 @@ import PersonMovie from "../common/PersonMovie";
 import TopBar from "../common/TopBar";
 import { setRecentlyView } from "../../redux/reducers/login.reducer";
 import { addRecentlyViewed, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export default function PersonLayout() {
     const { id } = useParams()
@@ -93,6 +94,13 @@ export default function PersonLayout() {
             movieType: "Person",
         }))
     }, [userInfoList, personList, dispatch])
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
 
     return (
@@ -110,7 +118,7 @@ export default function PersonLayout() {
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 id="personPhotos" className="text-2xl font-bold text-black ">Photos</h2>
+                                <h2 id="personPhotos" className="text-2xl font-bold text-black ">{translations[language]?.photos}</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{personList[0]?.images?.profiles?.length}</p>
                                 <i
                                     onClick={() => navigate(`/image/person/${personList[0]?.id}`)}
@@ -121,7 +129,7 @@ export default function PersonLayout() {
                             </div>
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 id="personKnowFor" className="text-2xl font-bold text-black ">Know For</h2>
+                                <h2 id="personKnowFor" className="text-2xl font-bold text-black ">{translations[language]?.knowFor}</h2>
                             </div>
                             <div className="lg:max-w-full w-full ">
                                 <PersonCredit personCreditList={personList[0]?.combined_credits?.cast} />
@@ -141,7 +149,7 @@ export default function PersonLayout() {
                                 <div className="text-white flex py-4 ">
                                     <div className="flex items-center ">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                        <h2 id="personalDetails" className="text-2xl font-bold text-black ">Personal details</h2>
+                                        <h2 id="personalDetails" className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
                                     </div>
                                 </div>
                                 <PersonDetailExternal personDetailExList={personList} />
@@ -150,16 +158,16 @@ export default function PersonLayout() {
                         <div className="hidden lg:block col-span-4  h-full px-2 py-2 ">
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                <h2 className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
                             </div>
                             <div onClick={() => navigate(`/top250Movie`)}>
                                 <ListRow listRowList={topRatedMovies} />
                             </div>
 
-                            <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
+                            <p className="text-red w-full text-black">{translations[language]?.staffPick}</p>
                             <p
                                 onClick={() => navigate(`/top250Movie`)}
-                                className="text-red w-full text-blue-500"> See our picks</p>
+                                className="text-red w-full text-blue-500"> {translations[language]?.seeOurPick}</p>
                         </div>
                     </div>
                 </div>

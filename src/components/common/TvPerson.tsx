@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -40,6 +41,14 @@ export default function TvPerson({
     const seasonLength = singleMovieList[0]?.seasons?.length
     const firstYear = singleMovieList[0]?.seasons[0]?.air_date?.slice(0, 4)
     const lastYear = singleMovieList[0]?.seasons[seasonLength - 1]?.air_date?.slice(0, 4)
+
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <section className="px-2 py-2">
@@ -106,7 +115,7 @@ export default function TvPerson({
             <div className="text-black mt-5">
                 <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300"
                     onClick={() => navigate(`/fullcredits/tv/${singleMovieList[0]?.id}`)}>
-                    <div className="font-bold">All Cast & Crew</div>
+                    <div className="font-bold capitalize">{translations[language]?.moreExplore} {translations[language]?.star}</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 
                 </div>
@@ -114,7 +123,7 @@ export default function TvPerson({
                 <div
                     onClick={() => navigate('/IMDbPro')}
                     className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300">
-                    <div className="font-bold">Production, box office & more at IMDbPro</div>
+                    <div className="font-bold capitalize">{translations[language]?.seePro}</div>
                     <i className="fa-solid fa-chevron-right"></i>
                 </div>
             </div>

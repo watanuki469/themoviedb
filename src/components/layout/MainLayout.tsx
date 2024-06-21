@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ListRow from "../../modules/ListRow";
@@ -12,6 +12,7 @@ import { AppDispatch } from "../../redux/store";
 import { getListRecentlyViewMongoApi, removeListRecentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
 import { setDeleteRecentlyView, setListRecentlyView } from "../../redux/reducers/login.reducer";
 import { toast } from "react-toastify";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 
 export default function MainLayout() {
@@ -124,11 +125,8 @@ export default function MainLayout() {
     ) => {
         setLoadingQuery(true)
         await dispatch(fetchRemove(
-            movieId,
-            movieType,
-            removeAll,
+            movieId, movieType, removeAll,
         ));
-        // Scroll to the top of the page
         window.scrollTo(0, 0);
         // Reload the page
         window.location.reload();
@@ -136,94 +134,99 @@ export default function MainLayout() {
             setLoadingQuery(false)
         }, 1000);
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
 
     return (
         <div className=" min-h-screen ">
-
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
 
-                    <div className="mt-8 ">
+                    <div className="mt-2">
                         <Slider />
                     </div>
                     <div className="text-white mt-10">
                         <p className="text-yellow-300 text-xl lg:text-3xl font-bold">
-                            Featured today
+                            {translations[language]?.featuredToday}
                         </p>
                     </div>
 
                     <div className="lg:max-w-full w-full mt-2  ">
                         <div
-                            onClick={() => navigate('/top250Movie')}
                             className="lg:grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 grid gap-2 text-white ">
                             <div>
-                                <ListRow listRowList={topRatedMovies} />
-                                <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
+                                <a href="/top250Movie">
+                                    <ListRow listRowList={topRatedMovies} />
+                                </a>
+                                <p className="mt-2 hover:underline"> {translations[language].staffPick} </p>
+                                <p className="mt-2 text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
                                 <a href="/top250Tv">
                                     <ListRow listRowList={mostPopularTv} />
                                 </a>
-                                <p className="mt-2 hover:underline">TV Tracker: Renewed and Canceled Shows</p>
-                                <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                                <p className="mt-2 hover:underline"> {translations[language]?.tvTracker}</p>
+                                <p className="mt-2 text-blue-500 hover:underline" > {translations[language]?.checkStatus}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="text-white flex mt-10">
                         <p className="text-yellow-300 text-xl lg:text-3xl font-bold">
-                            What to watch
+                            {translations[language]?.whatToWatch}
                         </p>
                         <div className="flex items-center ml-auto flex-wrap" >
                             <p className="mr-2 text-blue-500" onClick={() => navigate('/watchToWatch')}>
-                                Get more recommendations
+                                {translations[language]?.moreRecommendation}
                             </p>
                             <i className="fa-solid fa-angle-right text-blue-500"></i>
                         </div>
                     </div>
                     <div className="flex items-center mt-10">
                         <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                        <h2 className="text-xl font-bold text-white ">Top picks</h2>
+                        <h2 className="text-xl font-bold text-white ">  {translations[language]?.topPick}</h2>
                         <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
                     </div>
 
                     <div className="text-gray-300 mb-8">
-                        <h3 className="text-sm font-semibold">Top rated movies just for you</h3>
+                        <h3 className="text-sm font-semibold">  {translations[language]?.topRatedMovie}   {translations[language]?.justForYou}</h3>
                     </div>
 
                     <div className="mt-10 overflow-hidden">
                         <SwiperRow searchItemList={topRatedMovies} mediaType={'Movie'} />
-
                     </div>
 
                     <div className="flex items-center mt-10">
                         <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                        <h2 className="text-xl font-bold text-white ">Most popular TV show this week</h2>
+                        <h2 className="text-xl font-bold text-white ">  {translations[language]?.mostPopularTv}</h2>
                         <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
                     </div>
 
                     <div className="mt-8 overflow-hidden">
                         <SwiperRow searchItemList={mostPopularTv} mediaType={'TV'} />
-
                     </div>
 
                     <div className="flex items-center mt-8">
                         <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                        <h2 className="text-xl font-bold text-white ">Top Rated TV Shows</h2>
+                        <h2 className="text-xl font-bold text-white ">  {translations[language]?.topRatedTV}</h2>
                         <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
                     </div>
 
                     <div className="text-gray-300 mt-3">
-                        <h3 className="text-sm font-semibold">Top rated TV shows just for you</h3>
+                        <h3 className="text-sm font-semibold">  {translations[language]?.topRatedTV}  {translations[language]?.justForYou}</h3>
                     </div>
                     <div className="mt-8 overflow-hidden " >
                         <SwiperRow searchItemList={topRatedTv} mediaType={'TV'} />
                     </div>
 
-                    <div className=" overflow-hidden">
+                    {/* <div className=" overflow-hidden">
                         <div className="items-center mt-12">
                             <h2 className="text-xl font-bold text-white mt-10 ">More to watch</h2>
                         </div>
@@ -239,10 +242,10 @@ export default function MainLayout() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="text-white mt-6">
                         <p className="text-yellow-300 text-xl lg:text-3xl font-bold">
-                            Editor's picks
+                            {translations[language]?.editorPick}
                         </p>
                     </div>
 
@@ -252,39 +255,38 @@ export default function MainLayout() {
                             className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 text-white ">
                             <div>
                                 <ListRow listRowList={topRatedMovies?.slice(3)} />
-                                <p className="mt-2 hover:underline">Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
+                                <p className="mt-2 hover:underline"> {translations[language]?.staffPick} </p>
+                                <p className="mt-2 text-blue-500 hover:underline"> {translations[language]?.seeOurPick} </p>
                             </div>
                             <div>
                                 <a href="/top250Tv">
                                     <ListRow listRowList={discoverMovie} />
                                 </a>
-                                <p className="mt-2 hover:underline">{currentMonthName} 2024 TV and Streaming Premiere Dates</p>
-                                <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                                <p className="mt-2 hover:underline"> {translations[language]?.streaming} </p>
+                                <p className="mt-2 text-blue-500 hover:underline" > {translations[language]?.checkStatus} </p>
                             </div>
                             <div>
                                 <a href="/top250Tv">
                                     <ListRow listRowList={discoverTv} />
                                 </a>
-                                <p className="mt-2 hover:underline">Everything New On Netflix In {currentMonthName}</p>
-                                <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
+                                <p className="mt-2 hover:underline"> {translations[language]?.netFlix} </p>
+                                <p className="mt-2 text-blue-500 hover:underline" > {translations[language]?.checkStatus} </p>
                             </div>
 
                         </div>
                     </div>
                     <div className="text-white flex mt-10">
                         <p className="text-yellow-300 text-xl lg:text-3xl font-bold">
-                            Recently viewed
+                            {translations[language]?.recentlyViewed}
                         </p>
                         <div className="flex items-center ml-auto flex-wrap" >
                             <div className="mr-2 text-blue-500" onClick={() => handleWatchList('mro', 'meo', 'true')} >
-
                                 {
                                     loadingQuery ? (
                                         <i className="fa-solid fa-earth-americas fa-spin-pulse text-xl"></i>
                                     ) : (
                                         <div>
-                                            Clear all
+                                            {translations[language]?.clearAll}
                                         </div>
                                     )
                                 }
@@ -330,7 +332,7 @@ export default function MainLayout() {
                             </Swiper>
                         </div>
                     ) : (
-                        <div className="text-white h-12 py-2">You have no recently viewed pages</div>
+                        <div className="text-white h-12 py-2"> {translations[language]?.noViewedPage} </div>
                     )}
 
                     <div className=" overflow-hidden">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import FourSwiperRow from "../../modules/FourSwiperRow";
@@ -21,6 +21,7 @@ import TvEpisode from "../common/TvEpisode";
 import TvPerson from "../common/TvPerson";
 import TvReview from "../common/TvReview";
 import TvStoryLine from "../common/TvStoryLine";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export default function TvLayout() {
     const { id } = useParams()
@@ -117,12 +118,35 @@ export default function TvLayout() {
     }, [userInfoList, tvList, dispatch])
 
     const normalizeText = (text: string) => {
-        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')//bỏ dấu
-            .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')  // Loại bỏ các ký tự đặc biệt ngoại trừ dấu gạch ngang
-            .replace(/[\s-]+/g, '-')       // Thay thế khoảng trắng hoặc nhiều dấu gạch ngang liên tiếp bằng một dấu gạch ngang
-            .trim();                       // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+        // Convert to lowercase first to handle both uppercase and lowercase consistently
+        let result = text.toLowerCase();
+
+        // Replace 'đ' with 'd'
+        result = result.replace(/đ/g, 'd');
+
+        // Normalize to 'NFD' and remove diacritical marks
+        result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        // Remove special characters except hyphens
+        result = result.replace(/[^a-z0-9\s-]/g, '');
+
+        // Replace whitespace or multiple hyphens with a single hyphen
+        result = result.replace(/[\s-]+/g, '-');
+
+        // Trim leading and trailing hyphens
+        result = result.trim();
+
+        return result;
     };
+    const languageString = localStorage.getItem('language');
+
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer max-w-full ">
@@ -136,19 +160,23 @@ export default function TvLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
                     <div className="grid grid-cols-12 gap-2 ">
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
-                            <div className="lg:max-w-full w-full">
-                                <div className="text-white py-4 px-2 w-full ">
-                                    <div className="flex items-center"
-                                        onClick={() => navigate(`/film/tv/${id}/${normalizeText(tvList[0]?.name)}`)} >
-                                        <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                        <h2 className="text-2xl font-bold text-black ">Episodes</h2>
-                                        {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
-                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                            {languageString === 'vi-VI' ? (
+                                <div className="lg:max-w-full w-full">
+                                    <div className="text-white py-4 px-2 w-full ">
+                                        <div className="flex items-center"
+                                            onClick={() => navigate(`/film/tv/${id}/${normalizeText(tvList[0]?.name)}`)} >
+                                            <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                            <h2 className="text-2xl font-bold text-black ">{translations[language]?.episodes}</h2>
+                                            {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
+                                            <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                        </div>
                                     </div>
+                                    <TvEpisode singleTvList={tvList} />
+                                </div>) : (
+                                <div>
                                 </div>
-                                <TvEpisode singleTvList={tvList} />
-                            </div>
-                            <div className="lg:max-w-full w-full">
+                            )}
+                            <div className="lg:max-w-full w-full px-2">
                                 <div className="text-white py-4 ">
                                     <div className="flex items-center ">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -164,7 +192,7 @@ export default function TvLayout() {
                             </div>
                             <div className="flex items-center py-4 px-2 w-full">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">Photos</h2>
+                                <h2 className="text-2xl font-bold text-black ">{translations[language]?.photos}</h2>
                                 <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2  hover:text-yellow-300"
                                     onClick={() => navigate(`/image/tv/${id}`)}></i>
@@ -175,7 +203,7 @@ export default function TvLayout() {
                             <div className="text-white flex py-4 w-full px-2 " onClick={() => navigate(`/fullcredits/tv/${id}`)}>
                                 <div className="flex items-center w-full ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="tvCast" className="text-2xl font-bold text-black ">Top Cast</h2>
+                                    <h2 id="tvCast" className="text-2xl font-bold text-black capitalize ">Top {translations[language]?.star}</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
@@ -186,17 +214,17 @@ export default function TvLayout() {
                             <div className="text-white flex py-4 mt-4 px-2 w-full">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More Like This</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreRecommendation}</h2>
                                 </div>
                             </div>
                             <div className="lg:max-w-full w-full">
                                 <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'TV'} />
                             </div>
 
-                            <div className="text-white flex py-2 w-full px-2">
+                            <div id="tvTrvia" className="text-white flex py-2 w-full px-2">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">Story Line</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.storyLine}</h2>
                                 </div>
                             </div>
                             <div className="lg:max-w-full w-full">
@@ -205,7 +233,7 @@ export default function TvLayout() {
                             <div className="text-white flex py-4 px-2 w-full">
                                 <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/tv/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="tvReview" className="text-2xl font-bold text-black ">User Reviews</h2>
+                                    <h2 id="tvReview" className="text-2xl font-bold text-black ">{translations[language]?.reviews}</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.reviews?.results?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
@@ -216,8 +244,7 @@ export default function TvLayout() {
                             <div className="text-white flex py-4  px-2 w-full">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="tvTrvia" className="text-2xl font-bold text-black ">Detail</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4 ">{tvList[0]?.aggregate_credits?.cast?.length}</p>
+                                    <h2 className="text-2xl font-bold text-black  capitalize">{translations[language]?.moreExplore}</h2>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
                             </div>
@@ -230,16 +257,16 @@ export default function TvLayout() {
                         <div className="hidden lg:block col-span-4  h-full px-2 py-2 " onClick={() => navigate('/top250Movie')} >
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                             </div>
                             <div onClick={() => navigate(`/top250Movie`)}>
                                 <ListRow listRowList={topRatedMovies} />
                             </div>
-                            <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                            <p className="text-red w-full text-blue-500"> See our picks</p>
+                            <p className="text-red w-full text-black capitalize"> {translations[language]?.staffPick}</p>
+                            <p className="text-red w-full text-blue-500">{translations[language]?.seeOurPick}</p>
                             <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black  capitalize">{translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
@@ -254,6 +281,6 @@ export default function TvLayout() {
                     <Footer />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

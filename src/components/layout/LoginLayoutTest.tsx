@@ -14,9 +14,7 @@ const LoginLayoutTest = () => {
     const dispatch = useAppDispatch()
     let navigate = useNavigate()
 
-    const registerUser = useAppSelector((state) => state.login.register)
-    console.log(registerUser);
-    
+    const registerUser = useAppSelector((state) => state.login.register)    
 
     const fetchLogin = () => (dispatch: AppDispatch) => {
         dispatch(setGlobalLoading(true));

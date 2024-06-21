@@ -2,11 +2,12 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { Button, Menu, MenuItem } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { AppDispatch } from "../../redux/store";
 import apiController from "../../redux/client/api.Controller.";
 import { setListGenre, setListGenre2 } from "../../redux/reducers/genre.reducer";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export default function BrowseGenreLayout() {
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
@@ -76,6 +77,13 @@ export default function BrowseGenreLayout() {
             });
         }
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
     return (
         <div className=" min-h-screen cursor-pointer">
             <div className="bg-black py-1">
@@ -118,22 +126,22 @@ export default function BrowseGenreLayout() {
                                     onClick={() => setAnchorRankingEl(null)}
                                 >
                                     <MenuItem onClick={() => scrollToElement('pupularTVShowAndMovieGenreRef')} disableRipple>
-                                        Popular TV show and movie genres
+                                        {translations[language]?.mostPopularTv} && {translations[language]?.genre}
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToElement('popularMovieByGenre')} disableRipple>
-                                        Popular movies by genre
+                                        {translations[language]?.top250Movie} && {translations[language]?.genre}
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToElement('popularTVbyGenre')} disableRipple>
-                                        Popular TV by genre
+                                        {translations[language]?.topRatedTV} && {translations[language]?.genre}
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToElement('popularTvSerieByGenre')} disableRipple>
-                                        Popular TV series by genre
+                                        {translations[language]?.mostPopularTv} && {translations[language]?.genre}
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToElement('PrimeVideo')} disableRipple>
-                                        Prime videos by genre
+                                        Prime videos && {translations[language]?.genre}
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToElement('videoGames')} disableRipple>
-                                        Video games by genre
+                                        Video games && {translations[language]?.genre}
                                     </MenuItem>
 
                                 </Menu>
@@ -141,7 +149,7 @@ export default function BrowseGenreLayout() {
                             <div className="py-2">
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="pupularTVShowAndMovieGenreRef" className="text-2xl font-bold text-black ">Popular TV show and movie genres</h2>
+                                    <h2 id="pupularTVShowAndMovieGenreRef" className="text-2xl font-bold text-black ">  {translations[language]?.mostPopularTv} && {translations[language]?.genre}</h2>
                                     <i className="fa-solid fa-link text-white hover:text-yellow-300 px-4" onClick={() => scrollToElement('pupularTVShowAndMovieGenreRef')}></i>
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
@@ -158,7 +166,7 @@ export default function BrowseGenreLayout() {
                             <div className="py-2">
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="popularMovieByGenre" className="text-2xl font-bold text-black ">Popular movies by genre</h2>
+                                    <h2 id="popularMovieByGenre" className="text-2xl font-bold text-black "> {translations[language]?.top250Movie} && {translations[language]?.genre}</h2>
                                     <i className="fa-solid fa-link text-white hover:text-yellow-300 px-4" onClick={() => scrollToElement('popularMovieByGenre')}></i>
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
@@ -175,7 +183,7 @@ export default function BrowseGenreLayout() {
                             <div className="py-2">
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="popularTVbyGenre" className="text-2xl font-bold text-black ">Popular TV by genre</h2>
+                                    <h2 id="popularTVbyGenre" className="text-2xl font-bold text-black "> {translations[language]?.topRatedTV} && {translations[language]?.genre}</h2>
                                     <i className="fa-solid fa-link text-white hover:text-yellow-300 px-4" onClick={() => scrollToElement('popularTVbyGenre')}></i>
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
@@ -192,7 +200,7 @@ export default function BrowseGenreLayout() {
                             <div className="py-2">
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="popularTvSerieByGenre" className="text-2xl font-bold text-black ">Popular TV series by genre</h2>
+                                    <h2 id="popularTvSerieByGenre" className="text-2xl font-bold text-black ">  {translations[language]?.mostPopularTv} && {translations[language]?.genre}</h2>
                                     <i className="fa-solid fa-link text-white hover:text-yellow-300 px-4" onClick={() => scrollToElement('popularTvSerieByGenre')}></i>
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
@@ -209,7 +217,7 @@ export default function BrowseGenreLayout() {
                             <div className="py-2">
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="PrimeVideo" className="text-2xl font-bold text-black ">Prime videos by genre</h2>
+                                    <h2 id="PrimeVideo" className="text-2xl font-bold text-black ">Prime videos && {translations[language]?.genre}</h2>
                                     <i className="fa-solid fa-link text-white hover:text-yellow-300 px-4" onClick={() => scrollToElement('PrimeVideo')}></i>
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
@@ -226,7 +234,7 @@ export default function BrowseGenreLayout() {
                             <div className="py-2">
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 id="videoGames" className="text-2xl font-bold text-black ">Video games by genre</h2>
+                                    <h2 id="videoGames" className="text-2xl font-bold text-black ">Video games && {translations[language]?.genre}</h2>
                                     <i className="fa-solid fa-link text-white hover:text-yellow-300 px-4" onClick={() => scrollToElement('videoGames')}></i>
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
@@ -245,10 +253,10 @@ export default function BrowseGenreLayout() {
                         <div className="col-span-4  h-full px-2 py-2 ">
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                <h2 className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
                             </div>
                             <div className="py-2 mt-2">
-                                <p className="font-bold text-xl">Movie and TV series themes</p>
+                                <p className="font-bold text-xl">Movie && TV {translations[language]?.genre}</p>
                             </div>
                             <div>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-blue-500">
@@ -293,21 +301,20 @@ export default function BrowseGenreLayout() {
                                 </ul>
                             </div>
                             <div className="py-2 mt-2">
-                                <p className="font-bold text-xl">Movie charts</p>
+                                <p className="font-bold text-xl">Movie {translations[language]?.chart}</p>
                             </div>
                             <div>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-blue-500">
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:underline">Most Popular Movies</li> •
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:underline">Top 250 Movies</li> •
-                                    <li onClick={() => navigate('/topBoxOffice')} className="hover:underline">Top Box Office</li>
+                                    <li onClick={() => navigate('/top250Movie')} className="hover:underline">{translations[language]?.top250Movie}</li> •
+                                    <li onClick={() => navigate('/topPopularTv')} className="hover:underline">{translations[language]?.mostPopularTv}</li> •
+                                    <li onClick={() => navigate('/topBoxOffice')} className="hover:underline">{translations[language]?.topBoxOffice}</li>
                                 </ul>
                             </div>
                             <div className="sticky top-0 right-0 left-0">
                                 <div className="py-2 mt-2">
-                                    <p className="font-bold text-xl">Advanced Search</p>
+                                    <p className="font-bold text-xl">{translations[language]?.advancedSearch}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500">Create a more specific search using a variety of options and filters</p>
                                     <ul className="flex flex-wrap gap-x-2 gap-y-1 text-black items-center text-center mt-2">
                                         <li onClick={() => navigate('/search?mediaType=movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
                                         <li onClick={() => navigate('/search?mediaType=tv')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li>

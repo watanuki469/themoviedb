@@ -2,13 +2,14 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import ShareIcon from '@mui/icons-material/Share';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { AppDispatch } from '../../redux/store';
 import { favoriteActorMongoApi, getFavoriteActorMongoApi } from '../../redux/client/api.LoginMongo';
 import { setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 
 export interface TwoMovieRowProps {
@@ -18,6 +19,13 @@ export interface TwoMovieRowProps {
 export default function PersonDetail({
     singleMovieList
 }: TwoMovieRowProps) {
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
     let navigate = useNavigate()
     const scrollToElement = (elementId: any) => {
         const element = document.getElementById(elementId);
@@ -181,31 +189,32 @@ export default function PersonDetail({
         }
         return num;
     }
+
     return (
         <section className="" style={{
             position: "relative",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            overflow: 'hidden'
         }}>
             <div className="text-white font-sans font-medium cursor-pointer" >
                 <div style={{
                     backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}')`,
                     position: "absolute", width: "100%", height: "100%", opacity: "0.5",
                     backgroundSize: "cover", backgroundPosition: "center",
-                    backgroundColor: 'black'
+                    backgroundColor: 'black', filter: 'blur(100px)',
                 }}>
                 </div>
 
                 <div style={{ position: "relative", zIndex: "1" }}>
-
                     <div className="flex flex-row justify-end gap-2 items-center ">
-                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personalDetails')}>Biography</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personPhotos')}>{translations[language]?.photos}</div>
                         <div className=" py-2 hidden lg:block ">•</div>
-                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personPhotos')}>Photos</div>
-                        <div className=" py-2 hidden lg:block ">•</div>
-                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personKnowFor')}>Know For</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personKnowFor')}>{translations[language]?.knowFor}</div>
                         <div className=" py-2 hidden lg:block ">•</div>
                         <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personVideos')}>Videos</div>
+                        <div className=" py-2 hidden lg:block ">•</div>
+                        <div className=" py-2 hidden lg:block hover:underline" onClick={() => scrollToElement('personalDetails')}>{translations[language]?.moreExplore}</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block hover:underline" onClick={() => navigate('/IMDbPro')}>IMDbPro</button>
 
                         <IconButton
@@ -306,7 +315,7 @@ export default function PersonDetail({
                             </div>
                         </div>
                     </div>
-                    <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
+                    <div className="grid grid-cols-12 gap-y-4 h-full">
                         <div className="hidden lg:block col-span-3 bg-gray-200  h-full">
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}`}
@@ -355,7 +364,7 @@ export default function PersonDetail({
                                         <VideoLibraryIcon />
                                     </div>
                                     <div className="text-center">
-                                        {singleMovieList[0]?.combined_credits?.cast?.length > 99 ? "99+" : singleMovieList[0]?.combined_credits?.cast?.length} Videos
+                                        {singleMovieList[0]?.combined_credits?.cast?.length > 99 ? "99+" : singleMovieList[0]?.combined_credits?.cast?.length} Trailers
                                     </div>
                                 </div>
                             </div>
@@ -377,13 +386,11 @@ export default function PersonDetail({
                         <div className=" grid-cols-12 hidden md:grid gap-6 h-full">
                             <div className=" col-span-8  bg-black  ">
                                 <div className="flex gap-2 mb-1 border-b border-gray-500 py-2">
-                                    {singleMovieList[0]?.biography && singleMovieList[0]?.biography.length > 400 ?
-                                        singleMovieList[0]?.biography?.slice(0, 400) + "..." :
-                                        singleMovieList[0]?.biography}
+                                    {singleMovieList[0]?.biography}
                                 </div>
                                 <div className="flex justify-between gap-3 py-2 items-center">
                                     <div className='gap-2 flex items-center '>
-                                        <div className="font-bold text-white">More at IMDbPro</div>
+                                        <div className="font-bold text-white">{translations[language]?.seePro}</div>
                                         <div className='py-2 text-blue-500 flex gap-2'>
                                             <div className="hover:underline" onClick={() => navigate('/IMDbPro')}>Contact Info</div>
                                             <div className="">•</div>
@@ -403,7 +410,7 @@ export default function PersonDetail({
                                     <div className="flex flex-col justify-center items-center h-full ">
                                         <button className="items-center w-full  border-2 border-black  ">
                                             <div className="py-2 px-3 border-gray-400 flex items-center gap-2 grow  text-center h-full">
-                                                <p className='font-bold'>Born</p>
+                                                <p className='font-bold'>{translations[language]?.born}</p>
                                                 <p>{singleMovieList[0]?.birthday &&
                                                     new Date(singleMovieList[0]?.birthday).toLocaleDateString('en-US', {
                                                         month: 'long',
@@ -427,9 +434,9 @@ export default function PersonDetail({
                                                             <i className="fas fa-check font-bold text-xl  mr-2"></i>
                                                             <div className="text-left">
                                                                 <div className='font-bold'  >
-                                                                    <p>Remove from watchList</p>
+                                                                    <p>{translations[language]?.removeFrom} watchList</p>
                                                                 </div>
-                                                                <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
+                                                                {/* <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p> */}
                                                             </div>
                                                         </div>
                                                     )
@@ -442,9 +449,9 @@ export default function PersonDetail({
                                                                 <i className="fas fa-plus font-bold text-xl  mr-2"></i>
                                                                 <div className="text-left">
                                                                     <div className='font-bold'  >
-                                                                        <p>Add to watchList</p>
+                                                                        <p>{translations[language]?.add} watchList</p>
                                                                     </div>
-                                                                    <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
+                                                                    {/* <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p> */}
                                                                 </div>
                                                             </div>
                                                         )}
@@ -472,7 +479,7 @@ export default function PersonDetail({
                                     onClick={() => navigate(`/video/${singleMovieList[0]?.combined_credits?.cast[0]?.id}`)}
                                     className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center hover:opacity-90 flex'>
                                     <div>   <VideoLibraryIcon />   </div>
-                                    {singleMovieList[0]?.combined_credits?.cast?.length > 99 ? "99+" : singleMovieList[0]?.combined_credits?.cast?.length} Videos
+                                    {singleMovieList[0]?.combined_credits?.cast?.length > 99 ? "99+" : singleMovieList[0]?.combined_credits?.cast?.length} Trailers
                                 </div>
                             </div>
                             <div className='col-span-1'>
@@ -480,7 +487,7 @@ export default function PersonDetail({
                                     onClick={() => navigate(`/image/person/${singleMovieList[0]?.id}`)}
                                     className='flex h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 hover:opacity-90 text-center'>
                                     <div>   <PhotoLibraryIcon /></div>
-                                    {singleMovieList[0]?.images?.profiles?.length > 99 ? "99+" : singleMovieList[0]?.images?.profiles?.length} Photos
+                                    {singleMovieList[0]?.images?.profiles?.length > 99 ? "99+" : singleMovieList[0]?.images?.profiles?.length} {translations[language]?.photos}
                                 </div>
                             </div>
                         </div>
@@ -491,13 +498,11 @@ export default function PersonDetail({
                             <div className='col-span-2 px-2 '>
                                 <div>
                                     <p className="py-2 ">
-                                        {singleMovieList[0]?.biography && singleMovieList[0]?.biography.length > 120 ?
-                                            singleMovieList[0]?.biography.slice(0, 120) + "..." :
-                                            singleMovieList[0]?.biography}
+                                        {singleMovieList[0]?.biography}
                                     </p>
                                 </div>
                                 <div className='gap-2'>
-                                    <p>Born :{singleMovieList[0]?.birthday &&
+                                    <p>{translations[language]?.born} :{singleMovieList[0]?.birthday &&
                                         new Date(singleMovieList[0]?.birthday).toLocaleDateString('en-US', {
                                             month: 'long',
                                             day: 'numeric',
@@ -533,9 +538,9 @@ export default function PersonDetail({
                                                 <i className="fas fa-check font-bold text-xl  mr-2"></i>
                                                 <div className="text-left">
                                                     <div className='font-bold'  >
-                                                        <p>Remove from watchList</p>
+                                                        <p>{translations[language]?.removeFrom}  watchList</p>
                                                     </div>
-                                                    <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
+                                                    {/* <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p> */}
                                                 </div>
                                             </div>
                                         )
@@ -548,9 +553,9 @@ export default function PersonDetail({
                                                     <i className="fas fa-plus font-bold text-xl  mr-2"></i>
                                                     <div className="text-left">
                                                         <div className='font-bold'  >
-                                                            <p>Add to watchList</p>
+                                                            <p>{translations[language]?.add}  watchList</p>
                                                         </div>
-                                                        <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p>
+                                                        {/* <p>Added by {formatNumber(singleMovieList[0]?.popularity)} user</p> */}
                                                     </div>
                                                 </div>
                                             )}
@@ -564,11 +569,11 @@ export default function PersonDetail({
                             </button>
 
                         </div>
-                        <div className=" border-b border-gray-300 gap-3 py-2 items-center aligns-center px-2">
+                        <div className=" border-b border-gray-300 gap-3 py-2 items-center aligns-center px-4">
                             <div className="flex gap-3 items-center text-blue-500">
                                 <i className="fa-solid fa-phone"></i>
                                 <p onClick={() => navigate(`/`)} className="hover:underline flex gap-2">
-                                    <span className="text-blue-500">View contact info at IMDbPro</span>
+                                    <span className="text-blue-500">{translations[language]?.seePro}</span>
                                 </p>
                                 <i className="fa-solid fa-arrow-up-right-from-square text-blue-500"></i>
                             </div>

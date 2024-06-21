@@ -306,9 +306,11 @@ export function WatchListLayout() {
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="px-2">{movieIndex}</div>
-                                        <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                                            <img onClick={() => navigate(`/${movie?.title ? 'movie' : 'tv'}/${movie?.id}`)}
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                        </div>
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                 <div className="flex items-center gap-2">

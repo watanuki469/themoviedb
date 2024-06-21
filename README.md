@@ -5,6 +5,7 @@
 + [Reqres API](https://reqres.in/)
 + [IMDB Data Crawler API (RapidAPI)](https://rapidapi.com/DataCrawler/api/imdb188/)
 + [IMDB API (RapidAPI)](https://rapidapi.com/apidojo/api/imdb8/)
++ [ophim16 (vietnam free api film)](https://ophim16.cc/api-document)
 
 # 2.Configuration Setup:
 + Vite Configuration

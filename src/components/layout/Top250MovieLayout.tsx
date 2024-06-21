@@ -3,7 +3,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -20,6 +20,7 @@ import TopBar from "../common/TopBar";
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import apiController from '../../redux/client/api.Controller.';
 import { setListGenre } from '../../redux/reducers/genre.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
@@ -78,7 +79,6 @@ export default function Top250MovieLayout() {
     // const genreMapping: Record<GenreID, GenreName> = {
     //     28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
     // };
-    console.log(listGenreFromApi);
 
     const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
         acc[genre?.id] = genre?.name;
@@ -194,7 +194,7 @@ export default function Top250MovieLayout() {
         }
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
-        }, 3000);
+        }, 1000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -349,9 +349,11 @@ export default function Top250MovieLayout() {
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
                                         <div className="px-2"></div>
-                                        <img onClick={() => navigate(`/movie/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-full lg:h-56 h-80 hover:opacity-80" />
+                                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                                            <img onClick={() => navigate(`/movie/${movie?.id}`)}
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                        </div>
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
                                                 <div className="flex items-center gap-2">
@@ -600,6 +602,13 @@ export default function Top250MovieLayout() {
                 console.error('Error copying link:', error);
             });
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -723,7 +732,7 @@ export default function Top250MovieLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full w-full ">
                         <div className="flex mt-3 items-center  ">
-                            <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Charts</h2>
+                            <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center lg:text-2xl  text-lg text-black ">Share </p>
                                 <IconButton
@@ -807,9 +816,9 @@ export default function Top250MovieLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb Top 250 Movies</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.top250Movie}</h2>
                             </div>
-                            <p className="text-gray-500 py-2">As rated by regular IMDb voters.</p>
+                            <p className="text-gray-500 py-2">{translations[language]?.voter}</p>
                         </div>
 
                     </div>
@@ -843,7 +852,7 @@ export default function Top250MovieLayout() {
                                                 return true;
                                             })
                                             .map((m, index) => renderMovieItem(m, index, currentView)).length}
-                                        /{topRatedMovies.length} Titles</h2>
+                                        /{topRatedMovies?.length} Movie</h2>
 
                                 </div>
 
@@ -877,7 +886,7 @@ export default function Top250MovieLayout() {
                                     ))}
                                 </div>
                                 <div className="ml-auto flex items-center gap-4">
-                                    <p className="text-gray-500">Sort by</p>
+                                    <p className="text-gray-500">{translations[language]?.sortBy}</p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -905,25 +914,25 @@ export default function Top250MovieLayout() {
                                         onClose={handleRankingClose}
                                     >
                                         <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                            Ranking
+                                            {translations[language]?.ranking}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                            IMDb Rating
+                                            IMDb {translations[language]?.rating}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                            Release Day
+                                            {translations[language]?.releaseDay}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                            Number Of Rating
+                                            {translations[language]?.numberRating}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                            Alphabetical
+                                            {translations[language]?.alphabet}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                            Popularity
+                                            {translations[language]?.popularity}
                                         </MenuItem>
                                         <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                            Runtime
+                                            {translations[language]?.runTime}
                                         </MenuItem>
                                     </Menu>
                                 </div>
@@ -1020,28 +1029,28 @@ export default function Top250MovieLayout() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black ">  {translations[language]?.featuredToday}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={mostPopularTv} />
                                 </div>
-                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className="text-red w-full text-black">   {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline">   {translations[language]?.checkStatus}</p>
                             </div>
-                            <div>
+                            {/* <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black ">  {translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className='py-3'>
                                 <TopNew />
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize"> {translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

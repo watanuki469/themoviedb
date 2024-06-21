@@ -7,16 +7,14 @@ import { toast } from "react-toastify";
 import apiController from "../../redux/client/api.Controller.";
 import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../../redux/client/api.LoginMongo';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setListGenre } from '../../redux/reducers/genre.reducer';
 import { setDeleteRating, setListRating, setRating } from '../../redux/reducers/login.reducer';
 import { setListSearch } from "../../redux/reducers/search.reducer";
 import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
-import SolarSystem from '../common/SolarSystem';
 import TopBar from "../common/TopBar";
 import { ListMoviesPopular } from "../models/ListMoviesPopular";
 import './earth.css'; // Assuming you have a styles.css file for custom styles
-import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
-import { setListGenre } from '../../redux/reducers/genre.reducer';
 
 export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
@@ -86,8 +84,6 @@ export default function AdvancedSearchLayout() {
             clearTimeout(timerId); // Hủy timeout nếu component unmounts hoặc effect chạy lại trước khi timeout được kích hoạt
         };
     }, [query, mediatype]);
-
-
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -1278,8 +1274,6 @@ export default function AdvancedSearchLayout() {
                                             <div className='lg:max-w-full w-full flex flex-wrap'>
                                                 {
                                                     topRatedMovies[0]?.results
-                                                        // bug
-                                                        // http://127.0.0.1:5173/search?mediaType=movie&title=Planet&genres=empire
                                                         .filter((movie: any) => {
                                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                                             // Check if every selected genre is present in the movie's genres

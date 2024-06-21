@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import apiController from "../../redux/client/api.Controller.";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -11,6 +11,7 @@ import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TopBar from "../common/TopBar";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export default function UserReviewLayout() {
     const { mediaType, id } = useParams();
@@ -114,6 +115,13 @@ export default function UserReviewLayout() {
                 console.error('Error copying link:', error);
             });
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer bg-white text-black  ">
@@ -143,7 +151,7 @@ export default function UserReviewLayout() {
                                                 </div>
                                                 <div className='border-t-2 border-gray py-2 font-bold'>
                                                     <p>
-                                                        User Reviews {
+                                                        {translations[language]?.reviews} {
                                                             mediaList[0]?.reviews?.results?.length
                                                         }
                                                     </p>
@@ -151,12 +159,12 @@ export default function UserReviewLayout() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="w-full border-t-2 border-gray-500  flex flex-wrap">
+                                    {/* <div className="w-full border-t-2 border-gray-500  flex flex-wrap">
                                         <div className="items-center w-full flex text-black px-4 py-6 gap-4 border-b-2 border-gray-500">
                                             <i className="fa-solid fa-plus"></i>
                                             <p>Add a Review</p>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     {mediaList[0]?.reviews?.results?.map((item: any, index: any) => (
                                         <div className="w-full border-b-2 border-gray-500 py-2 px-2" key={index}>
                                             <div className="items-center w-full flex flex-wrap text-black px-2 py-2 gap-4">

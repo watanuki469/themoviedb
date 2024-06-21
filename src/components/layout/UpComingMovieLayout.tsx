@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import Footer from "../common/Footer";
@@ -8,6 +8,7 @@ import apiController from "../../redux/client/api.Controller.";
 import { setListUpComing } from "../../redux/reducers/upComing.reducer";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { setListGenre } from "../../redux/reducers/genre.reducer";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export default function UpComingMovieLayout() {
     const dispatch = useAppDispatch();
@@ -42,14 +43,13 @@ export default function UpComingMovieLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750';
     };
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
     const fetchGenre = () => (dispatch: AppDispatch) => {
         apiController.apiGenre.genre(mediatype)
             .then((data: any) => {
                 if (data && data?.genres) {
-                    console.log(data);
                     dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
                 } else {
                     console.error("API response structure is not as expected.", data);
@@ -72,6 +72,13 @@ export default function UpComingMovieLayout() {
         acc[genre?.id] = genre?.name;
         return acc;
     }, {});
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer px-2 py-2">
@@ -84,7 +91,7 @@ export default function UpComingMovieLayout() {
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <div className="lg:text-5xl text-xl py-2 px-2">
-                        <p className="font-bold">Upcoming releases</p>
+                        <p className="font-bold">{translations[language]?.releaseCalendar}</p>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-2 font-bold justify-start">
                         <div onClick={() => setMediaType('movie')} className={`px-4 py-2 text-center ${mediatype === 'movie' ? 'border-b-2 border-blue-500' : ''} bg-white hover:bg-gray-300 text-black`}>Movie</div>
@@ -124,7 +131,7 @@ export default function UpComingMovieLayout() {
                                                     <p className="font-bold">{item?.title} ({item?.release_date?.slice(0, 4)})</p>
                                                     <p>Original Language: {item?.original_language}</p>
                                                     <div className="flex flex-wrap items-center gap-2 mt-2">
-                                                        Genre: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
+                                                        {translations[language]?.genre}: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
 
                                                             <div key={genreIndex + genreId} className="flex items-center flex-wrap gap-2">
                                                                 <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)} key={genreIndex}>
