@@ -1,5 +1,5 @@
 import FilterIcon from '@mui/icons-material/Filter';
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { LanguageContext } from '../pages/LanguageContext';
 
@@ -10,27 +10,6 @@ export interface FourSwiperRowProps {
 export default function ListRow({
     listRowList,
 }: FourSwiperRowProps) {
-
-    // const [activeSlider, setActiveSlider] = useState(3);
-    // useEffect(() => {
-    //     const handleResize = () => {
-    //         if (window.innerWidth < 400) {
-    //             setActiveSlider(1);
-    //         } else if (window.innerWidth < 600) {
-    //             setActiveSlider(2);
-    //         } else if (window.innerWidth < 768) {
-    //             setActiveSlider(2);
-    //         } else if (window.innerWidth < 1024) {
-    //             setActiveSlider(3);
-    //         } 
-    //         else{
-    //             setActiveSlider(3)
-    //         }
-    //     };
-    //     window.addEventListener('resize', handleResize);
-    //     handleResize();
-    //     return () => window.removeEventListener('resize', handleResize);
-    // }, []);
     const context = useContext(LanguageContext);
 
     if (!context) {

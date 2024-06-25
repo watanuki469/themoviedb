@@ -375,7 +375,7 @@ export default function PersonDetail({
                                         <PhotoLibraryIcon />
                                     </div>
                                     <div className="text-center">
-                                        {singleMovieList[0]?.images?.profiles?.length > 99 ? "99+" : singleMovieList[0]?.images?.profiles?.length} Photos
+                                        {singleMovieList[0]?.images?.profiles?.length > 99 ? "99+" : singleMovieList[0]?.images?.profiles?.length} {translations[language]?.photos}
                                     </div>
                                 </div>
                             </div>

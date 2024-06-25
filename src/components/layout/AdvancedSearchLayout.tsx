@@ -31,6 +31,13 @@ export default function AdvancedSearchLayout() {
     const [query, setQuery] = useState('');
     const [loadingQuery, setLoadingQuery] = useState(false);
 
+    useEffect(() => {
+        const mediaParam = searchParams.get("mediaType");
+        if (mediaParam) {
+            setMediaType(mediaParam)
+        }
+    }, []);
+
     const fetchSearch = () => (dispatch: AppDispatch) => {
         Promise.all([
             apiController.apiSearch.search(mediatype, query),
@@ -62,7 +69,7 @@ export default function AdvancedSearchLayout() {
     };
     useEffect(() => {
         dispatch(fetchGenre());
-    }, [dispatch]);
+    }, [dispatch, mediatype]);
 
     useEffect(() => {
         let timerId: ReturnType<typeof setTimeout>;
@@ -128,6 +135,7 @@ export default function AdvancedSearchLayout() {
     //     10767: 'Talk',
     //     10768: 'War & Politics'
     // };
+
     const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
         acc[genre?.id] = genre?.name;
         return acc;
@@ -762,23 +770,20 @@ export default function AdvancedSearchLayout() {
             setSearchParams('title=' + titleParam)
         }
     }, []);
-    // useEffect(() => {
-    //     const queryParams = searchParams.get("mediaType");
-    //     if (queryParams) {
-    //         console.log(queryParams.trim());
-    //     }
-    // }, []);
-    useEffect(() => {
-        const mediaParam = searchParams.get("mediaType");
-        let params = [];
 
-        if (mediaParam) {
-            setMediaType(mediaParam);
-            params.push('mediaType=' + mediaParam);
-        }
-        else (
-            params.push('mediaType=' + mediatype)
-        )
+    useEffect(() => {
+
+        let params = [];
+        // const mediaParam = searchParams.get("mediaType");
+        // if (mediaParam) {
+        //     setMediaType(mediaParam);
+        //     params.push('mediaType=' + mediaParam);
+        // }
+        // else (
+        //     params.push('mediaType=' + mediatype)
+        // )
+
+        params.push('mediaType=' + mediatype);
 
         if (query.trim().length > 0) {
             params.push('title=' + query.trim());
@@ -798,6 +803,7 @@ export default function AdvancedSearchLayout() {
 
         setSearchParams(params.join('&'));
     }, [mediatype, query, selectedGenres, fromDate, toDate, votesFrom, votesTo, imdbImdbRatingFrom, imdbImdbRatingTo]);
+
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
@@ -1188,7 +1194,51 @@ export default function AdvancedSearchLayout() {
                             <div className="flex items-center ">
                                 <div className="items-center ">
                                     <h2 className=" text-black ">
-                                        1-50 of {topRatedMovies[0]?.results?.length} </h2>
+                                        1-20 of {topRatedMovies[0]?.results
+                                            .filter((movie: any) => {
+                                                if (selectedGenres?.length === 0) return true; // No genre filter
+                                                // Check if every selected genre is present in the movie's genres
+                                                const hasAllGenres = selectedGenres.every((genre) =>
+                                                    movie?.genre_ids?.some((mGenre: any) =>
+                                                        genreMapping[mGenre] === genre)
+                                                );
+                                                return hasAllGenres;
+                                            })
+                                            .filter((movie: any) => {
+                                                const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId && rating?.itemType === 'TV');
+                                                if (filterRatedMovie === false) return true
+                                                return existingRating == undefined;
+                                            })
+                                            .filter(() => {
+                                                if (applyFilter === true) return true; // No filter
+                                                return null
+                                            })
+                                            .filter((movie: any) => {
+                                                if (genderOption === 'Female') return movie?.gender == '1';
+                                                if (genderOption === 'Male') return movie?.gender == '2';
+                                                if (genderOption === 'Non-Binary') return movie?.gender == '0';
+                                                return true; // If 'none' or no filter is selected, include all gender
+                                            })
+                                            .filter(() => {
+                                                if (query !== '') return true; // No filter
+                                                return null
+                                            })
+                                            .filter((movie: any) => {
+                                                // Check if both imdbImdbRatingFrom and imdbImdbRatingTo are defined and not empty strings
+                                                if (imdbImdbRatingFrom !== '' && imdbImdbRatingTo !== '') {
+                                                    return movie?.vote_average >= imdbImdbRatingFrom && movie?.vote_average <= imdbImdbRatingTo;
+                                                }
+                                                // If no filter, include all movies
+                                                return true;
+                                            })
+                                            .filter((movie: any) => {
+                                                // Check if both imdbImdbRatingFrom and imdbImdbRatingTo are defined and not empty strings
+                                                if (votesFrom !== '' && votesTo !== '') {
+                                                    return movie?.vote_count >= votesFrom && movie?.vote_count <= votesTo;
+                                                }
+                                                // If no filter, include all movies
+                                                return true;
+                                            })?.length} </h2>
                                 </div>
                                 <div className="ml-auto flex gap-4">
                                     <div className="ml-auto flex items-center gap-2">

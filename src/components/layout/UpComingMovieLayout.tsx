@@ -127,12 +127,11 @@ export default function UpComingMovieLayout() {
                                                     onError={handleImageError}
                                                     onClick={() => navigate(`/${item?.title ? 'movie' : 'tv'}/${item?.id}`)}
                                                 />
-                                                <div>
+                                                <div className="items-center">
                                                     <p className="font-bold">{item?.title} ({item?.release_date?.slice(0, 4)})</p>
-                                                    <p>Original Language: {item?.original_language}</p>
-                                                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                    <p>{translations[language]?.originals}: {item?.original_language}</p>
+                                                    <div className="flex flex-wrap items-center gap-2">
                                                         {translations[language]?.genre}: {item?.genre_ids?.map((genreId: GenreID, genreIndex: number, array: GenreID[]) => (
-
                                                             <div key={genreIndex + genreId} className="flex items-center flex-wrap gap-2">
                                                                 <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)} key={genreIndex}>
                                                                     {genreMapping[genreId]}
@@ -141,18 +140,6 @@ export default function UpComingMovieLayout() {
                                                             </div>
                                                         ))}
                                                     </div>
-                                                    {/* <div className="flex flex-wrap items-center gap-2 mt-2">
-                                                        Genre: {item?.genre_ids?.map((genreId: any, genreIndex: any) => {
-                                                            return (
-                                                                <div key={genreIndex} className="flex items-center flex-wrap gap-2">
-                                                                    <div className="flex flex-wrap items-center gap-2 hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)}>
-                                                                        {genreMapping[genreId]}
-                                                                    </div>
-                                                                    {genreIndex < item?.genre_ids?.length - 1 && <span> • </span>}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>

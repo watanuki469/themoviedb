@@ -3,7 +3,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -22,6 +22,7 @@ import { fetchTrending } from '../../redux/reducers/trending.reducer';
 import apiController from '../../redux/client/api.Controller.';
 import { setlistKeyWord } from '../../redux/reducers/keyword.reducer';
 import { setListGenre } from '../../redux/reducers/genre.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function KeywordLayout() {
     const { mediaType } = useParams()
@@ -37,6 +38,11 @@ export default function KeywordLayout() {
     const listNewMax = useAppSelector((state) => state.trending.listNewMax)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const listKeywordMovie = useAppSelector((state) => state.keyword.listKeyWord)
+    const context = useContext(LanguageContext);
+    if (!context) {
+        return null;
+    }
+    const { language, translations, handleLanguageChange } = context;
 
     const fetchKeyword = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -331,58 +337,43 @@ export default function KeywordLayout() {
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
-                                            {
-                                                id != 'disney' && id != 'stream' ? (
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <div className="flex items-center gap-2">
-                                                            <i className="fa-solid fa-star text-yellow-300"></i>
-                                                            <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                        </div>
-                                                        <div className="flex items-center gap-2  hover:text-black text-blue-500">
-                                                            <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                                {
-                                                                    existingRating ? (
-                                                                        loading2[movieIndex] ? (
-                                                                            <div>
-                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
-                                                                                <i className="fa-solid fa-star text-blue-500"></i>
-                                                                                <div>{existingRating?.itemRating}</div>
-                                                                            </div>
 
-                                                                        )
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-star text-yellow-300"></i>
+                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                </div>
+                                                <div className="flex items-center gap-2  hover:text-black text-blue-500">
+                                                    <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                        {
+                                                            existingRating ? (
+                                                                loading2[movieIndex] ? (
+                                                                    <div>
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
+                                                                        <i className="fa-solid fa-star text-blue-500"></i>
+                                                                        <div>{existingRating?.itemRating}</div>
+                                                                    </div>
+
+                                                                )
+                                                            ) : (
+                                                                <div className="font-bold text-sm">
+                                                                    {loading2[movieIndex] ? (
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                     ) : (
-                                                                        <div className="font-bold text-sm">
-                                                                            {loading2[movieIndex] ? (
-                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                            ) : (
-                                                                                <div className="hover:bg-gray-200  flex gap-2 flex-wrap px-2 py-2 rounded-lg items-center">
-                                                                                    <i className="fa-regular fa-star text-blue-500"></i>
-                                                                                    <div>Rate</div>
-                                                                                </div>
-                                                                            )}
+                                                                        <div className="hover:bg-gray-200  flex gap-2 flex-wrap px-2 py-2 rounded-lg items-center">
+                                                                            <i className="fa-regular fa-star text-blue-500"></i>
+                                                                            <div>Rate</div>
                                                                         </div>
-                                                                    )
-                                                                }
-                                                            </div>
-                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        }
                                                     </div>
-                                                ) : (
-                                                    <div className="h-20">
-                                                        <p className="text-gray-500 "> {movie?.known_for_department}</p>
-                                                        <div className="w-full " >
-                                                            <div className="line-clamp-2 h-12 text-blue-500 hover:underline flex gap-2 flex-wrap"
-                                                                onClick={() => navigate(`/${movie?.known_for[0]?.media_type}/${movie?.known_for[0]?.id}`)}>
-                                                                <div>{movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}</div>
-                                                                <div> {movie?.known_for && movie?.known_for?.length > 0 ? `(${movie?.known_for[0]?.release_date ? movie?.known_for[0]?.release_date?.slice(0, 4) : movie?.known_for[0]?.first_air_date?.slice(0, 4)})` : ''}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="mt-1 lg:line-clamp-none line-clamp-4">
@@ -419,63 +410,43 @@ export default function KeywordLayout() {
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
                                                 </div>
                                                 <div className="">
-                                                    {
-                                                        id != 'disney' && id != 'stream' ?
-                                                            (
-                                                                <div>
-                                                                    <div className="flex items-center gap-2">
-                                                                        <i className="fa-solid fa-star text-yellow-300"></i>
-                                                                        <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                                    </div>
-                                                                    <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                                        <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                                            {
-                                                                                existingRating ? (
-                                                                                    loading2[movieIndex] ? (
-                                                                                        <div>
-                                                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                                        </div>
-                                                                                    ) : (
-                                                                                        <div className="flex items-center  gap-2">
-                                                                                            <i className="fa-solid fa-star text-blue-500"></i>
-                                                                                            <div>{existingRating?.itemRating}</div>
-                                                                                        </div>
-
-                                                                                    )
-                                                                                ) : (
-                                                                                    <div className="text-black">
-                                                                                        {loading2[movieIndex] ? (
-                                                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                                                                        ) : (
-                                                                                            <div className="">
-                                                                                                <i className="fa-regular fa-star text-blue-500"></i>
-                                                                                                Rate
-                                                                                            </div>
-                                                                                        )}
-                                                                                    </div>
-                                                                                )
-                                                                            }
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="h-20">
-                                                                    <p className="text-gray-500 "> {movie?.known_for_department}</p>
-                                                                    <div className="w-full " >
-                                                                        <div className="line-clamp-2 text-blue-500 hover:underline flex gap-2 flex-wrap"
-                                                                            onClick={() => navigate(`/${movie?.known_for[0]?.media_type}/${movie?.known_for[0]?.id}`)}>
-                                                                            {movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                    }
-
-
-                                                    <div className="flex flex-wrap">
-                                                        {movie?.release_date?.slice(0, 4)}
+                                                    <div className="flex items-center gap-2">
+                                                        <i className="fa-solid fa-star text-yellow-300"></i>
+                                                        <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                     </div>
+                                                    <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                        <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                            {
+                                                                existingRating ? (
+                                                                    loading2[movieIndex] ? (
+                                                                        <div>
+                                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="flex items-center  gap-2">
+                                                                            <i className="fa-solid fa-star text-blue-500"></i>
+                                                                            <div>{existingRating?.itemRating}</div>
+                                                                        </div>
 
+                                                                    )
+                                                                ) : (
+                                                                    <div className="text-black">
+                                                                        {loading2[movieIndex] ? (
+                                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
+                                                                        ) : (
+                                                                            <div className="">
+                                                                                <i className="fa-regular fa-star text-blue-500"></i>
+                                                                                Rate
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                                <div className="flex flex-wrap">
+                                                    {movie?.release_date?.slice(0, 4)}
                                                 </div>
                                             </div>
                                         </div>
@@ -483,7 +454,7 @@ export default function KeywordLayout() {
 
                                     <div className="px-2 py-2" onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}   >
                                         <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                            Details
+                                            {translations[language]?.details}
                                         </button>
 
                                     </div>
@@ -508,57 +479,43 @@ export default function KeywordLayout() {
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
-                                            {
-                                                id != 'disney' && id != 'stream' ? (
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <div className="flex items-center gap-2">
-                                                            <i className="fa-solid fa-star text-yellow-300"></i>
-                                                            <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                        </div>
-                                                        <div className="flex items-center gap-2  hover:text-black text-blue-500">
-                                                            <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                                {
-                                                                    existingRating ? (
-                                                                        loading2[movieIndex] ? (
-                                                                            <div>
-                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
-                                                                                <i className="fa-solid fa-star text-blue-500"></i>
-                                                                                <div>{existingRating?.itemRating}</div>
-                                                                            </div>
 
-                                                                        )
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-star text-yellow-300"></i>
+                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                </div>
+                                                <div className="flex items-center gap-2  hover:text-black text-blue-500">
+                                                    <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                        {
+                                                            existingRating ? (
+                                                                loading2[movieIndex] ? (
+                                                                    <div>
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
+                                                                        <i className="fa-solid fa-star text-blue-500"></i>
+                                                                        <div>{existingRating?.itemRating}</div>
+                                                                    </div>
+
+                                                                )
+                                                            ) : (
+                                                                <div className="font-bold text-sm">
+                                                                    {loading2[movieIndex] ? (
+                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                     ) : (
-                                                                        <div className="font-bold text-sm">
-                                                                            {loading2[movieIndex] ? (
-                                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                            ) : (
-                                                                                <div className="hover:bg-gray-200  flex gap-2 px-2 py-2  flex-wrap items-center">
-                                                                                    <i className="fa-regular fa-star text-blue-500"></i>
-                                                                                    <div>Rate</div>
-                                                                                </div>
-                                                                            )}
+                                                                        <div className="hover:bg-gray-200  flex gap-2 px-2 py-2  flex-wrap items-center">
+                                                                            <i className="fa-regular fa-star text-blue-500"></i>
+                                                                            <div>Rate</div>
                                                                         </div>
-                                                                    )
-                                                                }
-                                                            </div>
-                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        }
                                                     </div>
-                                                ) : (
-                                                    <div className="h-20">
-                                                        <p className="text-gray-500 "> {movie?.known_for_department}</p>
-                                                        <div className="w-full " >
-                                                            <div className="line-clamp-2 h-12 text-blue-500 hover:underline flex gap-2 flex-wrap"
-                                                                onClick={() => navigate(`/${movie?.known_for[0]?.media_type}/${movie?.known_for[0]?.id}`)}>
-                                                                <div>{movie?.known_for && movie?.known_for?.length > 0 ? movie?.known_for[0]?.title ? movie?.known_for[0]?.title : movie?.known_for[0]?.name : ''}</div>
-                                                                <div> {movie?.known_for && movie?.known_for?.length > 0 ? `(${movie?.known_for[0]?.release_date ? movie?.known_for[0]?.release_date?.slice(0, 4) : movie?.known_for[0]?.first_air_date?.slice(0, 4)})` : ''}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -602,25 +559,25 @@ export default function KeywordLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Ranking':
+            case `${translations[language]?.ranking}`:
                 menuItemNum = '1';
                 break;
-            case 'IMDb Rating':
+            case `IMDb ${translations[language]?.rating}`:
                 menuItemNum = '2';
                 break;
-            case 'Release Day':
+            case `${translations[language]?.releaseDay}`:
                 menuItemNum = '3';
                 break;
-            case 'Number Of Rating':
+            case `${translations[language]?.numberRating}`:
                 menuItemNum = '4';
                 break;
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '5';
                 break;
-            case 'Popularity':
+            case `${translations[language]?.popularity}`:
                 menuItemNum = '6';
                 break;
-            case 'Runtime':
+            case `${translations[language]?.runTime}`:
                 menuItemNum = '7';
                 break;
             default:
@@ -653,12 +610,6 @@ export default function KeywordLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    const [isChecked, setIsChecked] = useState(false);
-
-    const handleChecked = () => {
-        setIsChecked(!isChecked);
-    }
-
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -667,8 +618,8 @@ export default function KeywordLayout() {
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
                         <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
                             <div className="flex items-center justify-end">
-                                <div className="flex justify-end">
-                                    <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                <div className="flex justify-end py-2">
+                                    <button onClick={() => setIsRating(false)} className="text-white hover:opacity-80 h-12 w-12 bg-black border-2 border-blue-500 px-2 py-2 rounded-full  ">
                                         <i className="fa-solid fa-times text-xl"></i>
                                     </button>
                                 </div>
@@ -734,7 +685,7 @@ export default function KeywordLayout() {
                     },
                 }}
             >
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Genres and Counts</DialogTitle>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>{translations[language]?.genre} & {translations[language]?.count}</DialogTitle>
                 <DialogContent>
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
@@ -750,19 +701,21 @@ export default function KeywordLayout() {
                     <Divider sx={{
                         marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
                     }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>IN THEATERS</DialogTitle>
+                </DialogContent>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold',marginTop:'-20px' }}>{translations[language]?.inTheater}</DialogTitle>
+                <DialogContent>
                     <div className="flex gap-4 flex-wrap items-center">
                         <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>None</p>
+                            <p>{translations[language]?.none}</p>
                         </div>
                         <div onClick={() => handleOptionClick('near')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'near' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p> In Theaters Near You</p>
+                            <p>{translations[language]?.inTheaterNearYou}</p>
                         </div>
                         <div onClick={() => handleOptionClick('online')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'online' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>In Theaters With Online Ticketing</p>
+                            <p>{translations[language]?.inTheaterWithOnlineTicked}</p>
                         </div>
                     </div>
                 </DialogContent>
@@ -772,16 +725,16 @@ export default function KeywordLayout() {
                     <TopBar />
                     <div className="w-full bg-black mt-5 text-white ">
                         <div className="flex mt-3 items-center  ">
-                            <h2 className="lg:text-2xl text-lg font-bold  capitalize">Keyword: {keyword}
+                            <h2 className="lg:text-2xl text-lg font-bold  capitalize"> {translations[language]?.keyword}: {keyword}
                             </h2>
                             <div className="flex items-center ml-auto gap-2 text-gray-400" >
                                 <div className="text-md justify-center  text-right">
-                                    <p className='font-bold'> LIST ACTIVITY</p>
-                                    <div className='flex items-center gap-2 font-semibold'>
+                                    <p className='font-bold uppercase'> {translations[language]?.listActivity}</p>
+                                    <div className='flex items-center gap-2 font-semibold capitalize'>
                                         <i className="fa-regular fa-eye text-xl text-white"></i>
                                         <div>
-                                            <div> <span className='text-lg text-white'>107K</span> views</div>
-                                            <div>18K this week</div>
+                                            <div> <span className='text-lg text-white'>107K</span> {translations[language]?.views}</div>
+                                            <div>18K {translations[language]?.thisWeek}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -869,11 +822,8 @@ export default function KeywordLayout() {
                                 Vasiliev-Editors
                             </a>
                             <div>•</div>
-                            <div>Created 1 year ago</div>
-                            <div>•</div>
-                            <div>Modified 1 month ago</div>
+                            <div> {translations[language]?.createdModified}</div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -883,7 +833,7 @@ export default function KeywordLayout() {
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
-                                    <h2 className="lg:text-2xl text-lg text-black ">
+                                    <h2 className="lg:text-2xl text-lg text-black  capitalize">
                                         {listKeywordMovie
                                             .filter((movie: any) => {
                                                 if (selectedGenres?.length === 0) return true; // No genre filter
@@ -909,7 +859,7 @@ export default function KeywordLayout() {
                                                 return true;
                                             })
                                             .map((m, index) => renderMovieItem(m, index, currentView)).length}
-                                        /{listKeywordMovie?.length} Titles</h2>
+                                        /{listKeywordMovie?.length} {mediaKeywordType}</h2>
 
                                 </div>
 
@@ -943,7 +893,7 @@ export default function KeywordLayout() {
                                     ))}
                                 </div>
                                 <div className="ml-auto flex items-center gap-4">
-                                    <p className="text-gray-500">Sort by</p>
+                                    <p className="text-gray-500"> {translations[language]?.sortBy}</p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -962,7 +912,7 @@ export default function KeywordLayout() {
                                             },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                     </Button>
                                     <Menu
                                         id="demo-customized-menu"
@@ -970,26 +920,26 @@ export default function KeywordLayout() {
                                         open={Boolean(anchorRankingEl)}
                                         onClose={handleRankingClose}
                                     >
-                                        <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                            Ranking
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
+                                            {translations[language]?.ranking}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                            IMDb Rating
+                                        <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
+                                            IMDb {translations[language]?.rating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                            Release Day
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
+                                            {translations[language]?.releaseDay}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                            Number Of Rating
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
+                                            {translations[language]?.numberRating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                            Alphabetical
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
+                                            {translations[language]?.alphabet}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                            Popularity
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
+                                            {translations[language]?.popularity}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                            Runtime
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
+                                            {translations[language]?.runTime}
                                         </MenuItem>
                                     </Menu>
                                 </div>
@@ -1081,17 +1031,17 @@ export default function KeywordLayout() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize"> {translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={mostPopularTv} />
                                 </div>
-                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className="text-red w-full text-black capitalize">  {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline">  {translations[language]?.staffPick}</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize "> {translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -1099,7 +1049,7 @@ export default function KeywordLayout() {
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize "> {translations[language]?.moreExplore}  {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

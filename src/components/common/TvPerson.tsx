@@ -56,7 +56,7 @@ export default function TvPerson({
                 <div className="grid grid-cols-2 gap-4 ">
                     {singleMovieList[0]?.aggregate_credits?.cast?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
-                            <div id="bgHover" className="h-24 w-24 rounded-full bg-cover mr-4 bg-gray-500 hover:opacity-90"
+                            <div id="bgHover" className="h-24 w-24 rounded-full bg-cover bg-center mr-4 bg-gray-500 hover:opacity-90"
                                 style={{
                                     backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}
@@ -92,7 +92,7 @@ export default function TvPerson({
                             <SwiperSlide key={index}>
                                 <div className="w-full h-auto ">
                                     <div key={index} className="items-center justify-center text-center">
-                                        <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center hover:opacity-80"
+                                        <div className="w-36 h-36 mx-auto rounded-full bg-cover bg-center items-center justify-center hover:opacity-80"
                                             style={{
                                                 backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                             }}

@@ -525,25 +525,25 @@ export default function TopPopularTvLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Ranking':
+            case `${translations[language]?.ranking}`:
                 menuItemNum = '1';
                 break;
-            case 'IMDb Rating':
+            case `IMDb ${translations[language]?.rating}`:
                 menuItemNum = '2';
                 break;
-            case 'Release Day':
+            case `${translations[language]?.releaseDay}`:
                 menuItemNum = '3';
                 break;
-            case 'Number Of Rating':
+            case `${translations[language]?.numberRating}`:
                 menuItemNum = '4';
                 break;
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '5';
                 break;
-            case 'Popularity':
+            case `${translations[language]?.popularity}`:
                 menuItemNum = '6';
                 break;
-            case 'Runtime':
+            case `${translations[language]?.runTime}`:
                 menuItemNum = '7';
                 break;
             default:
@@ -707,7 +707,7 @@ export default function TopPopularTvLayout() {
                                 <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl text-lg  text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg  text-black ">{translations[language]?.share} </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -874,7 +874,7 @@ export default function TopPopularTvLayout() {
                                                 },
                                             }}
                                         >
-                                            {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                            {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                         </Button>
                                         <Menu
                                             id="demo-customized-menu"
@@ -882,25 +882,25 @@ export default function TopPopularTvLayout() {
                                             open={Boolean(anchorRankingEl)}
                                             onClose={handleRankingClose}
                                         >
-                                            <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
                                                 {translations[language]?.ranking}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                                {translations[language]?.rating}
+                                            <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
+                                                IMDb {translations[language]?.rating}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
                                                 {translations[language]?.releaseDay}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
                                                 {translations[language]?.numberRating}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
                                                 {translations[language]?.alphabet}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
                                                 {translations[language]?.popularity}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
                                                 {translations[language]?.runTime}
                                             </MenuItem>
                                         </Menu>

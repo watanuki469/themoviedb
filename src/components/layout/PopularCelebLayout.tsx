@@ -211,7 +211,7 @@ export default function PopularCelebLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '1';
                 break;
             case 'StarMETER':
@@ -264,7 +264,7 @@ export default function PopularCelebLayout() {
                                 <h2 className="text-2xl font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">Share </p>
+                                <p className="flex items-center text-2xl font-bold text-black ">{translations[language]?.share} </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -397,7 +397,7 @@ export default function PopularCelebLayout() {
                                             },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                     </Button>
                                     <Menu
                                         id="demo-customized-menu"
@@ -405,7 +405,7 @@ export default function PopularCelebLayout() {
                                         open={Boolean(anchorRankingEl)}
                                         onClose={handleRankingClose}
                                     >
-                                        <MenuItem sx={{ width: '100%' }} onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
+                                        <MenuItem sx={{ width: '100%' }} onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
                                             {translations[language]?.alphabet}
                                         </MenuItem>
                                         <MenuItem sx={{ width: '100%' }} onClick={() => handleMenuItemClick('StarMETER')} disableRipple>

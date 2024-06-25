@@ -1,8 +1,9 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -48,13 +49,20 @@ export default function SingleMovieReview({
                 console.error('Error copying link:', error);
             });
     };
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
 
     return (
         <section className=" text-black font-sans grid ">
             <div className="bg-white shadow-sm shadow-black w-full py-4 px-4  ">
                 <div className="text-black w-full flex py-4 ">
-                    <div className="bg-yellow-300 text-black py-2 px-2">Features Reviews</div>
+                    <div className="bg-yellow-300 text-black py-2 px-2 capitalize">{translations[language]?.latest} {translations[language]?.reviews}</div>
                     <div className="flex items-center ml-auto gap-2" >
                         <i className="fa-solid fa-star text-yellow-300 text-sm ml-2"></i>
                         <div>

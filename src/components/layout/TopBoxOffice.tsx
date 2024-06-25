@@ -338,7 +338,7 @@ export default function TopBoxOffice() {
 
                                 <div className="px-2 py-2" onClick={() => navigate(`/movie/${movie?.id}`)}   >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        Details
+                                        {translations[language]?.details}
                                     </button>
 
                                 </div>
@@ -529,7 +529,7 @@ export default function TopBoxOffice() {
                                 <h2 className="lg:text-2xl text-lg font-bold text-black ">{translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl text-lg text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg text-black ">{translations[language]?.share} </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -617,7 +617,7 @@ export default function TopBoxOffice() {
                         </div>
 
                     </div>
-                    <div className="grid grid-cols-12 gap-2 w-full">
+                    <div className="grid grid-cols-12 gap-2 w-full items-center">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex items-center">
                                 <h2 className="lg:text-2xl text-lg text-black ">
@@ -643,7 +643,7 @@ export default function TopBoxOffice() {
                                         position: "relative", backgroundSize: "cover", backgroundPosition: "center",
                                         display: 'flex', flexWrap: 'wrap'
                                     }}>
-                                    {topRatedMovies.length === 0 && (
+                                    {topRatedMovies?.length === 0 && (
                                         <div style={{
                                             backgroundImage: `url(https://filmfair.in/website/images/error_screens/no-result.png')`,
                                             position: "absolute", width: "100%", height: "100%", opacity: "0.5",
@@ -659,11 +659,11 @@ export default function TopBoxOffice() {
                             </div>
 
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
+                        <div className="hidden lg:block col-span-4  h-full px-2 text-xl">
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
+                                    <h2 className="text-3xl font-bold text-black capitalize ">{translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250TV`)}>
                                     <ListRow listRowList={topRatedTV} />
@@ -672,16 +672,16 @@ export default function TopBoxOffice() {
                                 <p className="text-red w-full text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
-                                <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.chart}</h2>
+                                <div className="flex items-center py-2">
+                                    <h2 className="text-xl font-bold text-black capitalize ">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
-                                <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.genre}</h2>
+                                <div className="flex items-center py-2">
+                                    <h2 className="text-xl font-bold text-black capitalize">{translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

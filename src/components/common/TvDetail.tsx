@@ -757,7 +757,9 @@ export default function TvDetail({
                             <div className='col-span-2'>
                                 <div className='gap-2'>
                                     {singleTvList[0]?.genres.slice(0, 4).map((item: any) => (
-                                        <button key={item.id} className="bg-none text-white py-2 px-2 mr-2 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
+                                        <button
+                                        onClick={() => navigate(`/search?mediaType=tv&genres=${item?.name}`)}
+                                        key={item.id} className="bg-none text-white py-2 px-2 mr-2 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
                                             {item.name}
                                         </button>
                                     ))}

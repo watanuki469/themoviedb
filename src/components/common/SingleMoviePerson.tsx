@@ -65,7 +65,7 @@ export default function SingleMoviePerson({
                 <div className="grid grid-cols-2 gap-4 ">
                     {movieCreditList?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
-                            <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80"
+                            <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80 bg-center" 
                                 style={{
                                     backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}
@@ -81,7 +81,7 @@ export default function SingleMoviePerson({
                     ))}
                 </div>
             </div>
-            <div className="lg:hidden flex">
+            <div className="lg:hidden flex  h-full">
                 <Swiper
                     spaceBetween={10}
                     slidesPerView={activeSlider}
@@ -91,24 +91,22 @@ export default function SingleMoviePerson({
                     }}
                     navigation={true}
                     modules={[Pagination, Navigation]}
-                    className="mySwiper text-white"
+                    className="mySwiper text-white "
                 >
                     {movieCreditList?.map((item: any, index: any) => {
                         return (
                             <SwiperSlide key={index}>
-                                <div className="w-full h-auto ">
-                                    <div key={index} className="items-center justify-center text-center">
-                                        <div className="w-36 h-36 mx-auto rounded-full bg-cover  items-center justify-center hover:opacity-80"
-                                            style={{
-                                                backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
-                                            }}
-                                            onClick={() => navigate(`/person/${item?.id}`)}>
-                                        </div>
+                                <div className="w-full justify-center  text-center items-center grid h-full mt-auto mb-auto ">
+                                    <div className="w-40 h-40 object-cover rounded-full mx-auto bg-cover bg-no-repeat bg-black bg-center  items-center justify-center hover:opacity-80"
+                                        style={{
+                                            backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
+                                        }}
+                                        onClick={() => navigate(`/person/${item?.id}`)}>
+                                    </div>
 
-                                        <div className="">
-                                            <p className="text-black font-bold">{item?.name}</p>
-                                            <p className="text-gray-500">{item?.character}</p>
-                                        </div>
+                                    <div className="">
+                                        <p className="text-black font-bold">{item?.name}</p>
+                                        <p className="text-gray-500">{item?.character}</p>
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -118,7 +116,7 @@ export default function SingleMoviePerson({
 
             </div>
 
-            <div className="text-black mt-5">
+            <div className="text-black">
                 <div className="py-2 border-b border-gray-300 flex gap-2">
                     <div className="font-bold">{translations[language]?.director}</div>
                     <div className='items-center flex flex-wrap gap-1 justify-start '>
@@ -154,7 +152,7 @@ export default function SingleMoviePerson({
                     </div>
                 </div>
                 <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300"
-                onClick={()=>navigate(`/fullcredits/movie/${movieCreditList[0]?.id}`)}>
+                    onClick={() => navigate(`/fullcredits/movie/${movieCreditList[0]?.id}`)}>
                     <div className="font-bold capitalize">{translations[language]?.moreExplore} {translations[language]?.star}</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 

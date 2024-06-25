@@ -404,7 +404,7 @@ export default function Top250MovieLayout() {
 
                                 <div className="px-2 py-2" onClick={() => navigate(`/movie/${movie?.id}`)}   >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        Details
+                                        {translations[language]?.details}
                                     </button>
 
                                 </div>
@@ -527,7 +527,6 @@ export default function Top250MovieLayout() {
     const [filterRatedMovie, setFilterRatedMovie] = useState(false);
     const [filterType, setFilterType] = useState('none');
 
-
     const [selectedOption, setSelectedOption] = useState<string | null>('none');
 
     const handleOptionClick = (option: any) => {
@@ -551,25 +550,25 @@ export default function Top250MovieLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Ranking':
+            case `${translations[language]?.ranking}`:
                 menuItemNum = '1';
                 break;
-            case 'IMDb Rating':
+            case `IMDb ${translations[language]?.rating}`:
                 menuItemNum = '2';
                 break;
-            case 'Release Day':
+            case `${translations[language]?.releaseDay}`:
                 menuItemNum = '3';
                 break;
-            case 'Number Of Rating':
+            case `${translations[language]?.numberRating}`:
                 menuItemNum = '4';
                 break;
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '5';
                 break;
-            case 'Popularity':
+            case `${translations[language]?.popularity}`:
                 menuItemNum = '6';
                 break;
-            case 'Runtime':
+            case `${translations[language]?.runTime}`:
                 menuItemNum = '7';
                 break;
             default:
@@ -684,7 +683,7 @@ export default function Top250MovieLayout() {
                     },
                 }}
             >
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Genres and Counts</DialogTitle>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>{translations[language]?.genre} && {translations[language]?.count}</DialogTitle>
                 <DialogContent>
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
@@ -700,19 +699,21 @@ export default function Top250MovieLayout() {
                     <Divider sx={{
                         marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
                     }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>IN THEATERS</DialogTitle>
-                    <div className="flex gap-4 flex-wrap items-center">
+                </DialogContent>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold', marginTop: '-20px' }}>{translations[language]?.inTheater}</DialogTitle>
+                <DialogContent>
+                    <div className="flex gap-4 flex-wrap items-center ">
                         <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>None</p>
+                            <p>{translations[language]?.none}</p>
                         </div>
                         <div onClick={() => handleOptionClick('near')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'near' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p> In Theaters Near You</p>
+                            <p>{translations[language]?.inTheaterNearYou}</p>
                         </div>
                         <div onClick={() => handleOptionClick('online')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'online' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>In Theaters With Online Ticketing</p>
+                            <p>{translations[language]?.inTheaterWithOnlineTicked}</p>
                         </div>
                     </div>
 
@@ -734,7 +735,7 @@ export default function Top250MovieLayout() {
                         <div className="flex mt-3 items-center  ">
                             <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl  text-lg text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -905,7 +906,7 @@ export default function Top250MovieLayout() {
                                             },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                     </Button>
                                     <Menu
                                         id="demo-customized-menu"
@@ -913,25 +914,25 @@ export default function Top250MovieLayout() {
                                         open={Boolean(anchorRankingEl)}
                                         onClose={handleRankingClose}
                                     >
-                                        <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
                                             {translations[language]?.ranking}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
                                             IMDb {translations[language]?.rating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
                                             {translations[language]?.releaseDay}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
                                             {translations[language]?.numberRating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
                                             {translations[language]?.alphabet}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
                                             {translations[language]?.popularity}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
                                             {translations[language]?.runTime}
                                         </MenuItem>
                                     </Menu>
@@ -1037,20 +1038,20 @@ export default function Top250MovieLayout() {
                                 <p className="text-red w-full text-black">   {translations[language]?.staffPick}</p>
                                 <p className="text-red w-full text-blue-500 hover:underline">   {translations[language]?.checkStatus}</p>
                             </div>
-                            {/* <div>
+                            <div>
                                 <div className="flex items-center py-3">
                                     <h2 className="text-2xl font-bold text-black ">  {translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
                                 </div>
-                            </div> */}
+                            </div>
                             <div className='py-3'>
                                 <TopNew />
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black capitalize"> {translations[language]?.moreExplore} {translations[language]?.genre}</h2>
+                                    <h2 className="text-xl font-bold text-black capitalize"> {translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

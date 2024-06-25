@@ -95,12 +95,12 @@ export default function WatchToWWatch() {
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
                         <div onClick={() => navigate(`/trending/netflix`)}>
                             <ListRow listRowList={listNewNetflix} />
-                            <p className="mt-2 hover:underline">Everything New On Disney In {currentMonthName}</p>
+                            <p className="mt-2 hover:underline">Everything New On Netflix In {currentMonthName}</p>
                             <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
                         </div>
                         <div onClick={() => navigate(`/trending/disney`)}>
                             <ListRow listRowList={listNewDisney} />
-                            <p className="mt-2 hover:underline">Everything New On Netflix In {currentMonthName}</p>
+                            <p className="mt-2 hover:underline">Everything New On Disney In {currentMonthName}</p>
                             <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
                         </div>
                         <div onClick={() => navigate(`/trending/hulu`)}>

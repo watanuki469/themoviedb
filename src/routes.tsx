@@ -157,11 +157,11 @@ const routes = [
     state: "keyword"
   },
 
-  {
-    path: "/watchList",
-    element: <WatchListLayout />,
-    state: "watchList"
-  },
+  // {
+  //   path: "/watchList",
+  //   element: <WatchListLayout />,
+  //   state: "watchList"
+  // },
   {
     path: "/watchList2",
     element: <WatchListLayout2 />,

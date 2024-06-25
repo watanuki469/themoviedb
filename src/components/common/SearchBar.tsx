@@ -29,7 +29,6 @@ export default function SearchBar() {
         { id: 4, label: 'person', icon: 'fa-user-group' },
     ];
 
-
     const anchorRef = useRef(null);
 
     const [open, setOpen] = useState(false);
@@ -65,7 +64,7 @@ export default function SearchBar() {
         else {
             timerId = setTimeout(() => {
                 dispatch(fetchSearch());
-            }, 2000);
+            }, 1000);
         }
         function handleResize() {
             const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
@@ -142,14 +141,13 @@ export default function SearchBar() {
                         <p>  Advanced Search</p>
                     </div>
                 </MenuItem>
-
             </Menu>
 
-            <div className="relative flex-grow">
+            <div className="relative flex-grow border border-l border-gray-300">
                 <input type="text" name="price" id="price" ref={anchorRef}
                     value={query}
                     onChange={onQueryChange}
-                    className="w-full h-full border-0 pl-3 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="w-full h-full border-0 pl-3 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     placeholder="Search IMDb..."
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center">

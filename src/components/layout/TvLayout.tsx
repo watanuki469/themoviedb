@@ -162,12 +162,11 @@ export default function TvLayout() {
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
                             {languageString === 'vi-VI' ? (
                                 <div className="lg:max-w-full w-full">
-                                    <div className="text-white py-4 px-2 w-full ">
+                                    <div className="text-white px-2 w-full ">
                                         <div className="flex items-center"
                                             onClick={() => navigate(`/film/tv/${id}/${normalizeText(tvList[0]?.name)}`)} >
                                             <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                            <h2 className="text-2xl font-bold text-black ">{translations[language]?.episodes}</h2>
-                                            {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
+                                            <h2 className="text-2xl font-bold text-black py-2">{translations[language]?.episodes}</h2>
                                             <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                         </div>
                                     </div>

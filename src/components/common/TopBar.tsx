@@ -416,7 +416,7 @@ export default function TopBar() {
                           </p>
                           <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">{translations[language]?.top250Tv}</p>
                           <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  {translations[language]?.topRatedTV}   </p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  {translations[language]?.browseTVByGenre}</p>
+                          <p onClick={() => navigate('/features/genre')} className="mt-2 hover:underline">  {translations[language]?.browseTVByGenre}</p>
                           <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV {translations[language]?.news}</p>
                         </div>
                       </div>
@@ -528,7 +528,6 @@ export default function TopBar() {
                 </div>
               </Dialog.Content>
             </Dialog.Portal>
-
           </Dialog.Root>
           <div className="grow ">
             <div className=" hidden lg:flex bg-white w-full z-20">
@@ -603,7 +602,7 @@ export default function TopBar() {
             open={openUser}
             onClose={() => setAnchorUserEl(null)}
           >
-            <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Fully Supported</MenuItem>
+            <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Fully Supported <span className='ml-2'> (No film)</span> </MenuItem>
             {/* <Divider sx={{ color: 'white', borderColor: "white" }} /> */}
             {menuItems?.map((item: any, index: any) => (
               <div key={index} className=''>
@@ -813,7 +812,7 @@ export default function TopBar() {
         className={`fixed overflow-auto  top-0 left-0 h-screen w-fit bg-black shadow z-40 justify-start  rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Toolbar />
-        <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif' }}>X</Button>
+        <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif',backgroundColor:'red' }}>X</Button>
         <List>
           {['Movies', 'TV Shows', 'Watch', 'Awards & Events', 'Celebs', 'Community', 'Language'].map((text, index) => (
             <Fragment key={text} >
@@ -835,7 +834,7 @@ export default function TopBar() {
 
               </ListItem>
               {menuOpen && selectedMenu === text && getMenuContent(text).map((item, index) => (
-                <ListItem disablePadding key={index} sx={{ color: 'white' }}>
+                <ListItem disablePadding key={index} sx={{ color: 'white',textTransform:'capitalize' }}>
                   <ListItemButton onClick={() => handleItemClick(item)}>
                     <ListItemIcon></ListItemIcon>
                     <ListItemText primary={item} sx={{ cursor: 'pointer' }} />

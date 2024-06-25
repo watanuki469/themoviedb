@@ -1,9 +1,10 @@
 import { Box, Rating } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export interface FourSwiperRowProps {
     personCreditList: any
@@ -65,6 +66,13 @@ export default function PersonCredit({
 
         }
     }
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <section className="relative w-full cursor-pointer">
@@ -149,7 +157,7 @@ export default function PersonCredit({
                                                             <i className="fas fa-check font-bold text-lg  mr-2"></i>
                                                             <div className="text-center">
                                                                 <div className='font-bold'  >
-                                                                    <p>Remove</p>
+                                                                    <p>Watchlist</p>
                                                                 </div>
 
                                                             </div>
@@ -172,7 +180,7 @@ export default function PersonCredit({
                                                             <i className="fas fa-check font-bold text-lg  mr-2"></i>
                                                             <div className="text-center">
                                                                 <div className='font-bold'  >
-                                                                    <p>Remove</p>
+                                                                    <p>Watchlist</p>
                                                                 </div>
 
                                                             </div>

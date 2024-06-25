@@ -513,25 +513,25 @@ export default function Top250TvLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Ranking':
+            case `${translations[language]?.ranking}`:
                 menuItemNum = '1';
                 break;
-            case 'IMDb Rating':
+            case `IMDb ${translations[language]?.rating}`:
                 menuItemNum = '2';
                 break;
-            case 'Release Day':
+            case `${translations[language]?.releaseDay}`:
                 menuItemNum = '3';
                 break;
-            case 'Number Of Rating':
+            case `${translations[language]?.numberRating}`:
                 menuItemNum = '4';
                 break;
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '5';
                 break;
-            case 'Popularity':
+            case `${translations[language]?.popularity}`:
                 menuItemNum = '6';
                 break;
-            case 'Runtime':
+            case `${translations[language]?.runTime}`:
                 menuItemNum = '7';
                 break;
             default:
@@ -694,7 +694,7 @@ export default function Top250TvLayout() {
                                 <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             </div>
                             <div className="flex items-center ml-auto gap-2 px-2" >
-                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">Share </p>
+                                <p className="flex items-center lg:text-2xl text-lg font-bold text-black ">{translations[language]?.share} </p>
                                 <IconButton
                                     onClick={handleShareClick}
                                     size="small"
@@ -814,7 +814,7 @@ export default function Top250TvLayout() {
                                         })
 
                                         .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
-                                    /{mostPopularTv?.length} Titles
+                                    /{mostPopularTv?.length} TV
                                 </h2>
 
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
@@ -865,33 +865,34 @@ export default function Top250TvLayout() {
                                             },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                     </Button>
-                                    <Menu
+                                 
+                                     <Menu
                                         id="demo-customized-menu"
                                         anchorEl={anchorRankingEl}
                                         open={Boolean(anchorRankingEl)}
                                         onClose={handleRankingClose}
                                     >
-                                        <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
                                             {translations[language]?.ranking}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
                                             IMDb {translations[language]?.rating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
                                             {translations[language]?.releaseDay}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
                                             {translations[language]?.numberRating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
                                             {translations[language]?.alphabet}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
                                             {translations[language]?.popularity}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
                                             {translations[language]?.runTime}
                                         </MenuItem>
                                     </Menu>
@@ -984,12 +985,12 @@ export default function Top250TvLayout() {
 
                                     </a>
                                 </div>
-                                <p className="text-red w-full text-black"> {translations[language]?.staffPick}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className="text-red w-full text-black capitalize"> {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.chart}</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -997,7 +998,7 @@ export default function Top250TvLayout() {
                             </div>
                             <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3 ">
-                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.genre}</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

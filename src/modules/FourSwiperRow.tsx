@@ -267,7 +267,7 @@ export default function FourSwiperRow({
                                         <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                     </div>
                                     <p className="text-yellow-300 font-bold">Rate this</p>
-                                    <p className="text-2xl ">{fourSwiperRowList[numberIndex]?.original_title ? (fourSwiperRowList[numberIndex]?.original_title) : (fourSwiperRowList[numberIndex]?.title ? (fourSwiperRowList[numberIndex]?.title) : (fourSwiperRowList[numberIndex]?.name))}</p>
+                                    <p className="text-2xl ">{fourSwiperRowList[numberIndex]?.title ? (fourSwiperRowList[numberIndex]?.title)  : (fourSwiperRowList[numberIndex]?.name)}</p>
                                     <div className="gap-2 px-2 py-2">
                                         <Rating name="customized-10" value={value} size="large"
                                             onChange={(event, newValue) => {

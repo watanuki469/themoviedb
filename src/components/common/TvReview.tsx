@@ -1,8 +1,9 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export interface TwoTvRowProps {
     singleTvList: any
@@ -49,16 +50,23 @@ export default function TvReview({
             });
     };
 
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     return (
-        <section className=" md:grid lg:py-4  lg:px-4 md:py-0 md:px-0">
+        <section className="grid lg:py-4  lg:px-4 md:py-0 px-2">
             <div className="text-black font-sans " >
                 <div style={{ position: "relative" }}>
                     <div className="bg-white shadow-sm shadow-black w-full py-4 px-4 ">
                         <div className="text-black flex py-4 ">
                             <div className="flex items-center">
                                 <div className="items-center">
-                                    <div className="bg-yellow-300 text-black py-2 px-2">Features Reviews</div>
+                                    <div className="bg-yellow-300 text-black py-2 px-2 capitalize"> {translations[language]?.latest}  {translations[language]?.reviews}</div>
                                 </div>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >

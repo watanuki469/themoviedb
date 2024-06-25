@@ -3,7 +3,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
@@ -21,6 +21,7 @@ import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import { fetchTrending } from '../../redux/reducers/trending.reducer';
 import apiController from '../../redux/client/api.Controller.';
 import { setListGenre } from '../../redux/reducers/genre.reducer';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function TrendingLayout() {
     const { type } = useParams()
@@ -33,6 +34,14 @@ export default function TrendingLayout() {
     const listNewStream = useAppSelector((state) => state.trending.listNewStream)
     const listNewMax = useAppSelector((state) => state.trending.listNewMax)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
+
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
@@ -162,7 +171,7 @@ export default function TrendingLayout() {
 
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'
     };
     const [openGenDialog, setOpenGenDialog] = useState(false);
     const handleDiaGenlogOpen = () => {
@@ -392,7 +401,7 @@ export default function TrendingLayout() {
                                         </div>
                                     </div>
                                     <div className="mt-1 lg:line-clamp-none line-clamp-4">
-                                        <p>{movie?.overview}</p>
+                                        <p>{movie?.overview ? movie?.overview : movie?.known_for?.[0]?.overview}</p>
                                     </div>
                                 </div>
 
@@ -489,7 +498,7 @@ export default function TrendingLayout() {
 
                                     <div className="px-2 py-2" onClick={() => navigate(`/${mediatype}/${movie?.id}`)}   >
                                         <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                            Details
+                                            {translations[language]?.details}
                                         </button>
 
                                     </div>
@@ -608,25 +617,25 @@ export default function TrendingLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Ranking':
+            case `${translations[language]?.ranking}`:
                 menuItemNum = '1';
                 break;
-            case 'IMDb Rating':
+            case `IMDb ${translations[language]?.rating}`:
                 menuItemNum = '2';
                 break;
-            case 'Release Day':
+            case `${translations[language]?.releaseDay}`:
                 menuItemNum = '3';
                 break;
-            case 'Number Of Rating':
+            case `${translations[language]?.numberRating}`:
                 menuItemNum = '4';
                 break;
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '5';
                 break;
-            case 'Popularity':
+            case `${translations[language]?.popularity}`:
                 menuItemNum = '6';
                 break;
-            case 'Runtime':
+            case `${translations[language]?.runTime}`:
                 menuItemNum = '7';
                 break;
             default:
@@ -659,11 +668,7 @@ export default function TrendingLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    const [isChecked, setIsChecked] = useState(false);
-
-    const handleChecked = () => {
-        setIsChecked(!isChecked);
-    }
+    console.log(presentList);
 
 
     return (
@@ -673,8 +678,8 @@ export default function TrendingLayout() {
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
                         <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
                             <div className="flex items-center justify-end">
-                                <div className="flex justify-end">
-                                    <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                                <div className="flex justify-end py-2">
+                                    <button onClick={() => setIsRating(false)} className="text-white bg-black h-12 w-12 border-2 border-blue-500 hover:opacity-80 px-2 py-2 rounded-full  ">
                                         <i className="fa-solid fa-times text-xl"></i>
                                     </button>
                                 </div>
@@ -740,7 +745,7 @@ export default function TrendingLayout() {
                     },
                 }}
             >
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>Genres and Counts</DialogTitle>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>{translations[language]?.genre} & {translations[language]?.count}</DialogTitle>
                 <DialogContent>
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
@@ -756,19 +761,21 @@ export default function TrendingLayout() {
                     <Divider sx={{
                         marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
                     }} />
-                    <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>IN THEATERS</DialogTitle>
+                </DialogContent>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold',marginTop:'-20px' }}>IN THEATERS</DialogTitle>
+                <DialogContent>
                     <div className="flex gap-4 flex-wrap items-center">
                         <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>None</p>
+                            <p>{translations[language]?.none}</p>
                         </div>
                         <div onClick={() => handleOptionClick('near')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'near' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p> In Theaters Near You</p>
+                            <p>{translations[language]?.inTheaterNearYou}</p>
                         </div>
                         <div onClick={() => handleOptionClick('online')} className="flex gap-2 items-center">
                             <i className={`fa-regular ${selectedOption === 'online' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>In Theaters With Online Ticketing</p>
+                            <p>{translations[language]?.inTheaterWithOnlineTicked}</p>
                         </div>
                     </div>
                 </DialogContent>
@@ -782,12 +789,12 @@ export default function TrendingLayout() {
                             </h2>
                             <div className="flex items-center ml-auto gap-2 text-gray-400" >
                                 <div className="text-md justify-center  text-right">
-                                    <p className='font-bold'> LIST ACTIVITY</p>
-                                    <div className='flex items-center gap-2 font-semibold'>
+                                    <p className='font-bold uppercase'> {translations[language]?.listActivity}</p>
+                                    <div className='flex items-center gap-2 font-semibold capitalize'>
                                         <i className="fa-regular fa-eye text-xl text-white"></i>
                                         <div>
-                                            <div> <span className='text-lg text-white'>77K</span> views</div>
-                                            <div>28K this week</div>
+                                            <div> <span className='text-lg text-white'>77K</span> {translations[language]?.views}</div>
+                                            <div>28K {translations[language]?.thisWeek}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -869,15 +876,12 @@ export default function TrendingLayout() {
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
-                            <div>by</div>
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories'
                                 className='text-blue-500 hover:underline'>
                                 Vasiliev-Editors
                             </a>
                             <div>•</div>
-                            <div>Created 2 weeks ago</div>
-                            <div>•</div>
-                            <div>Modified 6 days ago</div>
+                            <div>{translations[language]?.createdModified} </div>
                         </div>
 
                     </div>
@@ -889,7 +893,7 @@ export default function TrendingLayout() {
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
-                                    <h2 className="lg:text-2xl text-lg text-black ">
+                                    <h2 className="lg:text-2xl text-lg text-black capitalize">
                                         {presentList
                                             .filter((movie: any) => {
                                                 if (selectedGenres?.length === 0) return true; // No genre filter
@@ -915,7 +919,7 @@ export default function TrendingLayout() {
                                                 return true;
                                             })
                                             .map((m, index) => renderMovieItem(m, index, currentView)).length}
-                                        /{presentList?.length} Titles</h2>
+                                        /{presentList?.length} {mediatype}</h2>
 
                                 </div>
 
@@ -949,7 +953,7 @@ export default function TrendingLayout() {
                                     ))}
                                 </div>
                                 <div className="ml-auto flex items-center gap-4">
-                                    <p className="text-gray-500">Sort by</p>
+                                    <p className="text-gray-500">{translations[language]?.sortBy}</p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -968,7 +972,7 @@ export default function TrendingLayout() {
                                             },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                     </Button>
                                     <Menu
                                         id="demo-customized-menu"
@@ -976,44 +980,31 @@ export default function TrendingLayout() {
                                         open={Boolean(anchorRankingEl)}
                                         onClose={handleRankingClose}
                                     >
-                                        <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                            Ranking
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
+                                            {translations[language]?.ranking}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                            IMDb Rating
+                                        <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
+                                            IMDb {translations[language]?.rating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                            Release Day
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
+                                            {translations[language]?.releaseDay}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                            Number Of Rating
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
+                                            {translations[language]?.numberRating}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                            Alphabetical
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
+                                            {translations[language]?.alphabet}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                            Popularity
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
+                                            {translations[language]?.popularity}
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                            Runtime
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
+                                            {translations[language]?.runTime}
                                         </MenuItem>
                                     </Menu>
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="hidden lg:block col-span-4  h-full px-2 py-2 text-xl">
-                            <p className="text-2xl font-bold" >You have rated</p>
-                            <p className="mt-3"><span className="text-green-500">{ratingList?.length}</span>/{presentList?.length} ({ratingList?.length / presentList?.length * 100}%)</p>
-                            <div className="flex items-center gap-3 mt-3 " onClick={() => setFilterRatedMovie(!filterRatedMovie)}>
-                                {isChecked ? (
-                                    <i className={`fa-regular fa-square-check ${isChecked ? '' : 'hidden'}`} onClick={handleChecked}></i>
-                                ) : (
-                                    <i className={`fa-regular fa-square }`} onClick={handleChecked}></i>
-                                )}
-                                <p>Hide titles you have rated</p>
-
-                            </div>
-                        </div> */}
                     </div>
                     <div className="grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
@@ -1094,17 +1085,17 @@ export default function TrendingLayout() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={mostPopularTv} />
                                 </div>
-                                <p className="text-red w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className="text-red w-full text-black capitalize"> {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -1115,7 +1106,7 @@ export default function TrendingLayout() {
                             </div>
                             <div className='sticky top-0 right-0 left-0'>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore} {translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />
