@@ -78,42 +78,48 @@ export default function Slider() {
                             style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${popularMovies[activeStep]?.backdrop_path})` }}>
                             <div className="flex flex-col h-full "  >
                                 <div className='flex absolute w-full '>
-                                    <div className='grow text-left' >
-                                        <IconButton
-                                            onClick={handleBack}
-                                            disabled={activeStep === 0 || popularMovies.length === 0}
-                                            size="medium"
+                                    <div className={`grow text-left`} >
+                                        {activeStep === 0 || popularMovies?.length === 0 ?
+                                            ''
+                                            : <IconButton
+                                                onClick={handleBack}
+                                                disabled={activeStep === 0 || popularMovies?.length === 0}
+                                                size="medium"
 
-                                            sx={{
-                                                top: '200%',
-                                                left: "0px",
-                                                background: "rgba(0, 0, 0, 0.35)",
-                                                border: '1px solid white ',
-                                                "&:hover": {
+                                                sx={{
+                                                    top: '200%',
+                                                    left: "0px",
                                                     background: "rgba(0, 0, 0, 0.35)",
-                                                },
-                                            }}
-                                        >
-                                            <KeyboardArrowLeftIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
-                                        </IconButton>
+                                                    border: '1px solid white ',
+                                                    "&:hover": {
+                                                        background: "rgba(0, 0, 0, 0.35)",
+                                                    },
+                                                }}
+                                            >
+                                                <KeyboardArrowLeftIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
+                                            </IconButton>}
                                     </div>
                                     <div className='justify-end'>
-                                        <IconButton
-                                            onClick={handleNext}
-                                            disabled={activeStep === popularMovies.length - 5 || popularMovies.length === 0} // Disable khi activeStep = popularMovies.length hoặc popularMovies.length = 0
-                                            size="medium"
-                                            sx={{
-                                                justifyContent: 'flex-end', alignItems: 'center', right: '0', top: '200%',
+                                        {activeStep === popularMovies?.length - 5 || popularMovies?.length === 0 ? (
+                                            '') : (
+                                            <IconButton
+                                                onClick={handleNext}
+                                                disabled={activeStep === popularMovies?.length - 3 || popularMovies?.length === 0}
+                                                size="medium"
+                                                sx={{
+                                                    justifyContent: 'flex-end', alignItems: 'center', right: '0', top: '200%',
 
-                                                background: "rgba(0, 0, 0, 0.35)",
-                                                border: '1px solid white',
-                                                "&:hover": {
                                                     background: "rgba(0, 0, 0, 0.35)",
-                                                },
-                                            }}
-                                        >
-                                            <KeyboardArrowRightIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
-                                        </IconButton>
+                                                    border: '1px solid white',
+                                                    "&:hover": {
+                                                        background: "rgba(0, 0, 0, 0.35)",
+                                                    },
+                                                }}
+                                            >
+                                                <KeyboardArrowRightIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
+                                            </IconButton>
+                                        )}
+
                                     </div>
 
 

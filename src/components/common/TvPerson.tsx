@@ -56,7 +56,7 @@ export default function TvPerson({
                 <div className="grid grid-cols-2 gap-4 ">
                     {singleMovieList[0]?.aggregate_credits?.cast?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
-                            <div id="bgHover" className="h-24 w-24 rounded-full bg-cover bg-center mr-4 bg-gray-500 hover:opacity-90"
+                            <div id="bgHover" className="h-24 w-24 rounded-full bg-cover bg-center mr-4 bg-gray-500 hover:opacity-90 flex-shrink-0"
                                 style={{
                                     backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}

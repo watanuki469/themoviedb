@@ -18,21 +18,19 @@ export default function SingleMoviePerson({
     const [writer, setWriter] = useState<any[]>([])
 
     useEffect(() => {
-        if (singleMovieList && singleMovieList.length > 0) {
+        if (singleMovieList && singleMovieList?.length > 0) {
             const movie = singleMovieList[0];
             if (movie.credits && movie.credits.crew) {
                 const directors = movie.credits.crew.filter((item: any) => item.job === 'Director');
                 setDirector(directors);
-                const writers = movie.credits.crew.filter((item: any) => item.job === 'Story');
-                setWriter(writers);
+                const writers = movie?.credits?.crew?.filter((item: any) => item?.job === 'Story');
+                const screenplayWriters = movie?.credits?.crew?.filter((item: any) => item?.job === 'Screenplay');
+                const writerses = writers?.length > 0 ? writers : screenplayWriters;
+                setWriter(writerses);
             }
         }
     }, [singleMovieList[0]]);
 
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
@@ -65,14 +63,14 @@ export default function SingleMoviePerson({
                 <div className="grid grid-cols-2 gap-4 ">
                     {movieCreditList?.slice(0, 10).map((item: any, index: any) => (
                         <div key={index} className="flex items-center">
-                            <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80 bg-center" 
+                            <div className="h-24 w-24 rounded-full bg-cover mr-4 hover:opacity-80 bg-center object-center flex-shrink-0"
                                 style={{
                                     backgroundImage: `url(${item?.profile_path ? `https://image.tmdb.org/t/p/w200/${item?.profile_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}
                                 onClick={() => navigate(`/person/${item?.id}`)}>
                             </div>
 
-                            <div className="">
+                            <div className="flex-grow">
                                 <p className="text-black font-bold">{item?.name}</p>
                                 <p className="text-gray-500">{item?.character}</p>
                             </div>
@@ -118,23 +116,24 @@ export default function SingleMoviePerson({
 
             <div className="text-black">
                 <div className="py-2 border-b border-gray-300 flex gap-2">
-                    <div className="font-bold">{translations[language]?.director}</div>
-                    <div className='items-center flex flex-wrap gap-1 justify-start '>
-                        {director?.slice(0, 3).map((item: any, index: number) => (
-                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
-                                <span className="text-blue-600">{item?.name}</span>
-                                <span>{index < Math.min(director?.slice(0, 3).length) - 1 ? '•' : ''}</span>
-                            </p>
-                        ))}
-
+                    <div >
+                        <span className="font-bold"> {translations[language]?.director}</span>
+                        <div className='items-center flex flex-wrap gap-1 justify-start '>
+                            {director?.slice(0, 3).map((item: any, index: number) => (
+                                <div key={index} onClick={() => navigate(`/person/${item?.id}`)} className=" flex gap-2">
+                                    <span className="text-blue-600 hover:underline">{item?.name}</span>
+                                    <span>{index < Math.min(director?.slice(0, 3).length) - 1 ? '•' : ''}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
                 <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center">
                     <div className="font-bold">{translations[language]?.writer}</div>
                     <div className="flex flex-wrap gap-1 justify-left text-center aligns-center items-center">
                         {writer.slice(0, 3).map((item: any, index: number) => (
-                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
-                                <span className="text-blue-600">{item?.name}</span>
+                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="flex gap-2">
+                                <span className="text-blue-600 hover:underline ">{item?.name}</span>
                                 <span>{index < Math.min(writer?.slice(0, 3).length) - 1 ? '•' : ''}</span>
                             </p>
                         ))}
@@ -144,8 +143,8 @@ export default function SingleMoviePerson({
                     <div className="font-bold">{translations[language]?.star}</div>
                     <div className="flex gap-1  items-center flex-wrap">
                         {movieCreditList.slice(0, 3).map((item: any, index: number) => (
-                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
-                                <span className="text-blue-600">{item?.name}</span>
+                            <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="flex gap-2">
+                                <span className="text-blue-600 hover:underline ">{item?.name}</span>
                                 <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
                             </p>
                         ))}
@@ -153,7 +152,7 @@ export default function SingleMoviePerson({
                 </div>
                 <div className="flex justify-between border-b border-gray-300 gap-3 py-2 items-center hover:text-yellow-300"
                     onClick={() => navigate(`/fullcredits/movie/${movieCreditList[0]?.id}`)}>
-                    <div className="font-bold capitalize">{translations[language]?.moreExplore} {translations[language]?.star}</div>
+                    <div className="font-bold capitalize ">{translations[language]?.moreExplore} {translations[language]?.star}</div>
                     <i className="fa-solid fa-arrow-up-right-from-square"></i>
 
                 </div>

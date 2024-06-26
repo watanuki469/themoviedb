@@ -208,7 +208,7 @@ export function ActivityLayout() {
                                         <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
                                             onError={(e) => {
-                                                e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
+                                                e.currentTarget.src = 'https://via.placeholder.com/500x750'; 
                                                 e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
                                             }}
                                             className="hover:opacity-80"

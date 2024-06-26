@@ -35,7 +35,7 @@ export default function FourPhotos({
     }, []);
 
     return (
-        <div className="px-2 pt-2">
+        <div className="sm:px-2 w-full">
             <Box sx={{
                 "& .swiper-slide": {
                     width: {
@@ -51,7 +51,7 @@ export default function FourPhotos({
                 }
             }}>
                 <Swiper
-                    spaceBetween={10}
+                    spaceBetween={2}
                     slidesPerView={activeSlider}
                     grabCursor={true}
                     style={{ width: "100%", height: "max-content", maxWidth: '100%' }}
@@ -61,11 +61,11 @@ export default function FourPhotos({
                     }}
                     navigation={true}
                     modules={[Pagination, Navigation]}
-                    className="mySwiper text-white"
+                    className="mySwiper text-white "
                 >
                     {fourPhotosList && Array.isArray(fourPhotosList) && fourPhotosList.map((item: any, index: any) => (
                         <SwiperSlide key={index}>
-                            <div className="w-40 h-40 object-cover mx-auto bg-cover bg-no-repeat bg-black bg-center  items-center justify-center hover:opacity-80"
+                            <div className="w-36 h-36 rounded-xl border-2 border-gray-300 object-cover bg-cover bg-no-repeat bg-black bg-center  items-center justify-center hover:opacity-80"
                                 style={{
                                     backgroundImage: `url(${item.file_path ? `https://image.tmdb.org/t/p/w200/${item.file_path}` : 'https://via.placeholder.com/500x750'})`
                                 }}>

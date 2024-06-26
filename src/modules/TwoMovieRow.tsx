@@ -33,7 +33,7 @@ export default function TwoMovieRow({
 
 
     return (
-        <div className=" ">
+        <div className="sm:px-2">
             <Swiper
                 spaceBetween={10}
                 slidesPerView={activeSlider}
@@ -51,7 +51,7 @@ export default function TwoMovieRow({
                             <div className="w-full hover:opacity-90 hover:text-yellow text-white " >
                                 <img 
                                     src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`}                                      
-                                    className="h-40 w-full object-cover "
+                                    className="h-40 w-full object-cover object-center border-2 border-gray-300  rounded-xl "
                                     title={item?.name}
                                 />
                                 <div className="absolute inset-0 w-full h-full text-center top-14">

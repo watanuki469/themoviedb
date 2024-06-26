@@ -76,7 +76,7 @@ export default function PersonCredit({
 
     return (
         <section className="relative w-full cursor-pointer">
-            <div className="px-2 pt-2  w-full">
+            <div className="px-2  w-full">
                 <Box sx={{
                     "& .swiper-slide": {
                         width: {
@@ -84,14 +84,9 @@ export default function PersonCredit({
                             sm: "35%",
                             md: "35%",
                             lg: "50%",
-                            // xs: "50%",
-                            // sm: "35%",
-                            // md: "25%",
-                            // lg: "20.5%"
                         }
                     }
                 }}>
-
                     {isOpen && (
                         <div className="fixed top-0 left-0 w-full text-white flex justify-center items-center z-20">
                             <div className="p-5 rounded-lg max-w-2xl ">
@@ -209,47 +204,6 @@ export default function PersonCredit({
                             </div>
                         </div>
                     )}
-                    {isRating && (
-                        <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                            <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                                <div className="flex items-center justify-end">
-                                    <div className="flex justify-end">
-                                        <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                            <i className="fa-solid fa-times text-xl"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="bg-black px-4 py-4">
-                                    <div className="aligns-center justify-center items-center text-center gap-2">
-                                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                            <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                            <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                        </div>
-                                        <p className="text-yellow-300 font-bold">Rate this</p>
-                                        <p className="text-2xl ">{personCreditList[numberIndex]?.title ? personCreditList[numberIndex]?.title : personCreditList[numberIndex]?.name}</p>
-                                        <div className="gap-2 px-2 py-2">
-                                            <Rating name="customized-10" value={value} size="large"
-                                                onChange={(event, newValue) => {
-                                                    setValue(newValue);
-                                                }}
-                                                max={10} sx={{
-                                                    color: 'blue', mt: 1,
-                                                    '& .MuiRating-iconEmpty': {
-                                                        borderColor: 'red',
-                                                        color: 'gray'
-                                                    },
-                                                }} />
-                                            <br />
-                                            <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`} onClick={() => setIsRating(false)}>
-                                                Rate
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
 
                     <div className="z-10">
                         <Swiper
@@ -267,8 +221,8 @@ export default function PersonCredit({
                         >
                             {personCreditList?.map((item: any, index: any) => {
                                 return (
-                                    <SwiperSlide key={index} className="w-screen " >
-                                        <div className="flex items-stretch gap-2 shadow-sm shadow-black  h-full mt-3 mb-3 mr-3"> {/* Thêm class h-full để chiều cao bằng nhau */}
+                                    <SwiperSlide key={index} className="w-full " >
+                                        <div className="flex items-stretch gap-2 shadow-sm shadow-black rounded-xl  h-full mt-3 mb-3 mr-3"> {/* Thêm class h-full để chiều cao bằng nhau */}
                                             <div className="flex-1" style={{ maxWidth: "100px" }}
                                                 onClick={() => navigate(`/movie/${item?.id}`)}> {/* Đặt kích thước tối đa cho ảnh */}
                                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images"
@@ -320,12 +274,12 @@ export default function PersonCredit({
                             >
                                 {personCreditList?.slice(2).map((item: any, index: any) => {
                                     return (
-                                        <SwiperSlide key={index} className="w-screen">
-                                            <div className="flex items-stretch gap-2 shadow-sm shadow-black  h-full mt-3 mb-3 mr-3">
+                                        <SwiperSlide key={index} className="w-full">
+                                            <div className="flex items-stretch gap-2 shadow-sm shadow-black rounded-xl  h-full mt-3 mb-3 mr-3">
                                                 <div className="flex-1" style={{ maxWidth: "100px" }}
                                                     onClick={() => navigate(`/movie/${item?.id}`)}>
                                                     <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" onError={handleImageError}
-                                                        className="object-cover h-full w-full bg-gray-500 " style={{ minHeight: '150px' }} />
+                                                        className="object-cover h-full w-full bg-gray-500 "  style={{ maxWidth: "100%", height: '100%' }} />
                                                 </div>
                                                 <div className="bg-white text-black px-2  flex-1 flex-col "
                                                     onClick={() => navigate(`/movie/${item?.id}`)}>

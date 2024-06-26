@@ -80,11 +80,11 @@
     border-radius: 50%;
 }
 
-.circle {
+#circle {
     height: 24px;
     width: 24px;
-    border-radius: 50% 50% 50% 50%;
-    background-color: black;
+    /* border-radius: 50% 50% 50% 50%; */
+    /* background-color: black; */
     position: fixed;
     top: 0;
     left: 0;
@@ -92,6 +92,6 @@
     z-index: 99999999;
     animation: 10s colors infinite; 
 }
-.circle:active {
+#circle:active {
     background-color: black;
 }

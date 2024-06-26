@@ -219,11 +219,11 @@ export default function MovieLayout() {
 
     return (
         <div className="min-h-screen w-full">
-             <div className="bg-black w-full">
+            <div className="bg-black w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
                 </div>
-            </div>        
+            </div>
 
             <div className="bg-black w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
@@ -231,13 +231,13 @@ export default function MovieLayout() {
                         movieCreditList={movieCreditList} movieImageList={movieImageList} />
                 </div>
             </div>
-        
+
             <div className="bg-white w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12 w-full">
                             {languageString === 'vi-VI' ? (
-                                <div className="text-white py-2 w-full ">
+                                <div className="text-white py-2 w-full cursor-pointer ">
                                     <div className="flex items-center"
                                         onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} >
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -245,7 +245,9 @@ export default function MovieLayout() {
                                         {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
                                         <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                     </div>
-                                    <div onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} className="px-4 py-2 bg-yellow-300 rounded-md hover:opacity-90 w-fit mt-2">{translations[language]?.moreExplore}</div>
+                                    <div className="sn:px-2">
+                                        <div onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} className="px-4 py-2 bg-yellow-300 rounded-xl hover:opacity-90 w-fit mt-2">{translations[language]?.moreExplore}</div>
+                                    </div>
                                 </div>
                             ) : (
                                 <div></div>

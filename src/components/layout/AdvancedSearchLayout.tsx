@@ -1,7 +1,7 @@
 import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiController from "../../redux/client/api.Controller.";
@@ -15,11 +15,19 @@ import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { ListMoviesPopular } from "../models/ListMoviesPopular";
 import './earth.css'; // Assuming you have a styles.css file for custom styles
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export default function AdvancedSearchLayout() {
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const [mediatype, setMediaType] = useState('movie');
+    const context = useContext(LanguageContext);
+
+    if (!context) {
+        return null;
+    }
+
+    const { language, translations, handleLanguageChange } = context;
 
     const topRatedMovies = useAppSelector((state) => state.search.listSearch)
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
@@ -585,25 +593,25 @@ export default function AdvancedSearchLayout() {
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case 'Ranking':
+            case `${translations[language]?.ranking}`:
                 menuItemNum = '1';
                 break;
-            case 'IMDb Rating':
+            case `IMDb ${translations[language]?.rating}`:
                 menuItemNum = '2';
                 break;
-            case 'Release Day':
+            case `${translations[language]?.releaseDay}`:
                 menuItemNum = '3';
                 break;
-            case 'Number Of Rating':
+            case `${translations[language]?.numberRating}`:
                 menuItemNum = '4';
                 break;
-            case 'Alphabetical':
+            case `${translations[language]?.alphabet}`:
                 menuItemNum = '5';
                 break;
-            case 'Popularity':
+            case `${translations[language]?.popularity}`:
                 menuItemNum = '6';
                 break;
-            case 'Runtime':
+            case `${translations[language]?.runTime}`:
                 menuItemNum = '7';
                 break;
             default:
@@ -881,14 +889,14 @@ export default function AdvancedSearchLayout() {
                     <div className="lg:max-w-full w-screen ">
                         <div className="mt-3 ">
                             <div className="items-center ">
-                                <h2 className="lg:text-5xl text-xl font-semibold text-black ">Advanced {mediatype} search</h2>
+                                <h2 className="lg:text-5xl text-xl font-semibold text-black capitalize ">{translations[language]?.advancedSearch}: {mediatype} </h2>
                             </div>
                         </div>
 
                         <div className="mt-3 ">
                             <div className="items-center ">
                                 <h2 className="text-lg text-black ">
-                                    Discover IMDb's robust title search. Mix and match info to refine your searches. Looking for 1970s Canadian horror films rated above 6 by at least 100 users? Find them here. All fields below are optional, but at least one title field is needed for a search. For ranges (release date, votes), use 'min' for larger/after and 'max' for smaller/before. To learn more please visit our help site and FAQs.
+                                    {translations[language]?.imdbSearch}
                                 </h2>
                             </div>
                         </div>
@@ -924,7 +932,7 @@ export default function AdvancedSearchLayout() {
                             query ? (
                                 <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                     <p className="">
-                                        Title: {query}
+                                        {translations[language]?.title}: {query}
                                     </p>
                                     <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => setQuery('')}></i>
                                 </div>
@@ -936,7 +944,7 @@ export default function AdvancedSearchLayout() {
                             fromDate && toDate ? (
                                 <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                     <p className="">
-                                        From  {fromDate} To {toDate}
+                                        {translations[language]?.releaseDay}:{translations[language]?.from} {fromDate} {translations[language]?.to}{toDate}
                                     </p>
                                     <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => clearReleaseDay()}></i>
                                 </div>
@@ -949,7 +957,7 @@ export default function AdvancedSearchLayout() {
                             selectedOption && selectedOption != 'none' ? (
                                 <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                     <p className="">
-                                        Theater: {selectedOption}
+                                        {translations[language]?.inTheater}: {selectedOption}
                                     </p>
                                     <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => handleOptionClick('none')}></i>
                                 </div>
@@ -959,9 +967,9 @@ export default function AdvancedSearchLayout() {
                         }
                         {
                             votesFrom && votesTo ? (
-                                <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
+                                <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-2 py-1">
                                     <p className="">
-                                        Votes from  {votesFrom} To {votesTo}
+                                        {translations[language]?.votes} : {translations[language]?.from} {votesFrom}{translations[language]?.to}{votesTo}
                                     </p>
                                     <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => clearFromTo()}></i>
                                 </div>
@@ -973,7 +981,7 @@ export default function AdvancedSearchLayout() {
                             imdbImdbRatingFrom && imdbImdbRatingTo ? (
                                 <div className="flex items-center gap-2 justify-center text-center border-2 border-gray-200 w-fit rounded-full px-3 py-1">
                                     <p className="">
-                                        IMDb Rating from  {imdbImdbRatingFrom} To {imdbImdbRatingTo}
+                                        IMDb  {translations[language]?.rating}:{translations[language]?.from}  {imdbImdbRatingFrom} {translations[language]?.to} {imdbImdbRatingTo}
                                     </p>
                                     <i className="fa-solid fa-xmark font-bold text-2xl" onClick={() => clearImdbFromTo()}></i>
                                 </div>
@@ -989,16 +997,16 @@ export default function AdvancedSearchLayout() {
                     <div className="grid grid-cols-12 gap-2 w-full ">
                         <div className="lg:col-span-4 col-span-12 w-full">
                             <div className="flex items-center gap-2  ">
-                                <p className="font-bold">Search Filters</p>
+                                <p className="font-bold"> {translations[language]?.searchFilter}</p>
                                 <div className="flex items-center gap-2 text-blue-500 px-2 py-2 hover:bg-blue-200 ml-auto font-semibold" onClick={() => handleClickExpand()}>
-                                    <p>{expanded ? 'Collapse all' : 'Expand all'}</p>
+                                    <p>{expanded ? `${translations[language]?.collapseAll}` : `${translations[language]?.expandAll}`}</p>
                                     <i className={`fa-solid ${expanded ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
                                 </div>
 
                             </div>
-                            <div className="border-2 border-gray-300 px-2 py-2">
+                            <div className="border-2 border-gray-300 px-2 py-2 capitalize">
                                 <div className="flex items-center gap-2">
-                                    <p className="font-bold">Title Name</p>
+                                    <p className="font-bold"> {translations[language]?.title} {mediatype}</p>
                                     <i onClick={toggleTitleExpand} className={`fa-solid ${titleExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                 </div>
                                 <div className="border-b-2 px-1 py-1">
@@ -1021,13 +1029,13 @@ export default function AdvancedSearchLayout() {
                                 {mediatype !== 'person' ? (
                                     <div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <p className="font-bold">Release Day </p>
+                                            <p className="font-bold"> {translations[language]?.releaseDay} </p>
                                             <i onClick={toggleRleaseExpand} className={`fa-solid ${releaseExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
                                         <div className="border-b-2 px-1 py-1">
                                             {releaseExpanded ? (
                                                 <div className="relative mt-2 mb-1">
-                                                    <label htmlFor="startDate" className="block mb-1">From:</label>
+                                                    <label htmlFor="startDate" className="block mb-1">{translations[language]?.from} :</label>
                                                     <input
                                                         type="date"
                                                         id="startDate"
@@ -1037,7 +1045,7 @@ export default function AdvancedSearchLayout() {
                                                         onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
                                                     />
 
-                                                    <label htmlFor="endDate" className="block mb-2">To:</label>
+                                                    <label htmlFor="endDate" className="block mb-2">{translations[language]?.to} :</label>
                                                     <input
                                                         type="date"
                                                         id="endDate"
@@ -1046,7 +1054,7 @@ export default function AdvancedSearchLayout() {
                                                         value={toDate} // Đặt giá trị của "To" từ state
                                                         onChange={handleToDateChange} // Xử lý sự kiện thay đổi của "To"
                                                     />
-                                                    <label htmlFor="endDate" className="block mb-2">Or just enter:</label>
+                                                    <label htmlFor="endDate" className="block mb-2">{translations[language]?.orJustEnter}:</label>
                                                     <div className="flex items-center gap-2">
                                                         <input
                                                             id="startDate"
@@ -1055,7 +1063,7 @@ export default function AdvancedSearchLayout() {
                                                             value={fromDate} // Đặt giá trị của "From" từ state
                                                             onChange={handleFromDateChange} // Xử lý sự kiện thay đổi của "From"
                                                         />
-                                                        <p className="px-1">To</p>
+                                                        <p className="px-1">{translations[language]?.to}</p>
                                                         <input
                                                             id="endDate"
                                                             name="endDate"
@@ -1068,7 +1076,7 @@ export default function AdvancedSearchLayout() {
                                             ) : (<div></div>)}
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <p className="font-bold">IMDb Rating </p>
+                                            <p className="font-bold">IMDb  {translations[language]?.rating} </p>
                                             <i onClick={toggleImdbExpand} className={`fa-solid ${imdbExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
                                         <div className="border-b-2 px-1 py-1">
@@ -1093,7 +1101,7 @@ export default function AdvancedSearchLayout() {
                                             ) : (<div></div>)}
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <p className="font-bold">Number of votes </p>
+                                            <p className="font-bold"> {translations[language]?.votes} </p>
                                             <i onClick={toggleVotesExpand} className={`fa-solid ${votesExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
                                         <div className="border-b-2 px-1 py-1">
@@ -1106,7 +1114,7 @@ export default function AdvancedSearchLayout() {
                                                             onChange={handleFromVotesChange} // Xử lý sự kiện thay đổi của "From"
                                                             placeholder="e.g. 0"
                                                         />
-                                                        <p className="px-1">to</p>
+                                                        <p className="px-1">{translations[language]?.to}</p>
                                                         <input
                                                             className="border border-gray-300 px-2 py-1 w-full"
                                                             value={votesTo} // Đặt giá trị của "To" từ state
@@ -1118,7 +1126,7 @@ export default function AdvancedSearchLayout() {
                                             ) : (<div></div>)}
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <p className="font-bold">Genre </p>
+                                            <p className="font-bold"> {translations[language]?.genre} </p>
                                             <i onClick={toggleGenreExpand} className={`fa-solid ${genreExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
                                         <div className="border-b-2 px-1 py-1">
@@ -1135,7 +1143,7 @@ export default function AdvancedSearchLayout() {
                                             ) : (<div></div>)}
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <p className="font-bold">In Theaters </p>
+                                            <p className="font-bold"> {translations[language]?.inTheater} </p>
                                             <i onClick={toggleTheaterExpand} className={`fa-solid ${theaterExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
                                         <div className="border-b-2 px-1 py-1">
@@ -1143,15 +1151,15 @@ export default function AdvancedSearchLayout() {
                                                 <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
                                                     <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p>None</p>
+                                                        <p> {translations[language]?.none}</p>
                                                     </div>
                                                     <div onClick={() => handleOptionClick(' In Theaters Near You')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${selectedOption === ' In Theaters Near You' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p> In Theaters Near You</p>
+                                                        <p>  {translations[language]?.inTheaterNearYou}</p>
                                                     </div>
                                                     <div onClick={() => handleOptionClick('In Theaters With Online Ticketing')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${selectedOption === 'In Theaters With Online Ticketing' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p>In Theaters With Online Ticketing</p>
+                                                        <p> {translations[language]?.inTheaterWithOnlineTicked}</p>
                                                     </div>
                                                 </div>
                                             ) : (<div></div>)}
@@ -1194,7 +1202,7 @@ export default function AdvancedSearchLayout() {
                             <div className="flex items-center ">
                                 <div className="items-center ">
                                     <h2 className=" text-black ">
-                                        1-20 of {topRatedMovies[0]?.results
+                                        1-20 / {topRatedMovies[0]?.results
                                             .filter((movie: any) => {
                                                 if (selectedGenres?.length === 0) return true; // No genre filter
                                                 // Check if every selected genre is present in the movie's genres
@@ -1242,7 +1250,7 @@ export default function AdvancedSearchLayout() {
                                 </div>
                                 <div className="ml-auto flex gap-4">
                                     <div className="ml-auto flex items-center gap-2">
-                                        <p className="text-gray-500">Sort by</p>
+                                        <p className="text-gray-500">{translations[language]?.sortBy}</p>
                                         <Button
                                             id="demo-customized-button"
                                             aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -1261,7 +1269,7 @@ export default function AdvancedSearchLayout() {
                                                 },
                                             }}
                                         >
-                                            {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                            {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                         </Button>
                                         <Menu
                                             id="demo-customized-menu"
@@ -1269,26 +1277,26 @@ export default function AdvancedSearchLayout() {
                                             open={Boolean(anchorRankingEl)}
                                             onClose={handleRankingClose}
                                         >
-                                            <MenuItem onClick={() => handleMenuItemClick('Ranking')} disableRipple>
-                                                Ranking
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
+                                                {translations[language]?.ranking}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('IMDb Rating')} disableRipple>
-                                                IMDb Rating
+                                            <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
+                                                IMDb {translations[language]?.rating}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Release Day')} disableRipple>
-                                                Release Day
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
+                                                {translations[language]?.releaseDay}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Number Of Rating')} disableRipple>
-                                                Number Of Rating
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
+                                                {translations[language]?.numberRating}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Alphabetical')} disableRipple>
-                                                Alphabetical
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
+                                                {translations[language]?.alphabet}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Popularity')} disableRipple>
-                                                Popularity
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
+                                                {translations[language]?.popularity}
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenuItemClick('Runtime')} disableRipple>
-                                                Runtime
+                                            <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
+                                                {translations[language]?.runTime}
                                             </MenuItem>
                                         </Menu>
                                     </div>

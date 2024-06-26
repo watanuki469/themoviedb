@@ -95,17 +95,19 @@ export default function SearchBar() {
 
     return (
         <div className="relative flex text-left w-full h-full">
-            <Button
-                id="demo-customized-button"
-                aria-controls={openUser ? 'demo-customized-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={openUser ? 'true' : undefined}
-                sx={{ bgcolor: 'white', color: 'black', borderRadius: '0' }}
-                onClick={handleClick}
-                endIcon={<KeyboardArrowDownIcon />}
-            >
-                {mediatype.toString()}
-            </Button>
+            <div className='border-gray-300 border-l-2 border-t-2 border-b-2'> 
+                <Button
+                    id="demo-customized-button"
+                    aria-controls={openUser ? 'demo-customized-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openUser ? 'true' : undefined}
+                    sx={{ bgcolor: 'white', color: 'black', borderRadius: '0' }}
+                    onClick={handleClick}
+                    endIcon={<KeyboardArrowDownIcon />}
+                >
+                    {mediatype.toString()}
+                </Button>
+            </div>
             <Menu
                 elevation={0}
                 anchorOrigin={{

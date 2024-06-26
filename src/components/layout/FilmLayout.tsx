@@ -66,7 +66,7 @@ export default function FilmLayout() {
                     {singleMovieList?.episodes?.length > 0 ? (
                         <section className="min-h-screen cursor-pointer relative text-white font-sans font-medium " >
                             <div className="grid grid-cols-12 gap-y-4 h-full gap-2">
-                                <div className="lg:col-span-8 col-span-12 lg:ml-2 bg-black relative">
+                                <div className="col-span-12 lg:ml-2 bg-black relative">
                                     <div className='min-h-60 w-full h-full bg-black bg-cover border-2 border-gray-700'                            >
                                         <iframe
                                             allowFullScreen
@@ -79,7 +79,7 @@ export default function FilmLayout() {
                                     </div>
 
                                 </div>
-                                <div className="lg:col-span-4 col-span-12 h-full ml-2 overflow-hidden">
+                                <div className="col-span-12 h-full ml-2 overflow-hidden">
                                     <div className=" h-1/2 flex px-2 py-2 gap-2 max-h-40">
                                         <img onClick={() => navigate(`/${mediaType}/${id}`)}
                                             src={`${singleMovieList?.movie?.thumb_url ? singleMovieList?.movie?.thumb_url : singleMovieList?.movie?.poster_url}`} alt="product images"

@@ -161,7 +161,7 @@ export default function TvLayout() {
                     <div className="grid grid-cols-12 gap-2 ">
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
                             {languageString === 'vi-VI' ? (
-                                <div className="lg:max-w-full w-full">
+                                <div className="lg:max-w-full w-full cursor-pointer">
                                     <div className="text-white px-2 w-full ">
                                         <div className="flex items-center"
                                             onClick={() => navigate(`/film/tv/${id}/${normalizeText(tvList[0]?.name)}`)} >

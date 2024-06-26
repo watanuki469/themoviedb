@@ -136,7 +136,7 @@ export default function CastCrewLayout() {
                         <div className="items-center w-full grid md:grid-cols-2 text-black">
                             {mediaList[0]?.credits?.cast?.map((item: any, index: any) => (
                                 <div key={index} className="flex items-center  border-b-2 py-2 w-full">
-                                    <div className="flex items-center w-full">
+                                    <div className="flex gap-2 items-center w-full">
                                         <img
                                             src={`${item?.profile_path ? (`https://image.tmdb.org/t/p/w200/${item?.profile_path}`) : (`https://via.placeholder.com/500x750`)}`}
                                             onClick={() => navigate(`/person/${item?.id}`)}

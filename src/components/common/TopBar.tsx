@@ -102,13 +102,13 @@ export default function TopBar() {
       case 'Movies':
         return [`${translations[language]?.releaseCalendar}`, `${translations[language]?.top250Movie}`, `${translations[language]?.topBoxOffice}`, `Movie ${translations[language]?.news}`, `${translations[language]?.browseMovieByGenre}`];
       case 'TV Shows':
-        return [`${translations[language]?.whatOnTvStream}`,`${translations[language]?.top250Tv}`, `${translations[language]?.topRatedTV}`, `${translations[language]?.browseTVByGenre}`,`TV ${translations[language]?.news}`];
+        return [`${translations[language]?.whatOnTvStream}`, `${translations[language]?.top250Tv}`, `${translations[language]?.topRatedTV}`, `${translations[language]?.browseTVByGenre}`, `TV ${translations[language]?.news}`];
       case 'Watch':
-        return [`${translations[language]?.whatToWatch}`, `${translations[language]?.latest} Trailers`, `IMDb ${translations[language]?.originals}`,  `IMDb ${translations[language]?.editorPick}`, 'IMDb Podcasts'];
+        return [`${translations[language]?.whatToWatch}`, `${translations[language]?.latest} Trailers`, `IMDb ${translations[language]?.originals}`, `IMDb ${translations[language]?.editorPick}`, 'IMDb Podcasts'];
       case 'Awards & Events':
         return ['Oscars', 'ABFF', 'Best Of 2024', `${translations[language]?.holidayPicks}`, 'Starmeter Awards', `${translations[language]?.total} Event`];
       case 'Celebs':
-        return [`${translations[language]?.popularCeleb}`,`${translations[language]?.popularCeleb} ${translations[language]?.news}`];
+        return [`${translations[language]?.popularCeleb}`, `${translations[language]?.popularCeleb} ${translations[language]?.news}`];
       case 'Community':
         return [`${translations[language]?.helpCenter}`, `${translations[language]?.contributeZone}`, `${translations[language]?.polls}`];
       case 'Language':
@@ -122,9 +122,9 @@ export default function TopBar() {
       case 'Movies':
         if (item === `${translations[language]?.releaseCalendar}`) {
           navigate(`/upComing`);
-        } else if (item ===`${translations[language]?.top250Movie}`) {
+        } else if (item === `${translations[language]?.top250Movie}`) {
           navigate('/top250Movie');
-        } else if (item ===`${translations[language]?.topBoxOffice}`) {
+        } else if (item === `${translations[language]?.topBoxOffice}`) {
           navigate('/topBoxOffice');
         } else if (item === `Movie ${translations[language]?.news}`) {
           navigate('/news/movie');
@@ -158,7 +158,7 @@ export default function TopBar() {
           navigate('/upComing');
         } else if (item === `IMDb ${translations[language]?.originals}`) {
           navigate('/whatOnTv');
-        } else if (item ===  `IMDb ${translations[language]?.editorPick}`) {
+        } else if (item === `IMDb ${translations[language]?.editorPick}`) {
           navigate('/whatOnTv');
         } else if (item === 'IMDb Podcasts') {
           navigate('/search');
@@ -196,11 +196,11 @@ export default function TopBar() {
         break;
 
       case 'Community':
-        if (item ===`${translations[language]?.helpCenter}`) {
+        if (item === `${translations[language]?.helpCenter}`) {
           window.location.href = 'https://help.imdb.com/imdb?ref_=cons_nb_hlp';
-        } else if (item ===`${translations[language]?.contributeZone}`) {
+        } else if (item === `${translations[language]?.contributeZone}`) {
           window.location.href = ' https://contribute.imdb.com/czone?ref_=nv_cm_cz';
-        } else if (item ===`${translations[language]?.polls}`) {
+        } else if (item === `${translations[language]?.polls}`) {
           window.location.href = 'https://www.imdb.com/poll/?ref_=nv_cm_pl';
         } else {
           navigate('/');
@@ -452,7 +452,7 @@ export default function TopBar() {
                         <div>
                           <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
                             {" "}
-                            {translations[language]?.popularCeleb?.slice(0,15)}
+                            {translations[language]?.popularCeleb?.slice(0, 15)}
                           </p>
                         </div>
                       </div>
@@ -463,7 +463,7 @@ export default function TopBar() {
                         <div className="">
 
                           <p className="mt-2 hover:underline" onClick={() => navigate('/popularCeleb')}>
-                          {translations[language]?.popularCeleb}
+                            {translations[language]?.popularCeleb}
                           </p>
                           <p className="mt-2 hover:underline" onClick={() => navigate('/news/celeb')}>{translations[language]?.popularCeleb} {translations[language]?.news}</p>
                         </div>
@@ -631,7 +631,7 @@ export default function TopBar() {
                       </div>
                     </MenuItem>
                     <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>
-                      Film  Supported
+                      Film Episodes Supported
                     </MenuItem>
                   </div>
                 ) : item?.name === 'Vietnamese' ? (
@@ -812,7 +812,7 @@ export default function TopBar() {
         className={`fixed overflow-auto  top-0 left-0 h-screen w-fit bg-black shadow z-40 justify-start  rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Toolbar />
-        <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif',backgroundColor:'red' }}>X</Button>
+        <Button onClick={toggleDrawer} sx={{ color: 'white', top: '20px', right: '10px', position: "fixed", fontWeight: 'bold', fontSize: '20px', fontFamily: 'sans-serif', backgroundColor: 'red' }}>X</Button>
         <List>
           {['Movies', 'TV Shows', 'Watch', 'Awards & Events', 'Celebs', 'Community', 'Language'].map((text, index) => (
             <Fragment key={text} >
@@ -834,7 +834,7 @@ export default function TopBar() {
 
               </ListItem>
               {menuOpen && selectedMenu === text && getMenuContent(text).map((item, index) => (
-                <ListItem disablePadding key={index} sx={{ color: 'white',textTransform:'capitalize' }}>
+                <ListItem disablePadding key={index} sx={{ color: 'white', textTransform: 'capitalize' }}>
                   <ListItemButton onClick={() => handleItemClick(item)}>
                     <ListItemIcon></ListItemIcon>
                     <ListItemText primary={item} sx={{ cursor: 'pointer' }} />

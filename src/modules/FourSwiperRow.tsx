@@ -44,9 +44,9 @@ export default function FourSwiperRow({
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    // useEffect(() => {
+    //     window.scrollTo(0, 0);
+    // }, []);
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
@@ -101,14 +101,10 @@ export default function FourSwiperRow({
     }
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
         if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 3000);
     }, [userInfoList]);
 
     let navigate = useNavigate();
@@ -267,7 +263,7 @@ export default function FourSwiperRow({
                                         <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
                                     </div>
                                     <p className="text-yellow-300 font-bold">Rate this</p>
-                                    <p className="text-2xl ">{fourSwiperRowList[numberIndex]?.title ? (fourSwiperRowList[numberIndex]?.title)  : (fourSwiperRowList[numberIndex]?.name)}</p>
+                                    <p className="text-2xl ">{fourSwiperRowList[numberIndex]?.title ? (fourSwiperRowList[numberIndex]?.title) : (fourSwiperRowList[numberIndex]?.name)}</p>
                                     <div className="gap-2 px-2 py-2">
                                         <Rating name="customized-10" value={value} size="large"
                                             onChange={(event, newValue) => {
@@ -328,105 +324,107 @@ export default function FourSwiperRow({
                     const existingRating = ratingList.find(rating => rating?.itemId == item?.id);
 
                     return (
-                        <SwiperSlide key={index} className="bg-white px-2 w-full">
-                            <div className="object-cover">
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full hover:opacity-80"
-                                    onError={handleImageError}
+                        <SwiperSlide key={index} className="bg-white px-2 w-full ">
+                            <div className="shadow-sm  shadow-current rounded-xl">
+                                <div className="object-cover">
+                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full hover:opacity-80"
+                                        onError={handleImageError}
 
-                                    onClick={() => handleClickImg(`${item?.id}`)} />
-                            </div>
-                            <div className="bg-white shadow-lg rounded-xl  mb-4 py-2 h-full w-full text-black" >
-                                <div className="mx-3 ">
-                                    <div className="flex gap-x-4 items-center ">
-                                        <div className="flex items-center space-x-2">
-                                            <i className="fas fa-star text-yellow-300"></i>
-                                            <p className="leading-relaxed text-gray-500">{item?.vote_average?.toFixed(1)}</p>
-                                        </div>
-                                        {/* <div className="grow ml-auto" onClick={() => handleClick(index, existingRating?.itemRating)}>
+                                        onClick={() => handleClickImg(`${item?.id}`)} />
+                                </div>
+                                <div className="bg-white  rounded-xl  mb-4 py-2 h-full w-full text-black" >
+                                    <div className="mx-3 ">
+                                        <div className="flex gap-x-4 items-center ">
+                                            <div className="flex items-center space-x-2">
+                                                <i className="fas fa-star text-yellow-300"></i>
+                                                <p className="leading-relaxed text-gray-500">{item?.vote_average?.toFixed(1)}</p>
+                                            </div>
+                                            {/* <div className="grow ml-auto" onClick={() => handleClick(index, existingRating?.itemRating)}>
                                             <i className="fa-regular fa-star text-blue-500"></i>
                                         </div> */}
-                                        <div className="grow ml-auto" onClick={() => handleClick(index, existingRating?.itemRating)}>
-                                            {
-                                                existingRating ? (
-                                                    loading2[index] ? (
+                                            <div className="grow ml-auto" onClick={() => handleClick(index, existingRating?.itemRating)}>
+                                                {
+                                                    existingRating ? (
+                                                        loading2[index] ? (
+                                                            <div>
+                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center  gap-2 hover:bg-gray-300 w-fit px-2 py-2 rounded-lg">
+                                                                <i className="fa-solid fa-star text-blue-500"></i>
+                                                                <div>{existingRating?.itemRating}</div>
+                                                            </div>
+
+                                                        )
+                                                    ) : (
+                                                        <div className="">
+                                                            {loading2[index] ? (
+                                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                            ) : (
+                                                                <div className="hover:bg-gray-300  w-fit px-2 py-2 rounded-lg">
+                                                                    <i className="fa-regular fa-star text-blue-500"></i>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                        <div className="h-12 mt-2">
+                                            <p className="line-clamp-2"> {item?.title ? item?.title : item?.name}</p>
+                                        </div>
+                                        <button className="w-full mt-2 hover:opacity-70 rounded-lg bg-gray-300  text-center justify-center">
+                                            <div
+                                                onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count
+                                                )}>
+                                                {existingIndex !== -1 ? (
+                                                    loading[index] ? (
                                                         <div>
                                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                         </div>
                                                     ) : (
-                                                        <div className="flex items-center  gap-2 hover:bg-gray-300 w-fit px-2 py-2 rounded-lg">
-                                                            <i className="fa-solid fa-star text-blue-500"></i>
-                                                            <div>{existingRating?.itemRating}</div>
-                                                        </div>
-
-                                                    )
-                                                ) : (
-                                                    <div className="">
-                                                        {loading2[index] ? (
-                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                        ) : (
-                                                            <div className="hover:bg-gray-300  w-fit px-2 py-2 rounded-lg">
-                                                                <i className="fa-regular fa-star text-blue-500"></i>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-                                    </div>
-                                    <div className="h-12 mt-2">
-                                        <p className="line-clamp-2"> {item?.title ? item?.title : item?.name}</p>
-                                    </div>
-                                    <button className="w-full mt-2 hover:opacity-70 rounded-lg bg-gray-300  text-center justify-center">
-                                        <div
-                                            onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count
-                                            )}>
-                                            {existingIndex !== -1 ? (
-                                                loading[index] ? (
-                                                    <div>
-                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                    </div>
-                                                ) : (
-                                                    <div className="py-2 px-3 flex justify-center items-center text-black gap-2 grow  text-center h-full">
-                                                        <i className="fas fa-check font-bold "></i>
-                                                        <div className="text-left">
-                                                            <div className='font-bold'  >
-                                                                <p>WatchList</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            ) : (
-                                                <div className="">
-                                                    {loading[index] ? (
-                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                    ) : (
                                                         <div className="py-2 px-3 flex justify-center items-center text-black gap-2 grow  text-center h-full">
-                                                            <i className="fas fa-plus font-bold "></i>
+                                                            <i className="fas fa-check font-bold "></i>
                                                             <div className="text-left">
                                                                 <div className='font-bold'  >
                                                                     <p>WatchList</p>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </button>
-                                    <button className="flex items-center px-4 py-2 hover:opacity-50 rounded-lg w-full justify-center border-none "
-                                        onClick={() => {
-                                            if (item?.media_type === 'person') {
-                                                navigate(`/person/${item.id}`);
-                                            } else if (item?.media_type === "movie") {
-                                                navigate(`/movie/${item.id}`);
-                                            }
-                                            else {
-                                                navigate(`/tv/${item.id}`);
-                                            }
-                                        }}>
-                                        <i className="fa-solid fa-play mr-2"></i>
-                                        <p>Trailer</p>
-                                    </button>
+                                                    )
+                                                ) : (
+                                                    <div className="">
+                                                        {loading[index] ? (
+                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                        ) : (
+                                                            <div className="py-2 px-3 flex justify-center items-center text-black gap-2 grow  text-center h-full">
+                                                                <i className="fas fa-plus font-bold "></i>
+                                                                <div className="text-left">
+                                                                    <div className='font-bold'  >
+                                                                        <p>WatchList</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </button>
+                                        <button className="flex items-center px-4 py-2 hover:opacity-50 rounded-lg w-full justify-center border-none "
+                                            onClick={() => {
+                                                if (item?.media_type === 'person') {
+                                                    navigate(`/person/${item.id}`);
+                                                } else if (item?.media_type === "movie") {
+                                                    navigate(`/movie/${item.id}`);
+                                                }
+                                                else {
+                                                    navigate(`/tv/${item.id}`);
+                                                }
+                                            }}>
+                                            <i className="fa-solid fa-play mr-2"></i>
+                                            <p>Trailer</p>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </SwiperSlide>

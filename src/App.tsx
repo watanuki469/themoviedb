@@ -47,7 +47,7 @@ function App() {
   }, []);
   useEffect(() => {
     const coords = { x: 0, y: 0 };
-    const circles = document.querySelectorAll<CircleElement>(".circle");
+    const circles = document.querySelectorAll<CircleElement>("#circle");
 
     const colors = [
       "#a3d5ff",
@@ -78,7 +78,7 @@ function App() {
     circles.forEach(function (circle: any, index: any) {
       circle.x = 0;
       circle.y = 0;
-      circle.style.backgroundColor = colors[index % colors.length];
+      circle.style.color = colors[index % colors.length];
     });
 
     window.addEventListener("mousemove", function (e) {
@@ -100,8 +100,8 @@ function App() {
         circle.y = y;
 
         const nextCircle = circles[index + 1] || circles[0];
-        x += (nextCircle.x - x) * 0.3;
-        y += (nextCircle.y - y) * 0.3;
+        x += (nextCircle.x - x) * 0.9;
+        y += (nextCircle.y - y) * 0.9;
       });
 
       requestAnimationFrame(animateCircles);
@@ -116,7 +116,7 @@ function App() {
       {/* <div className="cursor"></div> */}
             
         {[...Array(20)].map((_, i) => (
-          <div key={i} className="circle"></div>
+            <i  key={i} id="circle" className="fa-brands fa-bluesky"></i>
         ))}
       <GlobalLoading />
       <Routes>
