@@ -668,8 +668,6 @@ export default function TrendingLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    console.log(presentList);
-
 
     return (
         <div className=" min-h-screen cursor-pointer">

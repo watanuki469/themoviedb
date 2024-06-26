@@ -62,40 +62,7 @@ export function RatingLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    const [currentSelection, setCurrentSelection] = useState('case1'); // Default view is 'detail'
-
-    type GenreID = number;
-    type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action',
-        12: 'Adventure',
-        16: 'Animation',
-        35: 'Comedy',
-        80: 'Crime',
-        99: 'Documentary',
-        18: 'Drama',
-        10751: 'Family',
-        14: 'Fantasy',
-        36: 'History',
-        27: 'Horror',
-        10402: 'Music',
-        9648: 'Mystery',
-        10749: 'Romance',
-        878: 'Science Fiction',
-        10770: 'TV Movie',
-        53: 'Thriller',
-        10752: 'War',
-        37: 'Western',
-        10759: 'Action & Adventure',
-        10762: 'Kids',
-        10763: 'News',
-        10764: 'Reality',
-        10765: 'Sci-Fi & Fantasy',
-        10766: 'Soap',
-        10767: 'Talk',
-        10768: 'War & Politics'
-    };
-
+    const [currentSelection, setCurrentSelection] = useState('case1'); 
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
@@ -220,7 +187,7 @@ export function RatingLayout() {
         const existingRating = recentList.find(rating => rating?.itemId == movie?.itemId); // Find the rating object for the item
 
         return (
-            <section className=" w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:1/4 " key={movieIndex}
+            <section className=" w-1/2 md:w-1/5 px-2 sm:w-1/3 " key={movieIndex}
             >
                 <div className="text-black font-sans  shadow-sm shadow-black  " >
                     <div className=" items-center ">
@@ -239,7 +206,6 @@ export function RatingLayout() {
                             </div>
                         </div>
                         <div className="grow ml-auto" onClick={() => handleClick(movieIndex, existingRating?.itemRating)}>
-
                             {
                                 existingRating ? (
                                     loading2[movieIndex] ? (

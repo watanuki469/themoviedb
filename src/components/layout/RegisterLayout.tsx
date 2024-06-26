@@ -1,33 +1,18 @@
+import { useFormik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useFormik } from "formik";
 import * as Yup from "yup";
 import bg from '../../assets/home-background.jpg';
 import { registerMongoApi } from "../../redux/client/api.LoginMongo";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import { setRegister } from "../../redux/reducers/login.reducer";
-import { AppDispatch } from "../../redux/store";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 const RegisterLayout = () => {
   const dispatch = useAppDispatch();
   let navigate = useNavigate();
-
-  const fetchRegister = async (values: any) => {
-    dispatch(setGlobalLoading(true));
-    try {
-      const response = await registerMongoApi(values.displayName, values.email, values.password, values.confirmPassword);
-      dispatch(setRegister(response));
-      toast.success('Register Successfully');
-      navigate('/login2');
-    } catch (e: any) {
-      console.error("Register Failed", e);
-      toast.error("Register failed: " + e.message);
-    } finally {
-      dispatch(setGlobalLoading(false));
-    }
-  }
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const registerForm = useFormik({
     initialValues: {
@@ -43,7 +28,7 @@ const RegisterLayout = () => {
       email: Yup.string()
         .email("Invalid email address")
         .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, "Email must be a Gmail address")
-        .required("Email is required"),        
+        .required("Email is required"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
         .required("Password is required"),
@@ -52,7 +37,25 @@ const RegisterLayout = () => {
         .required("Confirm Password is required")
     }),
     onSubmit: async (values) => {
-      await fetchRegister(values);
+      setErrorMessage(null);
+      setIsLoading(true)
+      try {
+        const response = await registerMongoApi(values.displayName, values.email, values.password, values.confirmPassword);
+        const responseData = JSON.stringify(response)
+
+        if (
+          responseData != `{"message":"Email Already Used"}`
+        ) {
+          dispatch(setRegister(response));
+          toast.success('Register Successfully');
+          navigate('/login2');
+        } else {
+          setErrorMessage('Email Already Used')
+        }
+      } catch (e: any) {
+        setErrorMessage(e);
+      }
+      setIsLoading(false)
     }
   });
 
@@ -188,15 +191,24 @@ const RegisterLayout = () => {
 
           </div>
         </div>
-
+        {errorMessage && (
+          <div>
+            Error: {errorMessage}
+          </div>
+        )}
         <button type="submit" className="btn w-full px-4 mt-2 py-2 font-bold text-center bg-black text-white rounded-lg">
-          Register
+
+          {isLoading ? (<div>
+            <i className="fa-solid fa-spinner fa-spin-pulse"></i>
+          </div>) : (
+            <p>Register</p>
+          )}
         </button>
         <div className="login-register text-center mt-3">
           <p>Already have an account? <a href="/login2" className="login-link hover:underline font-extrabold">Login</a></p>
         </div>
       </form>
-    </div>
+    </div >
   );
 };
 

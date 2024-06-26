@@ -702,7 +702,7 @@ export default function KeywordLayout() {
                         marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
                     }} />
                 </DialogContent>
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold',marginTop:'-20px' }}>{translations[language]?.inTheater}</DialogTitle>
+                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold', marginTop: '-20px' }}>{translations[language]?.inTheater}</DialogTitle>
                 <DialogContent>
                     <div className="flex gap-4 flex-wrap items-center">
                         <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
