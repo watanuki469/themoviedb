@@ -3,30 +3,30 @@ import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material"
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import ViewTable from '../../modules/View';
+import { default as View, default as ViewTable } from '../../modules/View';
 import { LanguageContext } from '../../pages/LanguageContext';
 import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchAward } from '../../redux/reducers/award.reducer';
 import { setListGenre } from '../../redux/reducers/genre.reducer';
-import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 
-export default function Top250MovieLayout() {
+export default function OscarLayout() {
     const dispatch = useAppDispatch();
-    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
+    let navigate = useNavigate()
+    const oscarList = useAppSelector((state) => state.award.marvelList)
+    const mostPopularTv = useAppSelector((state) => state.award.marvelList)
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        // dispatch(setGlobalLoading(true));
+        dispatch(fetchAward());
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
     }, []);
-  
+
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
     const fetchGenre = () => (dispatch: AppDispatch) => {
         apiController.apiGenre.genre('movie')
@@ -56,6 +56,7 @@ export default function Top250MovieLayout() {
     const handleCopyLink = () => {
         // Lấy địa chỉ URL hiện tại
         const currentUrl = window.location.href;
+
         // Thử copy địa chỉ URL vào clipboard
         navigator.clipboard.writeText(currentUrl)
             .then(() => {
@@ -75,10 +76,11 @@ export default function Top250MovieLayout() {
     }
 
     const { language, translations, handleLanguageChange } = context;
+    console.log(oscarList);
+    
 
     return (
         <div className=" min-h-screen cursor-pointer">
-          
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
@@ -178,8 +180,7 @@ export default function Top250MovieLayout() {
                         </div>
 
                     </div>
-                    <ViewTable viewList={topRatedMovies} mediaType={'movie'}  genreList={listGenreFromApi} moreToExploreList={mostPopularTv}></ViewTable>
-
+                    <ViewTable viewList={oscarList} moreToExploreList={mostPopularTv} genreList={listGenreFromApi} mediaType={'tv'}></ViewTable>
                 </div>
             </div>
             <div className="bg-black">

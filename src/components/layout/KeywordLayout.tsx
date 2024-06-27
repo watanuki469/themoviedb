@@ -127,7 +127,6 @@ export default function KeywordLayout() {
         dispatch(fetchGenre());
     }, [dispatch]);
 
-
     type GenreID = number;
     type GenreName = string;
     // const genreMapping: Record<GenreID, GenreName> = {

@@ -67,7 +67,8 @@ export default function TvPerson({
                                 <p className="text-black font-bold hover:opacity-50">{item?.name}</p>
                                 <p className="text-gray-500 hover:underline">{item?.roles[0]?.character}</p>
                                 <p className="text-gray-500 hover:bg-gray-200 py-1">
-                                    {item?.roles[0]?.episode_count} episodes • {firstYear && lastYear ? `${firstYear}-${lastYear}` : ''}
+                                    {item?.roles[0]?.episode_count} episodes •
+                                    {firstYear ? (lastYear && firstYear !== lastYear ? `${firstYear}-${lastYear}` : firstYear) : ''}
                                 </p>
                             </div>
                         </div>

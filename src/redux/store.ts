@@ -19,6 +19,7 @@ import trendingReducer from './reducers/trending.reducer'
 import keywordReducer from './reducers/keyword.reducer'
 import genreReducer from './reducers/genre.reducer'
 import filmReducer from './reducers/film.reducer'
+import awardReducer from './reducers/award.reducer'
 
 export const store = configureStore({
     reducer: {
@@ -41,7 +42,8 @@ export const store = configureStore({
         login:loginReducer,
         keyword:keywordReducer,
         genre:genreReducer,
-        film:filmReducer
+        film:filmReducer,
+        award:awardReducer
     },})
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

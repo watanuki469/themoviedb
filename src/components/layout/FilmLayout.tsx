@@ -111,7 +111,7 @@ export default function FilmLayout() {
 
                             <div className="flex items-center py-3 mt-3 px-2">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-white ">Danh sách tập</h2>
+                                <h2 className="text-2xl font-bold text-white ">Danh sách tập phim</h2>
                             </div>
 
                             <div className="flex flex-wrap gap-2 max-h-56 overflow-auto px-2">
@@ -119,7 +119,7 @@ export default function FilmLayout() {
                                     <div key={index} className="relative">
                                         <div className={`w-full  ${numberIndex === index ? 'bg-black text-white ' : 'bg-gray-300 text-black'} border-2 border-white hover:opacity-90 px-2 py-2`}
                                             onClick={() => { setNumberIndex(index) }}>
-                                            {index + 1}
+                                          {index + 1}
                                         </div>
                                     </div>
                                 ))}

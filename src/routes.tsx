@@ -12,6 +12,7 @@ import LoginLayoutTest from "./components/layout/LoginLayoutTest";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import MovieNewLayout from "./components/layout/MovieNewLayout";
+import OscarLayout from "./components/layout/OscarLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
@@ -156,6 +157,12 @@ const routes = [
     element: <KeywordLayout />,
     state: "keyword"
   },
+  {
+    path: "/award/oscars",
+    element: <OscarLayout />,
+    state: "oscars"
+  },
+  
 
   // {
   //   path: "/watchList",

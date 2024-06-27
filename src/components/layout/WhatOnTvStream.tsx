@@ -272,17 +272,17 @@ export default function WhatOnTvStream() {
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black ">More to explore</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.moreExplore}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
                                     <ListRow listRowList={topRatedMovies} />
                                 </div>
-                                <p className=" w-full text-black"> Staff Picks: What to Watch in {currentMonthName}</p>
-                                <p className=" w-full text-blue-500 hover:underline"> See our picks</p>
+                                <p className=" w-full text-black">{translations[language]?.staffPick}</p>
+                                <p className=" w-full text-blue-500 hover:underline">{translations[language]?.seeOurPick}</p>
                             </div>
                             <div>
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Charts</h2>
+                                    <h2 className="text-2xl font-bold text-black ">{translations[language]?.chart}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <Charts />
@@ -290,7 +290,7 @@ export default function WhatOnTvStream() {
                             </div>
                             <div className="sticky top-0 right-0 left-0">
                                 <div className="flex items-center py-3">
-                                    <h2 className="text-2xl font-bold text-black ">Top Rated Movies by Genre</h2>
+                                    <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}{translations[language]?.genre}</h2>
                                 </div>
                                 <div className="lg:max-w-full w-full">
                                     <TopRatedMovieByGenre />

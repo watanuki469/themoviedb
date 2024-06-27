@@ -194,7 +194,7 @@ export const translations: Record<LanguageCode, Translations> = {
     certificate: 'Chứng nhận',
     add: 'Thêm vào',
     releaseCalendar: 'Lịch phát sóng',
-    popularCeleb: 'Người nổi tiếng nhất',
+    popularCeleb: 'Người nổi tiếng',
     knowFor: 'Nổi tiếng với',
     born: 'Ngày ra đời',
     news: 'Tin tức',
