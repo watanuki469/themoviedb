@@ -240,7 +240,7 @@ export default function AdvancedSearchLayout() {
         }
         // setTimeout(() => {
         //     dispatch(setGlobalLoading(false));
-        // }, 3000);
+        // }, 1000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -321,7 +321,7 @@ export default function AdvancedSearchLayout() {
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500 bg-white  w-full" key={movieIndex}
+                    <section className="px-2 border-t border-r border-l border-gray-500 bg-white  w-full " key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
@@ -329,7 +329,7 @@ export default function AdvancedSearchLayout() {
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
                                             <p>{movie?.first_air_date ? movie?.first_air_date?.slice(0, 4) : movie?.release_date?.slice(0, 4)}</p>
@@ -401,16 +401,16 @@ export default function AdvancedSearchLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 py-2" key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black mt-2  " >
+                        <div className="text-black font-sans  shadow-sm shadow-black mt-2 rounded-br-xl rounded-bl-xl rounded-tr-xl" >
                             <div className="items-center gap-2">
                                 {/* <div className="px-2"></div> */}
-                                <div className="relative w-full pb-[150%] hover:opacity-80">
+                                <div className="relative w-full pb-[150%] hover:opacity-80  rounded-tr-xl ">
                                     <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
                                         src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                         onError={handleImageError}
-                                        className="absolute top-0 left-0 w-full h-full object-cover" />
+                                        className="absolute top-0 left-0 w-full h-full object-cover  rounded-tr-xl" />
                                 </div>
                                 <div className="px-2 py-2 ">
                                     {

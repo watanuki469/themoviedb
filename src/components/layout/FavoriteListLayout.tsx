@@ -196,7 +196,7 @@ export function FavoriteListLayout() {
                                         <img onClick={() => navigate(`/person/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
-                                            onError={handleImageError} className="w-28 h-40 hover:opacity-80" />
+                                            onError={handleImageError} className="w-28 h-40 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.itemName}</p>
                                             <div className="flex flex-wrap gap-2">
@@ -242,14 +242,14 @@ export function FavoriteListLayout() {
                 return (
                     <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3  " key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                        <div className="text-black font-sans  shadow-sm shadow-black  rounded-br-xl rounded-bl-xl rounded-tr-xl " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <img onClick={() => navigate(`/person/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500${movie?.itemImg}`}
                                             alt="product images"
-                                            onError={handleImageError} className=" hover:opacity-80" />
+                                            onError={handleImageError} className=" hover:opacity-80 rounded-tr-xl" />
                                         <div className="px-2 py-2 w-full">
                                             <div className="items-center gap-2 justify-start text-left w-full ">
                                                 <div className="h-12 w-full ">

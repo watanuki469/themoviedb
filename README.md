@@ -27,6 +27,7 @@
 + Tailwind CSS
 + SwiperJS
 + Material-UI (MUI)
++ Lottiefiles
   
 # 8.Database and ORM
 + MongoDB

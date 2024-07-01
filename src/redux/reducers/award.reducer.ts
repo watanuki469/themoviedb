@@ -33,6 +33,10 @@ const apiRequests = {
         const url = `list/70091?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`
         return axiosClient.get(url)
     },
+    blackFilm() {
+        const url = `list/7102892?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`
+        return axiosClient.get(url)
+    },
 
 }
 
@@ -44,6 +48,7 @@ interface IMoviesState {
     goldenList: any[],
     academicList: any[],
     emnysComedyList: any[],
+    blackFilmList: any[]
 }
 
 const initialState: IMoviesState = {
@@ -54,6 +59,7 @@ const initialState: IMoviesState = {
     goldenList: [],
     academicList: [],
     emnysComedyList: [],
+    blackFilmList: []
 }
 
 const setListOscarState = (state: IMoviesState, action: any) => {
@@ -83,6 +89,9 @@ const setListAcademicState = (state: IMoviesState, action: any) => {
 const setListEmnysComedyState = (state: IMoviesState, action: any) => {
     state.emnysComedyList = action.payload
 }
+const setListBlackFilmState = (state: IMoviesState, action: any) => {
+    state.blackFilmList = action.payload
+}
 
 export const awardSlice = createSlice({
     name: 'movies',
@@ -95,6 +104,7 @@ export const awardSlice = createSlice({
         setListGolden: (state, action) => setListGoldenState(state, action),
         setListAcademic: (state, action) => setListAcademicState(state, action),
         setListEmnysComedy: (state, action) => setListEmnysComedyState(state, action),
+        setListBlackFilm: (state, action) => setListBlackFilmState(state, action),
     }
 })
 
@@ -106,6 +116,7 @@ export const {
     setListGolden,
     setListAcademic,
     setListEmnysComedy,
+    setListBlackFilm,
 } = awardSlice.actions;
 
 export const fetchAward = () => (dispatch: AppDispatch) => {
@@ -117,9 +128,10 @@ export const fetchAward = () => (dispatch: AppDispatch) => {
         apiRequests.golden(),
         apiRequests.academic(),
         apiRequests.emnysComedy(),
+        apiRequests.blackFilm(),
     ])
         .then((data: any) => {
-            if (data[0] && data[0]?.items ) {
+            if (data[0] && data[0]?.items) {
                 dispatch(setListOscar(data[0]?.items));
                 dispatch(setListAnime(data[1]?.items));
                 dispatch(setListMarvel(data[2]?.items));
@@ -127,6 +139,7 @@ export const fetchAward = () => (dispatch: AppDispatch) => {
                 dispatch(setListGolden(data[4]?.items));
                 dispatch(setListAcademic(data[5]?.items));
                 dispatch(setListEmnysComedy(data[6]?.items));
+                dispatch(setListBlackFilm(data[7]?.items));
             } else {
                 console.error("API response structure is not as expected.", data);
             }

@@ -1,24 +1,27 @@
-import { useContext, useEffect } from "react";
-import Share from '../../modules/Share';
-import ViewTable from '../../modules/ViewTable';
+import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import ViewTableNoType from '../../modules/ViewTableNoType';
 import { LanguageContext } from '../../pages/LanguageContext';
 import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchAward } from '../../redux/reducers/award.reducer';
 import { setListGenre } from '../../redux/reducers/genre.reducer';
-import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
-import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import Share from '../../modules/Share';
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 
-export default function Top250MovieLayout() {
+export default function ABFFLayout() {
     const dispatch = useAppDispatch();
-    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
+    const oscarList = useAppSelector((state) => state.award.blackFilmList)
+    const mostPopularTv = useAppSelector((state) => state.award.marvelList)
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
-        dispatch(fetchMovies());
+        dispatch(fetchAward());
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
@@ -52,7 +55,6 @@ export default function Top250MovieLayout() {
 
     return (
         <div className=" min-h-screen cursor-pointer">
-
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
@@ -71,14 +73,13 @@ export default function Top250MovieLayout() {
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.top250Movie}</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb ABFF (American Black Film Festival)</h2>
                             </div>
                             <p className="text-gray-500 py-2">{translations[language]?.voter}</p>
                         </div>
 
                     </div>
-                    <ViewTable viewList={topRatedMovies} mediaType={'movie'} genreList={listGenreFromApi} moreToExploreList={mostPopularTv}></ViewTable>
-
+                    <ViewTableNoType viewList={oscarList} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTableNoType>
                 </div>
             </div>
             <div className="bg-black">

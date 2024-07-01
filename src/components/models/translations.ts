@@ -18,7 +18,8 @@ export interface Translations {
   inTheater: string, inTheaterNearYou: string, inTheaterWithOnlineTicked: string, none: string, options: string,
   fromThePastWeekend: string, asRated: string, createdModified: string, listActivity: string, views: string, thisWeek: string,
   share: string, keyword: string, advanced: string, imdbSearch: string, title: string, expandAll: string, collapseAll: string,
-  searchFilter: string,from:string,to:string,orJustEnter:string,votes:string
+  searchFilter: string,from:string,to:string,orJustEnter:string,votes:string,award:string,spotlight:string,
+  officialSites:string,alternativeName:string,height:string
 
 }
 
@@ -134,7 +135,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'Search filter',
     from:'From',to:'To',
     orJustEnter:'Or just enter',
-    votes:'Numbers of votes'
+    votes:'Numbers of votes',
+    award:'Award',
+    spotlight:'Spotlight',
+    officialSites:'Official sites',
+    alternativeName:'Alternative name',
+    height:'Height'
   },
   'vi-VI': {
     featuredToday: 'Nổi bật hôm nay',
@@ -240,7 +246,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'Bộ lọc tìm kiếm',
     from:'Từ',to:'Đến',
     orJustEnter:'Hoặc chỉ cần nhập',
-    votes:'Số lượng bầu cử'
+    votes:'Số lượng bầu cử',
+    award:'Giải thưởng',
+    spotlight:'Điểm sáng',
+    officialSites:'Trang web chính thức',
+    alternativeName:'Tên khác',
+    height:'Chiều cao'
   },
   'ja-JP': {
     featuredToday: '今日のおすすめ',
@@ -346,7 +357,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: '検索フィルター',
     from:'から',to:'へ',
     orJustEnter:'または入力してください',
-    votes:'投票数'
+    votes:'投票数',
+    award:'受賞歴',
+    spotlight:'スポットライト',
+    officialSites:'公式サイト',
+    alternativeName:'別名',
+    height:'身長'
   },
   'fr-FR': {
     featuredToday: `À la une aujourd\'hui`,
@@ -452,7 +468,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'Filtres de recherche',
     from:'De',to:'À',
     orJustEnter:'Ou entrez simplement',
-    votes:'Nombre de votes'
+    votes:'Nombre de votes',
+    award:'Récompenses',
+    spotlight:'Projecteur',
+    officialSites:'Sites officiels',
+    alternativeName:'Nom alternatif',
+    height:'Taille'
   },
 
   'de-DE': {
@@ -559,7 +580,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'Suchfilter',
     from:'Von',to:'Zu',
     orJustEnter:'Oder einfach eingeben',
-    votes:'Anzahl der Stimmen'
+    votes:'Anzahl der Stimmen',
+    award:'Auszeichnungen',
+    spotlight:'Rampenlicht',
+    officialSites:'Offizielle Webseiten',
+    alternativeName:'Alternativer Name',
+    height:'Höhe'
 
   },
   'hi-IN': {
@@ -666,7 +692,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'खोज फ़िल्टर',
     from:'से',to:'को',
     orJustEnter:'या बस दर्ज करें',
-    votes:'मतों की संख्या'
+    votes:'मतों की संख्या',
+    award:'पुरस्कार',
+    spotlight:'प्रकाश डालना',
+    officialSites:'आधिकारिक साइटें',
+    alternativeName:'वैकल्पिक नाम',
+    height:'ऊंचाई'
 
   },
   'id-ID': {
@@ -773,7 +804,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'Filter pencarian',
     from:'Dari',to:'Ke',
     orJustEnter:'Atau masukkan saja',
-    votes:'Jumlah suara'
+    votes:'Jumlah suara',
+    award:'Penghargaan',
+    spotlight:'Sorotan',
+    officialSites:'Situs resmi',
+    alternativeName:'Nama alternatif',
+    height:'Tinggi'
   },
   'it-IT': {
     featuredToday: 'In primo piano oggi',
@@ -879,7 +915,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter: 'Filtri di ricerca',
     from:'Da',to:'A',
     orJustEnter:'O semplicemente inserisci',
-    votes:'Numero di vot'
+    votes:'Numero di vot',
+    award:'Premi',
+    spotlight:'Riflettore',
+    officialSites:'Siti ufficiali',
+    alternativeName:'Nome alternativo',
+    height:'Altezza'
 
   },
   'ko-KR': {
@@ -986,7 +1027,12 @@ export const translations: Record<LanguageCode, Translations> = {
     searchFilter:'검색 필터',
     from:'~에서',to:'~에',
     orJustEnter:'또는 입력하세요',
-    votes:'투표 수'
+    votes:'투표 수',
+    award:'수상',
+    spotlight:'스포트라이트',
+    officialSites:'공식 사이트',
+    alternativeName:'대체 이름',
+    height:'키'
 
   },
 };

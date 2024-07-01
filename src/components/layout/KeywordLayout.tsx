@@ -332,7 +332,7 @@ export default function KeywordLayout() {
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
@@ -391,16 +391,17 @@ export default function KeywordLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
+                    <section className=" w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 py-2" key={movieIndex}
                     >
-                        <div className="text-black font-sans shadow-sm shadow-black  " >
+                        <div className="text-black font-sans shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
                                         <div className="relative w-full pb-[150%] hover:opacity-80" >
                                             <img onClick={() => navigate(`/${mediaKeywordType}/${movie?.id}`)}
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover
+                                            rounded-tr-xl" />
                                         </div>
 
                                         <div className="">

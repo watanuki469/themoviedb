@@ -49,31 +49,7 @@ export default function PersonLayout() {
             dispatch(setGlobalLoading(false));
         }, 1000);
     }, [id]);
-    const currentDate = new Date();
-
-    // Mảng các tên tháng
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
-    const currentMonth = currentDate.getMonth();
-
-    // Lấy tên của tháng hiện tại từ mảng monthNames
-    const currentMonthName = monthNames[currentMonth];
-    // useEffect(() => {
-    //     const storedDataString = localStorage.getItem('activity');
-    //     let storedData: { [key: string]: any } = {};
-    //     if (storedDataString !== null) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     if (storedData[personList[0]?.id]) {
-    //     } else {
-    //         storedData[personList[0]?.id] = personList[0];
-    //         localStorage.setItem('activity', JSON.stringify(storedData));
-    //     }
-    // })
+  
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');

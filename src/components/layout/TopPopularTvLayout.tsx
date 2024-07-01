@@ -2,7 +2,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ViewTable from '../../modules/View';
+import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
 import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -43,7 +43,7 @@ export default function TopPopularTvLayout() {
     useEffect(() => {
         dispatch(fetchGenre());
     }, [dispatch]);
-    
+
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
     const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -78,7 +78,7 @@ export default function TopPopularTvLayout() {
     const { language, translations, handleLanguageChange } = context;
 
     return (
-        <div className=" min-h-screen cursor-pointer">         
+        <div className=" min-h-screen cursor-pointer">
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />

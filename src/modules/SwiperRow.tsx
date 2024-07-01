@@ -70,9 +70,7 @@ export default function SwiperRow({
             dispatch(fetchGetFavorites());
             dispatch(fetchGetRating())
         }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 3000);
+        dispatch(setGlobalLoading(false));
     }, [userInfoList]);
 
     let navigate = useNavigate();
@@ -106,11 +104,6 @@ export default function SwiperRow({
     };
 
     const [value, setValue] = useState<number | null>(0);
-    const handleClose = () => {
-        setIsRating(false)
-        setNumberIndex(0);
-        setValue(0)
-    };
 
     const fetchFavorite = (
         movieId: string,
@@ -129,8 +122,6 @@ export default function SwiperRow({
                 email, movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
             );
             dispatch(setFavorite(response));
-            console.log(response);
-
             if (response) {
                 await dispatch(fetchGetFavorites());
 
@@ -243,7 +234,7 @@ export default function SwiperRow({
     }
 
     const { language, translations, handleLanguageChange } = context;
-    
+
     return (
         <div className="h-full ">
             {isRating &&
@@ -324,8 +315,8 @@ export default function SwiperRow({
                     const existingRating = ratingList.find(rating => rating?.itemId == item?.id); // Find the rating object for the item
 
                     return (
-                        <SwiperSlide key={index} className="bg-gray-200">
-                            <div className="relative w-full pb-[150%] hover:opacity-80">
+                        <SwiperSlide key={index} className=" rounded-br-xl rounded-bl-xl ">
+                            <div className="relative w-full pb-[150%] hover:opacity-80 ">
                                 <img
                                     onClick={() => navigate(`/${mediaType}/${item?.id}`)}
                                     onError={(e) => {
@@ -333,9 +324,9 @@ export default function SwiperRow({
                                         e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
                                     }}
                                     src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images "
-                                    className="absolute top-0 left-0 w-full h-full object-cover hover:opacity-80" />
+                                    className="absolute top-0 left-0 w-full h-full object-cover hover:opacity-80 rounded-tr-xl" />
                             </div>
-                            <div className="bg-gray-900">
+                            <div className="bg-gray-900 rounded-br-xl rounded-bl-xl">
                                 <div className="mx-3 ">
                                     <div className="flex gap-x-4 items-center ">
                                         <div className="flex items-center space-x-2">

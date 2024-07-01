@@ -169,17 +169,17 @@ export default function TopBar() {
 
       case 'Awards & Events':
         if (item === 'Oscars') {
-          navigate('/');
+          navigate('/award/oscars');
         } else if (item === 'ABFF') {
-          navigate('/');
+          navigate('/award/ABFF');
         } else if (item === 'Best Of 2024') {
-          navigate('/');
+          navigate('/award/spotlight');
         } else if (item === `${translations[language]?.holidayPicks}`) {
-          navigate('/');
+          navigate('/award/holidayPick');
         } else if (item === 'Starmeter Awards') {
-          navigate('/');
+          navigate('/award/starmeter');
         } else if (item === `${translations[language]?.total} Event`) {
-          navigate('/');
+          navigate('/award/IMDbPro');
         } else {
           navigate('/');
         }
@@ -434,13 +434,13 @@ export default function TopBar() {
                         <div className="aligns-start text-black">
                           <i className="fa-solid fa-film "></i>
                         </div>
-                        <div className="cursor-not-allowed ">
-                          <p className="mt-2 hover:underline">Oscars</p>
-                          <p className="mt-2 hover:underline">ABFF</p>
-                          <p className="mt-2 hover:underline">Best Of 2024</p>
-                          <p className="mt-2 hover:underline">{translations[language]?.holidayPicks}</p>
-                          <p className="mt-2 hover:underline">Starmeter Awards</p>
-                          <p className="mt-2 hover:underline"> {translations[language]?.total} Event</p>
+                        <div className=" ">
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/oscars')} >Oscars</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/ABFF')}>ABFF</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/spotlight')}>Best Of 2024</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/holidayPick')}>{translations[language]?.holidayPicks}</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/starmeter')}>Starmeter Awards</p>
+                          <p className="mt-2 hover:underline" onClick={() => navigate('/IMDbPro')}> {translations[language]?.total} Event</p>
                         </div>
                       </div>
                     </div>

@@ -1,3 +1,4 @@
+import ABFFLayout from "./components/layout/ABFFLayout";
 import { ActivityLayout } from "./components/layout/ActivityLayout";
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
@@ -6,6 +7,7 @@ import CelebNewLayout from "./components/layout/CelebNewLayout";
 import ChangeLayoutTest from "./components/layout/ChangePasswordLayout";
 import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
 import FilmLayout from "./components/layout/FilmLayout";
+import HolidayLayout from "./components/layout/HolidayLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import KeywordLayout from "./components/layout/KeywordLayout";
 import LoginLayoutTest from "./components/layout/LoginLayoutTest";
@@ -18,6 +20,8 @@ import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
 import { RatingLayout } from "./components/layout/RatingLayout";
 import RegisterLayoutTest from "./components/layout/RegisterLayoutTest";
+import SpotlightLayout from "./components/layout/SpotlightLayout";
+import StarmeterLayout from "./components/layout/StarmeterLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
@@ -162,8 +166,27 @@ const routes = [
     element: <OscarLayout />,
     state: "oscars"
   },
+  {
+    path: "/award/ABFF",
+    element: <ABFFLayout />,
+    state: "ABFF"
+  },
+  {
+    path: "/award/spotlight",
+    element: <SpotlightLayout />,
+    state: "spotlight"
+  },
+  {
+    path: "/award/holidayPick",
+    element: <HolidayLayout />,
+    state: "holidayPick"
+  },
+  {
+    path: "/award/starmeter",
+    element: <StarmeterLayout />,
+    state: "starmeter"
+  },
   
-
   // {
   //   path: "/watchList",
   //   element: <WatchListLayout />,

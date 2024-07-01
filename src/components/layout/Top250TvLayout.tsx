@@ -2,7 +2,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ViewTable from '../../modules/View';
+import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
 import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -32,7 +32,7 @@ export default function Top250TvLayout() {
         apiController.apiGenre.genre('tv')
             .then((data: any) => {
                 if (data && data?.genres) {
-                    dispatch(setListGenre(data?.genres)); 
+                    dispatch(setListGenre(data?.genres));
                 } else {
                     console.error("API response structure is not as expected.", data);
                 }
@@ -79,7 +79,7 @@ export default function Top250TvLayout() {
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
-           
+
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -180,7 +180,7 @@ export default function Top250TvLayout() {
                         </div>
 
                     </div>
-                    <ViewTable viewList={mostPopularTv} mediaType={'tv'}  genreList={listGenreFromApi} moreToExploreList={popularMovies}></ViewTable>
+                    <ViewTable viewList={mostPopularTv} mediaType={'tv'} genreList={listGenreFromApi} moreToExploreList={popularMovies}></ViewTable>
 
                 </div>
             </div>

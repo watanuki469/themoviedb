@@ -1,24 +1,22 @@
 import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
-import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Button, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
+import Share from '../../modules/Share';
 import TopNew from "../../modules/TopNew";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import { LanguageContext } from '../../pages/LanguageContext';
 import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
+import { fetchMovies } from '../../redux/reducers/movies.reducer';
 import { setPeoplePopular } from '../../redux/reducers/peoplePopular.reducer';
 import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
-import { LanguageContext } from '../../pages/LanguageContext';
-import { fetchMovies } from '../../redux/reducers/movies.reducer';
-
 
 export default function PopularCelebLayout() {
     const context = useContext(LanguageContext);
@@ -101,7 +99,7 @@ export default function PopularCelebLayout() {
                                         <a href={`/person/${movie?.id}`}>
                                             <img
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         </a>
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
@@ -128,16 +126,16 @@ export default function PopularCelebLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 py-2 " key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 py-2  " key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                        <div className="text-black font-sans  shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-2xl  " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <a href={`/person/${movie?.id}`}>
                                             <img
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="w-full hover:opacity-80" />
+                                                onError={handleImageError} className="w-full hover:opacity-80 rounded-tr-2xl  " />
                                         </a>
 
                                         <div className="px-2 py-2 w-full">
@@ -163,7 +161,7 @@ export default function PopularCelebLayout() {
                 )
             case 'Compact':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
+                    <section className="px-2 border-t border-r border-l border-gray-500  w-full " key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
@@ -172,7 +170,7 @@ export default function PopularCelebLayout() {
                                         <a href={`/person/${movie?.id}`}>
                                             <img
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         </a>
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
@@ -223,30 +221,7 @@ export default function PopularCelebLayout() {
         setMenuItemNum(menuItemNum);
         handleRankingClose();
     };
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
 
-        // Thử copy địa chỉ URL vào clipboard
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                // Nếu thành công, hiển thị thông báo
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
     const popularCeleb2 = [...popularCeleb]
 
     return (
@@ -259,89 +234,12 @@ export default function PopularCelebLayout() {
             <div className="bg-white ">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center px-2 ">
                     <div className="lg:max-w-full w-full ">
-                        <div className="flex mt-3 ">
-                            <div className="items-center ">
-                                <h2 className="text-2xl font-bold text-black ">IMDb {translations[language]?.chart}</h2>
-                            </div>
+                        <div className="flex items-center  ">
+                            <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center text-2xl font-bold text-black ">{translations[language]?.share} </p>
-                                <IconButton
-                                    onClick={handleShareClick}
-                                    size="small"
-                                    aria-controls={openShare ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={openShare ? 'true' : undefined}
-                                >
-                                    <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
-                                            bgcolor: 'gray', opacity: '50%'
-                                        }
-                                    }}>
-                                        <ShareIcon />
-                                    </Avatar>
-                                </IconButton>
-                                <Menu
-                                    anchorEl={anchorShareEl}
-                                    id="account-menu"
-                                    open={openShare}
-                                    onClose={handleShareClose}
-                                    onClick={handleShareClose}
-                                    PaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            '& .MuiAvatar-root': {
-                                                width: 32, height: 32, ml: -0.5, mr: 1,
-                                            },
-                                            '&::before': {
-                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                            },
-                                        },
-                                    }}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem>
-                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                                <ListItemIcon>
-                                                    <i className="fa-brands fa-facebook text-2xl"></i>
-                                                </ListItemIcon>
-                                                Facebook
-                                            </a>
-                                        </div>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <blockquote className="twitter-tweet items-center">
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-twitter text-2xl"></i>
-                                            </ListItemIcon>
-                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                                Twitter
-                                            </a>
-                                        </blockquote>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                            title="Share by Email">
-                                            <ListItemIcon>
-                                                <i className="fa-regular fa-envelope text-2xl"></i>
-                                            </ListItemIcon>
-                                            Email Link
-                                        </a>
-                                    </MenuItem>
-
-                                    <MenuItem onClick={handleCopyLink}>
-                                        <ListItemIcon>
-                                            <i className="fa-solid fa-link text-2xl"></i>
-                                        </ListItemIcon>
-                                        Copy Link
-                                    </MenuItem>
-                                </Menu>
+                                <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
                             </div>
+                            <Share />
                         </div>
                         <div className="">
                             <div className="flex items-center ">
@@ -353,12 +251,11 @@ export default function PopularCelebLayout() {
 
                     </div>
                     <div className="grid grid-cols-12 gap-2 w-full py-2">
-                        <div className="lg:col-span-8 col-span-12  w-full ">
+                        <div className="col-span-12  w-full ">
                             <div className="flex ">
                                 <div className="items-center ">
                                     <h2 className="text-2xl text-black ">
                                         {popularCeleb2?.length} People</h2>
-
                                 </div>
 
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >

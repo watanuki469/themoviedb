@@ -11,6 +11,7 @@ import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { fetchTrending } from "../../redux/reducers/trending.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { fetchAward } from "../../redux/reducers/award.reducer";
 
 export default function WatchToWWatch() {
     const context = useContext(LanguageContext);
@@ -50,17 +51,17 @@ export default function WatchToWWatch() {
     const listNewStream = useAppSelector((state) => state.trending.listNewStream)
     const listNewMax = useAppSelector((state) => state.trending.listNewMax)
     let navigate = useNavigate()
-    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    const popularMovie = useAppSelector((state) => state.movies.listMoviesPopular)
-    const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
-    const topRatedTv = useAppSelector((state) => state.movies.listTopRatedTvReq)
-    const discoverTv = useAppSelector((state) => state.movies.discoverTv)
-    const discoverMovie = useAppSelector((state) => state.movies.discoverMovies)
+    const topRatedMovies = useAppSelector((state) => state.award.animeList)
+    const popularMovie = useAppSelector((state) => state.award.oscarList)
+    const mostPopularTv = useAppSelector((state) => state.award.marvelList)
+    const topRatedTv = useAppSelector((state) => state.award.emnysComedyList)
+    const discoverTv = useAppSelector((state) => state.award.goldenList)
+    const discoverMovie = useAppSelector((state) => state.award.blackFilmList)
     const dispatch = useAppDispatch();
     useEffect(() => {
         // dispatch(setGlobalLoading(true));
         dispatch(fetchTrending());
-        dispatch(fetchMovies())
+        dispatch(fetchAward())
         // setTimeout(() => {
         //     dispatch(setGlobalLoading(false));
         // }, 1000);
@@ -139,33 +140,33 @@ export default function WatchToWWatch() {
                         </div>
                     </div>
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
-                        <div onClick={() => navigate(`/trending/netflix`)}>
-                            <OneRow listRowList={topRatedMovies} />
+                        <div onClick={() => navigate(`/award/spotlight`)}>
+                            <OneRow listRowList={topRatedTv} />
                             <p className="mt-2 hover:underline">5 Top Rated Will Ferrell Movies</p>
                             <p className="mt-2 text-blue-500 hover:underline">See what made the list</p>
                         </div>
-                        <div onClick={() => navigate(`/trending/disney`)}>
+                        <div onClick={() => navigate(`/award/oscars`)}>
                             <OneRow listRowList={popularMovie} />
                             <p className="mt-2 hover:underline">5 Must-See Sequels and Prequels in {currentMonthName}</p>
                             <p className="mt-2 text-blue-500 hover:underline" >See out picks</p>
                         </div>
-                        <div onClick={() => navigate(`/trending/hulu`)}>
+                        <div onClick={() => navigate(`/award/starmeter`)}>
                             <OneRow listRowList={mostPopularTv} />
                             <p className="mt-2 hover:underline">5 Award-Winning Sci-Fi Picks</p>
                             <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
                         </div>
-                        <div onClick={() => navigate(`/trending/prime`)}>
-                            <OneRow listRowList={topRatedTv} />
+                        <div onClick={() => navigate(`/award/spotlight`)}>
+                            <OneRow listRowList={topRatedMovies} />
                             <p className="mt-2 hover:underline">5 Anime Top Rated on Netflix</p>
                             <p className="mt-2 text-blue-500 hover:underline">Stream these now</p>
                         </div>
-                        <div onClick={() => navigate(`/trending/stream`)}>
+                        <div onClick={() => navigate(`/award/ABFF`)}>
                             <OneRow listRowList={discoverTv} />
                             <p className="mt-2 hover:underline">5 Top-Rated Pixar Movies to Watch</p>
                             <p className="mt-2 text-blue-500 hover:underline" >What the video</p>
                         </div>
-                        <div onClick={() => navigate(`/trending/hulu`)}>
-                            <OneRow listRowList={discoverMovie?.slice(1)} />
+                        <div onClick={() => navigate(`/popularCeleb`)}>
+                            <OneRow listRowList={discoverMovie} />
                             <p className="mt-2 hover:underline">5 Most Unhinged Villains</p>
                             <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
                         </div>
@@ -175,7 +176,7 @@ export default function WatchToWWatch() {
             case 'FanFavorite':
                 return (
                     <div>
-                        <Fullitem searchItemList={topRatedMovies.slice(0, 10)} mediaType={'movie'} />
+                        <Fullitem searchItemList={topRatedMovies.slice(0, 10)} />
                         <div className="w-full py-4" >
                             {translations[language]?.browseCollection}
                             <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
@@ -189,13 +190,13 @@ export default function WatchToWWatch() {
                                 <button></button>
                             </div>
                         </div>
-                        <Fullitem searchItemList={topRatedMovies.slice(11, 21)} mediaType={'movie'} />
+                        <Fullitem searchItemList={topRatedMovies.slice(10, 21)} />
                     </div>
                 )
             case 'TopPick':
                 return (
                     <div>
-                        <Fullitem searchItemList={topRatedTv.slice(0, 10)} mediaType={'tv'} />
+                        <Fullitem searchItemList={topRatedTv.slice(0, 10)} />
                         <div className="w-full py-4" >
                             {translations[language]?.browseCollection}
                             <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
@@ -209,13 +210,13 @@ export default function WatchToWWatch() {
                                 <button></button>
                             </div>
                         </div>
-                        <Fullitem searchItemList={topRatedTv.slice(11, 21)} mediaType={'tv'} />
+                        <Fullitem searchItemList={topRatedTv.slice(10, 21)} />
                     </div>
                 )
             case 'FromYourWatchList':
                 return (
                     <div>
-                        <Fullitem searchItemList={discoverTv.slice(0, 10)} mediaType={'tv'} />
+                        <Fullitem searchItemList={discoverTv.slice(0, 10)} />
                         <div className="w-full py-4" >
                             {translations[language]?.browseCollection}
                             <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
@@ -229,13 +230,13 @@ export default function WatchToWWatch() {
                                 <button></button>
                             </div>
                         </div>
-                        <Fullitem searchItemList={discoverTv.slice(11, 21)} mediaType={'tv'} />
+                        <Fullitem searchItemList={discoverTv.slice(10, 21)}  />
                     </div>
                 )
             case 'MostPopular':
                 return (
                     <div>
-                        <Fullitem searchItemList={mostPopularTv.slice(0, 10)} mediaType={'tv'} />
+                        <Fullitem searchItemList={mostPopularTv.slice(0, 10)}  />
                         <div className="w-full py-4" >
                             {translations[language]?.browseCollection}
                             <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
@@ -249,7 +250,7 @@ export default function WatchToWWatch() {
                                 <button></button>
                             </div>
                         </div>
-                        <Fullitem searchItemList={mostPopularTv.slice(11, 21)} mediaType={'tv'} />
+                        <Fullitem searchItemList={mostPopularTv.slice(10, 21)}  />
                     </div>
                 )
         }

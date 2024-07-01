@@ -153,13 +153,9 @@ export default function ViewTable({
     }
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
         if (userInfoList?.length > 0) {
             dispatch(fetchGetRating())
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -260,7 +256,7 @@ export default function ViewTable({
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/${mediaType}/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
@@ -317,10 +313,8 @@ export default function ViewTable({
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
-                    // {/* mai fix grid responsive  */ }
-                    >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4 py-2" key={movieIndex}>
+                        <div className="text-black font-sans  shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl" >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
@@ -328,7 +322,8 @@ export default function ViewTable({
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
                                             <img onClick={() => navigate(`/${mediaType}/${movie?.id}`)}
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl
+" />
                                         </div>
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
@@ -357,8 +352,7 @@ export default function ViewTable({
                                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
                                                                     ) : (
                                                                         <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            Rate
+                                                                            <i className="fa-regular fa-star text-blue-500"></i> Rate
                                                                         </div>
                                                                     )}
                                                                 </div>
@@ -379,7 +373,7 @@ export default function ViewTable({
                                 </div>
 
                                 <div className="px-2 py-2" onClick={() => navigate(`/${mediaType}/${movie?.id}`)}   >
-                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
+                                    <button className="px-2 py-1 bg-gray-200 hover:bg-blue-300 text-blue-500 w-full rounded-xl font-medium text-center items-center">
                                         {translations[language]?.details}
                                     </button>
 
@@ -394,13 +388,13 @@ export default function ViewTable({
                 return (
                     <section className="px-2 border-t border-r border-l border-gray-500 w-full " key={movieIndex}
                     >
-                        <div className="text-black font-sans w-full " >
+                        <div className="text-black font-sans w-full" >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/${mediaType}/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>

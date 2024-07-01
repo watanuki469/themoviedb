@@ -12,12 +12,10 @@ import { setGlobalLoading } from "../redux/reducers/globalLoading.reducer";
 
 export interface SwiperRowProps {
     searchItemList: any
-    mediaType: any
 }
 
 export default function Fullitem({
     searchItemList,
-    mediaType
 }: SwiperRowProps) {
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
@@ -113,6 +111,7 @@ export default function Fullitem({
 
     const fetchFavorite = (
         movieId: string,
+        movieType: string,
         movieName: string,
         movieImg: string,
         movieReleaseDay: Date,
@@ -125,7 +124,7 @@ export default function Fullitem({
         const email = userInfoList[0];
         try {
             const response = await favoriteMongoApi(
-                email, movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
+                email, movieId, movieType === 'movie' ? "Movie" : 'TV', movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
             );
             dispatch(setFavorite(response));
             console.log(response);
@@ -145,6 +144,7 @@ export default function Fullitem({
     const handleWatchList = async (
         index: number,
         movieId: any,
+        movieType: any,
         movieName: any,
         movieImg: string,
         movieReleaseDay: Date,
@@ -156,7 +156,7 @@ export default function Fullitem({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            movieId, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
+            movieId, movieType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
@@ -196,7 +196,7 @@ export default function Fullitem({
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
         await dispatch(fetchRating(
-            itemId, itemType, itemRating, itemImg, itemName
+            itemId, itemType === 'movie' ? 'Movie' : 'TV', itemRating, itemImg, itemName
         ));
         setCheckLog(!checkLog);
         setIsRating(false)
@@ -239,7 +239,7 @@ export default function Fullitem({
 
     return (
         <div className="lg:max-w-full w-full py-8 mt-2 px-2 ">
-            <div className="h-full  flex flex-wrap relative ">
+            <div className="h-full  flex flex-wrap relative  ">
                 {isRating && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
                         <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
@@ -272,7 +272,7 @@ export default function Fullitem({
                                             }} />
                                         <br />
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, searchItemList[numberIndex]?.id, mediaType, value, searchItemList[numberIndex]?.poster_path, searchItemList[numberIndex]?.name ? searchItemList[numberIndex]?.name : searchItemList[numberIndex]?.title)}>
+                                            onClick={() => handleRating(numberIndex, searchItemList[numberIndex]?.id, searchItemList[numberIndex]?.media_type, value, searchItemList[numberIndex]?.poster_path, searchItemList[numberIndex]?.name ? searchItemList[numberIndex]?.name : searchItemList[numberIndex]?.title)}>
                                             {loading2[numberIndex] ? (
                                                 <div>
                                                     <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
@@ -285,7 +285,7 @@ export default function Fullitem({
                                             }
                                         </button>
                                         <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRemoveRating(numberIndex, searchItemList[numberIndex]?.id, mediaType)}>
+                                            onClick={() => handleRemoveRating(numberIndex, searchItemList[numberIndex]?.id, searchItemList[numberIndex]?.media_type)}>
                                             {loading3[numberIndex] ? (
                                                 <div>
                                                     <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
@@ -309,18 +309,18 @@ export default function Fullitem({
                     const existingRating = ratingList.find(rating => rating?.itemId == item?.id); // Find the rating object for the item
 
                     return (
-                        <div key={index} className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:w-1/5 py-2">
-                            <div className="relative w-full pb-[150%] hover:opacity-80" onClick={() => navigate(`/${mediaType}/${item?.id}`)}>
+                        <div key={index} className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:w-1/5 py-2 ">
+                            <div className="relative w-full pb-[150%] hover:opacity-80  " onClick={() => navigate(`/${item?.media_type}/${item?.id}`)}>
                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`}
                                     alt="product images"
-                                    className="absolute top-0 left-0 w-full h-full object-cover"
+                                    className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-2xl "
                                     onError={(e) => {
                                         e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
                                         e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
                                     }}
                                 />
                             </div>
-                            <div className="bg-gray-900">
+                            <div className="bg-gray-900 rounded-br-2xl rounded-bl-2xl">
                                 <div className="mx-3 ">
                                     <div className="flex gap-x-4 items-center ">
                                         <div className="flex items-center space-x-2">
@@ -359,7 +359,7 @@ export default function Fullitem({
                                         <p className="line-clamp-2">{index}. {item.title ? item?.title : item?.name}</p>
                                     </div>
                                     <button
-                                        onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count
+                                        onClick={() => handleWatchList(index, item?.id, item?.media_type, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count
                                         )}
                                         className="flex mt-1 items-center px-4 py-2 border rounded-lg w-full hover:bg-gray-500 justify-center bg-gray-800 text-blue-500 border-none"
                                     >
@@ -398,7 +398,7 @@ export default function Fullitem({
                                         </div>
                                     </button>
                                     <button
-                                        onClick={() => navigate(`/${mediaType === 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
+                                        onClick={() => navigate(`/${item?.media_type === 'movie' ? 'video' : 'videoTv'}/${item?.id}`)}
                                         className="flex items-center px-4 py-2 border rounded-lg w-full hover:bg-gray-600 justify-center border-none text-white">
                                         <i className="fa-solid fa-play mr-2"></i>
                                         <p>Trailer</p>

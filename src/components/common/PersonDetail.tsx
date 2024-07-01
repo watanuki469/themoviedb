@@ -2,7 +2,7 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import ShareIcon from '@mui/icons-material/Share';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -10,8 +10,12 @@ import { AppDispatch } from '../../redux/store';
 import { favoriteActorMongoApi, getFavoriteActorMongoApi } from '../../redux/client/api.LoginMongo';
 import { setFavoriteActor, setListActorFavorite } from '../../redux/reducers/login.reducer';
 import { LanguageContext } from '../../pages/LanguageContext';
-
-
+import lottie from 'lottie-web';
+import { Player } from '@lottiefiles/react-lottie-player';
+import Twitter from '../../assets/lottie/AnimationTwitter.json'
+import Facebook from '../../assets/lottie/AnimationFB.json'
+import Mail from '../../assets/lottie/AnimationMail.json'
+import Copy from '../../assets/lottie/AnimationCopy.json'
 export interface TwoMovieRowProps {
     singleMovieList: any
 }
@@ -268,41 +272,65 @@ export default function PersonDetail({
                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         >
                             <MenuItem>
-                                <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-facebook text-2xl"></i>
-                                        </ListItemIcon>
-                                        Facebook
+                                <div className="fb-share-button " data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
+                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore flex items-center gap-2">
+                                        <Player
+                                            src={Facebook}
+                                            autoplay={true}
+                                            speed={1.5}
+                                            // hover
+                                            className="h-7 w-7 text-white"
+                                            loop
+                                        />
+                                        <div>Facebook</div>
                                     </a>
+
                                 </div>
+
                             </MenuItem>
 
                             <MenuItem>
-                                <blockquote className="twitter-tweet items-center">
-                                    <ListItemIcon>
-                                        <i className="fa-brands fa-twitter text-2xl"></i>
-                                    </ListItemIcon>
-                                    <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
+                                <div className='gap-2 flex items-center '>
+                                    <Player
+                                        src={Twitter}
+                                        autoplay={true}
+                                        speed={1.5}
+                                        // hover
+                                        className="h-7 w-7 text-white"
+                                        loop
+                                    />
+                                    <a target="_blank" href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
                                         Twitter
                                     </a>
-                                </blockquote>
+                                </div>
                             </MenuItem>
                             <MenuItem>
-                                <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                    title="Share by Email">
-                                    <ListItemIcon>
-                                        <i className="fa-regular fa-envelope text-2xl"></i>
-                                    </ListItemIcon>
-                                    Email Link
+                                <a target="_blank" href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
+                                    title="Share by Email" className='gap-2 flex items-center'>
+                                    <Player
+                                        src={Mail}
+                                        autoplay={true}
+                                        speed={1.5}
+                                        // hover
+                                        className="h-7 w-7 text-white"
+                                        loop
+                                    />
+                                    <div>Email Link</div>
                                 </a>
                             </MenuItem>
 
                             <MenuItem onClick={handleCopyLink}>
-                                <ListItemIcon>
-                                    <i className="fa-solid fa-link text-2xl"></i>
-                                </ListItemIcon>
-                                Copy Link
+                                <div className='gap-2 flex items-center'>
+                                    <Player
+                                        src={Copy}
+                                        autoplay={true}
+                                        speed={1.5}
+                                        // hover
+                                        className="h-7 w-7 text-white"
+                                        loop
+                                    />
+                                    <div>Copy Link</div>
+                                </div>
                             </MenuItem>
                         </Menu>
 

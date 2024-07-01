@@ -17,6 +17,7 @@ import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { LanguageContext } from '../../pages/LanguageContext';
+import Share from '../../modules/Share';
 
 export default function TopBoxOffice() {
     const dispatch = useAppDispatch();
@@ -46,11 +47,6 @@ export default function TopBoxOffice() {
     const currentDatePre = new Date(currentDate);
     currentDatePre.setDate(currentDatePre.getDate() - 5);
     const currenDatePre = currentDatePre.getDate();
-
-    const [isChecked, setIsChecked] = useState(false);
-    const handleChecked = () => {
-        setIsChecked(!isChecked);
-    }
 
     const [currentView, setCurrentView] = useState('Detail'); // Default view is 'detail'
 
@@ -123,7 +119,7 @@ export default function TopBoxOffice() {
         }
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
-        }, 3000);
+        }, 1000);
     }, [userInfoList]);
     const fetchRating = (
         itemId: string,
@@ -212,7 +208,9 @@ export default function TopBoxOffice() {
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                            onError={handleImageError}
+                                            className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl"
+                                        />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <p>{translations[language]?.weekend}: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
@@ -223,7 +221,7 @@ export default function TopBoxOffice() {
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
                                                 <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
+                                                    <div className="grow ml-auto" onClick={() => handleClick(movie, existingRating?.itemRating)}>
                                                         {
                                                             existingRating ? (
                                                                 loading2[movieIndex] ? (
@@ -231,7 +229,7 @@ export default function TopBoxOffice() {
                                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                     </div>
                                                                 ) : (
-                                                                    <div className="flex items-center  gap-2 hover:bg-gray-500 w-fit px-2 py-2 rounded-lg">
+                                                                    <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
                                                                         <i className="fa-solid fa-star text-blue-500"></i>
                                                                         <div>{existingRating?.itemRating}</div>
                                                                     </div>
@@ -242,7 +240,7 @@ export default function TopBoxOffice() {
                                                                     {loading2[movieIndex] ? (
                                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
                                                                     ) : (
-                                                                        <div className="hover:bg-gray-500  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
+                                                                        <div className="hover:bg-gray-200  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
                                                                             <i className="fa-regular fa-star text-blue-500"></i>
                                                                             <div>Rate</div>
                                                                         </div>
@@ -274,14 +272,14 @@ export default function TopBoxOffice() {
                 return (
                     <section className=" w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                        <div className="text-black font-sans  shadow-sm shadow-black rounded-tr-xl " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
                                             <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
                                         </div>
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
@@ -315,8 +313,7 @@ export default function TopBoxOffice() {
                                                                         <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
                                                                     ) : (
                                                                         <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            Rate
+                                                                            <i className="fa-regular fa-star text-blue-500"></i>  Rate
                                                                         </div>
                                                                     )}
                                                                 </div>
@@ -358,7 +355,7 @@ export default function TopBoxOffice() {
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/movie/${movie?.id}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
+                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <div>
@@ -416,31 +413,6 @@ export default function TopBoxOffice() {
                 )
         }
     }
-
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
-
-        // Thử copy địa chỉ URL vào clipboard
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                // Nếu thành công, hiển thị thông báo
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
 
     const context = useContext(LanguageContext);
 
@@ -524,89 +496,12 @@ export default function TopBoxOffice() {
             <div className="bg-white">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full w-full ">
-                        <div className="flex mt-3 items-center ">
-                            <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">{translations[language]?.chart}</h2>
-                            </div>
+                        <div className="flex items-center  ">
+                            <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl text-lg text-black ">{translations[language]?.share} </p>
-                                <IconButton
-                                    onClick={handleShareClick}
-                                    size="small"
-                                    aria-controls={openShare ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={openShare ? 'true' : undefined}
-                                >
-                                    <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
-                                            bgcolor: 'gray', opacity: '50%'
-                                        }
-                                    }}>
-                                        <ShareIcon />
-                                    </Avatar>
-                                </IconButton>
-                                <Menu
-                                    anchorEl={anchorShareEl}
-                                    id="account-menu"
-                                    open={openShare}
-                                    onClose={handleShareClose}
-                                    onClick={handleShareClose}
-                                    PaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            '& .MuiAvatar-root': {
-                                                width: 32, height: 32, ml: -0.5, mr: 1,
-                                            },
-                                            '&::before': {
-                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                            },
-                                        },
-                                    }}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem>
-                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                                <ListItemIcon>
-                                                    <i className="fa-brands fa-facebook text-2xl"></i>
-                                                </ListItemIcon>
-                                                Facebook
-                                            </a>
-                                        </div>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <blockquote className="twitter-tweet items-center">
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-twitter text-2xl"></i>
-                                            </ListItemIcon>
-                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                                Twitter
-                                            </a>
-                                        </blockquote>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                            title="Share by Email">
-                                            <ListItemIcon>
-                                                <i className="fa-regular fa-envelope text-2xl"></i>
-                                            </ListItemIcon>
-                                            Email Link
-                                        </a>
-                                    </MenuItem>
-
-                                    <MenuItem onClick={handleCopyLink}>
-                                        <ListItemIcon>
-                                            <i className="fa-solid fa-link text-2xl"></i>
-                                        </ListItemIcon>
-                                        Copy Link
-                                    </MenuItem>
-                                </Menu>
+                                <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
                             </div>
+                            <Share />
                         </div>
                         <div className="">
                             <div className="flex items-center ">
@@ -652,8 +547,7 @@ export default function TopBoxOffice() {
                                         </div>
                                     )}
                                     {topRatedMovies
-                                        .slice(0, 10) // Tạo một bản sao của mảng topRatedMovies
-                                        // .sort((a, b) => b?.popularity - a?.popularity) // Sắp xếp các đối tượng trong bản sao mảng
+                                        .slice(0, 10)
                                         .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))}
                                 </div>
                             </div>
@@ -687,10 +581,7 @@ export default function TopBoxOffice() {
                                     <TopRatedMovieByGenre />
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -105,10 +105,6 @@ export function ActivityLayout() {
 
     const [currentView, setCurrentView] = useState('Grid'); // Default view is 'detail'
 
-    const switchView = (view: any) => {
-        setCurrentView(view);
-    };
-
     const [currentSelection, setCurrentSelection] = useState('case1'); // Default view is 'detail'
 
     type GenreID = number;
@@ -199,9 +195,9 @@ export function ActivityLayout() {
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3" key={movieIndex}
+                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3 py-2" key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                        <div className="text-black font-sans  shadow-sm shadow-black  rounded-br-xl rounded-bl-xl rounded-tr-xl" >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
@@ -211,7 +207,7 @@ export function ActivityLayout() {
                                                 e.currentTarget.src = 'https://via.placeholder.com/500x750'; 
                                                 e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
                                             }}
-                                            className="hover:opacity-80"
+                                            className="hover:opacity-80  rounded-tr-xl"
                                         />
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">

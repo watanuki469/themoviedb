@@ -19,12 +19,12 @@ export default function OneRow({
     const { language, translations, handleLanguageChange } = context;
 
     return (
-        <div className="relative">
+        <div className="relative rounded-br-xl rounded-bl-xl rounded-tr-xl">
             <Swiper
                 spaceBetween={2}
                 slidesPerView={1}
                 // direction="horizontal"
-                className="mySwiper text-white w-full h-auto flex"
+                className="mySwiper text-white w-full h-auto flex rounded-br-xl rounded-bl-xl rounded-tr-xl"
             >
                 {listRowList?.slice(3).map((item: any, index: any) => (
                     <SwiperSlide key={index} className="w-full">

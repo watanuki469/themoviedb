@@ -299,7 +299,8 @@ export function WatchListLayout2() {
                                     <div className="flex items-center gap-2">
                                         <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                             src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError} className="w-28 h-40 hover:opacity-80" />
+                                            onError={handleImageError} className="w-28 h-40 hover:opacity-80
+                                            rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.itemName}</p>
                                             <div className="flex flex-wrap gap-2">{movie?.itemReleaseDay?.slice(0, 4)} ||
@@ -342,16 +343,16 @@ export function WatchListLayout2() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 lg:w-1/6 md:w-1/4 sm:w-1/3 px-2 " key={movieIndex}
+                    <section className=" w-1/2 lg:w-1/6 md:w-1/4 sm:w-1/3 px-2 py-2 " key={movieIndex}
                     >
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
+                        <div className="text-black font-sans  shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
                                             <img onClick={() => navigate(`/${movie?.mediaType}/${movie?.movieId}`)}
                                                 src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
                                         </div>
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">

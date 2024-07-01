@@ -222,11 +222,11 @@ export default function PersonCredit({
                             {personCreditList?.map((item: any, index: any) => {
                                 return (
                                     <SwiperSlide key={index} className="w-full " >
-                                        <div className="flex items-stretch gap-2 shadow-sm shadow-black rounded-xl  h-full mt-3 mb-3 mr-3"> {/* Thêm class h-full để chiều cao bằng nhau */}
+                                        <div className="flex items-stretch gap-2 shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl  h-full mt-3 mb-3 mr-3"> {/* Thêm class h-full để chiều cao bằng nhau */}
                                             <div className="flex-1" style={{ maxWidth: "100px" }}
                                                 onClick={() => navigate(`/movie/${item?.id}`)}> {/* Đặt kích thước tối đa cho ảnh */}
                                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images"
-                                                    className="object-cover h-full w-full bg-gray-500" style={{ maxWidth: "100%", height: '100%' }} onError={handleImageError} /> {/* Đặt kích thước tối đa cho ảnh */}
+                                                    className="object-cover h-full w-full bg-gray-500 rounded-bl-xl " style={{ maxWidth: "100%", height: '100%' }} onError={handleImageError} /> {/* Đặt kích thước tối đa cho ảnh */}
                                             </div>
                                             <div className=" text-black flex-1  flex-col" onClick={() => navigate(`/movie/${item?.id}`)}>
                                                 <div className=" py-2">
@@ -275,13 +275,13 @@ export default function PersonCredit({
                                 {personCreditList?.slice(2).map((item: any, index: any) => {
                                     return (
                                         <SwiperSlide key={index} className="w-full">
-                                            <div className="flex items-stretch gap-2 shadow-sm shadow-black rounded-xl  h-full mt-3 mb-3 mr-3">
+                                            <div className="flex items-stretch gap-2 shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl h-full mt-3 mb-3 mr-3">
                                                 <div className="flex-1" style={{ maxWidth: "100px" }}
                                                     onClick={() => navigate(`/movie/${item?.id}`)}>
                                                     <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" onError={handleImageError}
-                                                        className="object-cover h-full w-full bg-gray-500 "  style={{ maxWidth: "100%", height: '100%' }} />
+                                                        className="object-cover h-full w-full bg-gray-500 rounded-bl-xl  "  style={{ maxWidth: "100%", height: '100%' }} />
                                                 </div>
-                                                <div className="bg-white text-black px-2  flex-1 flex-col "
+                                                <div className=" text-black px-2  flex-1 flex-col "
                                                     onClick={() => navigate(`/movie/${item?.id}`)}>
                                                     <div className="py-2 ">
                                                         <div className="text-xl font-bold mb-1">

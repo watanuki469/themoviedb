@@ -74,7 +74,7 @@ export default function Slider() {
             <section className='relative overflow-hidden'>
                 <div className="grid grid-cols-12 text-white gap-3  items-end cursor-pointer w-full ">
                     <div className="lg:col-span-8 col-span-12 flex items-stretch">
-                        <div id='1' className=" bg-cover bg-top relative w-screen hover:opacity-90"
+                        <div id='1' className=" bg-cover bg-top relative w-screen hover:opacity-90 rounded-br-xl rounded-bl-xl rounded-tr-xl"
                             style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${popularMovies[activeStep]?.backdrop_path})` }}>
                             <div className="flex flex-col h-full "  >
                                 <div className='flex absolute w-full '>

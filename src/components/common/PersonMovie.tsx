@@ -42,8 +42,8 @@ export default function PersonMovie({
                 {personMovieList?.map((item: any, index: any) => {
                     return (
                         <SwiperSlide key={index} >
-                            <div className="w-full" onClick={()=>navigate(`/video/${item?.id}`)}>
-                                <div className='min-h-60 hover:opacity-90'
+                            <div className="w-full rounded-xl" onClick={()=>navigate(`/video/${item?.id}`)}>
+                                <div className='min-h-60 hover:opacity-80 rounded-xl'
                                     style={{
                                         backgroundImage: `url('https://image.tmdb.org/t/p/w300/${item?.poster_path}')`,
                                         width: "100%",

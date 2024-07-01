@@ -46,7 +46,7 @@ const apiPerson = {
 }
 const apiSearch = {
     search(mediaType: any, query: any) {
-        const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=true&language=${language}&page=1`;
+        const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=false&language=${language}&page=1`;
         return axiosClient.get(url)
     },
 }
@@ -64,12 +64,30 @@ const apiTvImages = {
     },
 }
 
+// const apiUpComing = {
+//     upComing(mediaType: any) {
+//         const url = `${mediaType}/upcoming?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`;
+//         return axiosClient.get(url)
+//     },
+// }
+// --url 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=true&language=en-US&page=20&primary_release_year=2024&primary_release_date.gte=2024-06-28&release_date.lte=2024-06-28&sort_by=primary_release_date.asc' \
+const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 const apiUpComing = {
     upComing(mediaType: any) {
-        const url = `${mediaType}/upcoming?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=1`;
-        return axiosClient.get(url)
-    },
-}
+        const todayDate = getTodayDate();
+        const url = mediaType === 'movie'
+            ? `/discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=1&primary_release_date.gte=${todayDate}&release_date.gte=${todayDate}&sort_by=primary_release_date.asc`
+            : `/discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=1&first_air_date.gte=${todayDate}&include_null_first_air_dates=false&sort_by=first_air_date.asc`;
+        return axiosClient.get(url);
+    }
+};
 
 const apiPeoplePopular = {
     peoplePopular() {
@@ -78,15 +96,15 @@ const apiPeoplePopular = {
     },
 }
 const apiKeyword = {
-    keyword(query: any,mediaType:any) {
+    keyword(query: any, mediaType: any) {
         const url = `keyword/${query}/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&language=${language}&page=1`;
         return axiosClient.get(url)
     },
 }
 const apiGenre = {
-    genre(mediaType:any) {
+    genre(mediaType: any) {
         const url = `genre/${mediaType}/list?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`;
         return axiosClient.get(url)
     },
 }
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing,apiPeoplePopular ,apiKeyword,apiGenre}
+export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing, apiPeoplePopular, apiKeyword, apiGenre }

@@ -26,7 +26,7 @@ export default function BrowseGenreLayout() {
     // };
     const dispatch = useAppDispatch();
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre);
-    const listGenreFromApi2 = useAppSelector((state) => state.genre.listGenre);
+    const listGenreFromApi2 = useAppSelector((state) => state.genre.listGenre2);
     const fetchGenre = () => (dispatch: AppDispatch) => {
         apiController.apiGenre.genre('movie')
             .then((data: any) => {
@@ -95,7 +95,7 @@ export default function BrowseGenreLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
                     <div className="md:grid grid-cols-12 gap-2 px-2 ">
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
-                            <div className="py-3">
+                            <div className="py-2">
                                 <Button
                                     id="demo-customized-button"
                                     aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -106,7 +106,7 @@ export default function BrowseGenreLayout() {
                                     endIcon={<i className="fa-solid fa-caret-down"></i>}
                                     sx={{
                                         // bgcolor: anchorRankingEl ? 'blue' : 'white',
-                                        textTransform:'capitalize',
+                                        textTransform:'uppercase',
                                         bgcolor: anchorRankingEl ? 'blue' : 'white',
                                         color: anchorRankingEl ? 'white' : 'blue',
                                         border: anchorRankingEl ? ' dashed' : '',
@@ -157,7 +157,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map((genre: any) => (
                                             <div
-                                                onClick={() => navigate(`/search?genres=${genre}`)}
+                                                onClick={() => navigate(`/search?mediaType=movie&genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -174,7 +174,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping2).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genres=${genre}`)}
+                                                onClick={() => navigate(`/search?mediaType=tv&genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -191,7 +191,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genres=${genre}`)}
+                                                onClick={() => navigate(`/search?mediaType=movie&genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -208,7 +208,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping2)?.map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genres=${genre}`)}
+                                                onClick={() => navigate(`/search?mediaType=tv&genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -225,7 +225,7 @@ export default function BrowseGenreLayout() {
                                     {
                                         Object.values(genreMapping).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genres=${genre}`)}
+                                                onClick={() => navigate(`/search?mediaType=movie&genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))
@@ -240,9 +240,9 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping).map(genre => (
+                                        Object.values(genreMapping2).map(genre => (
                                             <div
-                                                onClick={() => navigate(`/search?genres=${genre}`)}
+                                                onClick={() => navigate(`/search?mediaType=tv&genres=${genre}`)}
                                                 className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
                                             </div>
                                         ))

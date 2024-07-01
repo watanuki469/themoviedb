@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { LanguageContext } from "../../pages/LanguageContext";
 
 export interface TwoMovieRowProps {
     personDetailExList: any
@@ -8,6 +10,13 @@ export default function PersonDetailExternal({
     personDetailExList
 }: TwoMovieRowProps) {
     let navigate = useNavigate()
+
+    const context = useContext(LanguageContext);
+    if (!context) {
+        return null;
+    }
+    const { language, translations, handleLanguageChange } = context;
+
     return (
         <section className="" style={{
             position: "relative",
@@ -23,7 +32,7 @@ export default function PersonDetailExternal({
                         <div className="text-black">
                             <div className="py-2 border-b border-t border-gray-300 flex gap-3">
                                 <div className="flex flex-wrap gap-2">
-                                    <p>Official sites</p>
+                                    <p className="font-bold">{translations[language]?.officialSites}</p>
                                     <div className='flex flex-wrap items-center gap-2 text-blue-500'>
                                         <div className='flex flex-wrap items-center gap-2'
                                             onClick={() => window.location.href = `https://www.facebook.com/${personDetailExList[0]?.external_ids?.facebook_id}`}
@@ -59,12 +68,24 @@ export default function PersonDetailExternal({
                                 </div>
 
                             </div>
+                            <div className="border-b border-gray-300">
+                                <div className="font-bold">{translations[language]?.alternativeName} </div>
+                                <div className="">{personDetailExList[0]?.also_known_as?.map((item: any, index: any) => {
+                                    return (
+                                        <div key={index}>
+                                            {item}
+                                        </div>
+                                    )
+                                })}
+                                </div>
+                            </div>
                             <div className=" border-b border-gray-300 flex gap-2 py-2 items-center aligns-center">
-                                <div className="">Height   5′ 5″ (1.65 m)</div>
+                                <div className="font-bold">{translations[language]?.height}  </div>
+                                <div> 5′ 5″ (1.65 m)</div>
                             </div>
                             <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                 <div className="flex flex-wrap gap-2">
-                                    <p>Born</p>
+                                    <p className="font-bold">{translations[language]?.born}</p>
                                     <div className="flex flex-wrap text-blue-500 gap-2">
                                         <p>{personDetailExList[0]?.birthday &&
                                             new Date(personDetailExList[0]?.birthday).toLocaleDateString('en-US', {
@@ -82,10 +103,10 @@ export default function PersonDetailExternal({
                             </div>
                             <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                 <div className="flex flex-wrap gap-2">
-                                    <p>   IMDb<span className="text-blue-500">Pro</span></p>
+                                    <p className="font-bold">   IMDb<span className="text-blue-500">Pro</span></p>
                                     <div className="flex gap-3 items-center">
                                         <p onClick={() => navigate(`/`)} className="hover:underline flex gap-2">
-                                            <span className="text-blue-600">See more at IMDbPro</span>
+                                            <span className="text-blue-600">{translations[language]?.seePro}</span>
                                         </p>
                                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
 

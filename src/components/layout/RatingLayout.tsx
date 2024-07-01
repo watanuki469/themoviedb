@@ -62,7 +62,7 @@ export function RatingLayout() {
                 console.error('Error copying link:', error);
             });
     };
-    const [currentSelection, setCurrentSelection] = useState('case1'); 
+    const [currentSelection, setCurrentSelection] = useState('case1');
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
@@ -187,20 +187,21 @@ export function RatingLayout() {
         const existingRating = recentList.find(rating => rating?.itemId == movie?.itemId); // Find the rating object for the item
 
         return (
-            <section className=" w-1/2 md:w-1/5 px-2 sm:w-1/3 " key={movieIndex}
+            <section className=" w-1/2 md:w-1/5 px-2 sm:w-1/3 py-2  " key={movieIndex}
             >
-                <div className="text-black font-sans  shadow-sm shadow-black  " >
+                <div className="text-black font-sans  shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl " >
                     <div className=" items-center ">
                         <div className="mt-2">
-                            <div className="items-center gap-2">
+                            <div className="relative w-full pb-[150%] hover:opacity-80">
                                 <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
                                     src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                    onError={handleImageError} className="w-full h-60 hover:opacity-80" />
-                                <div className="px-2 py-2 w-full">
-                                    <div className="flex flex-wrap items-center gap-2 justify-start text-left">
-                                        <div className="h-12 w-full ">
-                                            <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
-                                        </div>
+                                    onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
+
+                            </div>
+                            <div className="px-2 py-2 w-full">
+                                <div className="flex flex-wrap items-center gap-2 text-left">
+                                    <div className="h-12 w-full ">
+                                        <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
                                     </div>
                                 </div>
                             </div>
