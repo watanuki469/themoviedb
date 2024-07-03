@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface TwoMovieRowProps {
-    twoMovieRowList: any
+    twoMovieRowList: any[];
 }
 
 export default function TwoMovieRow({
-    twoMovieRowList,
-    
+    twoMovieRowList = [],
 }: TwoMovieRowProps) {
 
     const [activeSlider, setActiveSlider] = useState(4);
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 500) {
@@ -20,7 +19,7 @@ export default function TwoMovieRow({
             } else if (window.innerWidth < 600) {
                 setActiveSlider(3);
             } else if (window.innerWidth < 1024) {
-                setActiveSlider(4);           
+                setActiveSlider(4);
             } else {
                 setActiveSlider(3);
             }
@@ -30,7 +29,6 @@ export default function TwoMovieRow({
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-
 
     return (
         <div className="sm:px-2">
@@ -46,13 +44,15 @@ export default function TwoMovieRow({
                 className="mySwiper text-white"
             >
                 {twoMovieRowList?.map((item: any, index: any) => {
-                    return (                       
+                    if (!item?.key) return
+                    <div></div>; // Skip rendering if item.key is undefined or null
+                    return (
                         <SwiperSlide key={index}>
                             <div className="w-full hover:opacity-90 hover:text-yellow text-white " >
-                                <img 
-                                    src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`}                                      
-                                    className="h-40 w-full object-cover object-center border-2 border-gray-300  rounded-xl "
-                                    title={item?.name}
+                                <img
+                                    src={`https://img.youtube.com/vi/${item.key}/hqdefault.jpg`}
+                                    className="h-40 w-full object-cover object-center border-2 border-gray-300 rounded-xl "
+                                    title={item.name}
                                 />
                                 <div className="absolute inset-0 w-full h-full text-center top-14">
                                     <i className="fa-solid fa-circle-play text-5xl "></i>

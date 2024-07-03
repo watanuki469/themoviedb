@@ -45,12 +45,7 @@ export default function Charts() {
                     <i className="fa-solid fa-chevron-right "></i>
                 </div>
                 <p className="text-gray-500 text-lg">{translations[language]?.asRated}</p>
-                {/* <div className="flex items-center gap-2 font-bold text-xl hover:text-yellow-300 mt-2">
-                    <p className="hover:text-black">Lowest Rated Movies</p>
-                    <i className="fa-solid fa-chevron-right "></i>
-                </div>
-                <p className="text-gray-500 text-lg">Bottom 100 as voted by IMDb users</p> */}
-
+               
                 <div
                     onClick={() => navigate('/popularCeleb')}
                     className="flex items-center gap-2 font-bold text-xl hover:text-yellow-300 mt-2">

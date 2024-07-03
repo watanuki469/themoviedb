@@ -405,7 +405,6 @@ export default function AdvancedSearchLayout() {
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black mt-2 rounded-br-xl rounded-bl-xl rounded-tr-xl" >
                             <div className="items-center gap-2">
-                                {/* <div className="px-2"></div> */}
                                 <div className="relative w-full pb-[150%] hover:opacity-80  rounded-tr-xl ">
                                     <img onClick={() => navigate(`/${mediatype}/${movie?.id}`)}
                                         src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
@@ -688,74 +687,55 @@ export default function AdvancedSearchLayout() {
         setQuery(newQuery);
     };
 
-    // Định nghĩa state cho fromDate và toDate
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "From"
+   
     const handleFromDateChange = (event: any) => {
         if (!query) {
-            // Hiển thị thông báo yêu cầu nhập ô input trước
-            // Ví dụ sử dụng thư viện toastify
             toast.error("Please enter the title field first.");
-            return; // Dừng xử lý tiếp theo
+            return;
         }
         setFromDate(event.target.value);
     };
 
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "To"
     const handleToDateChange = (event: any) => {
         if (!query) {
             toast.error("Please enter the title field first.");
-            return; // Dừng xử lý tiếp theo
+            return; 
         }
         setToDate(event.target.value);
     };
 
-
     const [imdbImdbRatingFrom, setImdbRatingFrom] = useState('');
     const [imdbImdbRatingTo, setImdbRatingTo] = useState('');
 
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "From"
     const handleFromImdbChange = (event: any) => {
         if (!query) {
-            // Hiển thị thông báo yêu cầu nhập ô input trước
-            // Ví dụ sử dụng thư viện toastify
             toast.error("Please enter the title field first.");
-            return; // Dừng xử lý tiếp theo
+            return;
         }
         setImdbRatingFrom(event.target.value);
     };
-
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "To"
+   
     const handleToImdbChange = (event: any) => {
         if (!query) {
-            // Hiển thị thông báo yêu cầu nhập ô input trước
-            // Ví dụ sử dụng thư viện toastify
             toast.error("Please enter the title field first.");
-            return; // Dừng xử lý tiếp theo
+            return;
         }
         setImdbRatingTo(event.target.value);
     };
 
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "From"
     const handleFromVotesChange = (event: any) => {
         if (!query) {
-            // Hiển thị thông báo yêu cầu nhập ô input trước
-            // Ví dụ sử dụng thư viện toastify
             toast.error("Please enter the title field first.");
-            return; // Dừng xử lý tiếp theo
+            return;
         }
         setVotesFrom(event.target.value);
     };
-
-    // Hàm xử lý sự kiện khi người dùng thay đổi ngày "To"
     const handleToVotesChange = (event: any) => {
         if (!query) {
-            // Hiển thị thông báo yêu cầu nhập ô input trước
-            // Ví dụ sử dụng thư viện toastify
             toast.error("Please enter the title field first.");
-            return; // Dừng xử lý tiếp theo
+            return;
         }
         setVotesTo(event.target.value);
     };
@@ -780,16 +760,7 @@ export default function AdvancedSearchLayout() {
     }, []);
 
     useEffect(() => {
-
         let params = [];
-        // const mediaParam = searchParams.get("mediaType");
-        // if (mediaParam) {
-        //     setMediaType(mediaParam);
-        //     params.push('mediaType=' + mediaParam);
-        // }
-        // else (
-        //     params.push('mediaType=' + mediatype)
-        // )
 
         params.push('mediaType=' + mediatype);
 

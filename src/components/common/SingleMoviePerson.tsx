@@ -111,7 +111,6 @@ export default function SingleMoviePerson({
                         )
                     })}
                 </Swiper>
-
             </div>
 
             <div className="text-black">

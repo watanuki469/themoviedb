@@ -85,7 +85,7 @@ export default function TvLayout() {
 
     // Lấy tên của tháng hiện tại từ mảng monthNames
     const currentMonthName = monthNames[currentMonth];
-    const totalImages = tvImageList[0]?.backdrops?.length + tvImageList[0]?.logos?.length + tvImageList[0]?.posters?.length;
+    // const totalImages = tvImageList[0]?.backdrops?.length + tvImageList[0]?.logos?.length + tvImageList[0]?.posters?.length;
     const [totalEpisodes, setTotalEpisodes] = useState(0);
     useEffect(() => {
         let sum = 0;
@@ -192,7 +192,7 @@ export default function TvLayout() {
                             <div className="flex items-center py-4 px-2 w-full">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black ">{translations[language]?.photos}</h2>
-                                <p className="text-lg font-bold text-gray-500 ml-4 ">{totalImages}</p>
+                                <p className="text-lg font-bold text-gray-500 ml-4 ">{tvImageList[0]?.backdrops?.length}</p>
                                 <i className="fa-solid fa-angle-right text-black text-2xl ml-2  hover:text-yellow-300"
                                     onClick={() => navigate(`/image/tv/${id}`)}></i>
                             </div>
@@ -219,7 +219,6 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full">
                                 <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'TV'} />
                             </div>
-
                             <div id="tvTrvia" className="text-white flex py-2 w-full px-2">
                                 <div className="flex items-center ">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -250,11 +249,9 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full">
                                 <TvDetailExternal tvDetailExList={tvList} />
                             </div>
-
-
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 " onClick={() => navigate('/top250Movie')} >
-                            <div className="flex items-center py-3">
+                        <div className="hidden lg:block col-span-4  h-full px-2 py-2 "  >
+                            <div className="flex items-center py-3" onClick={() => navigate('/top250Movie')}>
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                             </div>

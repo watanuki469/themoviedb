@@ -59,10 +59,10 @@ export default function TvReview({
     const { language, translations, handleLanguageChange } = context;
 
     return (
-        <section className="grid lg:py-4  lg:px-4 md:py-0 px-2">
+        <section className="grid lg:py-4  lg:px-4 md:py-0 px-2 ">
             <div className="text-black font-sans " >
                 <div style={{ position: "relative" }}>
-                    <div className="bg-white shadow-sm shadow-black w-full py-4 px-4 ">
+                    <div className="bg-white shadow-sm shadow-black w-full py-4 px-4  rounded-xl">
                         <div className="text-black flex py-4 ">
                             <div className="flex items-center">
                                 <div className="items-center">

@@ -132,7 +132,7 @@ export default function Slider() {
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className="h-full w-52 top-0 left-0  "
+                                            className="h-full w-52 top-0 left-0 rounded-br-xl rounded-tr-xl "
                                         />
                                     </div>
                                     <div className='flex-col w-full'>
@@ -192,7 +192,7 @@ export default function Slider() {
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 1]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className='w-20 object-cover self-start h-24'
+                                            className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
                                         />
                                     </div>
                                     <div className='flex flex-col w-full '>
@@ -229,7 +229,7 @@ export default function Slider() {
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 2]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className='w-20 object-cover self-start h-24'
+                                            className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
                                         />
                                     </div>
                                     <div className='flex flex-col w-full '>
@@ -264,7 +264,7 @@ export default function Slider() {
                                             src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 3]?.poster_path}`}
                                             onError={handleImageError}
                                             alt="movie-img"
-                                            className='w-20 object-cover self-start h-24'
+                                            className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
                                         />
                                     </div>
                                     <div className='flex flex-col w-full '>

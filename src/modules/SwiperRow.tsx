@@ -10,6 +10,7 @@ import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating
 import { AppDispatch } from "../redux/store";
 import { setGlobalLoading } from "../redux/reducers/globalLoading.reducer";
 import { LanguageContext } from "../pages/LanguageContext";
+import RatingModule from "./RatingModule";
 
 export interface SwiperRowProps {
     searchItemList: any
@@ -236,7 +237,7 @@ export default function SwiperRow({
     const { language, translations, handleLanguageChange } = context;
 
     return (
-        <div className="h-full ">
+        <div className="relative">
             {isRating &&
                 (
                     <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
@@ -315,7 +316,7 @@ export default function SwiperRow({
                     const existingRating = ratingList.find(rating => rating?.itemId == item?.id); // Find the rating object for the item
 
                     return (
-                        <SwiperSlide key={index} className=" rounded-br-xl rounded-bl-xl ">
+                        <SwiperSlide key={index} className=" rounded-br-xl rounded-bl-xl">
                             <div className="relative w-full pb-[150%] hover:opacity-80 ">
                                 <img
                                     onClick={() => navigate(`/${mediaType}/${item?.id}`)}
@@ -360,6 +361,7 @@ export default function SwiperRow({
                                                 )
                                             }
                                         </div>
+                                        {/* <RatingModule mediaType={mediaType === 'movie' ? 'Movie' : 'TV'} ratingList={item} email={userInfoList[0]} /> */}
                                     </div>
                                     <div className="h-12 mt-2">
                                         <p className="line-clamp-2">{index}. {item.title ? item?.title : item?.name}</p>

@@ -11,6 +11,8 @@ import { favoriteMongoApi, getFavoriteMongoApi, getListRatingMongoApi, ratingMon
 import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from '../../redux/reducers/login.reducer';
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import { LanguageContext } from '../../pages/LanguageContext';
+import Share from '../../modules/Share';
+import RatingModule from '../../modules/RatingModule';
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -264,27 +266,7 @@ export default function SingleMovieDetail({
             });
         }
     };
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
-        // Thử copy địa chỉ URL vào clipboard
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
+
     function formatNumber(num: any) {
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'm';
@@ -301,16 +283,13 @@ export default function SingleMovieDetail({
     return (
         <section className="" style={{
             position: "relative",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            overflow:'hidden'
         }}>
-            {isRating && (
+            {/* {isRating && (
                 <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
                     <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
                         <div className="flex items-center justify-end">
-                            <div className="flex justify-end">
-                                <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
+                            <div className="flex justify-end py-2">
+                                <button onClick={() => setIsRating(false)} className="text-white bg-black h-12 w-12 hover:opacity-80 px-2 py-2 rounded-full  ">
                                     <i className="fa-solid fa-times text-xl"></i>
                                 </button>
                             </div>
@@ -367,19 +346,19 @@ export default function SingleMovieDetail({
                         </div>
                     </div>
                 </div>
-            )}
-            <div className="text-white font-sans font-medium hue-rotate-15" >
+            )} */}
+            <div className="text-white font-sans font-medium " >
                 <div
                     style={{
                         backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleMovieList[0]?.backdrop_path}')`,
-                        position: "absolute", width: "100%", height:'100%',
+                        position: "absolute", width: "100%", height: '100%',
                         backgroundSize: "cover", backgroundPosition: "center",
                         backgroundColor: 'black', filter: 'blur(100px)',
                     }}>
 
                 </div>
 
-                <div style={{ position: "relative", zIndex: "1" }}>
+                <div style={{ position: "relative"}}>
                     <div className="flex flex-row justify-end gap-2 items-center ">
                         <div className=" py-2 hidden lg:block hover:underline capitalize" onClick={() => scrollToElement('movieCast')}>Top {translations[language]?.star}</div>
                         <div className=" py-2 hidden lg:block ">•</div>
@@ -388,76 +367,7 @@ export default function SingleMovieDetail({
                         <div className=" py-2 hidden lg:block hover:underline capitalize" onClick={() => scrollToElement('movieTrivia')}>{translations[language]?.storyLine}</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block hover:underline" onClick={() => navigate('/IMDbPro')}>IMDbPro</button>
 
-                        <IconButton
-                            onClick={handleShareClick}
-                            size="small"
-                            aria-controls={openShare ? 'account-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={openShare ? 'true' : undefined}
-                        >
-                            <ShareIcon sx={{ color: 'white', mr: '10px' }} />
-                        </IconButton>
-                        <Menu
-                            anchorEl={anchorShareEl}
-                            id="account-menu"
-                            open={openShare}
-                            onClose={handleShareClose}
-                            onClick={handleShareClose}
-                            PaperProps={{
-                                elevation: 0,
-                                sx: {
-                                    overflow: 'visible',
-                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                    mt: 1.5,
-                                    '& .MuiAvatar-root': {
-                                        width: 32, height: 32, ml: -0.5, mr: 1,
-                                    },
-                                    '&::before': {
-                                        content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                    },
-                                },
-                            }}
-                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                        >
-                            <MenuItem>
-                                <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-facebook text-2xl"></i>
-                                        </ListItemIcon>
-                                        Facebook
-                                    </a>
-                                </div>
-                            </MenuItem>
-
-                            <MenuItem>
-                                <blockquote className="twitter-tweet items-center">
-                                    <ListItemIcon>
-                                        <i className="fa-brands fa-twitter text-2xl"></i>
-                                    </ListItemIcon>
-                                    <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                        Twitter
-                                    </a>
-                                </blockquote>
-                            </MenuItem>
-                            <MenuItem>
-                                <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                    title="Share by Email">
-                                    <ListItemIcon>
-                                        <i className="fa-regular fa-envelope text-2xl"></i>
-                                    </ListItemIcon>
-                                    Email Link
-                                </a>
-                            </MenuItem>
-
-                            <MenuItem onClick={handleCopyLink}>
-                                <ListItemIcon>
-                                    <i className="fa-solid fa-link text-2xl"></i>
-                                </ListItemIcon>
-                                Copy Link
-                            </MenuItem>
-                        </Menu>
+                        <Share bgColor={'white'} />
                     </div>
                     <div className="flex justify-between">
                         <div className="items-center">
@@ -499,9 +409,10 @@ export default function SingleMovieDetail({
 
                                     </div>
                                 </div>
+                             
                                 <div className="items-center text-center justify-center  mr-4 aligns-center ">
                                     <div className="    text-stone-400">{translations[language]?.rating}</div>
-                                    <div className="flex hover:opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
+                                    {/* <div className="flex hover:opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
                                         <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
                                             {
                                                 existingRating ? (
@@ -530,13 +441,13 @@ export default function SingleMovieDetail({
                                                 )
                                             }
                                         </button>
-
-                                    </div>
+                                    </div> */}
+                                    <RatingModule mediaType={'Movie'} ratingList={singleMovieList[0]} email={userInfoList[0]}/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="md:grid md:grid-cols-12 gap-y-4 h-full py-2">
+                    <div className="grid grid-cols-12 gap-y-4 h-full py-2">
                         <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-90 ">
                             <img
                                 onError={handleImageError}
@@ -746,10 +657,7 @@ export default function SingleMovieDetail({
                                     ))}
                                 </div>
                                 <div>
-                                    <p className="py-2 ">
-                                        {/* {singleMovieList[0]?.overview && singleMovieList[0]?.overview.length > 120 ?
-                                            singleMovieList[0]?.overview.slice(0, 120) + "..." :
-                                            singleMovieList[0]?.overview} */}
+                                    <p className="py-2 ">                                  
                                         {singleMovieList[0]?.overview}
                                     </p>
                                 </div>
@@ -768,7 +676,8 @@ export default function SingleMovieDetail({
                                 </span>
                                 <span className="text-stone-400">  /10</span>
                                 <div className="text-stone-400">{singleMovieList[0]?.vote_count}</div>
-                                <div className="flex hover:opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
+                                <RatingModule mediaType={'Movie'} ratingList={singleMovieList[0]} email={userInfoList[0]}/>
+                                {/* <div className="flex hover:opacity-80 hover:bg-gray-500" onClick={() => handleClick(existingRating?.itemRating)}>
                                     <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl">
                                         {
                                             existingRating ? (
@@ -798,7 +707,7 @@ export default function SingleMovieDetail({
                                         }
                                     </button>
 
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className='px-3 items-center'>

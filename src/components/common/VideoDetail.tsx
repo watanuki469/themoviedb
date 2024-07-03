@@ -67,7 +67,7 @@ export default function VideoDetail({
                         <div className=" h-1/2 flex px-2 py-2 gap-2 max-h-40">
                             <img onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}
                                 src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
-                                className="max-w-32 h-full" />
+                                className="max-w-32 h-full rounded-xl" />
                             <div className='' >
                                 <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}>
                                     <p className='text-lg'>{singleMovieList[0]?.title ? singleMovieList[0]?.title : singleMovieList[0]?.name} ({singleMovieList[0]?.release_date ? singleMovieList[0]?.release_date?.slice(0, 4) : singleMovieList[0]?.first_air_date?.slice(0, 4)} )</p>
@@ -106,7 +106,7 @@ export default function VideoDetail({
                                     <img
                                         onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}
                                         src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
-                                        className="max-w-32 h-full max-h-32" />
+                                        className="max-w-32 h-full max-h-32 rounded-xl" />
                                     <div className=' px-2 py-2 w-full items-center'>
                                         <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)} >
                                             <p className='text-lg'>{singleMovieList[0]?.title ? singleMovieList[0]?.tile : singleMovieList[0]?.name}({singleMovieList[0]?.release_date ? singleMovieList[0]?.release_date?.slice(numberIndex, 4) : singleMovieList[0]?.first_air_date?.slice(numberIndex, 4)} )</p>
@@ -164,7 +164,7 @@ export default function VideoDetail({
                                         <img
                                             // src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
                                             src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`}
-                                            className="h-40 w-full object-cover"
+                                            className="h-40 w-full object-cover rounded-md"
                                             title={item?.name}
                                         />
                                         <p className="text-red w-full text-white font-bold">Watch {item?.name}</p>

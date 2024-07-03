@@ -68,7 +68,7 @@ export default function ABFFLayout() {
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
                             </div>
-                            <Share />
+                            <Share bgColor={'black'} />
                         </div>
                         <div className="">
                             <div className="flex items-center ">

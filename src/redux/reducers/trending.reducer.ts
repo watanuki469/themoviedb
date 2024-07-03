@@ -9,7 +9,7 @@ const apiRequests = {
         return axiosClient.get(url)
     },
     NewDisney() {
-        const url = `trending/person/day?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`
+        const url = `list/5906?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`
         return axiosClient.get(url)
     },
     NewHulu() {
@@ -105,7 +105,7 @@ export const fetchTrending = () => (dispatch: AppDispatch) => {
         .then((data: any) => {
             if (data[0] && data[0].results) {
                 dispatch(setNewNetflix(data[0].results));
-                dispatch(setNewDisney(data[1].results));
+                dispatch(setNewDisney(data[1].items));
                 dispatch(setNewHulu(data[2].results));
                 dispatch(setNewPrime(data[3].results));
                 dispatch(setNewStream(data[4].results));

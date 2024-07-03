@@ -11,6 +11,8 @@ import { favoriteMongoApi, getFavoriteMongoApi, getListRatingMongoApi, ratingMon
 import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from '../../redux/reducers/login.reducer';
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import { LanguageContext } from '../../pages/LanguageContext';
+import Share from '../../modules/Share';
+import RatingModule from '../../modules/RatingModule';
 
 export interface TwoMovieRowProps {
     singleTvList: any
@@ -32,27 +34,6 @@ export default function TvDetail({
                 inline: "nearest" // Cuộn trang để phần tử hiển thị ở phía trên cửa sổ trình duyệt
             });
         }
-    };
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
-        // Thử copy địa chỉ URL vào clipboard
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
     };
 
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
@@ -85,13 +66,7 @@ export default function TvDetail({
         }, 1000);
     }, [userInfoList]);
     const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleTvList[0]?.id);
-    const existingRating = ratingList?.find((rating: any) => rating?.itemId == singleTvList[0]?.id); // Find the rating object for the item
-
-    const handleClick = (value: any) => {
-        setIsRating(true);
-        setValue(value)
-    };
-
+ 
     const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
         try {
             const response = await getFavoriteMongoApi(userInfoList[0]);
@@ -135,7 +110,7 @@ export default function TvDetail({
             }
         } catch (e) {
             console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
+            toast.error("Updating watch list failed"+e);
         }
     };
 
@@ -256,26 +231,7 @@ export default function TvDetail({
         setIsRating(false)
         setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
     };
-    // const handleWatchList = (movie: any) => {
-    //     const storedDataString = localStorage.getItem('watchList');
-    //     let storedData: { [key: string]: any } = {};
-    //     if (storedDataString !== null) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     if (storedData[movie?.id]) {
-    //         delete storedData[movie?.id];
-    //         localStorage.setItem('watchList', JSON.stringify(storedData));
-    //         setCheckLog(!checkLog)
-    //         toast.success(`Removed ${movie?.title ? movie?.title : movie?.name} from watch list successfully`);
 
-    //     } else {
-    //         storedData[movie?.id] = movie;
-    //         setCheckLog(!checkLog)
-    //         localStorage.setItem('watchList', JSON.stringify(storedData));
-    //         toast.success(`Added ${movie?.title ? movie?.title : movie?.name} to watch list successfully`);
-
-    //     }
-    // }
     function formatNumber(num: any) {
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'm';
@@ -383,7 +339,7 @@ export default function TvDetail({
 
                 </div>
 
-                <div style={{ position: "relative", zIndex: "1" }}>
+                <div style={{ position: "relative" }}>
                     <div className="flex flex-row justify-end gap-2 items-center ">
                         <div className=" py-2 hidden lg:block hover:underline capitalize" onClick={() => scrollToElement('tvCast')}>Top {translations[language]?.star}</div>
                         <div className=" py-2 hidden lg:block ">•</div>
@@ -394,85 +350,13 @@ export default function TvDetail({
                         <div className=" py-2 hidden lg:block hover:underline capitalize" onClick={() => scrollToElement('tvTrvia')}>{translations[language]?.storyLine}</div>
                         <button className="py-2 px-3 border-l  border-r  border-gray-400 hidden lg:block">IMDbPro</button>
 
-                        <IconButton
-                            onClick={handleShareClick}
-                            size="small"
-                            aria-controls={openShare ? 'account-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={openShare ? 'true' : undefined}
-                        >
-                            <ShareIcon sx={{ color: 'white', mr: '10px' }} />
-                        </IconButton>
-                        <Menu
-                            anchorEl={anchorShareEl}
-                            id="account-menu"
-                            open={openShare}
-                            onClose={handleShareClose}
-                            onClick={handleShareClose}
-                            PaperProps={{
-                                elevation: 0,
-                                sx: {
-                                    overflow: 'visible', filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))', mt: 1.5,
-                                    '& .MuiAvatar-root': {
-                                        width: 32, height: 32, ml: -0.5, mr: 1,
-                                    },
-                                    '&::before': {
-                                        content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                    },
-                                },
-                            }}
-                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                        >
-                            <MenuItem>
-                                <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                        <ListItemIcon>
-                                            <i className="fa-brands fa-facebook text-2xl"></i>
-                                        </ListItemIcon>
-                                        Facebook
-                                    </a>
-                                </div>
-                            </MenuItem>
-
-                            <MenuItem>
-                                <blockquote className="twitter-tweet items-center">
-                                    <ListItemIcon>
-                                        <i className="fa-brands fa-twitter text-2xl"></i>
-                                    </ListItemIcon>
-                                    <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                        Twitter
-                                    </a>
-                                </blockquote>
-                            </MenuItem>
-                            <MenuItem>
-                                <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                    title="Share by Email">
-                                    <ListItemIcon>
-                                        <i className="fa-regular fa-envelope text-2xl"></i>
-                                    </ListItemIcon>
-                                    Email Link
-                                </a>
-                            </MenuItem>
-
-                            <MenuItem onClick={handleCopyLink}>
-                                <ListItemIcon>
-                                    <i className="fa-solid fa-link text-2xl"></i>
-                                </ListItemIcon>
-                                Copy Link
-                            </MenuItem>
-                        </Menu>
+                        <Share bgColor={'white'}></Share>
                     </div>
                     <div className="flex justify-between py-2">
                         <div className="items-center">
                             <div className="mr-4 text-2xl">{singleTvList[0]?.name}</div>
                             <div className="flex space-x-4 text-stone-400">
                                 <div>{singleTvList[0]?.first_air_date?.split("-")[0]}</div>
-                                {/* <div>{certification ? certification : "NR"}</div> */}
-                                {/* <div>
-                                    {Math.floor(singleTvList[0]?.runtime / 60)} h {singleTvList[0]?.runtime % 60} min
-                                </div> */}
-
                             </div>
                         </div>
                         <div className="hidden lg:block">
@@ -489,23 +373,19 @@ export default function TvDetail({
                                                             (singleTvList[0]?.vote_average % 1 === 0 ?
                                                                 singleTvList[0]?.vote_average.toFixed(0) :
                                                                 singleTvList[0]?.vote_average.toFixed(1)
-                                                            )
-                                                            :
-                                                            'N/A'
+                                                            ) : 'N/A'
                                                         }
-
                                                     </span>
                                                     <span className="text-stone-400">  /10</span>
                                                 </div>
                                                 <div className="text-stone-400">{singleTvList[0]?.vote_count}</div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <div className="items-center text-center justify-center m-auto mr-4 aligns-center">
                                     <div className="    text-stone-400">{translations[language]?.rating}</div>
-                                    <div className="hover:opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
+                                    {/* <div className="hover:opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
                                         <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl text-center justify-center w-full ">
                                             {
                                                 existingRating ? (
@@ -535,16 +415,17 @@ export default function TvDetail({
                                             }
                                         </button>
 
-                                    </div>
+                                    </div> */}
+                                      <RatingModule mediaType={'TV'} ratingList={singleTvList[0]} email={userInfoList[0]}/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="md:grid md:grid-cols-12 gap-y-4 h-full">
-                        <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-80">
-                            <img src={`https://image.tmdb.org/t/p/w500${singleTvList[0]?.poster_path}`} alt="product images" />
+                    <div className="md:grid md:grid-cols-12 py-2 gap-y-4 h-full">
+                        <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-80 rounded-xl">
+                            <img className='rounded-xl' src={`https://image.tmdb.org/t/p/w500${singleTvList[0]?.poster_path}`} alt="product images" />
                         </div>
-                        <div className="lg:col-span-7 col-span-12 lg:ml-2 bg-black relative hover:opacity-80">
+                        <div className="lg:col-span-7 col-span-12 lg:ml-2 bg-black relative hover:opacity-80 rounded-xl">
                             <iframe
                                 key={singleTvList[0]?.name}
                                 src={`https://www.youtube.com/embed/${singleTvList[0]?.videos?.results[0]?.key}?controls=0&&autoplay=1`}
@@ -552,14 +433,12 @@ export default function TvDetail({
                                 height={"100%"}
                                 title={singleTvList[0]?.name}
                                 style={{ border: 0, minHeight: '350px' }}
+                                className='rounded-xl'
                             >
-
                             </iframe>
-
                         </div>
-
-                        <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden">
-                            <div className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:opacity-90">
+                        <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden rounded-xl">
+                            <div className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mb-1 hover:opacity-80 rounded-xl">
                                 <div className="flex flex-col justify-center items-center "
                                     onClick={() => navigate(`/videoTv/${singleTvList[0]?.id}`)}>
                                     <div className="text-center">
@@ -570,7 +449,7 @@ export default function TvDetail({
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:opacity-90"
+                            <div className="bg-gray-500 flex flex-col justify-center items-center h-1/2 mt-1 hover:opacity-80 rounded-xl"
                                 onClick={() => navigate(`/image/tv/${singleTvList[0]?.id}`)}>
                                 <div className="flex flex-col justify-center items-center">
                                     <div className="text-center">
@@ -582,7 +461,6 @@ export default function TvDetail({
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div className="bg-black relative px-2 py-2">
                         <div className=" grid-cols-12 hidden lg:grid gap-6 h-full">
@@ -598,7 +476,6 @@ export default function TvDetail({
                                 </div>
                                 <div className="text-white">
                                     <div className="py-2 border-b border-gray-300">{singleTvList[0]?.overview}</div>
-
                                     <div className=" border-b border-gray-300 flex gap-2 py-2 items-center aligns-center">
                                         <div className="">{translations[language]?.writer}</div>
                                         <div className="flex gap-3 justify-center text-center aligns-center">
@@ -643,7 +520,7 @@ export default function TvDetail({
                                                         <p className='text-yellow-300 text-left'>Streaming</p>
                                                         <img
                                                             src={`https://media.themoviedb.org/t/p/h60${singleTvList[0]?.networks[0]?.logo_path}`}
-                                                            className='bg-white opacity-80 border-2 border-blue-500 rounded-lg px-2 py-2'
+                                                            className='bg-white border-2 border-blue-500 rounded-lg px-2 py-2'
                                                         />
                                                     </button>
                                                 </div>
@@ -741,7 +618,7 @@ export default function TvDetail({
                         <div className='grid grid-cols-3 gap-1 mt-2' >
                             <div>
                                 <img src={`https://image.tmdb.org/t/p/w500/${singleTvList[0]?.poster_path}`}
-                                    onError={handleImageError} alt="produdđct images" />
+                                    className='rounded-xl' onError={handleImageError} alt="produdđct images" />
                             </div>
                             <div className='col-span-2'>
                                 <div className='gap-2'>
@@ -775,7 +652,8 @@ export default function TvDetail({
                                 </span>
                                 <span className="text-stone-400">  /10</span>
                                 <div className="text-stone-400">{singleTvList[0]?.vote_count}</div>
-                                <div className="hover:opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
+                                <RatingModule mediaType={'TV'} ratingList={singleTvList[0]} email={userInfoList[0]}/>
+                                {/* <div className="hover:opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
                                     <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl text-center justify-center w-full ">
                                         {
                                             existingRating ? (
@@ -805,7 +683,7 @@ export default function TvDetail({
                                         }
                                     </button>
 
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className='px-3 items-center'>

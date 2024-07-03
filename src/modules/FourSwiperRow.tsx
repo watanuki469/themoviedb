@@ -324,10 +324,10 @@ export default function FourSwiperRow({
                     const existingRating = ratingList.find(rating => rating?.itemId == item?.id);
 
                     return (
-                        <SwiperSlide key={index} className="bg-white px-2 w-full ">
+                        <SwiperSlide key={index} className="py-2 px-2 w-full ">
                             <div className="shadow-sm  shadow-current rounded-xl">
                                 <div className="object-cover">
-                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full hover:opacity-80"
+                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="h-60 w-full hover:opacity-80 rounded-tl-xl rounded-tr-xl"
                                         onError={handleImageError}
 
                                         onClick={() => handleClickImg(`${item?.id}`)} />

@@ -347,7 +347,7 @@ export default function TrendingLayout() {
                                             <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
                                             {
-                                                type != 'disney' && type != 'stream' ? (
+                                                type != 'stream' ? (
                                                     <div className="flex items-center gap-2 flex-wrap">
                                                         <div className="flex items-center gap-2">
                                                             <i className="fa-solid fa-star text-yellow-300"></i>
@@ -435,7 +435,7 @@ export default function TrendingLayout() {
                                                 </div>
                                                 <div className="">
                                                     {
-                                                        type != 'disney' && type != 'stream' ?
+                                                        type != 'stream' ?
                                                             (
                                                                 <div>
                                                                     <div className="flex items-center gap-2">
@@ -524,7 +524,7 @@ export default function TrendingLayout() {
                                             <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date?.slice(0, 4)}</p>
                                             {
-                                                type != 'disney' && type != 'stream' ? (
+                                                type != 'stream' ? (
                                                     <div className="flex items-center gap-2 flex-wrap">
                                                         <div className="flex items-center gap-2">
                                                             <i className="fa-solid fa-star text-yellow-300"></i>
@@ -1085,7 +1085,7 @@ export default function TrendingLayout() {
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                                 </div>
-                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Movie`)}>
+                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250Tv`)}>
                                     <ListRow listRowList={mostPopularTv} />
                                 </div>
                                 <p className="text-red w-full text-black capitalize"> {translations[language]?.staffPick}</p>

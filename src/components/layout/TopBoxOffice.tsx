@@ -32,6 +32,8 @@ export default function TopBoxOffice() {
             dispatch(setGlobalLoading(false));
         }, 1000);
     }, []);
+    console.log(topRatedMovies);
+    
     const currentDate = new Date();
     const monthNames = [
         "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -501,7 +503,7 @@ export default function TopBoxOffice() {
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
                             </div>
-                            <Share />
+                            <Share bgColor={'black'} />
                         </div>
                         <div className="">
                             <div className="flex items-center ">

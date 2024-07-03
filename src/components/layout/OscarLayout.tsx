@@ -63,7 +63,7 @@ export default function OscarLayout() {
             <div className="bg-white  px-2">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full w-full ">
-                        <Share/>
+                        <Share bgColor={'black'}/>
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

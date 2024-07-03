@@ -11,11 +11,11 @@ export default function TvEpisode({
     const formattedDate = airDate ? format(parseISO(airDate), 'EEE, MMM dd, yyyy') : '';
     return (
         <section className=" md:grid lg:py-4  lg:px-4 md:py-0 md:px-0">
-            <div className="text-black font-sans " >
+            <div className="text-black font-sans rounded-xl " >
                 <div style={{ position: "relative" }}>
                     <div className=" w-full ">
                         <div className="grid grid-cols-2 gap-4 cursor-pointer  px-2 py-2">
-                            <div className='bg-white shadow-sm shadow-black  px-2 py-2'>
+                            <div className='bg-white shadow-sm shadow-black  px-2 py-2  rounded-xl  '>
                                 <div className="text-black flex gap-4 items-center ">
                                     <i className="fa-solid fa-bookmark text-4xl hover:text-gray-300 text-gray-400 "></i>
                                     <div>

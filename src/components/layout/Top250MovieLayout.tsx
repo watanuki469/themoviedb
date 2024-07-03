@@ -66,7 +66,7 @@ export default function Top250MovieLayout() {
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
                             </div>
-                            <Share />
+                            <Share bgColor={'black'} />
                         </div>
                         <div className="">
                             <div className="flex items-center ">
@@ -75,10 +75,8 @@ export default function Top250MovieLayout() {
                             </div>
                             <p className="text-gray-500 py-2">{translations[language]?.voter}</p>
                         </div>
-
                     </div>
                     <ViewTable viewList={topRatedMovies} mediaType={'movie'} genreList={listGenreFromApi} moreToExploreList={mostPopularTv}></ViewTable>
-
                 </div>
             </div>
             <div className="bg-black">
