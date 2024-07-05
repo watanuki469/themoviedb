@@ -30,6 +30,7 @@ import TrendingLayout from "./components/layout/TrendingLayout";
 import TvLayout from "./components/layout/TvLayout";
 import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
+import UserDiscussLayout from "./components/layout/UserDiscussLayout";
 import UserReviewLayout from "./components/layout/UserReviewLayout";
 import VideoLayout from "./components/layout/VideoLayout";
 import VideoTvLayout from "./components/layout/VideoTvLayout";
@@ -128,6 +129,11 @@ const routes = [
     path: "/fullReview/:mediaType/:id",
     element: <UserReviewLayout />,
     state: "fullReview"
+  },
+  {
+    path: "/fullDiscuss/:mediaType/:id",
+    element: <UserDiscussLayout />,
+    state: "fullDiscuss"
   },
   {
     path: "/news/movie",

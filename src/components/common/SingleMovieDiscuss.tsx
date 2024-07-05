@@ -10,7 +10,7 @@ export interface TwoMovieRowProps {
     singleMovieList: any
 }
 
-export default function SingleMovieReview({
+export default function SingleMovieDiscuss({
     singleMovieList,
 }: TwoMovieRowProps) {
     const [randomNumber1, setRandomNumber1] = useState(0);
@@ -36,7 +36,6 @@ export default function SingleMovieReview({
     }
 
     const { language, translations, handleLanguageChange } = context;
-
 
     return (
         <section className=" text-black font-sans grid ">

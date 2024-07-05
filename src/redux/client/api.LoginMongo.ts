@@ -107,8 +107,18 @@ const removeListRecentlyViewMongoApi = (email: any, movieId: any, movieType: any
     });
 }
 
+// const ratingMongoApi = (email: string, itemId: any, itemType: any, itemRating: any, itemImg: any, itemName: any) => {
+//     return axiosMongo.post(`/api/user/addRating`, {
+//         email,
+//         itemId,
+//         itemType,
+//         itemRating,
+//         itemImg,
+//         itemName
+//     });
+// };
 const ratingMongoApi = (email: string, itemId: any, itemType: any, itemRating: any, itemImg: any, itemName: any) => {
-    return axiosMongo.post(`/api/user/addRating`, {
+    return axiosMongo.post(`/api/review/addRating`, {
         email,
         itemId,
         itemType,
@@ -117,6 +127,13 @@ const ratingMongoApi = (email: string, itemId: any, itemType: any, itemRating: a
         itemName
     });
 };
+// const getListRatingMongoApi = (email: any) => {
+//     return axiosMongo.get(`/api/user/getRating`, {
+//         params: {
+//             email: email
+//         }
+//     });
+// }
 const getListRatingMongoApi = (email: any) => {
     return axiosMongo.get(`/api/user/getRating`, {
         params: {
@@ -133,10 +150,53 @@ const removeRatingMongoApi = (email: any, movieId: any, movieType: any) => {
     });
 }
 
+const reviewMongoMovieApi = (itemId: any, itemName: string, itemEmail: string, itemDisplayName: string, itemContent: string) => {
+    return axiosMongo.post(`/api/review/addMovieReview`, {
+        itemId,
+        itemName,
+        itemEmail,
+        itemDisplayName,
+        itemContent,
+    });
+};
+
+const getUserReviewMongoMovieApi = (itemId: any, itemEmail: string) => {
+    return axiosMongo.get(`/api/review/getUserReview`, {
+        params: {
+            itemId: itemId,
+            itemEmail: itemEmail,
+        }
+    });
+};
+
+const getFullReviewMongoMovieApi = (itemId: any) => {
+    return axiosMongo.get(`/api/review/getFullReview`, {
+        params: {
+            itemId: itemId,
+        }
+    });
+};
+
+const addLikeToReviewMongoMovieApi = (itemId: any, reviewId: string, itemEmail: string, itemDisplayName: string) => {
+    return axiosMongo.post(`/api/review/addReviewLike`, {
+        itemId,
+        reviewId,
+        itemEmail,
+        itemDisplayName        
+    });
+};
+
+const remoReviewMongoMovieApi = (itemId: any, reviewId: string) => {
+    return axiosMongo.post(`/api/review/removeUserReview`, {
+        itemId,
+        reviewId,     
+    });
+};
 
 export {
     fetchAllMongoUser, registerMongoApi, updateMongoPasswordApi, deleteMongoUser, loginMongoApi,
     favoriteMongoApi, getFavoriteMongoApi, favoriteActorMongoApi, getFavoriteActorMongoApi
     , recentlyViewMongoApi, getListRecentlyViewMongoApi, removeListRecentlyViewMongoApi,
-    ratingMongoApi, getListRatingMongoApi, removeRatingMongoApi
+    ratingMongoApi, getListRatingMongoApi, removeRatingMongoApi, reviewMongoMovieApi,
+    getUserReviewMongoMovieApi,getFullReviewMongoMovieApi,addLikeToReviewMongoMovieApi,remoReviewMongoMovieApi
 }

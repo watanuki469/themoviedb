@@ -16,7 +16,11 @@ interface ILoginState {
     rating:any[],
     deleteRating:any[],
     loading:boolean,
-    error:any
+    error:any,
+    review:any[],
+    singleUserReview:any[],
+    fullMovieReview:any[],
+    addLiketoReview:any[]
 }
 
 const initialState: ILoginState = {
@@ -35,6 +39,10 @@ const initialState: ILoginState = {
     deleteRating:[],
     loading: false,
     error: null,
+    review:[],
+    singleUserReview:[],
+    fullMovieReview:[],
+    addLiketoReview:[]
 }
 
 const setListLoginState = (state: ILoginState, action: any) => {
@@ -81,6 +89,21 @@ const setListRatingState = (state: ILoginState, action: any) => {
 const setDeleteRatingState = (state: ILoginState, action: any) => {
     state.deleteRecently = action.payload.recentlyViewedList;
 }
+const setReviewState = (state: ILoginState, action: any) => {
+    state.review = action.payload;
+}
+
+const setListSingleUserReviewState = (state: ILoginState, action: any) => {
+    state.singleUserReview = action.payload.userReview;
+}
+
+const setListFullMovieReviewState = (state: ILoginState, action: any) => {
+    state.fullMovieReview = action.payload.review.reviews;
+}
+
+const setListAddLikeToReviewState = (state: ILoginState, action: any) => {
+    state.addLiketoReview = action.payload;
+}
 
 
 export const LoginSlice = createSlice({
@@ -100,6 +123,10 @@ export const LoginSlice = createSlice({
         setRating:(state, action) => setRatingState(state, action),
         setListRating:(state, action) => setListRatingState(state, action),
         setDeleteRating:(state, action) => setDeleteRatingState(state, action),
+        setReview:(state,action)=>setReviewState(state,action),
+        setListSingleUserReview:(state,action)=>setListSingleUserReviewState(state,action),
+        setListFullMovieReview:(state,action)=>setListFullMovieReviewState(state,action),
+        setListAddLikeToReview:(state,action)=>setListAddLikeToReviewState(state,action)
     },
     extraReducers: (builder) => {
         builder
@@ -131,7 +158,8 @@ export const LoginSlice = createSlice({
 });
 
 export const { setListLogin, setUser,setRegister,setFavorite,setListFavorite,setFavoriteActor,setListActorFavorite 
-    ,setListRecentlyView,setRecentlyView,setDeleteRecentlyView,setRating,setListRating,setDeleteRating
+    ,setListRecentlyView,setRecentlyView,setDeleteRecentlyView,setRating,setListRating,setDeleteRating,setReview,
+    setListSingleUserReview,setListFullMovieReview,setListAddLikeToReview
 } = LoginSlice.actions;
 
 export default LoginSlice.reducer;

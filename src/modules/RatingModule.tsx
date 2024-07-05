@@ -18,7 +18,6 @@ export default function RatingModule({
     ratingList,
     email
 }: SwiperRowProps) {
-    let navigate = useNavigate()
     const [value, setValue] = useState<number | null>(0);
     const [isRating, setIsRating] = useState(false);
     const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
@@ -52,7 +51,7 @@ export default function RatingModule({
         //     dispatch(setGlobalLoading(false));
         // }, 1000);
     }, [email]);
-    const existingRating = ratingListFromApi?.find((rating: any) => rating?.itemId == ratingList?.id); // Find the rating object for the item
+    const existingRating = ratingListFromApi?.find((rating: any) => rating?.itemId === ratingList?.id); // Find the rating object for the item
 
     const handleRating = async (itemRating: any,
         itemImg: any,

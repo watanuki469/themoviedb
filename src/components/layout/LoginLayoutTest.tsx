@@ -39,7 +39,7 @@ const LoginLayoutTest = () => {
             })
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
-        }, 3000);
+        }, 1000);
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
