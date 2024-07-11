@@ -17,14 +17,35 @@ export default function Top250TvLayout() {
     const dispatch = useAppDispatch();
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        dispatch(fetchMovies(page));
+    }, [page]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0,
+        });
+
+        const loadMoreElement = document.querySelector('#load-more');
+        if (loadMoreElement) {
+            observer.observe(loadMoreElement);
+        }
+
+        return () => {
+            if (loadMoreElement) {
+                observer.unobserve(loadMoreElement);
+            }
+        };
     }, []);
+
 
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
 
@@ -181,6 +202,7 @@ export default function Top250TvLayout() {
 
                     </div>
                     <ViewTable viewList={mostPopularTv} mediaType={'tv'} genreList={listGenreFromApi} moreToExploreList={popularMovies}></ViewTable>
+                    <div id="load-more" style={{ height: '20px' }}></div>
 
                 </div>
             </div>
@@ -189,6 +211,8 @@ export default function Top250TvLayout() {
                     <Footer />
                 </div>
             </div>
+           
+
         </div >
     )
 }

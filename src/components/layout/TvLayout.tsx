@@ -6,7 +6,7 @@ import ListRow from "../../modules/ListRow";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import TwoMovieRow from "../../modules/TwoMovieRow";
 import apiController from "../../redux/client/api.Controller.";
-import { addRecentlyViewed } from "../../redux/client/api.LoginMongo";
+import { addRecentlyViewed, getFullReviewMongoMovieApi } from "../../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
@@ -22,6 +22,8 @@ import TvPerson from "../common/TvPerson";
 import TvReview from "../common/TvReview";
 import TvStoryLine from "../common/TvStoryLine";
 import { LanguageContext } from "../../pages/LanguageContext";
+import { setListFullMovieReview } from "../../redux/reducers/login.reducer";
+import SingleMovieDiscuss from "../common/SingleMovieDiscuss";
 
 export default function TvLayout() {
     const { id } = useParams()
@@ -58,15 +60,33 @@ export default function TvLayout() {
                 console.log(e);
             })
     }
+
+    const fetchGetAllMovieReview = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFullReviewMongoMovieApi('tv', id);
+            if (response) {
+                dispatch(setListFullMovieReview(response));
+            } else {
+                throw new Error('Failed to fetch list');
+            }
+        } catch (e) {
+            console.log("Fetching fetchGetAllMovieReview failed: " + e);
+        }
+    }
+
     const tvList = useAppSelector((state) => state.tv.listTv)
     const tvImageList = useAppSelector((state) => state.tvImages.listTvImage)
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
+    const fullMovieReviewListFromApi = useAppSelector((state) => state.login.fullMovieReview);
+
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
         dispatch(fetchTv());
         dispatch(fetchTvImages());
+        dispatch(fetchGetAllMovieReview())
+
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
@@ -217,7 +237,7 @@ export default function TvLayout() {
                                 </div>
                             </div>
                             <div className="lg:max-w-full w-full">
-                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'TV'} />
+                                <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'tv'} mediaMenuItem={1} />
                             </div>
                             <div id="tvTrvia" className="text-white flex py-2 w-full px-2">
                                 <div className="flex items-center ">
@@ -249,6 +269,21 @@ export default function TvLayout() {
                             <div className="lg:max-w-full w-full">
                                 <TvDetailExternal tvDetailExList={tvList} />
                             </div>
+                            <div className="text-white py-4 w-full">
+                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullDiscuss/tv/${id}`)}>
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">discussion</h2>
+                                    <p className="text-lg font-bold text-gray-500 ml-4">{fullMovieReviewListFromApi.length}</p>
+                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
+                                </div>
+                            </div>
+                            {fullMovieReviewListFromApi?.length > 0 ? (
+                                <div className="lg:max-w-full w-full">
+                                    <SingleMovieDiscuss singleMovieList={fullMovieReviewListFromApi} userInfoList={userInfoList} id={id} mediaType={'tv'} />
+                                </div>
+                            ) : (
+                                <div className="lg:max-w-full w-full"></div>
+                            )}
                         </div>
                         <div className="hidden lg:block col-span-4  h-full px-2 py-2 "  >
                             <div className="flex items-center py-3" onClick={() => navigate('/top250Movie')}>

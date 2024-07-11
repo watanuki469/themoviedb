@@ -21,18 +21,17 @@ import SingleMovieReview from "../common/SingleMovieReview";
 import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import TopBar from "../common/TopBar";
 import { toast } from "react-toastify";
-import { addRecentlyViewed, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
-import { setRecentlyView } from "../../redux/reducers/login.reducer";
+import { addRecentlyViewed, getFullReviewMongoMovieApi, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
+import { setListFullMovieReview, setRecentlyView } from "../../redux/reducers/login.reducer";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import { LanguageContext } from "../../pages/LanguageContext";
+import SingleMovieDiscuss from "../common/SingleMovieDiscuss";
 
 export default function MovieLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-    const mostDiscoverTv = useAppSelector((state) => state.movies.discoverTv)
-
 
     const fetchSingleMovies = () => (dispatch: AppDispatch) => {
         Promise.all([
@@ -111,11 +110,26 @@ export default function MovieLayout() {
             })
     }
 
+    const fetchGetAllMovieReview = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFullReviewMongoMovieApi('movie', id);
+            if (response) {
+                dispatch(setListFullMovieReview(response));
+            } else {
+                throw new Error('Failed to fetch list');
+            }
+        } catch (e) {
+            console.log("Fetching fetchGetAllMovieReview failed: " + e);
+        }
+    }
+
     const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
     const movieVideoList = useAppSelector((state) => state.movieVideo.listMovieVideo)
     const movieImageList = useAppSelector((state) => state.movieImage.listMovieImage)
     const movieCreditList = useAppSelector((state) => state.movieCredit.listMovieCredit)
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
+    const fullMovieReviewListFromApi = useAppSelector((state) => state.login.fullMovieReview);
+
 
     useEffect(() => {
         // dispatch(setGlobalLoading(true));
@@ -125,6 +139,7 @@ export default function MovieLayout() {
         dispatch(fetchMovieCredit());
         dispatch(fetchMovieSimilar());
         dispatch(fetchMovies());
+        dispatch(fetchGetAllMovieReview())
         // setTimeout(() => {
         //     dispatch(setGlobalLoading(false));
         // }, 1000);
@@ -219,7 +234,8 @@ export default function MovieLayout() {
             </div>
 
             <div className="bg-white w-full">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center"
+                >
                     <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12 w-full">
                             {languageString === 'vi-VI' ? (
@@ -274,8 +290,8 @@ export default function MovieLayout() {
                                     <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full w-full">
-                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'Movie'} />
+                            <div className="">
+                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'movie'} mediaMenuItem={1}/>
                             </div>
                             <div className="text-white flex py-4 w-full">
                                 <div className="flex items-center">
@@ -301,13 +317,18 @@ export default function MovieLayout() {
                                 <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullDiscuss/movie/${id}`)}>
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">discussion</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4">{singleMovieList[0]?.reviews?.results?.length}</p>
+                                    <p className="text-lg font-bold text-gray-500 ml-4">{fullMovieReviewListFromApi?.length}</p>
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full w-full">
-                                <SingleMovieReview singleMovieList={singleMovieList} />
-                            </div>
+                            {fullMovieReviewListFromApi?.length > 0 ? (
+                                <div className="lg:max-w-full w-full">
+                                    <SingleMovieDiscuss singleMovieList={fullMovieReviewListFromApi} userInfoList={userInfoList} id={id} mediaType={'movie'} />
+                                </div>
+                            ) : (
+                                <div className="lg:max-w-full w-full"></div>
+                            )}
+
                         </div>
                         <div className="hidden lg:block col-span-4">
                             <div

@@ -1,23 +1,19 @@
 import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
-import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
+import RatingModule from '../../modules/RatingModule';
+import Share from '../../modules/Share';
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
+import { LanguageContext } from '../../pages/LanguageContext';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { setDeleteRating, setListRating, setRating } from "../../redux/reducers/login.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import { LanguageContext } from '../../pages/LanguageContext';
-import Share from '../../modules/Share';
 
 export default function TopBoxOffice() {
     const dispatch = useAppDispatch();
@@ -31,9 +27,8 @@ export default function TopBoxOffice() {
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
-    }, []);
-    console.log(topRatedMovies);
-    
+    }, [])
+
     const currentDate = new Date();
     const monthNames = [
         "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -62,7 +57,6 @@ export default function TopBoxOffice() {
         imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
 
-
     function shortenNumber(number: any) {
         if (number >= 1000000000) {
             return (number / 1000000000).toFixed(1) + 'b';
@@ -75,23 +69,8 @@ export default function TopBoxOffice() {
         }
         return number;
     }
-
-    const [selectedStudent, setSelectedStudent] = useState<any>();
-    const [value, setValue] = useState<number | null>(0);
-    const [isRating, setIsRating] = useState(false);
-    const [numberIndex, setNumberIndex] = useState(0);
-    const [checkLog, setCheckLog] = useState(false)
-    const handleClick = (index: any, value: any) => {
-        setIsRating(true)
-        setSelectedStudent(index);
-        setValue(value)
-    };
-
-    const ratingList = useAppSelector((state) => state.login.listRating);
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
-    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
-
+   
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
@@ -101,104 +80,9 @@ export default function TopBoxOffice() {
         }
         setUserInfoList(Object.values(storedData));
     }, []);
-    const fetchGetRating = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getListRatingMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListRating(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
-
-    useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        if (userInfoList.length > 0) {
-            dispatch(fetchGetRating())
-        }
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
-    }, [userInfoList]);
-    const fetchRating = (
-        itemId: string,
-        itemType: string,
-        itemRating: string,
-        itemImg: string,
-        itemName: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await ratingMongoApi(
-                email, itemId, itemType, itemRating, itemImg, itemName
-            );
-            dispatch(setRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-    const handleRating = async (
-        index: number,
-        itemId: any,
-        itemType: any,
-        itemRating: any,
-        itemImg: any,
-        itemName: any
-    ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
-        await dispatch(fetchRating(
-            itemId, itemType, itemRating, itemImg, itemName
-        ));
-        setCheckLog(!checkLog);
-        setIsRating(false)
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
-        toast.success('Rating success')
-    };
-    const fetchRemove = (
-        movieId: string,
-        movieType: string,
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await removeRatingMongoApi(
-                email, movieId, movieType,
-            );
-            dispatch(setDeleteRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-                toast.info('Remove rating success')
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-    const handleRemoveRating = async (
-        index: number, movieId: any, movieType: any,
-    ) => {
-        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
-        await dispatch(fetchRemove(
-            movieId, movieType,
-        ));
-        setCheckLog(!checkLog);
-        setIsRating(false)
-        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
-    };
-
+   
+    
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
-        const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
-
         switch (currentView) {
             case 'Detail':
                 return (
@@ -223,33 +107,9 @@ export default function TopBoxOffice() {
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
                                                 <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
+                                                    <div className="grow ml-auto" >
+                                                        <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
 
-                                                                )
-                                                            ) : (
-                                                                <div className="font-bold text-sm">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    ) : (
-                                                                        <div className="hover:bg-gray-200  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            <div>Rate</div>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
                                                     </div>
                                                 </button>
 
@@ -295,32 +155,9 @@ export default function TopBoxOffice() {
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
                                                 <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
+                                                    <div className="grow ml-auto py-2" >
+                                                        <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
 
-                                                                )
-                                                            ) : (
-                                                                <div className="text-black">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                                                    ) : (
-                                                                        <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>  Rate
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
                                                     </div>
                                                 </button>
                                                 <div className="h-12 w-full ">
@@ -371,35 +208,10 @@ export default function TopBoxOffice() {
                                                     <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
                                                 <button className=" hover:text-black text-blue-500" >
-                                                    <div className="" onClick={() => handleClick(movieIndex, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2 ">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
-
-                                                                )
-                                                            ) : (
-                                                                <div className="font-bold text-sm">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    ) : (
-                                                                        <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
+                                                    <div className="">
+                                                        <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                     </div>
                                                 </button>
-
                                             </div>
                                         </div>
                                     </div>
@@ -425,71 +237,6 @@ export default function TopBoxOffice() {
     const { language, translations, handleLanguageChange } = context;
     return (
         <div className=" min-h-screen cursor-pointer px-2">
-            {isRating &&
-                (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                        <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                            <div className="flex items-center justify-end">
-                                <div className="flex justify-end">
-                                    <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                        <i className="fa-solid fa-times text-xl"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="bg-black px-4 py-4">
-                                <div className="aligns-center justify-center items-center text-center gap-2">
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                        <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                        <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                    </div>
-                                    <p className="text-yellow-300 font-bold">Rate this</p>
-                                    <p className="text-2xl ">{selectedStudent?.title ? selectedStudent.title : selectedStudent?.name}</p>
-                                    <div className="gap-2 px-2 py-2">
-                                        <Rating name="customized-10" value={value} size="large"
-                                            onChange={(event, newValue) => {
-                                                setValue(newValue);
-                                            }}
-                                            max={10} sx={{
-                                                color: 'blue', mt: 1,
-                                                '& .MuiRating-iconEmpty': {
-                                                    borderColor: 'red',
-                                                    color: 'gray'
-                                                },
-                                            }} />
-                                        <br />
-                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, selectedStudent?.id, 'Movie', value, selectedStudent?.poster_path, selectedStudent?.name ? selectedStudent?.name : selectedStudent?.title)}>
-                                            {loading2[numberIndex] ? (
-                                                <div>
-                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                </div>
-                                            ) : (
-                                                <div className="">
-                                                    <div>Rate</div>
-                                                </div>
-                                            )
-                                            }
-                                        </button>
-                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRemoveRating(numberIndex, selectedStudent?.id, 'Movie')}>
-                                            {loading3[numberIndex] ? (
-                                                <div>
-                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                </div>
-                                            ) : (
-                                                <div className="">
-                                                    <div>Remove Rating</div>
-                                                </div>
-                                            )
-                                            }
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
             <div className="bg-black py-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
                     <TopBar />
@@ -499,16 +246,16 @@ export default function TopBoxOffice() {
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full w-full ">
                         <div className="flex items-center  ">
-                            <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.chart}</h2>
+                            <h2 className="lg:text-2xl text-lg font-bold text-black  capitalize">IMDb {translations[language]?.chart}</h2>
                             <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl  text-lg text-black ">{translations[language]?.share} </p>
+                                <p className="flex items-center lg:text-2xl  text-lg text-black capitalize">{translations[language]?.share} </p>
                             </div>
                             <Share bgColor={'black'} />
                         </div>
                         <div className="">
                             <div className="flex items-center ">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="lg:text-2xl text-lg font-bold text-black ">IMDb {translations[language]?.topBoxOffice}</h2>
+                                <h2 className="lg:text-2xl text-lg font-bold text-black capitalize">IMDb {translations[language]?.topBoxOffice}</h2>
                             </div>
                             <p className="text-gray-500 py-2">{translations[language]?.weekend} {currenDatePre > 28 ? preMonthName : currentMonthName} {currenDatePre} {`->`} {currentMonthName} {currenDateToday}</p>
                         </div>

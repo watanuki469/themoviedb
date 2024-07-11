@@ -1,34 +1,150 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { LanguageContext } from '../../pages/LanguageContext';
 import Share from '../../modules/Share';
+import { AppDispatch } from '../../redux/store';
+import { useAppDispatch } from '../../redux/hooks';
+import { addDislikeToReviewMongoMovieApi, addLikeToReviewMongoMovieApi, getFullReviewMongoMovieApi } from '../../redux/client/api.LoginMongo';
+import { setListFullMovieReview } from '../../redux/reducers/login.reducer';
 
 export interface TwoMovieRowProps {
-    singleMovieList: any
+    singleMovieList: any,
+    userInfoList: any,
+    id: any,
+    mediaType:any
 }
 
 export default function SingleMovieDiscuss({
     singleMovieList,
+    userInfoList,
+    id,
+    mediaType
 }: TwoMovieRowProps) {
-    const [randomNumber1, setRandomNumber1] = useState(0);
-    const [randomNumber2, setRandomNumber2] = useState(0);
+    const dispatch = useAppDispatch();
 
+
+    const handleAddlike = async (
+        itemId: any,
+        reviewId: any,
+        itemEmail: any,
+        itemDisplayName: any,
+    ) => {
+        await dispatch(fetchAddlike(
+            itemId,
+            reviewId,
+            itemEmail,
+            itemDisplayName
+        ));
+    };
+
+    const fetchAddlike = (
+        itemId: string,
+        reviewId: string,
+        itemEmail: string,
+        itemDisplayName: string,
+    ) => async (dispatch: AppDispatch) => {
+        try {
+            const response = await addLikeToReviewMongoMovieApi(
+                mediaType,itemId, reviewId, itemEmail, itemDisplayName
+            );
+            if (response) {
+                await dispatch(fetchGetAllMovieReview());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating failed: " + e);
+            toast.error("Something went wrong");
+        }
+    };
+
+    const handleAddDislike = async (
+        itemId: any,
+        reviewId: any,
+        itemEmail: any,
+        itemDisplayName: any,
+    ) => {
+        await dispatch(fetchAddDislike(
+            itemId,
+            reviewId,
+            itemEmail,
+            itemDisplayName
+        ));
+    };
+
+    const fetchAddDislike = (
+        itemId: string,
+        reviewId: string,
+        itemEmail: string,
+        itemDisplayName: string,
+    ) => async (dispatch: AppDispatch) => {
+        try {
+            const response = await addDislikeToReviewMongoMovieApi(
+                mediaType,itemId, reviewId, itemEmail, itemDisplayName
+            );
+            if (response) {
+                await dispatch(fetchGetAllMovieReview());
+            } else {
+                toast.error('Something went wrong');
+            }
+        } catch (e) {
+            console.log("Updating failed: " + e);
+            toast.error("Something went wrong");
+        }
+    };
+
+    const fetchGetAllMovieReview = () => async (dispatch: AppDispatch) => {
+        try {
+            const response = await getFullReviewMongoMovieApi(mediaType,id);
+            if (response) {
+                dispatch(setListFullMovieReview(response));
+            } else {
+                throw new Error('Failed to fetch list');
+            }
+        } catch (e) {
+            console.log("Fetching fetchGetAllMovieReview failed: " + e);
+        }
+    }
     useEffect(() => {
-        // Tạo số ngẫu nhiên từ 0 đến 999 cho cả hai số
-        const newRandomNumber1 = Math.floor(Math.random() * 1000);
-        let newRandomNumber2;
-        do {
-            newRandomNumber2 = Math.floor(Math.random() * 1000);
-        } while (newRandomNumber2 === newRandomNumber1); // Đảm bảo số thứ hai khác số đầu tiên
+        // dispatch(setGlobalLoading(true));
+        if (userInfoList[0]) {
+            dispatch(fetchGetAllMovieReview())
+        }
+        // setTimeout(() => {
+        //     dispatch(setGlobalLoading(false));
+        // }, 1000);
+    }, [userInfoList[0]]);
 
-        // Đặt số ngẫu nhiên vào state
-        setRandomNumber1(newRandomNumber1);
-        setRandomNumber2(newRandomNumber2);
-    }, []); // Không có dependencies, vì chúng ta chỉ muốn tạo số ngẫu nhiên một lần khi component được render
-   
+    const stringToColor = (str: any) => {
+        let hash = 0;
+        let i;
+
+        for (i = 0; i < str?.length; i += 1) {
+            hash = str?.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        let color = "#";
+
+        for (i = 0; i < 3; i += 1) {
+            const value = (hash >> (i * 8)) & 0xff;
+            color += `00${value?.toString(16)}`?.slice(-2);
+        }
+
+        return color;
+    };
+
+    const formatTime = (timeString: any) => {
+        const [hours, minutes] = timeString.slice(11, 16).split(':');
+        const hour = parseInt(hours, 10);
+        const minute = parseInt(minutes, 10);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const formattedHour = hour % 12 || 12;
+        return `${formattedHour}:${minute < 10 ? '0' + minute : minute} ${ampm}`;
+    };
+
     const context = useContext(LanguageContext);
 
     if (!context) {
@@ -37,72 +153,63 @@ export default function SingleMovieDiscuss({
 
     const { language, translations, handleLanguageChange } = context;
 
-    return (
-        <section className=" text-black font-sans grid ">
-            <div className="bg-white shadow-sm shadow-black w-full py-4 px-4  ">
-                <div className="text-black w-full flex py-4 ">
-                    <div className="bg-yellow-300 text-black py-2 px-2 capitalize">{translations[language]?.latest} {translations[language]?.reviews}</div>
-                    <div className="flex items-center ml-auto gap-2" >
-                        <i className="fa-solid fa-star text-yellow-300 text-sm ml-2"></i>
-                        <div>
-                            <span className="">
-                                {typeof singleMovieList[0]?.reviews.results[0]?.author_details?.rating === 'number' ?
-                                    (singleMovieList[0]?.reviews.results[0]?.author_details?.rating % 1 === 0 ?
-                                        singleMovieList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(0) :
-                                        singleMovieList[0]?.reviews.results[0]?.author_details?.rating?.toFixed(1)
-                                    )
-                                    :
-                                    'N/A'
-                                }
+    const filteredList = singleMovieList.slice().sort((a: any, b: any) => {
+        const dateA = new Date(a?.createdTime)?.getTime();
+        const dateB = new Date(b?.createdTime)?.getTime();
+        return dateB - dateA;
+    })
+    const existingIndex = filteredList[0]?.peopleLike.findIndex((fav: any) => fav?.itemEmail == userInfoList[0]);
+    const existingDislikeIndex = filteredList[0]?.peopleDislike.findIndex((fav: any) => fav?.itemEmail == userInfoList[0]);
 
-                            </span>
-                            <span className="text-stone-400">  /10</span>
+    return (
+        <div>
+            <div className={`cursor-pointer`}>
+                <div className="w-full bg-white shadow-sm  shadow-black px-4">
+                    <div className='py-4'>
+                        <div className="bg-yellow-300 text-black py-2 px-2 w-fit capitalize">{translations[language]?.latest} </div>
+                    </div>
+                    <div>
+                        <div className='font-bold capitalize'>A review by {filteredList[0]?.itemDisplayName}</div>
+                    </div>              
+                    <div className="">
+                        {filteredList[0]?.itemContent}
+                    </div>
+                    <div className='items-center flex'>
+                        <div className='flex items-center gap-1 h-full'>
+                            {existingIndex !== -1 ?
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <i className="fa-solid text-blue-500 fa-thumbs-up text-xl" onClick={() => handleAddlike(id, filteredList[0]?._id, userInfoList[0], userInfoList[1])}></i>
+                                    <div>Liked</div>
+                                </div> :
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <i className="fa-solid fa-thumbs-up text-xl" onClick={() => handleAddlike(id, filteredList[0]?._id, userInfoList[0], userInfoList[1])}></i>
+                                    <div>Like</div>
+                                </div>
+                            }
+
+                            <div>•</div>
+                            <div>{filteredList[0]?.peopleLike?.length}</div>
+                            {existingDislikeIndex !== -1 ?
+                                <div className="">
+                                    <i className="fa-solid fa-thumbs-up rotate-180 text-purple-500 text-xl" onClick={() => handleAddDislike(id, filteredList[0]?._id, userInfoList[0], userInfoList[1])}></i>
+                                </div> :
+                                <div className="">
+                                    <i className="fa-solid fa-thumbs-up  rotate-180 text-xl" onClick={() => handleAddDislike(id, filteredList[0]?._id, userInfoList[0], userInfoList[1])}></i>
+                                </div>
+                            }
+                            <div>{filteredList[0]?.peopleDislike?.length}</div>
+                        </div>
+                        <div className='ml-auto flex flex-wrap gap-2 items-center'>
+                            <Share bgColor={'black'} />
                         </div>
                     </div>
-                </div>
-                <div>
-                    {singleMovieList[0]?.reviews.results.slice(0, 1).map((item: any, index: any) => (
-                        <div className='flex text-black' key={index}>
-                            <div>
-                                <div className='font-bold text-xl'>A review by {item?.author}</div>
-                                <div>
-                                    <p>
-                                        {item?.content}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    {singleMovieList[0]?.reviews?.results?.length > 0 ? (
-                        <div>
-                            <div className=' flex py-2 px-1 mt-1 items-center'>
-                                <div className='flex items-center gap-1 h-full'>
-                                    <i className="fa-solid fa-thumbs-up text-xl"></i>
-                                    <div>helpful</div>
-                                    <div>•</div>
-                                    <div>{randomNumber1}</div>
-                                    <i className="fa-solid fa-thumbs-up fa-rotate-180 ml-2 text-xl"></i>
-                                    <div>{randomNumber2}</div>
-                                </div>
-                                <div className='ml-auto'>
-                                    <Share bgColor={'black'}/>
-                                </div>
-                            </div>
-                            <div className='flex gap-2 px-2 py-2'>
-                                <p className='text-blue-500'>{singleMovieList[0]?.reviews?.results[0]?.author}</p>
-                                <p>•</p>
-                                <p>{singleMovieList[0]?.reviews.results[0]?.created_at?.slice(0, 10)}</p>
-                            </div>
-                        </div>
-                    )
-                        : (<div>
-
-                        </div>)}
-
+                    <div className='flex items-center gap-2 py-2 flex-wrap'>
+                        <div className="text-blue-500">{filteredList[0]?.itemDisplayName}</div>
+                        <div>•</div>
+                        <div>{filteredList[0]?.createdTime.slice(0, 10)} </div>
+                    </div>
                 </div>
             </div>
-        </section >
+        </div>
     )
 }

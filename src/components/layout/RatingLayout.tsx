@@ -10,12 +10,12 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { AppDispatch } from "../../redux/store";
 import { getListRatingMongoApi, getListRecentlyViewMongoApi, ratingMongoApi, removeListRecentlyViewMongoApi, removeRatingMongoApi } from "../../redux/client/api.LoginMongo";
 import { setDeleteRecentlyView, setListRating, setListRecentlyView, setRating } from "../../redux/reducers/login.reducer";
+import Share from "../../modules/Share";
 
 
 export function RatingLayout() {
     const [handleRefine, setHandleRefine] = useState(false);
-    const [movieCheck, setMovieCheck] = useState(false);
-    const [seriesCheck, setSeriesCheck] = useState(false);
+    const [mediaType, setMediaType] = useState('movie');
     const [isRating, setIsRating] = useState(false);
     const [value, setValue] = useState<number | null>(0);
     const [numberIndex, setNumberIndex] = useState(0);
@@ -27,60 +27,30 @@ export function RatingLayout() {
         setValue(value)
     };
 
-    const toggleFeature = (type: any) => {
-        if (type === "Movie") {
-            setMovieCheck(!movieCheck);
-        } else if (type === "TV") {
-            setSeriesCheck(!seriesCheck);
-        }
-    };
-
     let navigate = useNavigate()
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
     };
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                // Nếu thành công, hiển thị thông báo
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
-    const [currentSelection, setCurrentSelection] = useState('case1');
+
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-    const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const recentList = useAppSelector((state) => state.login.listRating);
     const fetchGetRating = () => async (dispatch: AppDispatch) => {
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [numberIndex]: true }));
         try {
-            const response = await getListRatingMongoApi(userInfoList[0]);
+            const response = await getListRatingMongoApi(mediaType, userInfoList[0]);
             if (response) {
                 dispatch(setListRating(response));
             } else {
-                throw new Error('Failed to fetch favorites');
+                throw new Error('Failed to fetch list');
             }
         } catch (e) {
-            console.log("Fetching favorites failed: " + e);
+            console.log("Fetching list failed: " + e);
         }
+        setLoading2((prevLoading2) => ({ ...prevLoading2, [numberIndex]: false }));
     }
-
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
@@ -94,97 +64,48 @@ export function RatingLayout() {
         if (userInfoList.length > 0) {
             dispatch(fetchGetRating());
         }
-    }, [userInfoList]);
+    }, [userInfoList, mediaType])
 
-    const fetchRating = (
-        itemId: string,
-        itemType: string,
-        itemRating: string,
-        itemImg: string,
-        itemName: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await ratingMongoApi(
-                email,
-                itemId,
-                itemType,
-                itemRating,
-                itemImg,
-                itemName
-            );
-            dispatch(setRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-
-    const handleRating = async (
-        index: number,
-        itemId: any,
-        itemType: any,
-        itemRating: any,
-        itemImg: any,
-        itemName: any
-    ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
-        await dispatch(fetchRating(
-            itemId,
-            itemType,
-            itemRating,
-            itemImg,
-            itemName
-        ));
-        setCheckLog(!checkLog);
-        setIsRating(false)
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
-    };
 
     const fetchRemove = (
-        movieId: string,
-        movieType: string,
+        itemId: any,
+        reviewId: any,
     ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
         try {
             const response = await removeRatingMongoApi(
-                email,
-                movieId,
-                movieType,
+                mediaType,
+                itemId,
+                reviewId,
             );
-            dispatch(setDeleteRecentlyView(response));
             if (response) {
+                console.log(response);
                 await dispatch(fetchGetRating());
             } else {
                 toast.error('Something went wrong');
             }
         } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
+            console.log("Updating failed: " + e);
+            toast.error("Remove rating failed due to " + e);
         }
     };
-
-    const handleWatchList = async (
-        index: number,
-        movieId: any,
-        movieType: any,
+    const handleRemoveRating = async (
+        numberIndex: any,
+        itemId: any,
+        ratingId: any,
     ) => {
-        setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
+        setLoading((prevLoading) => ({ ...prevLoading, [numberIndex]: true }));
         await dispatch(fetchRemove(
-            movieId,
-            movieType,
+            itemId,
+            ratingId,
         ));
-        setCheckLog(!checkLog);
-        setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
+        setIsRating(false)
+        setLoading((prevLoading) => ({ ...prevLoading, [numberIndex]: false }));
     };
+
 
     const renderMovieItem = (movie: any, movieIndex: number) => {
         const existingRating = recentList.find(rating => rating?.itemId == movie?.itemId); // Find the rating object for the item
+        const existingRating2 = existingRating?.ratings?.find((item: any) => item?.itemEmail == userInfoList[0]);
 
         return (
             <section className=" w-1/2 md:w-1/5 px-2 sm:w-1/3 py-2  " key={movieIndex}
@@ -193,22 +114,23 @@ export function RatingLayout() {
                     <div className=" items-center ">
                         <div className="mt-2">
                             <div className="relative w-full pb-[150%] hover:opacity-80">
-                                <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
+                                <img onClick={() => navigate(`/${mediaType}/${movie?.itemId}`)}
                                     src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
                                     onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
 
                             </div>
                             <div className="px-2 py-2 w-full">
-                                <div className="flex flex-wrap items-center gap-2 text-left">
+                                <div className="text-left">
                                     <div className="h-12 w-full ">
                                         <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                         <div className="grow ml-auto" onClick={() => handleClick(movieIndex, existingRating?.itemRating)}>
                             {
-                                existingRating ? (
+                                existingRating2 ? (
                                     loading2[movieIndex] ? (
                                         <div>
                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
@@ -216,7 +138,7 @@ export function RatingLayout() {
                                     ) : (
                                         <div className="flex items-center  gap-2 hover:bg-gray-500 w-fit px-2 py-2 rounded-lg">
                                             <i className="fa-solid fa-star text-blue-500"></i>
-                                            <div>{existingRating?.itemRating}</div>
+                                            <div>{existingRating2?.itemRating}</div>
                                         </div>
 
                                     )
@@ -234,7 +156,7 @@ export function RatingLayout() {
                             }
                         </div>
 
-                        <div className="px-2 py-2" onClick={() => handleWatchList(movieIndex, movie?.itemId, movie?.itemType)}   >
+                        <div className="px-2 py-2" onClick={() => handleRemoveRating(movieIndex, movie?.itemId, existingRating2?._id)}   >
                             <button className="px-2 py-2 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
                                 <Tooltip title="Click here to remove rating">
                                     {loading[movieIndex] ? (
@@ -291,14 +213,7 @@ export function RatingLayout() {
                                                 },
                                             }} />
                                         <br />
-                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, recentList[numberIndex]?.itemId, recentList[numberIndex]?.itemType, value, recentList[numberIndex]?.itemImg, recentList[numberIndex]?.itemName)}>
-                                            Rate
-                                        </button>
-                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleWatchList(numberIndex, recentList[numberIndex]?.itemId, recentList[numberIndex]?.itemType)}>
-                                            Remove Rating
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -308,89 +223,14 @@ export function RatingLayout() {
             <div className="bg-white text-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <div className="lg:max-w-full  ">
-                        <div className="flex mt-3 border-b-2 border-gray py-4">
+                        <div className="flex mt-3 border-b-2 border-gray">
                             <div className="items-center ">
                                 <h2 className="text-2xl font-bold ">Your Rating List</h2>
                                 <p className="text-xl font-semibold text-gray-500">Private</p>
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center text-2xl font-bold text-black ">Share </p>
-                                <IconButton
-                                    onClick={handleShareClick}
-                                    size="small"
-                                    aria-controls={openShare ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={openShare ? 'true' : undefined}
-                                >
-                                    <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
-                                            bgcolor: 'gray', opacity: '50%'
-                                        }
-                                    }}>
-                                        <ShareIcon />
-                                    </Avatar>
-                                </IconButton>
-                                <Menu
-                                    anchorEl={anchorShareEl}
-                                    id="account-menu"
-                                    open={openShare}
-                                    onClose={handleShareClose}
-                                    onClick={handleShareClose}
-                                    PaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            '& .MuiAvatar-root': {
-                                                width: 32, height: 32, ml: -0.5, mr: 1,
-                                            },
-                                            '&::before': {
-                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                            },
-                                        },
-                                    }}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem>
-                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                                <ListItemIcon>
-                                                    <i className="fa-brands fa-facebook text-2xl"></i>
-                                                </ListItemIcon>
-                                                Facebook
-                                            </a>
-                                        </div>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <blockquote className="twitter-tweet items-center">
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-twitter text-2xl"></i>
-                                            </ListItemIcon>
-                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                                Twitter
-                                            </a>
-                                        </blockquote>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                            title="Share by Email">
-                                            <ListItemIcon>
-                                                <i className="fa-regular fa-envelope text-2xl"></i>
-                                            </ListItemIcon>
-                                            Email Link
-                                        </a>
-                                    </MenuItem>
-
-                                    <MenuItem onClick={handleCopyLink}>
-                                        <ListItemIcon>
-                                            <i className="fa-solid fa-link text-2xl"></i>
-                                        </ListItemIcon>
-                                        Copy Link
-                                    </MenuItem>
-                                </Menu>
+                                <Share bgColor={'black'} />
                             </div>
                         </div>
                         <div className="flex border-b-2 border-gray py-2 items-center ">
@@ -410,78 +250,47 @@ export function RatingLayout() {
                         <div className="w-full">
                             {handleRefine ? (
                                 <div className="flex border-b-2 border-gray py-2 items-center w-full">
-                                    <div className="md:grid md:grid-cols-12 cursor-pointer  w-full ">
-                                        <div className="lg:col-span-5 col-span-12 bg-gray-400">
-                                            <div onClick={() => setCurrentSelection('case1')} className={`h-full px-4 py-8  hover:opacity-90  hover:bg-gray-200 ${currentSelection == 'case1' ? 'bg-gray-200' : ''} `}>
-                                                <div className="font-bold">Type (Film, TV, etc.)</div>
-                                                <div className="capitalize">
-                                                    {movieCheck ? 'Movie' : ''}
-                                                    {seriesCheck ? 'TV' : ''}
-                                                    {!movieCheck && !seriesCheck ? 'all' : ''}
-                                                </div>
+                                    <div className="grid grid-cols-12 cursor-pointer px-2 py-2 bg-gray-200 w-full ">
+                                        <div className="lg:col-span-5 col-span-12 ">
+                                            <div className={`h-full `}>
+                                                <div className="font-bold">Type (Movie, TV, etc.)</div>
                                             </div>
                                         </div>
-                                        <div className="lg:col-span-7 col-span-12 bg-gray-200 w-full h-full">
-                                            <button id='1' className="relative hover:opacity-90 w-full" >
-                                                {currentSelection == 'case1' ? (
-                                                    <div className="w-full py-4 px-2">
-                                                        <div className="w-full py-4 px-2 text-xl">
+                                        <div className="lg:col-span-7 col-span-12 w-full h-full">
+                                            <div className="relative w-full" >
+                                                {
+                                                    <div className="w-full ">
+                                                        <div className="w-full text-xl">
                                                             <div className="items-center w-full">
-                                                                {movieCheck && (
-                                                                    <div className="flex items-center">
-                                                                        <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("Movie")}></i>
-                                                                            <div>Feature Movie</div>
-                                                                        </div>
-                                                                        <div className="ml-auto">
-                                                                            {recentList?.filter(movie => movie?.itemType === 'Movie').length}
-                                                                        </div>
+                                                                <div className="flex items-center">
+                                                                    <div className="flex gap-2 items-center">
+                                                                        {mediaType === 'movie' ? (
+                                                                            <i className="fa-regular fa-square-check" onClick={() => setMediaType("movie")}></i>
+                                                                        )
+                                                                            : (
+                                                                                <i className="fa-regular fa-square" onClick={() => setMediaType("movie")}></i>
+                                                                            )}
 
+                                                                        <div>Feature Movie</div>
                                                                     </div>
-                                                                )}
-                                                                {seriesCheck && (
-                                                                    <div className="flex items-center">
-                                                                        <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("TV")}></i>
-                                                                            <div>Feature TV Mini-Series</div>
-                                                                        </div>
-                                                                        <div className="ml-auto">
-                                                                            {recentList?.filter(movie => movie?.itemType === 'TV').length}                                                                             </div>
-
+                                                                </div>
+                                                                <div className="flex items-center">
+                                                                    <div className="flex gap-2 items-center">
+                                                                        {mediaType === 'tv' ? (
+                                                                            <i className="fa-regular fa-square-check" onClick={() => setMediaType("tv")}></i>
+                                                                        )
+                                                                            : (
+                                                                                <i className="fa-regular fa-square" onClick={() => setMediaType("tv")}></i>
+                                                                            )}
+                                                                        <div>Feature TV Mini-Series</div>
                                                                     </div>
-                                                                )}
-
-                                                                {!movieCheck && !seriesCheck && (
-                                                                    <>
-                                                                        <div className="flex items-center">
-                                                                            <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("Movie")}></i>
-                                                                                <div>Feature Movie</div>
-                                                                            </div>
-                                                                            <div className="ml-auto">
-                                                                                {recentList?.filter(movie => movie?.itemType === 'Movie').length}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="flex items-center mt-4">
-                                                                            <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("TV")}></i>
-                                                                                <div>Feature TV Mini-Series</div>
-                                                                            </div>
-                                                                            <div className="ml-auto">
-                                                                                {recentList?.filter(movie => movie?.itemType === 'TV').length}                                                                                 </div>
-                                                                        </div>
-                                                                    </>
-                                                                )}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )
-                                                    : (
-                                                        <div></div>
-                                                    )}
+                                                    </div>}
 
 
-                                            </button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -502,19 +311,7 @@ export function RatingLayout() {
                                         const dateA = new Date(a?.createdTime)?.getTime();
                                         const dateB = new Date(b?.createdTime)?.getTime();
                                         return dateB - dateA;
-                                    })
-                                        .filter((movie: any) => {
-                                            if (movieCheck) {
-                                                return movie?.itemType === "Movie"; // Chỉ hiển thị phim có tiêu đề
-                                            }
-                                            else if (seriesCheck) {
-                                                return movie?.itemType === "TV"
-                                            }
-                                            else {
-                                                return true; // Không áp dụng bộ lọc
-                                            }
-                                        })
-                                        .map((m, index) => renderMovieItem(m, index))}
+                                    }).map((m, index) => renderMovieItem(m, index))}
                                 </div>
                             </div>
                         </div>

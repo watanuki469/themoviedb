@@ -19,7 +19,8 @@ export interface Translations {
   fromThePastWeekend: string, asRated: string, createdModified: string, listActivity: string, views: string, thisWeek: string,
   share: string, keyword: string, advanced: string, imdbSearch: string, title: string, expandAll: string, collapseAll: string,
   searchFilter: string,from:string,to:string,orJustEnter:string,votes:string,award:string,spotlight:string,
-  officialSites:string,alternativeName:string,height:string
+  officialSites:string,alternativeName:string,height:string,discussion:string,user:string,remove:string,
+  rate:string
 
 }
 
@@ -140,7 +141,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'Spotlight',
     officialSites:'Official sites',
     alternativeName:'Alternative name',
-    height:'Height'
+    height:'Height',
+    discussion:'Discussion',
+    user:'User',
+    remove:'Remove',
+    rate:'Rate'
   },
   'vi-VI': {
     featuredToday: 'Nổi bật hôm nay',
@@ -251,7 +256,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'Điểm sáng',
     officialSites:'Trang web chính thức',
     alternativeName:'Tên khác',
-    height:'Chiều cao'
+    height:'Chiều cao',
+    discussion:'Thảo luận',
+    user:'Người dùng',
+    remove:'Xóa',
+    rate:'Đánh giá'
   },
   'ja-JP': {
     featuredToday: '今日のおすすめ',
@@ -362,7 +371,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'スポットライト',
     officialSites:'公式サイト',
     alternativeName:'別名',
-    height:'身長'
+    height:'身長',
+    discussion:'議論',
+    user:'ユーザー',
+    remove:'削除する',
+    rate:'評価する'
   },
   'fr-FR': {
     featuredToday: `À la une aujourd\'hui`,
@@ -473,7 +486,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'Projecteur',
     officialSites:'Sites officiels',
     alternativeName:'Nom alternatif',
-    height:'Taille'
+    height:'Taille',
+    discussion:'Discussion',
+    user:'Utilisateur',
+    remove:'Supprimer',
+    rate:'Évaluer'
   },
 
   'de-DE': {
@@ -585,7 +602,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'Rampenlicht',
     officialSites:'Offizielle Webseiten',
     alternativeName:'Alternativer Name',
-    height:'Höhe'
+    height:'Höhe',
+    discussion:'Diskussion',
+    user:'Benutzer',
+    remove:'Entfernen',
+    rate:'Bewerten'
 
   },
   'hi-IN': {
@@ -697,7 +718,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'प्रकाश डालना',
     officialSites:'आधिकारिक साइटें',
     alternativeName:'वैकल्पिक नाम',
-    height:'ऊंचाई'
+    height:'ऊंचाई',
+    discussion:'चर्चा',
+    user:'उपयोगकर्ता',
+    remove:'हटाएं',
+    rate:'रेट करें'
 
   },
   'id-ID': {
@@ -809,7 +834,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'Sorotan',
     officialSites:'Situs resmi',
     alternativeName:'Nama alternatif',
-    height:'Tinggi'
+    height:'Tinggi',
+    discussion:'Diskusi',
+    user:'Pengguna',
+    remove:'Hapus',
+    rate:'Menilai'
   },
   'it-IT': {
     featuredToday: 'In primo piano oggi',
@@ -920,7 +949,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'Riflettore',
     officialSites:'Siti ufficiali',
     alternativeName:'Nome alternativo',
-    height:'Altezza'
+    height:'Altezza',
+    discussion:'Discussione',
+    user:'Utente',
+    remove:'Rimuovere',
+    rate:'Valutare'
 
   },
   'ko-KR': {
@@ -1032,7 +1065,11 @@ export const translations: Record<LanguageCode, Translations> = {
     spotlight:'스포트라이트',
     officialSites:'공식 사이트',
     alternativeName:'대체 이름',
-    height:'키'
+    height:'키',
+    discussion:'토론',
+    user:'사용자',
+    remove:'제거하다',
+    rate:'평가하다'
 
   },
 };

@@ -1,19 +1,19 @@
 import AppsIcon from '@mui/icons-material/Apps';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
-import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, ListItemIcon, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Divider, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { AppDispatch } from '../redux/store';
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../redux/client/api.LoginMongo';
-import { setDeleteRating, setListRating, setRating } from '../redux/reducers/login.reducer';
 import { LanguageContext } from '../pages/LanguageContext';
-import ListRow from './ListRow';
+import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../redux/client/api.LoginMongo';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { setDeleteRating, setListRating, setRating } from '../redux/reducers/login.reducer';
+import { AppDispatch } from '../redux/store';
 import Charts from './Charts';
+import ListRow from './ListRow';
 import TopRatedMovieByGenre from './TopRatedMovieByGenre';
+import RatingModule from './RatingModule';
 
 export interface ViewsProps {
     viewList: any,
@@ -139,47 +139,7 @@ export default function ViewTable({
         }
         setUserInfoList(Object.values(storedData));
     }, []);
-    const fetchGetRating = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getListRatingMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListRating(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
 
-    useEffect(() => {
-        if (userInfoList?.length > 0) {
-            dispatch(fetchGetRating())
-        }
-    }, [userInfoList]);
-    const fetchRating = (
-        itemId: string,
-        itemType: string,
-        itemRating: string,
-        itemImg: string,
-        itemName: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await ratingMongoApi(
-                email, itemId, itemType, itemRating, itemImg, itemName
-            );
-            dispatch(setRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
     const [mediaKeywordType, setMediaKeyWordType] = useState('');
 
     useEffect(() => {
@@ -191,56 +151,6 @@ export default function ViewTable({
             setMediaKeyWordType('Movie');
         }
     }, [mediaType]);
-    const handleRating = async (
-        index: number,
-        itemId: any,
-        itemType: any,
-        itemRating: any,
-        itemImg: any,
-        itemName: any
-    ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: true }));
-
-        await dispatch(fetchRating(
-            itemId, mediaKeywordType, itemRating, itemImg, itemName
-        ));
-        setCheckLog(!checkLog);
-        setIsRating(false)
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [index]: false }));
-        toast.success('Rating success')
-    };
-    const fetchRemove = (
-        movieId: string,
-        movieType: string,
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await removeRatingMongoApi(
-                email, movieId, mediaKeywordType,
-            );
-            dispatch(setDeleteRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-                toast.info('Remove rating success')
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-    const handleRemoveRating = async (
-        index: number, movieId: any, movieType: any,
-    ) => {
-        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
-        await dispatch(fetchRemove(
-            movieId, movieType,
-        ));
-        setCheckLog(!checkLog);
-        setIsRating(false)
-        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
-    };
 
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
@@ -266,33 +176,9 @@ export default function ViewTable({
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
                                                 <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2 hover:bg-gray-200 w-fit px-2 py-2 rounded-lg">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
+                                                    <div className="grow ml-auto py-2">
+                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
 
-                                                                )
-                                                            ) : (
-                                                                <div className="font-bold text-sm">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    ) : (
-                                                                        <div className="hover:bg-gray-200  flex gap-2 flex-wrap w-fit items-center px-2 py-2 rounded-lg">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                            <div>Rate</div>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
                                                     </div>
                                                 </button>
                                             </div>
@@ -332,32 +218,8 @@ export default function ViewTable({
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
                                                 <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
-
-                                                                )
-                                                            ) : (
-                                                                <div className="text-black">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                                                    ) : (
-                                                                        <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i> Rate
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
+                                                    <div className="grow ml-auto py-2" >
+                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                     </div>
                                                 </button>
                                                 <div className="h-12 w-full ">
@@ -405,31 +267,7 @@ export default function ViewTable({
                                                 </div>
                                                 <button className=" hover:text-black text-blue-500" >
                                                     <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        {
-                                                            existingRating ? (
-                                                                loading2[movieIndex] ? (
-                                                                    <div>
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center  gap-2 ">
-                                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                                        <div>{existingRating?.itemRating}</div>
-                                                                    </div>
-
-                                                                )
-                                                            ) : (
-                                                                <div className="font-bold text-sm">
-                                                                    {loading2[movieIndex] ? (
-                                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                                    ) : (
-                                                                        <div className="">
-                                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        }
+                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                     </div>
                                                 </button>
 
@@ -502,30 +340,7 @@ export default function ViewTable({
         setMenuItemNum(menuItemNum);
         handleRankingClose();
     };
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
 
-        // Thử copy địa chỉ URL vào clipboard
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                // Nếu thành công, hiển thị thông báo
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
     const context = useContext(LanguageContext);
 
     if (!context) {
@@ -536,70 +351,6 @@ export default function ViewTable({
 
     return (
         <div className='cursor-pointer'>
-            {isRating &&
-                (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                        <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                            <div className="flex items-center justify-end">
-                                <div className="flex justify-end">
-                                    <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                        <i className="fa-solid fa-times text-xl"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="bg-black px-4 py-4">
-                                <div className="aligns-center justify-center items-center text-center gap-2">
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                        <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                        <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                    </div>
-                                    <p className="text-yellow-300 font-bold">Rate this</p>
-                                    <p className="text-2xl ">{selectedStudent?.title ? selectedStudent.title : selectedStudent?.name}</p>
-                                    <div className="gap-2 px-2 py-2">
-                                        <Rating name="customized-10" value={value} size="large"
-                                            onChange={(event, newValue) => {
-                                                setValue(newValue);
-                                            }}
-                                            max={10} sx={{
-                                                color: 'blue', mt: 1,
-                                                '& .MuiRating-iconEmpty': {
-                                                    borderColor: 'red',
-                                                    color: 'gray'
-                                                },
-                                            }} />
-                                        <br />
-                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRating(numberIndex, selectedStudent?.id, mediaType, value, selectedStudent?.poster_path, selectedStudent?.name ? selectedStudent?.name : selectedStudent?.title)}>
-                                            {loading2[numberIndex] ? (
-                                                <div>
-                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                </div>
-                                            ) : (
-                                                <div className="">
-                                                    <div>Rate</div>
-                                                </div>
-                                            )
-                                            }
-                                        </button>
-                                        <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                            onClick={() => handleRemoveRating(numberIndex, selectedStudent?.id, mediaType)}>
-                                            {loading3[numberIndex] ? (
-                                                <div>
-                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                </div>
-                                            ) : (
-                                                <div className="">
-                                                    <div>Remove Rating</div>
-                                                </div>
-                                            )
-                                            }
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
             <Dialog open={openGenDialog} onClose={handleDiaGenlogClose} maxWidth={'sm'}
                 keepMounted={true}
                 PaperProps={{
@@ -789,7 +540,7 @@ export default function ViewTable({
                                     return null
                                 })
                                 .filter((movie: any) => {
-                                    const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId);
+                                    const existingRating = ratingList?.find((rating: any) => movie?.id == rating?.itemId);
                                     if (filterRatedMovie === false) return true
                                     return existingRating == undefined;
                                 })

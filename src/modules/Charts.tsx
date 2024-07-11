@@ -12,7 +12,7 @@ export default function Charts() {
 
     const { language, translations, handleLanguageChange } = context;
     return (
-        <div className="pt-2">
+        <div className="pt-2 capitalize">
             <div>
                 <div
                     onClick={() => navigate('/topBoxOffice')}

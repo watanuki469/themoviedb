@@ -13,7 +13,7 @@ interface ILoginState {
     recentlyView:any[],
     deleteRecently:any[],
     listRating:any[],
-    rating:any[],
+    rating:any[],    
     deleteRating:any[],
     loading:boolean,
     error:any,
@@ -83,7 +83,8 @@ const setRatingState = (state: ILoginState, action: any) => {
     state.rating = action.payload;
 }
 const setListRatingState = (state: ILoginState, action: any) => {
-    state.listRating = action.payload.ratingList;
+    // state.listRating = action.payload.rating.ratings;
+    state.listRating = action.payload;
 }
 
 const setDeleteRatingState = (state: ILoginState, action: any) => {

@@ -1,10 +1,5 @@
-import { Rating } from "@mui/material";
-import { useEffect, useState } from "react";
-import { AppDispatch } from "../redux/store";
-import { getUserReviewMongoMovieApi, reviewMongoMovieApi } from "../redux/client/api.LoginMongo";
-import { toast } from "react-toastify";
-import { setListSingleUserReview, setReview } from "../redux/reducers/login.reducer";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useState } from "react";
+import { useAppDispatch } from "../redux/hooks";
 
 export interface FourSwiperRowProps {
     setShowModal: any,

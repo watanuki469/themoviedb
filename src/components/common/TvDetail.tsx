@@ -37,14 +37,11 @@ export default function TvDetail({
     };
 
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-    const [isRating, setIsRating] = useState(false);
     const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
-    const [value, setValue] = useState<number | null>(0);
 
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
-    const ratingList = useAppSelector((state) => state.login.listRating);
 
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
@@ -59,14 +56,13 @@ export default function TvDetail({
         dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
             dispatch(fetchGetFavorites());
-            dispatch(fetchGetRating())
         }
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
     }, [userInfoList]);
     const existingIndex = favoriteList.findIndex(fav => fav.itemId == singleTvList[0]?.id);
- 
+
     const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
         try {
             const response = await getFavoriteMongoApi(userInfoList[0]);
@@ -110,7 +106,7 @@ export default function TvDetail({
             }
         } catch (e) {
             console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed"+e);
+            toast.error("Updating watch list failed" + e);
         }
     };
 
@@ -134,113 +130,9 @@ export default function TvDetail({
         setCheckLog(!checkLog);
 
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
-    };
+    }; 
 
-    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
-    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
-
-    const fetchGetRating = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getListRatingMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListRating(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
-
-    const fetchRating = (
-        itemId: string,
-        itemType: string,
-        itemRating: string,
-        itemImg: any,
-        itemName: any
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await ratingMongoApi(
-                email, itemId, itemType, itemRating, itemImg, itemName
-            );
-            dispatch(setRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-
-    const handleRating = async (itemRating: any,
-        itemImg: any,
-        itemName: any
-    ) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
-        await dispatch(fetchRating(
-            singleTvList[0]?.id,
-            'TV',
-            itemRating,
-            itemImg,
-            itemName
-        ));
-        setCheckLog(!checkLog);
-        setIsRating(false)
-        toast.success('Rating success')
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: false }));
-    };
-
-    const fetchRemove = (
-        movieId: string,
-        movieType: string,
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await removeRatingMongoApi(
-                email,
-                movieId,
-                movieType,
-            );
-            dispatch(setDeleteRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-    const handleRemoveRating = async (
-        index: number,
-        movieId: any,
-        movieType: any,
-    ) => {
-        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: true }));
-        await dispatch(fetchRemove(
-            movieId,
-            movieType,
-        ));
-        setCheckLog(!checkLog);
-        toast.info('Remove rating success')
-        setIsRating(false)
-        setLoading3((prevLoading3) => ({ ...prevLoading3, [index]: false }));
-    };
-
-    function formatNumber(num: any) {
-        if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + 'm';
-        }
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + 'k';
-        }
-        return num;
-    }
+   
     const handleImageError = (e: any) => {
         const imgElement = e.currentTarget as HTMLImageElement;
         imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
@@ -265,69 +157,6 @@ export default function TvDetail({
             backgroundPosition: "center",
             overflow: 'hidden'
         }}>
-            {isRating && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black text-white bg-opacity-50 flex justify-center items-center z-30">
-                    <div className="p-5 rounded-lg max-w-2xl min-w-xl px-4 py-4 ">
-                        <div className="flex items-center justify-end">
-                            <div className="flex justify-end">
-                                <button onClick={() => setIsRating(false)} className="text-white hover:text-gray-700 px-2 py-2 rounded-full  ">
-                                    <i className="fa-solid fa-times text-xl"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="bg-black px-4 py-4">
-                            <div className="aligns-center justify-center items-center text-center gap-2">
-                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-52 flex flex-col items-center">
-                                    <i className="fa-solid fa-star text-9xl text-blue-500"></i>
-                                    <p className="-translate-y-20 text-4xl font-extrabold ">{value}</p>
-                                </div>
-                                <p className="text-yellow-300 font-bold">Rate this</p>
-                                <p className="text-2xl ">{singleTvList[0]?.title ? singleTvList[0]?.title : singleTvList[0]?.name}</p>
-                                <div className="gap-2 px-2 py-2">
-                                    <Rating name="customized-10" value={value} size="large"
-                                        onChange={(event, newValue) => {
-                                            setValue(newValue);
-                                        }}
-                                        max={10} sx={{
-                                            color: 'blue', mt: 1,
-                                            '& .MuiRating-iconEmpty': {
-                                                borderColor: 'red',
-                                                color: 'gray'
-                                            },
-                                        }} />
-                                    <br />
-                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRating(value, singleTvList[0]?.poster_path, singleTvList[0]?.title ? singleTvList[0]?.title : singleTvList[0]?.name)}>
-                                        {loading2[0] ? (
-                                            <div>
-                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                            </div>
-                                        ) : (
-                                            <div className="">
-                                                <div>Rate</div>
-                                            </div>
-                                        )
-                                        }
-                                    </button>
-                                    <button className={`px-2 py-2 justify-center mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRemoveRating(0, singleTvList[0]?.id, 'TV')}>
-                                        {loading3[0] ? (
-                                            <div>
-                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                            </div>
-                                        ) : (
-                                            <div className="">
-                                                <div>Remove Rating</div>
-                                            </div>
-                                        )
-                                        }
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
             <div className="text-white font-sans font-medium max-w-full " >
                 <div style={{
                     backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleTvList[0]?.backdrop_path}')`,
@@ -385,38 +214,7 @@ export default function TvDetail({
                                 </div>
                                 <div className="items-center text-center justify-center m-auto mr-4 aligns-center">
                                     <div className="    text-stone-400">{translations[language]?.rating}</div>
-                                    {/* <div className="hover:opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
-                                        <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl text-center justify-center w-full ">
-                                            {
-                                                existingRating ? (
-                                                    loading2[0] ? (
-                                                        <div>
-                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="flex items-center gap-2 ">
-                                                            <i className="fa-solid fa-star text-blue-500"></i>
-                                                            <div>{existingRating?.itemRating}</div>
-                                                        </div>
-
-                                                    )
-                                                ) : (
-                                                    <div className="font-bold text-sm">
-                                                        {loading2[0] ? (
-                                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                        ) : (
-                                                            <div className="flex items-center text-xl text-center gap-2">
-                                                                <div>Rate</div>
-                                                                <i className="fa-regular fa-star text-blue-500"></i>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )
-                                            }
-                                        </button>
-
-                                    </div> */}
-                                      <RatingModule mediaType={'TV'} ratingList={singleTvList[0]} email={userInfoList[0]}/>
+                                    <RatingModule mediaType={'tv'} ratingList={singleTvList[0]} userInfoList={userInfoList} rateHidden={'false'} starIndex={0} />
                                 </div>
                             </div>
                         </div>
@@ -652,38 +450,7 @@ export default function TvDetail({
                                 </span>
                                 <span className="text-stone-400">  /10</span>
                                 <div className="text-stone-400">{singleTvList[0]?.vote_count}</div>
-                                <RatingModule mediaType={'TV'} ratingList={singleTvList[0]} email={userInfoList[0]}/>
-                                {/* <div className="hover:opacity-80 hover:bg-gray-500 text-center justify-center" onClick={() => handleClick(existingRating?.itemRating)}>
-                                    <button className="flex px-3 py-3 text-blue-500 items-center gap-2 text-xl text-center justify-center w-full ">
-                                        {
-                                            existingRating ? (
-                                                loading2[0] ? (
-                                                    <div>
-                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex items-center gap-2 ">
-                                                        <i className="fa-solid fa-star text-blue-500"></i>
-                                                        <div>{existingRating?.itemRating}</div>
-                                                    </div>
-
-                                                )
-                                            ) : (
-                                                <div className="font-bold text-sm">
-                                                    {loading2[0] ? (
-                                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                                    ) : (
-                                                        <div className="flex items-center text-xl text-center gap-2">
-                                                            <div>Rate</div>
-                                                            <i className="fa-regular fa-star text-blue-500"></i>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )
-                                        }
-                                    </button>
-
-                                </div> */}
+                                <RatingModule mediaType={'tv'} ratingList={singleTvList[0]} userInfoList={userInfoList} starIndex={0} rateHidden={'false'} />
                             </div>
                         </div>
                         <div className='px-3 items-center'>
@@ -725,10 +492,8 @@ export default function TvDetail({
                                                     <span className="text-blue-600">{translations[language]?.seePro} </span>
                                                 </p>
                                                 <i className="fa-solid fa-arrow-up-right-from-square"></i>
-
                                             </div>
                                         </div>
-
                                     </div>
                                 )}
                             </div>

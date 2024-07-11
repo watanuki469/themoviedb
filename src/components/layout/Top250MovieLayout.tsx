@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Share from '../../modules/Share';
 import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
@@ -15,14 +15,11 @@ export default function Top250MovieLayout() {
     const dispatch = useAppDispatch();
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
-    }, []);
+        dispatch(fetchMovies(page));
+    }, [page, dispatch]);
 
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
     const fetchGenre = () => (dispatch: AppDispatch) => {
@@ -49,6 +46,30 @@ export default function Top250MovieLayout() {
     }
 
     const { language, translations, handleLanguageChange } = context;
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0,
+        });
+
+        const loadMoreElement = document.querySelector('#load-more');
+        if (loadMoreElement) {
+            observer.observe(loadMoreElement);
+        }
+
+        return () => {
+            if (loadMoreElement) {
+                observer.unobserve(loadMoreElement);
+            }
+        };
+    }, []);
+
+
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -76,6 +97,8 @@ export default function Top250MovieLayout() {
                             <p className="text-gray-500 py-2">{translations[language]?.voter}</p>
                         </div>
                     </div>
+
+
                     <ViewTable viewList={topRatedMovies} mediaType={'movie'} genreList={listGenreFromApi} moreToExploreList={mostPopularTv}></ViewTable>
                 </div>
             </div>
@@ -84,6 +107,7 @@ export default function Top250MovieLayout() {
                     <Footer />
                 </div>
             </div>
+            <div id="load-more" style={{ height: '20px' }}></div>
         </div >
     )
 }

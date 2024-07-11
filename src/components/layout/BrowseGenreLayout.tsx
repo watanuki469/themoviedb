@@ -20,10 +20,6 @@ export default function BrowseGenreLayout() {
     const handleRankingClose = () => {
         setAnchorRankingEl(null);
     };
-
-    // const genreMapping = {
-    //     12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
-    // };
     const dispatch = useAppDispatch();
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre);
     const listGenreFromApi2 = useAppSelector((state) => state.genre.listGenre2);
@@ -91,11 +87,11 @@ export default function BrowseGenreLayout() {
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white">
+            <div className="bg-white capitalize">
                 <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
                     <div className="md:grid grid-cols-12 gap-2 px-2 ">
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
-                            <div className="py-2">
+                            <div className="py-2 capitalize">
                                 <Button
                                     id="demo-customized-button"
                                     aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -125,6 +121,7 @@ export default function BrowseGenreLayout() {
                                     open={Boolean(anchorRankingEl)}
                                     onClose={handleRankingClose}
                                     onClick={() => setAnchorRankingEl(null)}
+                                    sx={{textTransform:'capitalize'}}
                                 >
                                     <MenuItem onClick={() => scrollToElement('pupularTVShowAndMovieGenreRef')} disableRipple>
                                         {translations[language]?.mostPopularTv} & {translations[language]?.genre}

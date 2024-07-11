@@ -187,7 +187,9 @@ export default function SingleMovieDetail({
                         backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleMovieList[0]?.backdrop_path}')`,
                         position: "absolute", width: "100%", height: '100%',
                         backgroundSize: "cover", backgroundPosition: "center",
-                        backgroundColor: 'black', filter: 'blur(100px)',
+                        backgroundColor: 'black',
+                         filter: 'blur(100px)',
+                        // opacity:'30%'
                     }}>
 
                 </div>
@@ -246,7 +248,7 @@ export default function SingleMovieDetail({
 
                                 <div className="items-center text-center justify-center  mr-4 aligns-center ">
                                     <div className="    text-stone-400">{translations[language]?.rating}</div>
-                                    <RatingModule mediaType={'Movie'} ratingList={singleMovieList[0]} email={userInfoList[0]} />
+                                    <RatingModule mediaType={'movie'} ratingList={singleMovieList[0]} userInfoList={userInfoList} starIndex={0} rateHidden={'false'} />
                                 </div>
                             </div>
                         </div>
@@ -257,7 +259,7 @@ export default function SingleMovieDetail({
                                 onError={handleImageError}
                                 src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" />
                         </div>
-                        <div className=" lg:col-span-7 col-span-12   lg:ml-2 bg-black hover:opacity-90">
+                        <div className=" lg:col-span-7 col-span-12   lg:ml-2  hover:opacity-90">
                             <iframe
                                 key={movieVideoList[0]?.name}
                                 src={`https://www.youtube.com/embed/${movieVideoList[0]?.key}?controls=0&&autoplay=1`}
@@ -297,9 +299,9 @@ export default function SingleMovieDetail({
                         </div>
 
                     </div>
-                    <div className="bg-black relative">
+                    <div className=" relative">
                         <div className=" grid-cols-12 hidden md:grid gap-6 h-full">
-                            <div className=" col-span-8  bg-black  ">
+                            <div className=" col-span-8  ">
                                 <div className="flex gap-2 mb-1">
                                     {singleMovieList[0]?.genres?.map((item: any) => (
                                         <button
@@ -430,7 +432,7 @@ export default function SingleMovieDetail({
                             </div>
                         </div>
                     </div>
-                    <div className='bg-black relative  lg:hidden'>
+                    <div className='relative  lg:hidden'>
                         <div className='grid grid-cols-2 gap-1' >
                             <div className='col-span-1'>
                                 <div onClick={() => navigate(`/video/${singleMovieList[0]?.id}`)} className='h-full aligns-center item-center justify-center px-2 py-2 bg-gray-500 text-center flex'>
@@ -478,7 +480,7 @@ export default function SingleMovieDetail({
                                 </span>
                                 <span className="text-stone-400">  /10</span>
                                 <div className="text-stone-400">{singleMovieList[0]?.vote_count}</div>
-                                <RatingModule mediaType={'Movie'} ratingList={singleMovieList[0]} email={userInfoList[0]} />
+                                <RatingModule mediaType={'movie'} ratingList={singleMovieList[0]} userInfoList={userInfoList} starIndex={0} rateHidden={'false'}/>
                             </div>
                         </div>
                         <div className='px-3 items-center'>

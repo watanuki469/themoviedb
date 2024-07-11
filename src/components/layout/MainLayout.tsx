@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListRow from "../../modules/ListRow";
-import SwiperRow from "../../modules/SwiperRow";
 import { LanguageContext } from "../../pages/LanguageContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import Footer from "../common/Footer";
@@ -15,6 +14,7 @@ import apiController from "../../redux/client/api.Controller.";
 import { setPeoplePopular } from "../../redux/reducers/peoplePopular.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import FourSwiperRow from "../../modules/FourSwiperRow";
 
 
 export default function MainLayout() {
@@ -66,19 +66,14 @@ export default function MainLayout() {
         dispatch(setGlobalLoading(true));
         dispatch(fetPopularCeleb())
         dispatch(fetchMovies())
-        // setTimeout(() => {
         dispatch(setGlobalLoading(false));
-        // }, 1000);
     }, [dispatch]);
     const popularCeleb2 = [...popularCeleb]
-    console.log(popularCeleb2);
-
     const context = useContext(LanguageContext);
     if (!context) {
         return null;
     }
     const { language, translations, handleLanguageChange } = context;
-
 
     return (
         <div className=" min-h-screen ">
@@ -137,7 +132,8 @@ export default function MainLayout() {
                     </div>
 
                     <div className="mt-5 overflow-hidden">
-                        <SwiperRow searchItemList={topRatedMovies} mediaType={'Movie'} />
+                        {/* <SwiperRow searchItemList={topRatedMovies} mediaType={'Movie'} /> */}
+                        <FourSwiperRow fourSwiperRowList={topRatedMovies} mediaType={'movie'} mediaMenuItem={0}></FourSwiperRow>
                     </div>
 
                     <div className="flex items-center mt-5">
@@ -147,7 +143,7 @@ export default function MainLayout() {
                     </div>
 
                     <div className="mt-8 overflow-hidden">
-                        <SwiperRow searchItemList={mostPopularTv} mediaType={'TV'} />
+                        <FourSwiperRow fourSwiperRowList={mostPopularTv} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
                     </div>
 
                     <div className="flex items-center mt-8">
@@ -160,7 +156,7 @@ export default function MainLayout() {
                         <h3 className="text-sm font-semibold">  {translations[language]?.topRatedTV}  {translations[language]?.justForYou}</h3>
                     </div>
                     <div className="mt-5 overflow-hidden " >
-                        <SwiperRow searchItemList={topRatedTv} mediaType={'TV'} />
+                        <FourSwiperRow fourSwiperRowList={topRatedTv} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
                     </div>
                     <div className="flex items-center mt-8" onClick={() => navigate('/watchToWatch')}>
                         <div className="h-6 w-1 bg-yellow-300 mr-2 rounded-full"></div>
