@@ -2,15 +2,14 @@ import { Avatar, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { formatTime, stringToColor } from "../../modules/BaseModule";
 import Share from "../../modules/Share";
 import { LanguageContext } from "../../pages/LanguageContext";
-import apiController from "../../redux/client/api.Controller.";
-import { addDislikeToReviewMongoMovieApi, addLikeToReviewMongoMovieApi, getFullReviewMongoMovieApi, remoReviewMongoMovieApi, reviewMongoMovieApi } from "../../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListFullMovieReview, setReview } from "../../redux/reducers/login.reducer";
-import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
-import { setListTv } from "../../redux/reducers/tv.reducer";
-import { AppDispatch } from "../../redux/store";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { fetchAddDislike, fetchAddlike, fetchDiscuss, fetchGetAllMovieReview, fetchRemoveReview } from "../../redux/reducers/login.reducer";
+import { fetchSingleMovies } from "../../redux/reducers/singleMovie.reducer";
+import { fetchTv } from "../../redux/reducers/tv.reducer";
 import TopBar from "../common/TopBar";
 
 export default function UserDiscussLayout() {
@@ -35,57 +34,28 @@ export default function UserDiscussLayout() {
         }
         setUserInfoList(Object.values(storedData));
     }, []);
-    const fetchTv = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiTv.tv(id),
-        ])
-            .then((data: any) => {
-                if (data) {
-                    dispatch(setListTv(data));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchSingleMovies = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiSingleMovieRequests.singleMovie(id),
-        ])
-            .then((data: any) => {
-                if (data) {
-                    dispatch(setListSingleMovie(data));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
+
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (mediaType === 'tv') {
-            dispatch(fetchTv());
+            dispatch(fetchTv(id));
         }
         else if (mediaType === 'person') {
-
+            navigate('/')
+            toast.error('There is no type person')
         }
         else if (mediaType === 'movie') {
-            dispatch(fetchSingleMovies())
+            dispatch(fetchSingleMovies(id))
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        dispatch(setGlobalLoading(false));
     }, [id]);
 
     let mediaList = [];
 
     // Xác định danh sách dựa trên mediaType
     if (mediaType === 'person') {
-
+        navigate('/')
+        toast.error('Not exist')
     } else if (mediaType === 'movie') {
         mediaList = singleMovieList;
     } else if (mediaType === 'tv') {
@@ -94,62 +64,20 @@ export default function UserDiscussLayout() {
     const handleDiscuss = async (
         itemId: any,
         itemName: any,
-        itemTMDbRating:any,
-        itemTMDbRatingCount:any,
-        itemTMDbReleaseDay:any,
-        itemTMDbRunTime:any,
+        itemTMDbRating: any,
+        itemTMDbRatingCount: any,
+        itemTMDbReleaseDay: any,
+        itemTMDbRunTime: any,
         itemImg: any,
         itemContent: any,
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: true }));
         await dispatch(fetchDiscuss(
-            itemId,
-            itemName,
-            itemTMDbRating,
-            itemTMDbRatingCount,
-            itemTMDbReleaseDay,
-            itemTMDbRunTime,
-            itemImg,
-            userInfoList[0],
-            userInfoList[1],
-            itemContent,
+            mediaType, itemId, itemName, itemTMDbRating, itemTMDbRatingCount, itemTMDbReleaseDay, itemTMDbRunTime, itemImg, userInfoList[0], userInfoList[1], itemContent,
         ));
         setLoading2((prevLoading2) => ({ ...prevLoading2, [0]: false }));
         setContent('')
-    };
-
-    const fetchDiscuss = (
-        itemId: string,
-        itemName: string,
-        itemTMDbRating:string,
-        itemTMDbRatingCount:string,
-        itemTMDbReleaseDay:string,
-        itemTMDbRunTime:string,
-        itemImg: string,
-        itemEmail: string,
-        itemDisplayName: string,
-        itemContent: string,
-    ) => async (dispatch: AppDispatch) => {
-        try {
-            const response = await reviewMongoMovieApi(
-                mediaType, itemId, itemName, itemTMDbRating,
-                itemTMDbRatingCount,
-                itemTMDbReleaseDay,
-                itemTMDbRunTime, itemImg, itemEmail, itemDisplayName, itemContent
-            );
-            dispatch(setReview(response));
-            if (response) {
-                await dispatch(fetchGetAllMovieReview());
-                setShowModal(false)
-            } else {
-                toast.error('Something went wrong');
-                setShowModal(false)
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-            setShowModal(false)
-        }
+        setShowModal(false)
     };
 
     const handleAddlike = async (
@@ -159,32 +87,8 @@ export default function UserDiscussLayout() {
         itemDisplayName: any,
     ) => {
         await dispatch(fetchAddlike(
-            itemId,
-            reviewId,
-            itemEmail,
-            itemDisplayName
+            mediaType, itemId, reviewId, itemEmail, itemDisplayName
         ));
-    };
-
-    const fetchAddlike = (
-        itemId: string,
-        reviewId: string,
-        itemEmail: string,
-        itemDisplayName: string,
-    ) => async (dispatch: AppDispatch) => {
-        try {
-            const response = await addLikeToReviewMongoMovieApi(
-                mediaType, itemId, reviewId, itemEmail, itemDisplayName
-            );
-            if (response) {
-                await dispatch(fetchGetAllMovieReview());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating failed: " + e);
-            toast.error("Something went wrong");
-        }
     };
 
     const handleAddDislike = async (
@@ -194,32 +98,8 @@ export default function UserDiscussLayout() {
         itemDisplayName: any,
     ) => {
         await dispatch(fetchAddDislike(
-            itemId,
-            reviewId,
-            itemEmail,
-            itemDisplayName
+            mediaType, itemId, reviewId, itemEmail, itemDisplayName
         ));
-    };
-
-    const fetchAddDislike = (
-        itemId: string,
-        reviewId: string,
-        itemEmail: string,
-        itemDisplayName: string,
-    ) => async (dispatch: AppDispatch) => {
-        try {
-            const response = await addDislikeToReviewMongoMovieApi(
-                mediaType, itemId, reviewId, itemEmail, itemDisplayName
-            );
-            if (response) {
-                await dispatch(fetchGetAllMovieReview());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating failed: " + e);
-            toast.error("Something went wrong");
-        }
     };
 
     const handleRemoveReview = async (
@@ -229,73 +109,20 @@ export default function UserDiscussLayout() {
     ) => {
         setLoading4((prevLoading4) => ({ ...prevLoading4, [index]: true }));
         await dispatch(fetchRemoveReview(
-            itemId,
-            reviewId,
+            mediaType, itemId, reviewId,
         ));
         setLoading4((prevLoading4) => ({ ...prevLoading4, [index]: false }));
     };
-    const fetchRemoveReview = (
-        itemId: string,
-        reviewId: string
-    ) => async (dispatch: AppDispatch) => {
-        try {
-            const response = await remoReviewMongoMovieApi(
-                mediaType, itemId, reviewId
-            );
-            if (response) {
-                await dispatch(fetchGetAllMovieReview());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Something went wrong");
-        }
-    };
 
-    const fetchGetAllMovieReview = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getFullReviewMongoMovieApi(mediaType, id);
-            if (response) {
-                dispatch(setListFullMovieReview(response));
-            } else {
-                throw new Error('Failed to fetch list');
-            }
-        } catch (e) {
-            console.log("Fetching fetchGetAllMovieReview failed: " + e);
-        }
-    }
     useEffect(() => {
         if (userInfoList[0]?.length > 0) {
-            dispatch(fetchGetAllMovieReview())
+            dispatch(fetchGetAllMovieReview(mediaType, id))
         }
     }, [userInfoList[0]]);
 
     const context = useContext(LanguageContext);
-
-    if (!context) {
-        return null;
-    }
-
+    if (!context) { return null; }
     const { language, translations, handleLanguageChange } = context;
-
-    const stringToColor = (str: any) => {
-        let hash = 0;
-        let i;
-
-        for (i = 0; i < str?.length; i += 1) {
-            hash = str?.charCodeAt(i) + ((hash << 5) - hash);
-        }
-
-        let color = "#";
-
-        for (i = 0; i < 3; i += 1) {
-            const value = (hash >> (i * 8)) & 0xff;
-            color += `00${value?.toString(16)}`?.slice(-2);
-        }
-
-        return color;
-    };
     const uniqueEmails = new Set<string>();
 
     // Filter the array to remove duplicates based on itemEmail
@@ -306,14 +133,6 @@ export default function UserDiscussLayout() {
         }
         return false;
     });
-    const formatTime = (timeString: any) => {
-        const [hours, minutes] = timeString.slice(11, 16).split(':');
-        const hour = parseInt(hours, 10);
-        const minute = parseInt(minutes, 10);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const formattedHour = hour % 12 || 12;
-        return `${formattedHour}:${minute < 10 ? '0' + minute : minute} ${ampm}`;
-    };
 
     return (
         <div className=" min-h-screen cursor-pointer bg-white text-black  ">
@@ -322,39 +141,32 @@ export default function UserDiscussLayout() {
                     <TopBar />
                 </div>
                 {showModal &&
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-2 z-50">
-                        <div className="bg-white p-6 rounded-lg lg:w-1/3 w-full">
-                            <h2 className="text-xl mb-4">Subject</h2>
-                            <textarea
-                                className="w-full border border-gray-300 p-2 rounded-lg"
-                                rows={5}
-                                value={content}
-                                required
-                                onChange={(e) => setContent(e.target.value)}
-                            ></textarea>
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-2 z-50 capitalize">
+                        <div className="rounded-lg lg:w-1/3 md:w-1/2 w-full relative">
+                            <div className="bg-white p-2">
+                                <div className="flex items-center ">
+                                    <h2 className="text-xl">{translations[language]?.discussion}</h2>
+                                    <button className="ml-auto text-3xl px-2 py-2 rounded-lg" onClick={() => setShowModal(false)}>
+                                        <i className="fa-regular fa-circle-xmark"></i>
+                                    </button>
+                                </div>
+                                <textarea className="w-full border border-gray-300 p-2 rounded-lg"
+                                    rows={5}
+                                    value={content}
+                                    required
+                                    onChange={(e) => setContent(e.target.value)}
+                                ></textarea>
 
-                            <div className="flex justify-between items-center mt-4">
-                                <button
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                                    onClick={() => setShowModal(false)}
-                                >
-                                    Cancel
-                                </button>
+                                <div className="text-end mt-4 ">
+                                    <button onClick={() => handleDiscuss(mediaList[0]?.id, mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title, mediaList[0]?.vote_average, mediaList[0]?.vote_count, mediaList[0]?.release_date ? mediaList[0]?.release_date : mediaList[0]?.first_air_date, mediaList[0]?.runtime, mediaList[0]?.poster_path, content)}
+                                        className="bg-yellow-300 text-white px-4 py-2 rounded-lg">
+                                        {loading2[0] ? (
+                                            <div>  <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i></div>
+                                        ) : (
+                                            <div>{translations[language]?.submit}</div>)}
+                                    </button>
 
-                                <button
-                                    onClick={() => handleDiscuss(mediaList[0]?.id, mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title,mediaList[0]?.vote_average,mediaList[0]?.vote_count,mediaList[0]?.release_date?mediaList[0]?.release_date:mediaList[0]?.first_air_date,mediaList[0]?.runtime, mediaList[0]?.poster_path, content)}
-                                    className="bg-yellow-300 text-white px-4 py-2 rounded-lg"
-                                >
-                                    {loading2[0] ? (
-                                        <div>
-                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            Submit
-                                        </div>)}
-                                </button>
-
+                                </div>
                             </div>
                         </div>
                     </div>}
@@ -373,28 +185,20 @@ export default function UserDiscussLayout() {
                                     <div className="relative text-left text-white lg:max-w-4xl px-4 py-4 rounded-lg">
                                         <h1 className="text-4xl font-bold">{mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</h1>
                                         <div className="text-xl mt-2 flex gap-2 flex-wrap">{mediaList[0]?.genres?.map((item: any, index: any) => (
-                                            <div key={index * 2} onClick={() => navigate(`/search?mediaType=${mediaType}&genres=${item?.name}`)}
+                                            <a href={`/search?mediaType=${mediaType}&genres=${item?.name}`} key={index * 2}
                                                 className="px-2 py-2 bg-opacity-80 rounded-xl">
                                                 {item?.name}
-                                            </div>
+                                            </a>
                                         ))}</div>
                                         <p className="mt-4 line-clamp-4">{mediaList[0]?.overview}</p>
-                                        {/* <button  onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)} className="mt-6 px-4 py-2 text-white font-bold rounded-xl">
-                                            {translations[language]?.moreExplore}
-                                        </button> */}
-                                        <div
-                                            onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)}
-                                            className="relative mt-6 px-4 py-2 text-white border-2 border-white w-fit font-bold rounded-xl overflow-hidden cursor-pointer"
-                                        >
-                                            <span
-                                                className="absolute inset-0 bg-cover bg-center bg-black bg-opacity-50 blur-[10px]"
-                                                style={{
-                                                    backgroundImage: `url('https://image.tmdb.org/t/p/w500${mediaList[0]?.backdrop_path}')`,
-                                                }}
-                                            />
-                                            <span className="relative z-10 ">
-                                                {translations[language]?.moreExplore}
-                                            </span>
+                                        <div className="py-4">
+                                            <a href={`/${mediaType}/${mediaList[0]?.id}`} className="relative mt-6 px-4 py-2 text-white border-2 border-white w-fit font-bold rounded-xl overflow-hidden cursor-pointer">
+                                                <span
+                                                    className="absolute inset-0 bg-cover bg-center bg-black bg-opacity-50 blur-[10px]"
+                                                    style={{ backgroundImage: `url('https://image.tmdb.org/t/p/w500${mediaList[0]?.backdrop_path}')` }}
+                                                />
+                                                <span className="relative z-10 ">{translations[language]?.moreExplore}</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -436,9 +240,9 @@ export default function UserDiscussLayout() {
                                             <div className="flex-wrap flex gap-2 capitalize py-2">
                                                 <div className="">{translations[language]?.discussion}</div>
                                                 <div>{`-->`}</div>
-                                                <div className="hover:text-yellow-300 uppercase" onClick={() => navigate(`/search?mediaType=${mediaType}`)}>{mediaType}</div>
+                                                <a href={`/search?mediaType=${mediaType}`} className="hover:text-yellow-300 uppercase">{mediaType}</a>
                                                 <div>{`-->`}</div>
-                                                <div className="hover:text-yellow-300" onClick={() => navigate(`/mediaType=${mediaType}/${mediaList[0]?.title ? mediaList[0]?.title : mediaList[0]?.name}`)}> {mediaList[0]?.title ? mediaList[0]?.title : mediaList[0]?.name}</div>
+                                                <a href={`/mediaType=${mediaType}/${mediaList[0]?.title ? mediaList[0]?.title : mediaList[0]?.name}`} className="hover:text-yellow-300"> {mediaList[0]?.title ? mediaList[0]?.title : mediaList[0]?.name}</a>
                                                 <div>{`-->`}</div>
                                                 <div>{translations[language]?.community}</div>
                                             </div>
@@ -490,7 +294,7 @@ export default function UserDiscussLayout() {
                                                                             }
 
                                                                             <div>•</div>
-                                                                            <div>{item?.peopleLike?.length}</div>
+                                                                            <div>({item?.peopleLike?.length})</div>
                                                                             {/* <i className="fa-solid fa-thumbs-up fa-rotate-180 ml-2 text-xl"></i> */}
                                                                             {existingDislikeIndex !== -1 ?
                                                                                 <div className="">
@@ -500,7 +304,8 @@ export default function UserDiscussLayout() {
                                                                                     <i className="fa-solid fa-thumbs-up  rotate-180 text-xl" onClick={() => handleAddDislike(id, item?._id, userInfoList[0], userInfoList[1])}></i>
                                                                                 </div>
                                                                             }
-                                                                            <div>{item?.peopleDislike?.length}</div>
+                                                                            <div>•</div>
+                                                                            <div>({item?.peopleDislike?.length})</div>
                                                                         </div>
                                                                         <div className='ml-auto flex flex-wrap gap-2 items-center'>
                                                                             <div>

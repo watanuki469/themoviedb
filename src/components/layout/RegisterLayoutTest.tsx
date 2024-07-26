@@ -141,7 +141,7 @@ const RegisterLayoutTest = () => {
           Register
         </button>
         <div className="login-register text-center mt-3">
-          <p>Already have an account? <a href="/login2" className="login-link hover:underline font-extrabold">Login</a></p>
+          <p>Already have an account? <a href="/login" className="login-link hover:underline font-extrabold">Login</a></p>
         </div>
 
       </form>

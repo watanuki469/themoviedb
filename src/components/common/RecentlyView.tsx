@@ -1,16 +1,13 @@
 import { useContext, useEffect, useState } from "react";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { handleImageError } from "../../modules/BaseModule";
 import { LanguageContext } from "../../pages/LanguageContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { AppDispatch } from "../../redux/store";
-import { getListRecentlyViewMongoApi, removeListRecentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
-import { setDeleteRecentlyView, setListRecentlyView } from "../../redux/reducers/login.reducer";
-import { toast } from "react-toastify";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { useNavigate } from "react-router-dom";
+import { fetchGetRecentlyView, fetchRemoveRecentlyView } from "../../redux/reducers/login.reducer";
 
 export default function RecentlyViewed() {
     const dispatch = useAppDispatch()
-    let navigate = useNavigate()
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
@@ -41,65 +38,23 @@ export default function RecentlyViewed() {
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
     const recentList = useAppSelector((state) => state.login.listRecentlyView);
 
-    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getListRecentlyViewMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListRecentlyView(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
     useEffect(() => {
         if (userInfoList.length > 0) {
-            dispatch(fetchGetFavorites());
+            dispatch(fetchGetRecentlyView(userInfoList[0]));
         }
     }, [userInfoList]);
-
-    const fetchRemove = (
-        movieId: string,
-        movieType: string,
-        removeALl: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await removeListRecentlyViewMongoApi(
-                email,
-                movieId,
-                movieType,
-                removeALl
-            );
-            dispatch(setDeleteRecentlyView(response));
-            if (response) {
-                await dispatch(fetchGetFavorites());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-
     const [loadingQuery, setLoadingQuery] = useState(false);
 
-    const handleWatchList = async (
+    const handleRecentlyList = async (
         movieId: any,
         movieType: any,
         removeAll: any
     ) => {
         setLoadingQuery(true)
-        await dispatch(fetchRemove(
-            movieId, movieType, removeAll,
+        await dispatch(fetchRemoveRecentlyView(
+            userInfoList[0], movieId, movieType, removeAll,
         ));
         window.scrollTo(0, 0);
         // Reload the page
@@ -117,18 +72,14 @@ export default function RecentlyViewed() {
     return (
         <div>
             <div className="text-white flex">
-                <p className="text-xl lg:text-3xl font-bold">
-                    {translations[language]?.recentlyViewed}
-                </p>
-                <div className="flex items-center ml-auto flex-wrap" >
-                    <div className="mr-2 text-blue-500" onClick={() => handleWatchList('mro', 'meo', 'true')} >
+                <p className="text-xl lg:text-3xl font-bold capitalize">{translations[language]?.recentlyViewed}</p>
+                <div className="flex items-center ml-auto flex-wrap capitalize  " >
+                    <div className="mr-2 text-blue-500" onClick={() => handleRecentlyList('mro', 'meo', 'true')} >
                         {
                             loadingQuery ? (
                                 <i className="fa-solid fa-earth-americas fa-spin-pulse text-xl"></i>
                             ) : (
-                                <div>
-                                    {translations[language]?.clearAll}
-                                </div>
+                                <div>{translations[language]?.clearAll}</div>
                             )
                         }
                     </div>
@@ -140,6 +91,8 @@ export default function RecentlyViewed() {
                     <Swiper
                         spaceBetween={10}
                         slidesPerView={activeSlider}
+                        navigation={true}
+                        modules={[Pagination, Navigation]}
                         direction="horizontal"
                         className="mySwiper w-full text-white h-auto flex "
                     >
@@ -151,10 +104,9 @@ export default function RecentlyViewed() {
                             <SwiperSlide key={movieIndex} className="w-full h-auto ">
                                 <div className="font-sans py-2" >
                                     <div className="relative w-full pb-[150%] hover:opacity-80">
-                                        <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={handleImageError}
-                                            className="absolute top-0 left-0 w-full h-full object-cover  rounded-tr-xl" />
+                                        <a href={`/${movie?.itemType}/${movie?.itemId}`}>
+                                            <img src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images" onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover  rounded-tr-xl" />
+                                        </a>
                                     </div>
                                     <div className="px-2 py-2 w-full bg-gray-900 rounded-br-xl rounded-bl-xl ">
                                         <div className="flex flex-wrap items-center gap-2 justify-start text-left">

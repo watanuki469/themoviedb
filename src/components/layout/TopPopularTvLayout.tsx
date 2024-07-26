@@ -1,15 +1,10 @@
-import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import Share from '../../modules/Share';
 import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
-import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListGenre } from '../../redux/reducers/genre.reducer';
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { fetchGenre } from '../../redux/reducers/genre.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { AppDispatch } from "../../redux/store";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 
@@ -17,64 +12,44 @@ export default function TopPopularTvLayout() {
     const dispatch = useAppDispatch();
     const mostPopularTv = useAppSelector((state) => state.movies.discoverTv)
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
-
-    useEffect(() => {
-        dispatch(setGlobalLoading(true));
-        dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
-    }, []);
-
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
-    const fetchGenre = () => (dispatch: AppDispatch) => {
-        apiController.apiGenre.genre('tv')
-            .then((data: any) => {
-                if (data && data?.genres) {
-                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
+    const [page, setPage] = useState(1);
+
     useEffect(() => {
-        dispatch(fetchGenre());
+        dispatch(fetchMovies(page));
+    }, [page]);
+
+    useEffect(() => {
+        dispatch(fetchGenre('tv'));
     }, [dispatch]);
 
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0,
+        });
 
-        // Thử copy địa chỉ URL vào clipboard
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                // Nếu thành công, hiển thị thông báo
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
+        const loadMoreElement = document.querySelector('#load-more');
+        if (loadMoreElement) {
+            observer.observe(loadMoreElement);
+        }
+
+        return () => {
+            if (loadMoreElement) {
+                observer.unobserve(loadMoreElement);
+            }
+        };
+    }, []);
 
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
 
     return (
@@ -84,8 +59,8 @@ export default function TopPopularTvLayout() {
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white px-2">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
+            <div className="bg-black">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center bg-white px-2 ">
                     <div className="lg:max-w-full w-full ">
                         <div className="flex items-center flex-wrap">
                             <div className="items-center ">
@@ -93,82 +68,7 @@ export default function TopPopularTvLayout() {
                             </div>
                             <div className="flex items-center ml-auto gap-2" >
                                 <p className="flex items-center lg:text-2xl text-lg  text-black ">{translations[language]?.share} </p>
-                                <IconButton
-                                    onClick={handleShareClick}
-                                    size="small"
-                                    aria-controls={openShare ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={openShare ? 'true' : undefined}
-                                >
-                                    <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
-                                            bgcolor: 'gray', opacity: '50%'
-                                        }
-                                    }}>
-                                        <ShareIcon />
-                                    </Avatar>
-                                </IconButton>
-                                <Menu
-                                    anchorEl={anchorShareEl}
-                                    id="account-menu"
-                                    open={openShare}
-                                    onClose={handleShareClose}
-                                    onClick={handleShareClose}
-                                    PaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            '& .MuiAvatar-root': {
-                                                width: 32, height: 32, ml: -0.5, mr: 1,
-                                            },
-                                            '&::before': {
-                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                            },
-                                        },
-                                    }}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem>
-                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                                <ListItemIcon>
-                                                    <i className="fa-brands fa-facebook text-2xl"></i>
-                                                </ListItemIcon>
-                                                Facebook
-                                            </a>
-                                        </div>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <blockquote className="twitter-tweet items-center">
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-twitter text-2xl"></i>
-                                            </ListItemIcon>
-                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                                Twitter
-                                            </a>
-                                        </blockquote>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                            title="Share by Email">
-                                            <ListItemIcon>
-                                                <i className="fa-regular fa-envelope text-2xl"></i>
-                                            </ListItemIcon>
-                                            Email Link
-                                        </a>
-                                    </MenuItem>
-
-                                    <MenuItem onClick={handleCopyLink}>
-                                        <ListItemIcon>
-                                            <i className="fa-solid fa-link text-2xl"></i>
-                                        </ListItemIcon>
-                                        Copy Link
-                                    </MenuItem>
-                                </Menu>
+                                <Share bgColor={'black'} />
                             </div>
                         </div>
                         <div className="">
@@ -181,11 +81,12 @@ export default function TopPopularTvLayout() {
 
                     </div>
                     <ViewTable viewList={mostPopularTv} mediaType={'tv'} genreList={listGenreFromApi} moreToExploreList={popularMovies}></ViewTable>
+                    <div id="load-more" style={{ height: '20px' }}></div>
 
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <Footer />
                 </div>
             </div>

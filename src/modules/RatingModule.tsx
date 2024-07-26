@@ -1,11 +1,8 @@
 import { Rating } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { LanguageContext } from "../pages/LanguageContext";
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setDeleteRating, setListRating, setRating } from "../redux/reducers/login.reducer";
-import { AppDispatch } from "../redux/store";
+import { fetchGetRating, fetchRating, fetchRemoveRating } from "../redux/reducers/login.reducer";
 
 export interface SwiperRowProps {
     mediaType: any
@@ -15,40 +12,22 @@ export interface SwiperRowProps {
     rateHidden: any
 }
 export default function RatingModule({
-    mediaType,
-    ratingList,
-    userInfoList,
-    starIndex,
-    rateHidden
+    mediaType, ratingList, userInfoList, starIndex, rateHidden
 }: SwiperRowProps) {
     const [value, setValue] = useState<number | null>(0);
     const [isRating, setIsRating] = useState(false);
     const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
     const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
-    const [checkLog, setCheckLog] = useState(false)
     const dispatch = useAppDispatch()
     const ratingListFromApi = useAppSelector((state) => state.login.listRating);
 
-    const fetchGetRating = () => async (dispatch: AppDispatch) => {
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [starIndex]: true }));
-        try {
-            const response = await getListRatingMongoApi(mediaType, userInfoList[0]);
-            if (response) {
-                dispatch(setListRating(response));
-            } else {
-                throw new Error('Failed to fetch list');
-            }
-        } catch (e) {
-            console.log("Fetching list failed: " + e);
-        }
-        setLoading2((prevLoading2) => ({ ...prevLoading2, [starIndex]: false }));
-    }
     useEffect(() => {
-        dispatch(fetchGetRating())
-    }, []);
+        if (userInfoList?.length > 0) {
+            dispatch(fetchGetRating(mediaType, userInfoList[0]));
+        }
+    }, [dispatch, userInfoList, mediaType]);
 
     const existingRating = ratingListFromApi?.find((item: any) => item?.itemId == ratingList?.id);
-
     const existingRating2 = existingRating?.ratings?.find((item: any) => item?.itemEmail == userInfoList[0]);
 
     const handleClick = (value: number) => {
@@ -60,79 +39,19 @@ export default function RatingModule({
     ) => {
         setLoading2((prevLoading2) => ({ ...prevLoading2, [starIndex]: true }));
         await dispatch(fetchRating(
-            ratingList?.id,
-            ratingList?.title ? ratingList?.title : ratingList?.name,
-            ratingList?.vote_average,
-            ratingList?.vote_count,
-            ratingList?.release_date ? ratingList?.release_date : ratingList?.first_air_date,
-            ratingList?.runtime,
-            ratingList?.poster_path,
-            userInfoList[0],
-            userInfoList[1],
-            itemRating
+            mediaType, ratingList?.id, ratingList?.title ? ratingList?.title : ratingList?.name, ratingList?.vote_average, ratingList?.vote_count, ratingList?.release_date ? ratingList?.release_date : ratingList?.first_air_date, ratingList?.runtime, ratingList?.poster_path ? ratingList?.poster_path : ratingList?.profile_path, userInfoList[0], userInfoList[1], itemRating
         ));
-        setCheckLog(!checkLog);
         setIsRating(false)
         setLoading2((prevLoading2) => ({ ...prevLoading2, [starIndex]: false }));
     };
 
-    const fetchRating = (
-        itemId: string,
-        itemName: any,
-        itemTMDbRating: string,
-        itemTMDbRatingCount: string,
-        itemTMDbReleaseDay: string,
-        itemTMDbRunTime: string,
-        itemImg: string,
-        itemEmail: string,
-        itemDisplayName: any,
-        itemRating: string,
-    ) => async (dispatch: AppDispatch) => {
-        try {
-            const response = await ratingMongoApi(
-                mediaType, itemId, itemName, itemTMDbRating, itemTMDbRatingCount, itemTMDbReleaseDay, itemTMDbRunTime, itemImg, itemEmail, itemDisplayName, itemRating
-            );
-            dispatch(setRating(response));
-            if (response) {
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-
-    const fetchRemove = (
-        itemId: any,
-        reviewId: any,
-    ) => async (dispatch: AppDispatch) => {
-        try {
-            const response = await removeRatingMongoApi(
-                mediaType,
-                itemId,
-                reviewId,
-            );
-            if (response) {
-                console.log(response);
-                await dispatch(fetchGetRating());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating failed: " + e);
-            toast.error("Remove rating failed due to " + e);
-        }
-    };
     const handleRemoveRating = async (
         itemId: any,
         ratingId: any,
     ) => {
         setLoading3((prevLoading3) => ({ ...prevLoading3, [starIndex]: true }));
-        await dispatch(fetchRemove(
-            itemId,
-            ratingId,
+        await dispatch(fetchRemoveRating(
+            userInfoList[0], mediaType, itemId, ratingId,
         ));
         setIsRating(false)
         setLoading3((prevLoading3) => ({ ...prevLoading3, [starIndex]: false }));
@@ -172,43 +91,30 @@ export default function RatingModule({
                                         name="customized-10"
                                         value={value}
                                         size="large"
-                                        onChange={(event, newValue) => {
-                                            setValue(newValue);
-                                        }}
+                                        onChange={(event, newValue) => { setValue(newValue) }}
                                         max={10}
-                                        sx={{
-                                            color: 'blue',
-                                            mt: 1,
-                                            '& .MuiRating-iconEmpty': {
-                                                color: 'gray',
-                                            },
-                                        }}
+                                        sx={{ color: 'blue', mt: 1, '& .MuiRating-iconEmpty': { color: 'gray' } }}
                                     />
                                     <br />
                                     <button
                                         className={`px-2 py-2 justify-center mt-2 capitalize items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRating(value)}
-                                    >
+                                        onClick={() => handleRating(value)}>
                                         {loading2[starIndex] ? (
-                                            <div>
-                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                            </div>
+                                            <div>  <i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i> </div>
                                         ) : (
-                                            <div className="">
-                                                <div>{translations[language]?.rate}</div>
-                                            </div>
+                                            <div>{translations[language]?.rate}</div>
                                         )}
                                     </button>
                                     <button
                                         className={`px-2 py-2 justify-center capitalize mt-2 items-center w-full ${value !== 0 ? 'bg-yellow-300' : 'bg-gray-500'} ${value !== null ? 'hover:opacity-75' : ''}`}
-                                        onClick={() => handleRemoveRating(`${ratingList?.id}`,existingRating2?._id)}
+                                        onClick={() => handleRemoveRating(`${ratingList?.id}`, existingRating2?._id)}
                                     >
                                         {loading3[starIndex] ? (
                                             <div>
-                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
                                             </div>
                                         ) : (
-                                            <div className="">
+                                            <div className="capitalize">
                                                 <div>{translations[language]?.remove} {translations[language]?.rate}</div>
                                             </div>
                                         )}
@@ -219,13 +125,12 @@ export default function RatingModule({
                     </div>
                 </div>
             )}
-
             <button className=" text-blue-500 items-center gap-2 text-center justify-center w-full" onClick={() => handleClick(existingRating2?.itemRating)}>
                 {
                     existingRating2 ? (
                         loading2[starIndex] ? (
                             <div>
-                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
                             </div>
                         ) : (
                             <div className="flex items-center gap-2 ">
@@ -237,12 +142,12 @@ export default function RatingModule({
                     ) : (
                         <div className="font-bold text-sm">
                             {loading2[starIndex] ? (
-                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i>
                             ) : (
                                 <div className="flex items-center text-center gap-2">
                                     <i className="fa-regular fa-star text-blue-500"></i>
-                                    <div className={`${rateHidden === 'true' ? 'hidden' : ''}`}>   {translations[language]?.rate}</div>
-                                    
+                                    <div className={`${rateHidden === 'true' ? 'hidden' : ''} capitalize`}>   {translations[language]?.rate}</div>
+
                                 </div>
                             )}
                         </div>

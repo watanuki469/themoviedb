@@ -49,25 +49,22 @@ export default function VideoDetail({
                 <div className="grid grid-cols-12 gap-y-4 h-full gap-2">
                     <div className="lg:col-span-8 col-span-12 lg:ml-2 bg-black relative">
                         <div className='min-h-60 w-full h-full bg-black bg-cover'                            >
-                            <iframe
-                                src={"https://www.youtube.com/embed/" +
-                                    (singleMovieList[0]?.videos?.results[numberIndex]?.key || "") +
-                                    "?controls=" + numberIndex + "&&autoplay=1"}
+                            <iframe src={"https://www.youtube.com/embed/" +(singleMovieList[0]?.videos?.results[numberIndex]?.key || "") +"?controls=" + 1 + "&&autoplay=1"}
                                 width="100%"
                                 height={"100%"}
                                 title={singleMovieList[0]?.name}
+                                allow="fullscreen"
                                 style={{ border: 0, minHeight: '350px' }}
                             >
                             </iframe>
-
                         </div>
 
                     </div>
                     <div className="hidden lg:block col-span-4 h-full ml-2 overflow-hidden">
                         <div className=" h-1/2 flex px-2 py-2 gap-2 max-h-40">
-                            <img onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}
-                                src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images"
-                                className="max-w-32 h-full rounded-xl" />
+                            <a href={`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`} className="max-w-32 h-full rounded-xl" >
+                                <img src={`https://image.tmdb.org/t/p/w500/${singleMovieList[0]?.poster_path}`} alt="product images" className="max-w-32 h-full rounded-xl" />
+                            </a>
                             <div className='' >
                                 <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${singleMovieList[0]?.title ? 'movie' : 'tv'}/${singleMovieList[0]?.id}`)}>
                                     <p className='text-lg'>{singleMovieList[0]?.title ? singleMovieList[0]?.title : singleMovieList[0]?.name} ({singleMovieList[0]?.release_date ? singleMovieList[0]?.release_date?.slice(0, 4) : singleMovieList[0]?.first_air_date?.slice(0, 4)} )</p>
@@ -80,17 +77,13 @@ export default function VideoDetail({
                                             <p className='hover:underline hover:text-yellow-300' onClick={() => navigate(`/search?mediaType=${singleMovieList[0]?.title ? 'movie' : 'tv'}&genres=${item?.name}`)}> {item?.name}</p>
                                             <p className=''>{index < Math.min(singleMovieList[0]?.genres?.length) - 1 ? '•' : ''}</p>
                                         </div>
-
                                     ))}
 
                                 </div>
                             </div>
                         </div>
                         <div className="h-1/2 px-2 py-2 gap-2">
-                            <div className='items-center gap-2'>
-                                <p>{singleMovieList[0]?.videos?.results[numberIndex]?.name}</p>
-
-                            </div>
+                            <p>{singleMovieList[0]?.videos?.results[numberIndex]?.name}</p>
                             <div className="line-clamp-5">
                                 <p>{singleMovieList[0]?.overview}</p>
                             </div>
@@ -128,13 +121,8 @@ export default function VideoDetail({
                         <div className='col-span-1 px-2 py-2'>
                             <div className='flex h-full aligns-center item-center justify-center px-2 py-2  text-left'>
                                 <div>
-                                    <div className='items-center gap-2'>
-                                        <p>{singleMovieList[0]?.videos?.results[numberIndex]?.name}</p>
-
-                                    </div>
-                                    <div className="line-clamp-5">
-                                        <p>{singleMovieList[0]?.overview}</p>
-                                    </div>
+                                    <p>{singleMovieList[0]?.videos?.results[numberIndex]?.name}</p>
+                                    <div className="line-clamp-5">{singleMovieList[0]?.overview}</div>
                                 </div>
                             </div>
                         </div>
@@ -161,27 +149,18 @@ export default function VideoDetail({
                             <div key={index} className="relative">
                                 <SwiperSlide key={index}>
                                     <div className="w-full hover:text-yellow-300 text-white hover:opacity-90" onClick={() => { setNumberIndex(index) }}  >
-                                        <img
-                                            // src={`https://movies-proxy.vercel.app/ipx/f_webp&s_800x1200/youtube/vi/${item?.key}/maxresdefault.jpg`}
-                                            src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`}
-                                            className="h-40 w-full object-cover rounded-md"
-                                            title={item?.name}
-                                        />
+                                        <img src={`https://img.youtube.com/vi/${item?.key}/hqdefault.jpg`} className="h-40 w-full object-cover rounded-md" title={item?.name}/>
                                         <p className="text-red w-full text-white font-bold">Watch {item?.name}</p>
                                         <p className="text-red w-full text-gray-500 ">{singleMovieList[0]?.original_title}</p>
                                         <div className="absolute inset-0 w-full h-full text-center top-14">
                                             <i className="fa-solid fa-circle-play text-5xl "></i>
                                         </div>
                                     </div>
-
                                 </SwiperSlide>
                             </div>
                         )
                     })}
                 </Swiper>
-
-
-
             </div>
         </section >
     )

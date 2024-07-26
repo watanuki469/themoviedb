@@ -1,27 +1,21 @@
-import ABFFLayout from "./components/layout/ABFFLayout";
 import { ActivityLayout } from "./components/layout/ActivityLayout";
 import AdvancedSearchLayout from "./components/layout/AdvancedSearchLayout";
+import AwardLayout from "./components/layout/AwardLayout";
 import BrowseGenreLayout from "./components/layout/BrowseGenreLayout";
 import CastCrewLayout from "./components/layout/CastCrewLayout";
 import CelebNewLayout from "./components/layout/CelebNewLayout";
 import ChangeLayoutTest from "./components/layout/ChangePasswordLayout";
 import { FavoriteListLayout } from "./components/layout/FavoriteListLayout";
 import FilmLayout from "./components/layout/FilmLayout";
-import HolidayLayout from "./components/layout/HolidayLayout";
 import ImageLayout from "./components/layout/ImageLayout";
 import KeywordLayout from "./components/layout/KeywordLayout";
-import LoginLayoutTest from "./components/layout/LoginLayoutTest";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import MovieNewLayout from "./components/layout/MovieNewLayout";
-import OscarLayout from "./components/layout/OscarLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
 import { RatingLayout } from "./components/layout/RatingLayout";
-import RegisterLayoutTest from "./components/layout/RegisterLayoutTest";
-import SpotlightLayout from "./components/layout/SpotlightLayout";
-import StarmeterLayout from "./components/layout/StarmeterLayout";
 import Top250MovieLayout from "./components/layout/Top250MovieLayout";
 import Top250TvLayout from "./components/layout/Top250TvLayout";
 import TopBoxOffice from "./components/layout/TopBoxOffice";
@@ -32,9 +26,8 @@ import TvNewLayout from "./components/layout/TvNewLayout";
 import UpComingMovieLayout from "./components/layout/UpComingMovieLayout";
 import UserDiscussLayout from "./components/layout/UserDiscussLayout";
 import UserReviewLayout from "./components/layout/UserReviewLayout";
+import VideoGalleryLayout from "./components/layout/VideoGalleryLayout";
 import VideoLayout from "./components/layout/VideoLayout";
-import VideoTvLayout from "./components/layout/VideoTvLayout";
-import { WatchListLayout } from "./components/layout/WatchListLayout";
 import { WatchListLayout2 } from "./components/layout/WatchListLayout2";
 import WatchToWWatch from "./components/layout/WatchToWatchLayout";
 import WhatOnTvStream from "./components/layout/WhatOnTvStream";
@@ -56,15 +49,11 @@ const routes = [
     state: "person"
   },
   {
-    path: "/video/:id",
+    path: "/video/:mediaType/:id",
     element: <VideoLayout />,
     state: "video"
   },
-  {
-    path: "/videoTv/:id",
-    element: <VideoTvLayout />,
-    state: "videoTv"
-  },
+
   {
     path: "/tv/:id",
     element: <TvLayout />,
@@ -121,6 +110,11 @@ const routes = [
     state: "image"
   },
   {
+    path: "/film/:mediaType/:id/:name",
+    element: <FilmLayout />,
+    state: "film"
+  },
+  {
     path: "/fullcredits/:mediaType/:id",
     element: <CastCrewLayout />,
     state: "fullcredits"
@@ -167,39 +161,14 @@ const routes = [
     element: <KeywordLayout />,
     state: "keyword"
   },
+
   {
-    path: "/award/oscars",
-    element: <OscarLayout />,
-    state: "oscars"
+    path: "/award/:type",
+    element: <AwardLayout />,
+    state: "award"
   },
   {
-    path: "/award/ABFF",
-    element: <ABFFLayout />,
-    state: "ABFF"
-  },
-  {
-    path: "/award/spotlight",
-    element: <SpotlightLayout />,
-    state: "spotlight"
-  },
-  {
-    path: "/award/holidayPick",
-    element: <HolidayLayout />,
-    state: "holidayPick"
-  },
-  {
-    path: "/award/starmeter",
-    element: <StarmeterLayout />,
-    state: "starmeter"
-  },
-  
-  // {
-  //   path: "/watchList",
-  //   element: <WatchListLayout />,
-  //   state: "watchList"
-  // },
-  {
-    path: "/watchList2",
+    path: "/watchList",
     element: <WatchListLayout2 />,
     state: "watchList"
   },
@@ -220,11 +189,6 @@ const routes = [
     state: "rating"
   },
   {
-    path: "/test",
-    element: <LoginLayoutTest />,
-    state: "test"
-  },
-  {
     path: "/changePassword",
     element: <ChangeLayoutTest />,
     state: "test"
@@ -235,9 +199,9 @@ const routes = [
     state: "watchToWatch"
   },
   {
-    path: "/film/:mediaType/:id/:name",
-    element: <FilmLayout />,
-    state: "film"
+    path: "/videoGallery/:name/:id",
+    element: <VideoGalleryLayout />,
+    state: "VideoGallery"
   },
 
 ];

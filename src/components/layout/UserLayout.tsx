@@ -36,17 +36,10 @@ export default function UserLayout() {
 
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
-    const currenDateToday = currentDate.getDate();
     const currentMonthName = monthNames[currentMonth];
     // Lấy ngày 5 ngày trước
     const currentDatePre = new Date(currentDate);
     currentDatePre.setDate(currentDatePre.getDate() - 5);
-    const currenDatePre = currentDatePre.getDate();
-
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
 
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
@@ -285,7 +278,7 @@ export default function UserLayout() {
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <Footer />
                 </div>
             </div>

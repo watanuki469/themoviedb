@@ -1,13 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import bg from '../../assets/image.png';
+import { handleImageError } from "../../modules/BaseModule";
 
 
 export default function ProLayout() {
     let navigate = useNavigate()
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750';
-    };
+    
     const Divider = ({ children }: any) => {
         return (
             <div className="relative">
@@ -21,9 +19,7 @@ export default function ProLayout() {
         );
     };
     return (
-        <div className="min-h-screen cursor-pointer py-4 px-2"
-        // style={{ backgroundImage: `url(${bg})` }}
-        >
+        <div className="min-h-screen cursor-pointer py-4 px-2">
             <div className="text-black bg-opacity-70 ml-auto mr-auto flex justify-center items-center rounded md:w-5/12 w-10/12  ">
                 <div className="bg-white">
                     <div>

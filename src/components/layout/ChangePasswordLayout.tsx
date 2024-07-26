@@ -48,7 +48,7 @@ const ChangeLayoutTest = () => {
     ])
       .then((response: any) => {
         dispatch(setRegister(response));
-        navigate('/login2')
+        navigate('/login')
         toast.success('Change password successfully')
       })
       .catch((e) => {
@@ -115,7 +115,7 @@ const ChangeLayoutTest = () => {
             <label className={`absolute left-1 transform transition-all duration-500 pointer-events-none
                             ${password ? 'top-[-20px] text-sm' : 'top-1/2 -translate-y-1/2'} font-medium`}
             >
-              Password
+             Old Password
             </label>
           </div>
         </div>

@@ -1,128 +1,33 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import FourPhotos from "../../modules/FourPhotos";
 import FourSwiperRow from "../../modules/FourSwiperRow";
 import ListRow from "../../modules/ListRow";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import TwoMovieRow from "../../modules/TwoMovieRow";
-import apiController from "../../redux/client/api.Controller.";
+import { LanguageContext } from "../../pages/LanguageContext";
+import { addRecentlyViewed } from "../../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
-import { setListMovieCredit } from "../../redux/reducers/movieCredit.reducer";
-import { setListMovieImage } from "../../redux/reducers/movieImage.reducer";
-import { setListMovieSimilar } from "../../redux/reducers/movieSimilar.reducer";
-import { setListMovieVideo } from "../../redux/reducers/movieVideo.reducer";
+import { fetchGetAllMovieReview } from "../../redux/reducers/login.reducer";
+import { fetchMovieCredit } from "../../redux/reducers/movieCredit.reducer";
+import { fetchMovieImage } from "../../redux/reducers/movieImage.reducer";
+import { fetchMovieSimilar } from "../../redux/reducers/movieSimilar.reducer";
+import { fetchMovieVideos } from "../../redux/reducers/movieVideo.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
-import { AppDispatch } from "../../redux/store";
+import { fetchSingleMovies } from "../../redux/reducers/singleMovie.reducer";
 import Footer from "../common/Footer";
 import SingleMovieDetail from "../common/SingleMovieDetail";
+import SingleMovieDiscuss from "../common/SingleMovieDiscuss";
 import SingleMoviePerson from "../common/SingleMoviePerson";
 import SingleMovieReview from "../common/SingleMovieReview";
 import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import TopBar from "../common/TopBar";
-import { toast } from "react-toastify";
-import { addRecentlyViewed, getFullReviewMongoMovieApi, recentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
-import { setListFullMovieReview, setRecentlyView } from "../../redux/reducers/login.reducer";
-import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
-import { LanguageContext } from "../../pages/LanguageContext";
-import SingleMovieDiscuss from "../common/SingleMovieDiscuss";
 
 export default function MovieLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
-    let navigate = useNavigate()
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
-
-    const fetchSingleMovies = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiSingleMovieRequests.singleMovie(id),
-        ])
-            .then((data: any) => {
-                if (data) {
-                    dispatch(setListSingleMovie(data));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieVideos = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieVideo.movieVideo(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.results) {
-                    dispatch(setListMovieVideo(data[0].results));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieImage = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieImage.movieImage(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.backdrops) {
-                    dispatch(setListMovieImage(data[0]?.backdrops));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieCredit = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieCredits.movieCredit(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.cast) {
-                    dispatch(setListMovieCredit(data[0]?.cast));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchMovieSimilar = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiMovieSimilar.movieSimilar(id),
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0]?.results) {
-                    dispatch(setListMovieSimilar(data[0]?.results));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-
-    const fetchGetAllMovieReview = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getFullReviewMongoMovieApi('movie', id);
-            if (response) {
-                dispatch(setListFullMovieReview(response));
-            } else {
-                throw new Error('Failed to fetch list');
-            }
-        } catch (e) {
-            console.log("Fetching fetchGetAllMovieReview failed: " + e);
-        }
-    }
-
     const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
     const movieVideoList = useAppSelector((state) => state.movieVideo.listMovieVideo)
     const movieImageList = useAppSelector((state) => state.movieImage.listMovieImage)
@@ -130,19 +35,16 @@ export default function MovieLayout() {
     const movieSimilarList = useAppSelector((state) => state.movieSimilar.listMovieSimilar)
     const fullMovieReviewListFromApi = useAppSelector((state) => state.login.fullMovieReview);
 
-
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
-        dispatch(fetchSingleMovies());
-        dispatch(fetchMovieVideos());
-        dispatch(fetchMovieImage());
-        dispatch(fetchMovieCredit());
-        dispatch(fetchMovieSimilar());
+        dispatch(setGlobalLoading(true));
+        dispatch(fetchSingleMovies(id));
+        dispatch(fetchMovieVideos(id));
+        dispatch(fetchMovieImage(id));
+        dispatch(fetchMovieCredit(id));
+        dispatch(fetchMovieSimilar(id));
         dispatch(fetchMovies());
-        dispatch(fetchGetAllMovieReview())
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        dispatch(fetchGetAllMovieReview('movie', id))
+        dispatch(setGlobalLoading(false));
     }, [id]);
 
     const moreToExploreRef = useRef<HTMLDivElement>(null); // Định rõ kiểu của ref là HTMLDivElement
@@ -189,34 +91,33 @@ export default function MovieLayout() {
     }, [userInfoList, singleMovieList, dispatch])
     const normalizeText = (text: string) => {
         // Convert to lowercase first to handle both uppercase and lowercase consistently
-        let result = text.toLowerCase();
+        let result = text?.toLowerCase();
 
         // Replace 'đ' with 'd'
-        result = result.replace(/đ/g, 'd');
+        result = result?.replace(/đ/g, 'd');
 
         // Normalize to 'NFD' and remove diacritical marks
-        result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        result = result?.normalize('NFD')?.replace(/[\u0300-\u036f]/g, '');
 
         // Remove special characters except hyphens
-        result = result.replace(/[^a-z0-9\s-]/g, '');
+        result = result?.replace(/[^a-z0-9\s-]/g, '');
 
         // Replace whitespace or multiple hyphens with a single hyphen
-        result = result.replace(/[\s-]+/g, '-');
+        result = result?.replace(/[\s-]+/g, '-');
 
         // Trim leading and trailing hyphens
-        result = result.trim();
+        result = result?.trim();
 
         return result;
     };
     const languageString = localStorage.getItem('language');
-
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
+    console.log(movieImageList[0]?.backdrops);
+
 
     return (
         <div className="min-h-screen w-full">
@@ -228,59 +129,60 @@ export default function MovieLayout() {
 
             <div className="bg-black w-full">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
-                    <SingleMovieDetail singleMovieList={singleMovieList} movieVideoList={movieVideoList}
-                        movieCreditList={movieCreditList} movieImageList={movieImageList} />
+                    <SingleMovieDetail singleMovieList={singleMovieList} movieImageList={movieImageList} />
                 </div>
             </div>
 
-            <div className="bg-white w-full">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center"
-                >
+            <div className="bg-white w-full cursor-pointer">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12 w-full">
                             {languageString === 'vi-VI' ? (
                                 <div className="text-white py-2 w-full cursor-pointer ">
-                                    <div className="flex items-center"
-                                        onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} >
+                                    <a className="flex items-center" href={`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`}>
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.episodes}</h2>
-                                        {/* <p className="text-lg font-bold text-gray-500 ml-4 ">{typeof totalEpisodes === 'number' ? totalEpisodes : 'Loading...'}</p> */}
                                         <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
-                                    </div>
-                                    <div className="sn:px-2">
-                                        <div onClick={() => navigate(`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`)} className="px-4 py-2 bg-yellow-300 rounded-xl hover:opacity-90 w-fit mt-2">{translations[language]?.moreExplore}</div>
+                                    </a>
+                                    <div className="px-2 py-2">
+                                        <a href={`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`} className="px-4 py-2 bg-yellow-300 rounded-xl hover:opacity-90 w-fit mt-2">{translations[language]?.moreExplore}</a>
                                     </div>
                                 </div>
                             ) : (
                                 <div></div>
                             )}
-
-                            <div className="flex items-center py-4" onClick={() => navigate(`/video/${id}`)}>
-                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black">Videos</h2>
-                                <p className="text-lg font-bold text-gray-500 ml-4">{movieVideoList?.length}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
-                            </div>
-                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/video/${id}`)}>
-                                <TwoMovieRow twoMovieRowList={movieVideoList} />
-                            </div>
-                            <div className="flex items-center py-4">
-                                <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black">{translations[language]?.photos}</h2>
-                                <p className="text-lg font-bold text-gray-500 ml-4">{singleMovieList[0]?.images?.backdrops?.length}</p>
-                                <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300" onClick={() => navigate(`/image/movie/${id}`)}></i>
-                            </div>
-                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/image/movie/${id}`)}>
-                                <FourPhotos fourPhotosList={movieImageList} />
-                            </div>
-                            <div className="flex items-center text-white py-4 w-full" onClick={() => navigate(`/fullcredits/movie/${id}`)}>
-                                <div className="flex items-center">
-                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black capitalize" id="movieCast">Top {translations[language]?.star}</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4">{movieCreditList?.length}</p>
-                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                            <a href={`/video/${id}`}>
+                                <div className="flex gap-2 items-center py-4 hover:text-yellow-300" >
+                                    <div className="h-8 w-1 bg-yellow-300 rounded-full"></div>
+                                    <h2 className="text-2xl text-black font-bold ">Videos</h2>
+                                    <p className="text-lg font-bold text-gray-500">{movieVideoList?.length}</p>
+                                    <i className="fa-solid fa-angle-right text-2xl"></i>
                                 </div>
-                            </div>
+                            </a>
+                            <a href={`/video/${id}`} className="lg:max-w-full w-full">
+                                <TwoMovieRow twoMovieRowList={movieVideoList} />
+                            </a>
+                            <a href={`/image/movie/${id}`}>
+                                <div className="flex gap-2 items-center py-4 hover:text-yellow-300 text-black">
+                                    <div className="h-8 w-1 bg-yellow-300 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black">{translations[language]?.photos}</h2>
+                                    <p className="text-lg font-bold text-gray-500">{singleMovieList[0]?.images?.backdrops?.length}</p>
+                                    <i className="fa-solid fa-angle-right  text-2xl" ></i>
+                                </div>
+                            </a>
+                            <a href={`/image/movie/${id}`} className="lg:max-w-full w-full">
+                                <FourPhotos fourPhotosList={movieImageList[0]?.backdrops} />
+                            </a>
+                            <a href={`/fullcredits/movie/${id}`}>
+                                <div className="flex items-center  py-4 w-full hover:text-yellow-300 text-black" >
+                                    <div className="flex gap-2 items-center">
+                                        <div className="h-8 w-1 bg-yellow-300 rounded-full"></div>
+                                        <h2 className="text-2xl font-bold text-black capitalize" id="movieCast">Top {translations[language]?.star}</h2>
+                                        <p className="text-lg font-bold text-gray-500">{movieCreditList?.length}</p>
+                                        <i className="fa-solid fa-angle-right  text-2xl"></i>
+                                    </div>
+                                </div>
+                            </a>
                             <div className="lg:max-w-full w-full">
                                 <SingleMoviePerson singleMovieList={singleMovieList} movieCreditList={movieCreditList} />
                             </div>
@@ -291,7 +193,7 @@ export default function MovieLayout() {
                                 </div>
                             </div>
                             <div className="">
-                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'movie'} mediaMenuItem={1}/>
+                                <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'movie'} mediaMenuItem={1} />
                             </div>
                             <div className="text-white flex py-4 w-full">
                                 <div className="flex items-center">
@@ -303,32 +205,31 @@ export default function MovieLayout() {
                                 <SingleMovieStoryLine singleMovieList={singleMovieList} />
                             </div>
                             <div className="text-white py-4 w-full">
-                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullReview/movie/${id}`)}>
-                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">{translations[language]?.reviews}</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4">{singleMovieList[0]?.reviews?.results?.length}</p>
-                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
-                                </div>
+                                <a href={`/fullReview/movie/${id}`}>
+                                    <div className="flex gap-2 items-center hover:text-yellow-300 text-black" >
+                                        <div className="h-8 w-1 bg-yellow-300  rounded-full"></div>
+                                        <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">{translations[language]?.reviews}</h2>
+                                        <p className="text-lg font-bold text-gray-500 ">{singleMovieList[0]?.reviews?.results?.length}</p>
+                                        <i className="fa-solid fa-angle-right  text-2xl "></i>
+                                    </div>
+                                </a>
                             </div>
                             <div className="lg:max-w-full w-full">
                                 <SingleMovieReview singleMovieList={singleMovieList} />
                             </div>
                             <div className="text-white py-4 w-full">
-                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullDiscuss/movie/${id}`)}>
-                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                    <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">discussion</h2>
-                                    <p className="text-lg font-bold text-gray-500 ml-4">{fullMovieReviewListFromApi?.length}</p>
-                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
-                                </div>
+                                <a href={`/fullDiscuss/movie/${id}`}>
+                                    <div className="flex gap-2 items-center hover:text-yellow-300 text-black" >
+                                        <div className="h-8 w-1 bg-yellow-300 rounded-full"></div>
+                                        <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">{translations[language]?.discussion}</h2>
+                                        <p className="text-lg font-bold text-gray-500 ">{fullMovieReviewListFromApi?.length}</p>
+                                        <i className="fa-solid fa-angle-right text-2xl"></i>
+                                    </div>
+                                </a>
                             </div>
-                            {fullMovieReviewListFromApi?.length > 0 ? (
-                                <div className="lg:max-w-full w-full">
-                                    <SingleMovieDiscuss singleMovieList={fullMovieReviewListFromApi} userInfoList={userInfoList} id={id} mediaType={'movie'} />
-                                </div>
-                            ) : (
-                                <div className="lg:max-w-full w-full"></div>
-                            )}
-
+                            <div className="lg:max-w-full w-full">
+                                <SingleMovieDiscuss singleMovieList={fullMovieReviewListFromApi} userInfoList={userInfoList} id={id} mediaType={'movie'} />
+                            </div>
                         </div>
                         <div className="hidden lg:block col-span-4">
                             <div
@@ -360,7 +261,7 @@ export default function MovieLayout() {
             </div>
 
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <Footer />
                 </div>
             </div>

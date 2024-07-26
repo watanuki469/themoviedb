@@ -1,13 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import FilterIcon from '@mui/icons-material/Filter';
-import axiosTopNew from "../redux/axios/axiosTopNew";
-import { useNavigate } from "react-router-dom";
 import { LanguageContext } from "../pages/LanguageContext";
+import axiosTopNew from "../redux/axios/axiosTopNew";
 
 export default function TopNew() {
-
     const [topNews, setTopNews] = useState<any[]>([]);
     useEffect(() => {
         axiosTopNew.get('', {
@@ -23,16 +18,11 @@ export default function TopNew() {
                 console.error('Error fetching top news:', error);
             });
     }, []);
-    let navigate=useNavigate()
-
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
-
 
     return (
         <div className="relative">
@@ -41,7 +31,8 @@ export default function TopNew() {
                     <p className="hover:text-black">{translations[language]?.moreRecommendation}</p>
                     <i className="fa-solid fa-chevron-right "></i>
                 </div>
-                <div onClick={()=>navigate('/news/movie')}>
+
+                <a href="/news/movie">
                     {topNews?.slice(0, 5).map((item, index) => (
                         <div key={index} className="py-2">
                             <div className="flex items-center border-2 border-gray-200 py-1 px-1">
@@ -58,14 +49,13 @@ export default function TopNew() {
                                                 </div>
                                             </>
                                         )}
-
                                     </div>
                                 </div>
                                 <div className="w-3/12">
                                     <div className="w-full">
                                         <img
                                             className="h-28 w-full object-cover hover:opacity-90"
-                                            src={`${item?.node?.image.url}`}
+                                            src={`${item?.node?.image?.url}`}
                                             alt="Article Thumbnail"
                                         />
                                     </div>
@@ -73,12 +63,9 @@ export default function TopNew() {
                             </div>
                         </div>
                     ))}
-                </div>
+                </a>
 
             </div>
         </div>
-
-
-
     );
 }

@@ -1,485 +1,400 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import TopBar from "../common/TopBar";
-import { Avatar, Button, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import ShareIcon from '@mui/icons-material/Share';
 import AppsIcon from '@mui/icons-material/Apps';
-import { toast } from "react-toastify";
-import Footer from "../common/Footer";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { Avatar, Button, Menu, MenuItem, Tooltip } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { formatDate, handleImageError } from "../../modules/BaseModule";
+import Charts from "../../modules/Charts";
+import ListRow from "../../modules/ListRow";
+import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
+import { LanguageContext } from "../../pages/LanguageContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { AppDispatch } from "../../redux/store";
-import { getListRecentlyViewMongoApi, removeListRecentlyViewMongoApi } from "../../redux/client/api.LoginMongo";
-import { setDeleteRecentlyView, setListRecentlyView } from "../../redux/reducers/login.reducer";
-
+import { fetchGetRecentlyView, fetchRemoveRecentlyView } from "../../redux/reducers/login.reducer";
+import { fetchMovies } from "../../redux/reducers/movies.reducer";
+import Footer from "../common/Footer";
+import TopBar from "../common/TopBar";
 
 export function ActivityLayout() {
-    const [watchList, setWatchList] = useState<any[]>([]);
     const [handleRefine, setHandleRefine] = useState(false);
-    const [movieCheck, setMovieCheck] = useState(false);
-    const [seriesCheck, setSeriesCheck] = useState(false);
-    const [actorCheck, setActorCheck] = useState(false);
-
-    const toggleFeature = (type: any) => {
-        if (type === "Movie") {
-            setMovieCheck(!movieCheck);
-        } else if (type === "TV") {
-            setSeriesCheck(!seriesCheck);
-        }
-        else if (type === "Person") {
-            setActorCheck(!actorCheck);
-        }
-    };
-
-    // useEffect(() => {
-    //     // Lấy dữ liệu từ local storage
-    //     const storedDataString = localStorage.getItem('activity');
-    //     let storedData = [];
-
-    //     if (storedDataString) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-    //     console.log('Stored data:', storedData);
-
-    //     // Lưu dữ liệu vào state
-    //     setWatchList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
-    // }, []);
-    // const removeFromWatchList = (imdb_id: string) => {
-    //     // Lấy dữ liệu từ local storage
-    //     const storedDataString = localStorage.getItem('activity');
-    //     let storedData: Record<string, any> = {};
-
-    //     if (storedDataString) {
-    //         storedData = JSON.parse(storedDataString);
-    //     }
-
-    //     // Xóa item với imdb_id tương ứng khỏi object
-    //     delete storedData[imdb_id];
-
-    //     // Cập nhật local storage
-    //     localStorage.setItem('activity', JSON.stringify(storedData));
-
-    //     // Cập nhật state để render lại
-    //     setWatchList(Object.values(storedData));
-    // };
-    let navigate = useNavigate()
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-        imgElement.style.objectFit = 'cover'; // Ensure the fallback image covers the container
-    };
-    const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
-    const openShare = Boolean(anchorShareEl);
-    const handleShareClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorShareEl(event.currentTarget);
-    };
-    const handleShareClose = () => {
-        setAnchorShareEl(null);
-    };
-    const handleCopyLink = () => {
-        // Lấy địa chỉ URL hiện tại
-        const currentUrl = window.location.href;
-        navigator.clipboard.writeText(currentUrl)
-            .then(() => {
-                // Nếu thành công, hiển thị thông báo
-                toast.success('Link copied');
-            })
-            .catch((error) => {
-                // Nếu có lỗi, hiển thị thông báo lỗi
-                toast.error('Failed to copy link');
-                console.error('Error copying link:', error);
-            });
-    };
-
-    function shortenNumber(number: any) {
-        if (number >= 1000000000) {
-            return (number / 1000000000).toFixed(1) + 'b';
-        }
-        if (number >= 1000000) {
-            return (number / 1000000).toFixed(1) + 'm';
-        }
-        if (number >= 1000) {
-            return (number / 1000).toFixed(1) + 'k';
-        }
-        return number;
-    }
-
-    const [currentView, setCurrentView] = useState('Grid'); // Default view is 'detail'
-
-    const [currentSelection, setCurrentSelection] = useState('case1'); // Default view is 'detail'
-
-    type GenreID = number;
-    type GenreName = string;
-    const genreMapping: Record<GenreID, GenreName> = {
-        28: 'Action', 12: 'Adventure', 10768: 'War & Politics', 10765: 'Sci-Fi & Fantasy', 10759: 'Action & Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
-    };
-
+    const [currentView, setCurrentView] = useState('Grid');
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-    const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const recentList = useAppSelector((state) => state.login.listRecentlyView);
-    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getListRecentlyViewMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListRecentlyView(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
+    const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
 
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
-
-        if (storedDataString) {
-            storedData = JSON.parse(storedDataString);
-        }
+        if (storedDataString) { storedData = JSON.parse(storedDataString) }
         setUserInfoList(Object.values(storedData));
     }, []);
     useEffect(() => {
-        if (userInfoList.length > 0) {
-            dispatch(fetchGetFavorites());
+        if (userInfoList?.length > 0) {
+            dispatch(fetchGetRecentlyView(userInfoList[0]))
+            dispatch(fetchMovies());
         }
     }, [userInfoList]);
-    const fetchRemove = (
-        movieId: string,
-        movieType: string,
-        removeALl: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await removeListRecentlyViewMongoApi(
-                email,
-                movieId,
-                movieType,
-                removeALl
-            );
-            dispatch(setDeleteRecentlyView(response));
-            if (response) {
-                await dispatch(fetchGetFavorites());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
 
-    const handleWatchList = async (
-        index: number,
-        movieId: any,
-        movieType: any,
-        removeAll: any
-    ) => {
+    const handleRecentlyViewList = async (index: number, movieId: any, movieType: any, removeAll: any) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
-        await dispatch(fetchRemove(
-            movieId,
-            movieType,
-            removeAll,
-        ));
-        setCheckLog(!checkLog);
+        await dispatch(fetchRemoveRecentlyView(userInfoList[0], movieId, movieType, removeAll));
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
 
-    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
+    const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
+    const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorRankingEl(event.currentTarget);
+    };
 
+    const handleRankingClose = () => {
+        setAnchorRankingEl(null);
+    };
+    const [selectedRankingOption, setSelectedRankingOption] = useState(null);
+    const [menuItemNum, setMenuItemNum] = useState('');
+
+    const handleMenuItemClick = (option: any) => {
+        setSelectedRankingOption(option);
+        let menuItemNum = '';
+        switch (option) {
+            case `${translations[language]?.releaseDay}`: menuItemNum = '1'; break;
+            case `${translations[language]?.alphabet}`: menuItemNum = '2'; break;
+            case `${translations[language]?.runTime}`: menuItemNum = '3'; break;
+            default: break;
+        }
+        setMenuItemNum(menuItemNum);
+        handleRankingClose();
+    };
+
+    const switchView = (view: any) => {
+        setCurrentView(view);
+    };
+    const [selectedGenres, setSelectedGenres] = useState<any[]>([]);
+
+    const characterCount = recentList?.reduce((acc: any, movie: any) => {
+        if (movie?.itemType) {
+            acc[movie?.itemType] = (acc[movie?.itemType] || 0) + 1;
+        }
+        return acc;
+    }, {});
+    const handleGenreClick = (selectedGenre: any) => {
+        if (selectedGenres?.includes(selectedGenre)) {
+            // If already selected, remove it
+            setSelectedGenres(selectedGenres?.filter((genre) => genre !== selectedGenre));
+        } else {
+            // If not selected, add it
+            setSelectedGenres([...selectedGenres, selectedGenre]);
+        }
+    };
+
+    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}></section>
+                    <section className="px-2 w-full" key={movieIndex}>
+                        <div className="text-black font-sans w-full">
+                            <div className="flex w-full items-center py-2 px-2">
+                                <div className="mt-2 flex items-center gap-2">
+                                    <a className="hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" href={`/${movie?.itemType}/${movie?.itemId}`}>
+                                        <div className="w-28 h-40 overflow-hidden rounded-br-xl rounded-bl-xl rounded-tr-xl">
+                                            <img src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images" className="rounded-br-xl rounded-bl-xl rounded-tr-xl w-full h-full object-cover" onError={handleImageError} />
+                                        </div>
+                                    </a>
+                                    <div>
+                                        <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
+                                        <div className="flex flex-wrap gap-2">{movie?.itemReleaseDay?.slice(0, 4)}
+                                        </div>
+                                        <div>{movie?.itemKnowFor}</div>
+                                        <div className="line-clamp-4">
+                                            <p>{movie?.itemReview}</p>
+                                        </div>
+                                        <div className="lg:line-clamp-none line-clamp-4">
+                                            <p>Added to list at {formatDate(movie?.createdTime)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="ml-auto px-2"
+                                    onClick={() => handleRecentlyViewList(movieIndex, movie?.itemId, movie?.itemType, 'none')}
+                                >
+                                    <Tooltip title="Click here to remove from list">
+                                        {loading[movieIndex] ? (
+                                            <i className="fa-solid fa-bell-slash fa-spin-pulse py-2 px-3 bg-red-500 text-xl text-white"></i>
+                                        ) : (
+                                            <i className="fa-solid fa-bell-slash px-2 text-white text-xl bg-red-500 rounded-lg py-2"></i>
+                                        )}
+                                    </Tooltip>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/5 px-2 sm:w-1/3 py-2" key={movieIndex}
-                    >
-                        <div className="text-black font-sans  shadow-sm shadow-black  rounded-br-xl rounded-bl-xl rounded-tr-xl" >
+                    <section className=" w-1/2 lg:w-1/4 md:w-1/4 sm:w-1/3 px-2 py-2 " key={movieIndex}>
+                        <div className="text-black font-sans  shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
-                                        <img onClick={() => navigate(`/${movie?.itemType}/${movie?.itemId}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                            onError={(e) => {
-                                                e.currentTarget.src = 'https://via.placeholder.com/500x750'; 
-                                                e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
-                                            }}
-                                            className="hover:opacity-80  rounded-tr-xl"
-                                        />
+                                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                                            <a href={`/${movie?.itemType}/${movie?.movieId}`}>
+                                                <div>
+                                                    <img src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
+                                                        onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
+                                                </div>
+                                            </a>
+                                        </div>
                                         <div className="px-2 py-2 w-full">
                                             <div className="flex flex-wrap items-center gap-2 justify-start text-left">
-                                                <div className="h-12 w-full">
+                                                <div>
+                                                    {movie?.itemKnowFor}
+                                                </div>
+                                                <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}. {movie?.itemName}</p>
+                                                </div>
+                                                <div className="flex flex-wrap">
+                                                    {movie?.itemReleaseDay?.slice(0, 10)}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-2" onClick={() => handleWatchList(movieIndex, movie?.itemId, movie?.itemType, 'none')}   >
+                                <div className="px-2 py-2"
+                                    onClick={() => handleRecentlyViewList(movieIndex, movie?.itemId, movie?.itemType, 'none')}
+                                >
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        <Tooltip title="Click here to remove from activity list">
-                                            {loading[movieIndex] ? (
-                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
-                                            ) :
-                                                (
-                                                    <p>Remove</p>
-                                                )}
-                                        </Tooltip>
+                                        {loading[movieIndex] ? (
+                                            <i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i>
+                                        ) :
+                                            (<div>   Remove</div>)}
                                     </button>
 
                                 </div>
                             </div>
                         </div>
-                    </section >
+                    </section>
                 )
         }
     }
 
-
+    const context = useContext(LanguageContext);
+    if (!context) {
+        return null;
+    }
+    const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className=" min-h-screen cursor-pointer">
-            <div className="bg-black pb-1">
+            <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
+                    <div className="w-full bg-black text-white ">
+                        <div className="flex items-center  ">
+                            <h2 className="lg:text-2xl text-lg font-bold  capitalize"> {userInfoList[1]} Activity List </h2>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm py-2" >
+                            <div>by</div>
+                            <a target='_blank' href='https://github.com/watanuki469?tab=repositories' className='text-blue-500 hover:underline'>
+                                {userInfoList[1]}-Editor
+                            </a>
+                            <div>•</div>
+                            <div> {translations[language]?.createdModified}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="bg-white text-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center px-2">
-                    <div className="lg:max-w-full w-full ">
-                        <div className="flex mt-3 border-b-2 border-gray py-4">
-                            <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold ">Your History List</h2>
-                                <p className="text-lg font-semibold text-gray-500">Private</p>
-                            </div>
-                            <div className="flex items-center ml-auto gap-2" >
-                                <p className="flex items-center lg:text-2xl text-lg  font-bold text-black ">Share </p>
-                                <IconButton
-                                    onClick={handleShareClick}
-                                    size="small"
-                                    aria-controls={openShare ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={openShare ? 'true' : undefined}
-                                >
-                                    <Avatar sx={{
-                                        width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": {
-                                            bgcolor: 'gray', opacity: '50%'
-                                        }
-                                    }}>
-                                        <ShareIcon />
-                                    </Avatar>
-                                </IconButton>
-                                <Menu
-                                    anchorEl={anchorShareEl}
-                                    id="account-menu"
-                                    open={openShare}
-                                    onClose={handleShareClose}
-                                    onClick={handleShareClose}
-                                    PaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            '& .MuiAvatar-root': {
-                                                width: 32, height: 32, ml: -0.5, mr: 1,
-                                            },
-                                            '&::before': {
-                                                content: '""', display: 'block', position: 'absolute', top: 0, right: 14, width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
-                                            },
-                                        },
-                                    }}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem>
-                                        <div className="fb-share-button" data-href="https://themoviedb-five.vercel.app/" data-layout="button_count" data-size="small">
-                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://themoviedb-five.vercel.app/" className="fb-xfbml-parse-ignore">
-                                                <ListItemIcon>
-                                                    <i className="fa-brands fa-facebook text-2xl"></i>
-                                                </ListItemIcon>
-                                                Facebook
-                                            </a>
-                                        </div>
-                                    </MenuItem>
 
-                                    <MenuItem>
-                                        <blockquote className="twitter-tweet items-center">
-                                            <ListItemIcon>
-                                                <i className="fa-brands fa-twitter text-2xl"></i>
-                                            </ListItemIcon>
-                                            <a href="https://twitter.com/intent/tweet?url=https://themoviedb-five.vercel.app/" className="twitter-share-button">
-                                                Twitter
-                                            </a>
-                                        </blockquote>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a href="mailto:?subject=I wanted you to see this site&amp;body=Check out this site https://themoviedb-five.vercel.app."
-                                            title="Share by Email">
-                                            <ListItemIcon>
-                                                <i className="fa-regular fa-envelope text-2xl"></i>
-                                            </ListItemIcon>
-                                            Email Link
-                                        </a>
-                                    </MenuItem>
+            <div className="bg-black text-black">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center bg-white ">
+                    <div className="grid grid-cols-12 gap-2 w-full">
+                        <div className="lg:col-span-8 col-span-12  w-full ">
+                            <div className="flex border-b-2 border-gray py-2 items-center px-2 ">
+                                <div className="items-center ">
+                                    <h2 className=" font-bold ">
+                                        {
+                                            recentList?.filter((movie: any) => {
+                                                if (selectedGenres?.length === 0) return true;
+                                                const hasAllGenres = selectedGenres?.every((genre: any) =>
+                                                    movie?.itemType === genre
+                                                );
+                                                return hasAllGenres
+                                            })?.length} Title</h2>
+                                </div>
+                                <div className=" items-center ml-auto gap-2 flex" >
+                                    <p className="items-center text-gray-400 hidden lg:flex ">Sort by </p>
+                                    <div className='hidden lg:block'>
+                                        <Button
+                                            id="demo-customized-button"
+                                            aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
+                                            aria-haspopup="true" variant="contained"
+                                            disableElevation onClick={handleRankingClick}
+                                            endIcon={<i className="fa-solid fa-caret-down"></i>}
+                                            sx={{ bgcolor: anchorRankingEl ? 'blue' : 'white', color: anchorRankingEl ? 'white' : 'blue', ":hover": { backgroundColor: 'blue', color: 'white' }, }}
+                                        >
+                                            {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        </Button>
+                                    </div>
 
-                                    <MenuItem onClick={handleCopyLink}>
-                                        <ListItemIcon>
-                                            <i className="fa-solid fa-link text-2xl"></i>
-                                        </ListItemIcon>
-                                        Copy Link
-                                    </MenuItem>
-                                </Menu>
-                            </div>
-                        </div>
-                        <div className="flex border-b-2 border-gray py-2 items-center ">
-                            <div className="items-center ">
-                                <h2 className="lg:text-2xl text-lg font-bold ">{recentList?.length} Title</h2>
-                            </div>
-                            <div className="ml-auto gap-2" >
-                                <div>
-                                    <button
-                                        onClick={() => setHandleRefine(!handleRefine)}
-                                        className="bg-gray-300 hover:opacity-80 px-2 py-1">
-                                        Refine
-                                    </button>
+                                    <Menu
+                                        id="demo-customized-menu"
+                                        anchorEl={anchorRankingEl}
+                                        open={Boolean(anchorRankingEl)}
+                                        onClose={handleRankingClose}
+                                    >
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>{translations[language]?.releaseDay}</MenuItem>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>{translations[language]?.alphabet}</MenuItem>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>{translations[language]?.runTime}</MenuItem>
+                                    </Menu>
+                                    <div className="flex items-center ml-auto gap-4 px-2 py-2" >
+                                        <Avatar sx={{
+                                            width: 32, height: 32, bgcolor: 'white', color: 'black', padding: '20px', ":hover": { opacity: '50%' }
+                                        }}>
+                                            {currentView == "Detail" ?
+                                                (
+                                                    <Tooltip title="Detail View" className={"text-blue-500"} onClick={() => switchView('Grid')}>
+                                                        <i className="fa-solid fa-list-ul "></i>
+                                                    </Tooltip>
+                                                ) :
+                                                (
+                                                    <Tooltip title="Grid View" className={"text-blue-500"}>
+                                                        <AppsIcon onClick={() => switchView('Detail')} />
+                                                    </Tooltip>
+                                                )
+                                            }
+                                        </Avatar>
+                                    </div>
+                                    <div onClick={() => setHandleRefine(!handleRefine)} className="bg-blue-500 rounded-3xl min-w-12 hover:opacity-80 px-2 py-1 text-center">
+                                        <FilterListIcon />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="w-full">
-                            {handleRefine ? (
-                                <div className="flex border-b-2 border-gray py-2 items-center w-full">
-                                    <div className="md:grid md:grid-cols-12 cursor-pointer  w-full ">
-                                        <div className="lg:col-span-5 col-span-12 bg-gray-400">
-                                            <div onClick={() => setCurrentSelection('case1')} className={`h-full px-4 py-8  hover:opacity-90  hover:bg-gray-200 ${currentSelection == 'case1' ? 'bg-gray-200' : ''} `}>
-                                                <div className="font-bold">Type (Film, TV, etc.)</div>
-                                                <div className="capitalize">
-                                                    {movieCheck ? 'Movie' : ''}
-                                                    {seriesCheck ? 'TV' : ''}
-                                                    {actorCheck ? 'Person' : ''}
-                                                    {!movieCheck && !seriesCheck && !actorCheck ? 'all' : ''}
+
+                            <div className="w-full">
+                                {handleRefine ? (
+                                    <div className="fixed top-0 left-0 overflow-auto right-0 w-screen h-full bg-black text-white bg-opacity-50 flex text-center justify-center items-center z-50">
+                                        <div className="text-white overflow-auto">
+                                            <div className="w-full lg:max-w-xl h-92 relative overflow-auto bg-black">
+                                                <div className="absolute right-4 text-right px-2 py-2">
+                                                    <button onClick={() => setHandleRefine(false)} className="text-white hover:text-yellow-300 px-2 py-2 border-2 border-white h-12 w-12 rounded-full">
+                                                        <i className="fa-solid fa-times text-xl"></i>
+                                                    </button>
+                                                </div>
+                                                <div className="divide-y divide-gray-500 px-4 py-2 overflow-auto" style={{ maxHeight: '80vh' }}>
+                                                    <div className="w-full text-left py-2">
+                                                        <div className="py-2 text-yellow-300 font-semibold mt-2">TITLE TYPE</div>
+                                                        <div className="flex gap-2 items-center flex-wrap">
+                                                            {Object.entries(characterCount)?.map(([genre, count], index) => (
+                                                                <button key={`genre-${genre}-${index}`} className={`uppercase text-sm rounded-full px-2 py-1 border-2 border-white ${selectedGenres?.includes(genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:opacity-90'}`} onClick={() => handleGenreClick(genre)}>
+                                                                    <p>{`${genre}: (${count})`}</p>
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="lg:col-span-7 col-span-12 bg-gray-200 w-full h-full">
-                                            <button id='1' className="relative hover:opacity-90 w-full" >
-                                                {currentSelection == 'case1' ? (
-                                                    <div className="w-full py-4 px-2">
-                                                        <div className="w-full py-4 px-2 text-xl">
-                                                            <div className="items-center w-full">
-                                                                {movieCheck && (
-                                                                    <div className="flex items-center">
-                                                                        <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("Movie")}></i>
-                                                                            <div>Feature Movie</div>
-                                                                        </div>
-                                                                        <div className="ml-auto">
-                                                                            {recentList?.filter(movie => movie?.itemType === 'Movie').length}
-                                                                        </div>
-
-                                                                    </div>
-                                                                )}
-                                                                {seriesCheck && (
-                                                                    <div className="flex items-center">
-                                                                        <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("TV")}></i>
-                                                                            <div>Feature TV Mini-Series</div>
-                                                                        </div>
-                                                                        <div className="ml-auto">
-                                                                            {recentList?.filter(movie => movie?.itemType === 'TV').length}                                                                             </div>
-
-                                                                    </div>
-                                                                )}
-                                                                {actorCheck && (
-                                                                    <div className="flex items-center">
-                                                                        <div className="flex gap-2 items-center">
-                                                                            <i className="fa-regular fa-square-check" onClick={() => toggleFeature("Person")}></i>
-                                                                            <div>Feature Actor</div>
-                                                                        </div>
-                                                                        <div className="ml-auto">
-                                                                            {recentList?.filter(movie => movie?.itemType === 'Person').length}                                                                             </div>
-
-                                                                    </div>
-                                                                )}
-                                                                {!movieCheck && !seriesCheck && !actorCheck && (
-                                                                    <>
-                                                                        <div className="flex items-center">
-                                                                            <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("Movie")}></i>
-                                                                                <div>Feature Movie</div>
-                                                                            </div>
-                                                                            <div className="ml-auto">
-                                                                                {recentList?.filter(movie => movie?.itemType === 'Movie').length}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="flex items-center mt-4">
-                                                                            <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("TV")}></i>
-                                                                                <div>Feature TV Mini-Series</div>
-                                                                            </div>
-                                                                            <div className="ml-auto">
-                                                                                {recentList?.filter(movie => movie?.itemType === 'TV').length}                                                                                 </div>
-                                                                        </div>
-                                                                        <div className="flex items-center mt-4">
-                                                                            <div className="flex gap-2 items-center">
-                                                                                <i className="fa-regular fa-square" onClick={() => toggleFeature("Person")}></i>
-                                                                                <div>Feature Actor</div>
-                                                                            </div>
-                                                                            <div className="ml-auto">
-                                                                                {recentList?.filter(movie => movie?.itemType === 'Person').length}                                                                                 </div>
-                                                                        </div>
-                                                                    </>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                                    : (
-                                                        <div></div>
-                                                    )}
-
-
-                                            </button>
-                                        </div>
                                     </div>
-
-
-                                </div>) : (<div>
-
-                                </div>)}
-
-                        </div>
-                        <div>
-                            <div className="lg:max-w-full w-full py-4 px-2 ">
-                                <div
-                                    style={{
-                                        position: "relative", backgroundSize: "cover", backgroundPosition: "center",
-                                        display: 'flex', flexWrap: 'wrap'
-                                    }}>
-                                    {recentList?.slice()?.sort((a: any, b: any) => {
-                                        const dateA = new Date(a?.createdTime)?.getTime();
-                                        const dateB = new Date(b?.createdTime)?.getTime();
-                                        return dateB - dateA;
-                                    })
-                                        .filter((movie: any) => {
-                                            if (movieCheck) {
-                                                return movie?.itemType === "Movie"; // Chỉ hiển thị phim có tiêu đề
-                                            }
-                                            else if (seriesCheck) {
-                                                return movie?.itemType === "TV"
-                                            }
-                                            else if (actorCheck) {
-                                                return movie?.itemType === "Person"
-                                            }
-                                            else {
-                                                return true; // Không áp dụng bộ lọc
-                                            }
+                                ) : (
+                                    <div></div>
+                                )}
+                            </div>
+                            <div className="flex border-b-2 border-gray py-2 items-center lg:hidden">
+                                <div className="flex items-center ml-auto gap-2" >
+                                    <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
+                                    <Button
+                                        id="demo-customized-button"
+                                        aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
+                                        aria-haspopup="true"
+                                        variant="contained"
+                                        disableElevation
+                                        onClick={handleRankingClick}
+                                        endIcon={<i className="fa-solid fa-caret-down"></i>}
+                                        sx={{
+                                            bgcolor: anchorRankingEl ? 'blue' : 'white', color: anchorRankingEl ? 'white' : 'blue', border: anchorRankingEl ? '2px dashed' : '',
+                                            ":hover": { backgroundColor: 'blue', color: 'white' },
+                                        }}
+                                    >
+                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                    </Button>
+                                    <Menu
+                                        id="demo-customized-menu"
+                                        anchorEl={anchorRankingEl}
+                                        open={Boolean(anchorRankingEl)}
+                                        onClose={handleRankingClose}
+                                    >
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>{translations[language]?.releaseDay}</MenuItem>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>{translations[language]?.alphabet}</MenuItem>
+                                        <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>{translations[language]?.runTime}</MenuItem>
+                                    </Menu>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="lg:max-w-full w-full py-4 px-2 ">
+                                    <div className={` ${currentView === 'Detail' ? 'divide-y divide-gray-500 px-2 border-2 border-gray-500' : ''}`} style={{ position: "relative", backgroundSize: "cover", backgroundPosition: "center", display: 'flex', flexWrap: 'wrap' }}>
+                                        {recentList?.filter((movie: any) => {
+                                            if (selectedGenres?.length === 0) return true;
+                                            const hasAllGenres = selectedGenres?.every((genre: any) =>
+                                                movie?.itemType === genre
+                                            );
+                                            return hasAllGenres
                                         })
-                                        .map((m, index) => renderMovieItem(m, index, currentView))}
+                                            ?.sort((a: any, b: any) => {
+                                                const dateA = new Date(a?.createdTime).getTime();
+                                                const dateB = new Date(b?.createdTime).getTime();
+                                                if (menuItemNum === '2') {
+                                                    // Sắp xếp theo thứ tự alphabet của title
+                                                    const titleA = a?.itemName?.toUpperCase();
+                                                    const titleB = b?.itemName?.toUpperCase();
+                                                    if (titleA < titleB) { return -1; }
+                                                    if (titleA > titleB) { return 1; }
+                                                    return 0;
+                                                }
+                                                else if (menuItemNum === '1') {
+                                                    return dateA - dateB;
+                                                }
+                                                else if (menuItemNum === '3') {
+                                                    return dateB - dateA;
+                                                }
+                                                else {
+                                                    const titleA = a?.createdTime; const titleB = b?.createdTime;
+                                                    if (titleA < titleB) { return -1; }
+                                                    if (titleA > titleB) { return 1; }
+                                                    return 0;
+                                                }
+                                            })
+                                            ?.map((m: any, index: any) => renderMovieItem(m, index, currentView))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 ">
+                            <div>
+                                <div className="flex items-center py-3">
+                                    <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                    <h2 className="text-2xl font-bold text-black ">  {translations[language]?.featuredToday}</h2>
+                                </div>
+                                <a href={`/top250Movie`}>
+                                    <div className="lg:max-w-full w-full">
+                                        <ListRow listRowList={topRatedMovies} />
+                                    </div>
+                                </a>
+
+                                <p className="text-red w-full text-black">   {translations[language]?.staffPick}</p>
+                                <p className="text-red w-full text-blue-500 hover:underline">   {translations[language]?.checkStatus}</p>
+                            </div>
+                            <div>
+                                <div className="flex items-center py-3">
+                                    <h2 className="text-2xl font-bold text-black ">  {translations[language]?.chart}</h2>
+                                </div>
+                                <div className="lg:max-w-full w-full">
+                                    <Charts />
+                                </div>
+                            </div>
+                            <div className='sticky top-0 right-0 left-0'>
+                                <div className="flex items-center py-3">
+                                    <h2 className="text-xl font-bold text-black capitalize"> {translations[language]?.moreExplore} {translations[language]?.genre}</h2>
+                                </div>
+                                <div className="lg:max-w-full w-full">
+                                    <TopRatedMovieByGenre />
                                 </div>
                             </div>
                         </div>
@@ -487,15 +402,10 @@ export function ActivityLayout() {
                 </div>
             </div >
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <Footer />
                 </div>
             </div>
         </div >
-
-
-
-
-
     );
 }

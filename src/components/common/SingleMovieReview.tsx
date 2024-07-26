@@ -1,10 +1,6 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Avatar, IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import { LanguageContext } from '../../pages/LanguageContext';
 import Share from '../../modules/Share';
+import { LanguageContext } from '../../pages/LanguageContext';
 
 export interface TwoMovieRowProps {
     singleMovieList: any
@@ -30,14 +26,10 @@ export default function SingleMovieReview({
     }, []); // Không có dependencies, vì chúng ta chỉ muốn tạo số ngẫu nhiên một lần khi component được render
    
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
-
-
     return (
         <section className=" text-black font-sans grid ">
             <div className="bg-white shadow-sm shadow-black w-full py-4 px-4  ">

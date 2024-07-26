@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { AppDispatch } from '../store';
+import apiController from '../client/api.Controller.';
 
 interface ITvtate {
     listTv: any[],
@@ -22,7 +24,23 @@ export const TvSlice = createSlice({
 
 export const {
     setListTv,
-   } = TvSlice.actions;
+} = TvSlice.actions;
+
+export const fetchTv = (id:any) => (dispatch: AppDispatch) => {
+    Promise.all([
+        apiController.apiTv.tv(id),
+    ])
+        .then((data: any) => {
+            if (data) {
+                dispatch(setListTv(data));
+            } else {
+                console.error("API response structure is not as expected.", data);
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+}
 
 export default TvSlice.reducer
 

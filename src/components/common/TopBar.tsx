@@ -13,33 +13,24 @@ import * as Dialog from "@radix-ui/react-dialog";
 import "flowbite";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import SearchBar from "./SearchBar";
 import { LanguageContext } from '../../pages/LanguageContext';
-
+import SearchBar from "./SearchBar";
 
 export default function TopBar() {
-  const dispatch = useAppDispatch();
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
   const [userInfoList, setUserInfoList] = useState<any[]>([]);
+
   useEffect(() => {
-    // Lấy dữ liệu từ local storage
     const storedDataString = localStorage.getItem('user');
     let storedData = [];
-
     if (storedDataString) {
       storedData = JSON.parse(storedDataString);
     }
-    console.log('Stored data:', storedData);
-
-    // Lưu dữ liệu vào state
     setUserInfoList(Object.values(storedData)); // Chuyển đổi dữ liệu từ đối tượng sang mảng
   }, []);
-
 
   const handleCloseDialogClick = () => {
     setOpen(false);
@@ -69,6 +60,7 @@ export default function TopBar() {
       window.removeEventListener('resize', handleResize);
     };
   }, [open, isDrawerOpen]);
+
   useEffect(() => {
     function handleResize() {
       const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
@@ -90,13 +82,12 @@ export default function TopBar() {
 
   const toggleMenu = (menu: any) => {
     if (selectedMenu === menu) {
-      setSelectedMenu('');
-      setMenuOpen(false);
+      setSelectedMenu(''); setMenuOpen(false);
     } else {
-      setSelectedMenu(menu);
-      setMenuOpen(true);
+      setSelectedMenu(menu); setMenuOpen(true);
     }
   };
+
   const getMenuContent = (menu: any) => {
     switch (menu) {
       case 'Movies':
@@ -157,11 +148,11 @@ export default function TopBar() {
         } else if (item === `${translations[language]?.latest} Trailers`) {
           navigate('/upComing');
         } else if (item === `IMDb ${translations[language]?.originals}`) {
-          navigate('/whatOnTv');
+          navigate('/trending/netflix');
         } else if (item === `IMDb ${translations[language]?.editorPick}`) {
-          navigate('/whatOnTv');
+          navigate('/trending/prime');
         } else if (item === 'IMDb Podcasts') {
-          navigate('/search');
+          navigate('/search?mediaType=tv&title=podcast');
         } else {
           navigate('/NotFound');
         }
@@ -234,8 +225,7 @@ export default function TopBar() {
         else {
         }
         break;
-      default:
-        break;
+      default: break;
     }
     setMenuOpen(false);
   };
@@ -253,7 +243,7 @@ export default function TopBar() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem('activity');
-    navigate('/login2')
+    navigate('/login')
   };
 
   const stringToColor = (str: any) => {
@@ -318,6 +308,7 @@ export default function TopBar() {
 
   return (
     <section className=" w-full bg-black mx-auto py-4 h-full static ">
+      {/*search full page */}
       {isSearchOpen ? (
         <div className='items-center h-10 mt-1 px-2 w-full flex gap-2'>
           <SearchBar />
@@ -326,17 +317,22 @@ export default function TopBar() {
 
       ) : (
         <div className="flex w-full gap-x-3 items-center  justify-center ">
+          {/*menu icon khi màn hình nhỏ start */}
           <div onClick={toggleDrawer} className=" lg:hidden font-extrabold text-xl text-white m-3">
             <i className="fa-sharp fa-solid fa-bars"></i>
           </div >
-          <button
-            onClick={() => navigate("/")}
-            className=" bg-yellow-400 text-black text-center 
-            border-none font-extrabold text-xl font-sans
-            whitespace-nowrap hover:bg-black hover:text-blue-500 rounded-md px-1 py-1"
-          >
-            IMDb
-          </button>
+          {/*menu icon khi màn hình nhỏ end */}
+
+          {/*icon imdb */}
+          <a href='/'>
+            <button
+              className=" bg-yellow-400 text-black text-center  border-none font-extrabold text-xl font-sans whitespace-nowrap hover:bg-black hover:text-blue-500 rounded-md px-1 py-1"
+            >
+              IMDb
+            </button>
+          </a>
+          {/*icon imdb  end*/}
+          {/* Dialog màn hình lớn start */}
           <Dialog.Root open={open} onOpenChange={setOpen} >
             <Dialog.Trigger>
               <div className="hidden lg:flex items-center content-center justify-center self-center text-white gap-2 hover:bg-black hover:opacity-95">
@@ -367,153 +363,176 @@ export default function TopBar() {
                     </button>
                   </div>
                   <div className="grid grid-cols-3 gap-4 text-white mt-10 cursor-pointer">
-                    <div className=" items-center">
-                      <div className="flex  items-center gap-3">
+                    <div className="items-center">
+                      <div className="flex items-center gap-3">
                         <div className="aligns-start">
                           <i className="fa-solid fa-film text-yellow-400"></i>
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                            Movies
-                          </p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">Movies</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="aligns-start text-black">
-                          <i className="fa-solid fa-film "></i>
+                          <i className="fa-solid fa-film"></i>
                         </div>
-                        <div className="">
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/upComing'))}>{translations[language]?.releaseCalendar}</p>
-                          <p className="mt-2 hover:underline " onClick={() => (navigate('/top250Movie'))}>
-                            {translations[language]?.top250Movie}
-                          </p>
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/topBoxOffice'))}>{translations[language]?.topBoxOffice}</p>
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/news/movie'))}>Movies {translations[language]?.news}</p>
-                          <p className="mt-2 hover:underline" onClick={() => (navigate('/features/genre'))}>
-                            {translations[language]?.browseMovieByGenre}
-                          </p>
+                        <div>
+                          <a href='/upComing'>
+                            <p className="mt-2 hover:underline">{translations[language]?.releaseCalendar}</p>
+                          </a>
+                          <a href='/top250Movie'>
+                            <p className="mt-2 hover:underline">{translations[language]?.top250Movie}</p>
+                          </a>
+                          <a href='/topBoxOffice'>
+                            <p className="mt-2 hover:underline">{translations[language]?.topBoxOffice}</p>
+                          </a>
+                          <a href='/news/movie'>
+                            <p className="mt-2 hover:underline">Movies {translations[language]?.news}</p>
+                          </a>
+                          <a href='/features/genre'>
+                            <p className="mt-2 hover:underline">{translations[language]?.browseMovieByGenre}</p>
+                          </a>
                         </div>
                       </div>
                     </div>
                     <div className="items-center">
-                      <div className="flex  items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <div className="aligns-start text-yellow-400">
                           <i className="fa-solid fa-tv"></i>
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                            TV Shows
-                          </p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">TV Shows</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="aligns-start text-black">
-                          <i className="fa-solid fa-film "></i>
+                          <i className="fa-solid fa-film"></i>
                         </div>
-                        <div className="">
-                          <p onClick={() => navigate('/whatOnTv')} className="mt-2 hover:underline">
-                            {translations[language]?.whatOnTvStream}
-                          </p>
-                          <p onClick={() => navigate('/top250Tv')} className="mt-2 hover:underline">{translations[language]?.top250Tv}</p>
-                          <p onClick={() => navigate('/topPopularTv')} className="mt-2 hover:underline">  {translations[language]?.topRatedTV}   </p>
-                          <p onClick={() => navigate('/features/genre')} className="mt-2 hover:underline">  {translations[language]?.browseTVByGenre}</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/tv')}>TV {translations[language]?.news}</p>
+                        <div>
+                          <a href='/whatOnTv'>
+                            <p className="mt-2 hover:underline">{translations[language]?.whatOnTvStream}</p>
+                          </a>
+                          <a href='/top250Tv'>
+                            <p className="mt-2 hover:underline">{translations[language]?.top250Tv}</p>
+                          </a>
+                          <a href='/topPopularTv'>
+                            <p className="mt-2 hover:underline">{translations[language]?.topRatedTV}</p>
+                          </a>
+                          <a href='/features/genre'>
+                            <p className="mt-2 hover:underline">{translations[language]?.browseTVByGenre}</p>
+                          </a>
+                          <a href='/news/tv'>
+                            <p className="mt-2 hover:underline">TV {translations[language]?.news}</p>
+                          </a>
                         </div>
                       </div>
                     </div>
                     <div className="items-center">
-                      <div className="flex  items-center gap-3">
-                        <div className="aligns-center text-yellow-400 ">
+                      <div className="flex items-center gap-3">
+                        <div className="aligns-center text-yellow-400">
                           <StarsIcon />
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap"> {" "}  Award & Event  </p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">Award & Event</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="aligns-start text-black">
-                          <i className="fa-solid fa-film "></i>
+                          <i className="fa-solid fa-film"></i>
                         </div>
-                        <div className=" ">
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/oscars')} >Oscars</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/ABFF')}>ABFF</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/spotlight')}>Best Of 2024</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/holidayPick')}>{translations[language]?.holidayPicks}</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/award/starmeter')}>Starmeter Awards</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/IMDbPro')}> {translations[language]?.total} Event</p>
+                        <div>
+                          <a href='/award/oscars'>
+                            <p className="mt-2 hover:underline">Oscars</p>
+                          </a>
+                          <a href='/award/ABFF'>
+                            <p className="mt-2 hover:underline">ABFF</p>
+                          </a>
+                          <a href='/award/spotlight'>
+                            <p className="mt-2 hover:underline">Best Of 2024</p>
+                          </a>
+                          <a href='/award/holidayPick'>
+                            <p className="mt-2 hover:underline">{translations[language]?.holidayPicks}</p>
+                          </a>
+                          <a href='/award/starmeter'>
+                            <p className="mt-2 hover:underline">Starmeter Awards</p>
+                          </a>
+                          <a href='/IMDbPro'>
+                            <p className="mt-2 hover:underline">{translations[language]?.total} Event</p>
+                          </a>
                         </div>
                       </div>
                     </div>
                     <div className="items-center">
-                      <div className="flex  items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <div className="aligns-start text-yellow-400">
                           <i className="fa-solid fa-user-group"></i>
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                            {" "}
-                            {translations[language]?.popularCeleb?.slice(0, 15)}
-                          </p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">{translations[language]?.popularCeleb?.slice(0, 18)}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="aligns-start text-black">
-                          <i className="fa-solid fa-film "></i>
+                          <i className="fa-solid fa-film"></i>
                         </div>
-                        <div className="">
-
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/popularCeleb')}>
-                            {translations[language]?.popularCeleb}
-                          </p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate('/news/celeb')}>{translations[language]?.popularCeleb} {translations[language]?.news}</p>
+                        <div>
+                          <a href='/popularCeleb'>
+                            <p className="mt-2 hover:underline">{translations[language]?.popularCeleb}</p>
+                          </a>
+                          <a href='/news/celeb'>
+                            <p className="mt-2 hover:underline">{translations[language]?.popularCeleb} {translations[language]?.news}</p>
+                          </a>
                         </div>
                       </div>
                     </div>
                     <div className="items-center">
-                      <div className="flex  items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <div className="aligns-start text-yellow-400">
                           <VideoLibraryIcon />
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                            {" "}
-                            Watch
-                          </p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">Watch</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="aligns-start text-black">
-                          <i className="fa-solid fa-film "></i>
+                          <i className="fa-solid fa-film"></i>
                         </div>
-                        <div className="">
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/watchToWatch`)}>{translations[language]?.whatToWatch}</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/upComing`)}>{translations[language]?.latest} Trailers</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb {translations[language]?.originals}</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/whatOnTv`)}>IMDb {translations[language]?.editorPick}</p>
-                          <p className="mt-2 hover:underline" onClick={() => navigate(`/search?mediaType=tv&title=podcast`)}>IMDb Podcasts</p>
+                        <div>
+                          <a href='/watchToWatch'>
+                            <p className="mt-2 hover:underline">{translations[language]?.whatToWatch}</p>
+                          </a>
+                          <a href='/upComing'>
+                            <p className="mt-2 hover:underline">{translations[language]?.latest} Trailers</p>
+                          </a>
+                          <a href='/trending/netflix'>
+                            <p className="mt-2 hover:underline">IMDb {translations[language]?.originals}</p>
+                          </a>
+                          <a href='/trending/prime'>
+                            <p className="mt-2 hover:underline">IMDb {translations[language]?.editorPick}</p>
+                          </a>
+                          <a href='/search?mediaType=tv&title=podcast'>
+                            <p className="mt-2 hover:underline">IMDb Podcasts</p>
+                          </a>
                         </div>
                       </div>
                     </div>
-
                     <div className="items-center">
-                      <div className="flex  items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <div className="aligns-start text-yellow-400">
                           <i className="fa-solid fa-earth-americas"></i>
                         </div>
                         <div>
-                          <p className="font-extrabold text-2xl font-sans whitespace-nowrap">
-                            {" "}
-                            {translations[language]?.community}
-                          </p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">{translations[language]?.community}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="aligns-start text-black">
-                          <i className="fa-solid fa-film "></i>
+                          <i className="fa-solid fa-film"></i>
                         </div>
-                        <div className="">
+                        <div>
                           <a href='https://help.imdb.com/imdb?ref_=cons_nb_hlp'>
-                            <p className="mt-2 hover:underline"> {translations[language]?.helpCenter}</p>
+                            <p className="mt-2 hover:underline">{translations[language]?.helpCenter}</p>
                           </a>
                           <a href='https://contribute.imdb.com/czone?ref_=nv_cm_cz'>
                             <p className="mt-2 hover:underline">{translations[language]?.contributeZone}</p>
@@ -529,37 +548,41 @@ export default function TopBar() {
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
+          {/* Dialog màn hình bự end */}
+          {/* Search  màn hình lớn start */}
           <div className="grow ">
             <div className=" hidden lg:flex bg-white w-full z-20">
               <SearchBar />
             </div>
           </div>
+          {/* Search  màn hình lớn end */}
 
-          <button
-            onClick={() => navigate("/IMDbPro")}
-            className=" hidden lg:flex bg-black text-white text-center 
-           font-extrabold text-lg font-sans whitespace-nowrap  hover:opacity-90  rounded-md"
-          >
-            IMDb<span className="text-blue-600">Pro</span>
-          </button>
-          <Divider className=" hidden lg:flex" orientation="vertical" sx={{ bgcolor: "red", color: 'white', border: "1px solid gray", height: '20px' }} />
-          <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
+          <a href='/IMDbPro'>
             <button
-              onClick={() => navigate("/watchList2")}
-              className="flex items-center gap-2"
+              className=" hidden lg:flex bg-black text-white text-center 
+           font-extrabold text-lg font-sans whitespace-nowrap  hover:opacity-90  rounded-md"
             >
-              <i className="fa-regular fa-bookmark  text-white"></i>
-              <p className="text-white border-none ">
-                Watchlist
-              </p>
+              IMDb<span className="text-blue-600">Pro</span>
             </button>
-          </div>
+          </a>
 
+          <Divider className=" hidden lg:flex" orientation="vertical" sx={{ bgcolor: "red", color: 'white', border: "1px solid gray", height: '20px' }} />
+          {/* Watchlist start */}
+          <div className=" items-center bg-black  font-extrabold md:flex hidden lg:flex">
+            <a href='/watchList'>
+              <button className="flex items-center gap-2">
+                <i className="fa-regular fa-bookmark  text-white"></i>
+                <p className="text-white border-none ">  Watchlist  </p>
+              </button>
+            </a>
+          </div>
+          {/* Watchlist end */}
+          {/* icon search start */}
           <div className="lg:hidden text-white " >
             <i className="fa-solid fa-magnifying-glass" onClick={() => setIsSearchOpen(true)}></i>
           </div>
-          {/*change language */}
-
+          {/* icon search  end */}
+          {/*change language start*/}
           <Button
             id="demo-customized-button"
             aria-controls={openUser ? 'demo-customized-menu' : undefined}
@@ -567,10 +590,7 @@ export default function TopBar() {
             aria-expanded={openUser ? 'true' : undefined}
             sx={{
               bgcolor: 'black', fontWeight: 'extrabold', color: 'white', borderRadius: '0',
-              display: { xs: "none", md: "flex" },
-              '&:hover': {
-                opacity: '80%'
-              }
+              display: { xs: "none", md: "flex" }, '&:hover': { opacity: '80%' }
             }}
             onClick={handleClick}
             endIcon={<KeyboardArrowDownIcon />}
@@ -580,30 +600,18 @@ export default function TopBar() {
           <Menu
             elevation={0}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
+              vertical: 'bottom', horizontal: 'right',
             }}
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
+              vertical: 'top', horizontal: 'right',
             }}
             sx={{
-              "& .MuiPaper-root": {
-                backgroundColor: "black"
-              },
-              color: "white",
+              "& .MuiPaper-root": { backgroundColor: "black" }, color: "white",
             }}
-
-            id="demo-customized-menu"
-            MenuListProps={{
-              'aria-labelledby': 'demo-customized-button',
-            }}
-            anchorEl={anchorUserEl}
-            open={openUser}
-            onClose={() => setAnchorUserEl(null)}
+            id="demo-customized-menu" MenuListProps={{ 'aria-labelledby': 'demo-customized-button', }}
+            anchorEl={anchorUserEl} open={openUser} onClose={() => setAnchorUserEl(null)}
           >
             <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Fully Supported <span className='ml-2'> (No film)</span> </MenuItem>
-            {/* <Divider sx={{ color: 'white', borderColor: "white" }} /> */}
             {menuItems?.map((item: any, index: any) => (
               <div key={index} className=''>
                 {item?.name === 'English' ? (
@@ -688,7 +696,8 @@ export default function TopBar() {
               </div>
             ))}
           </Menu>
-
+          {/*change language end */}
+          {/*user start */}
           <IconButton
             onClick={handleShareClick}
             size="small"
@@ -723,64 +732,44 @@ export default function TopBar() {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem sx={{
-              ":hover": {
-                color: '#ffc107',
-              }
-            }}
-              onClick={() => navigate('/changePassword')}
-            >
-              <Avatar
-                sx={{
-                  backgroundColor: stringToColor(email), width: 40, height: 40,
-                }}
-                children={`${userInfoList[1]?.split(" ")[0][0]}`}
-              />
-              {userInfoList[1]}
-            </MenuItem>
+            <a href='/changePassword'>
+              <MenuItem sx={{ ":hover": { color: '#ffc107' } }} >
+                <Avatar sx={{ backgroundColor: stringToColor(email), width: 40, height: 40, }} children={`${userInfoList[1]?.split(" ")[0][0]}`} />
+                {userInfoList[1]}
+              </MenuItem>
+            </a>
 
             <div className='hover:text-yellow-300'>
-              <MenuItem onClick={() => navigate('/favoriteList')}>
-                <Avatar
-                  sx={{
-                    backgroundColor: 'green', width: 40, height: 40
-                  }}
-                  children={
-                    <i className="fa-solid fa-user-astronaut"></i>
-                  }
-                />
-                <p>Favorite Actor List</p>
-              </MenuItem>
+              <a href='/favoriteList'>
+                <MenuItem>
+                  <Avatar sx={{ backgroundColor: 'green', width: 40, height: 40 }}
+                    children={<i className="fa-solid fa-user-astronaut"></i>}
+                  />
+                  <p>Favorite Actor List</p>
+                </MenuItem>
+              </a>
             </div>
+            <a href='/rating'>
+              <div className='hover:text-yellow-300'>
+                <MenuItem>
+                  <Avatar sx={{ backgroundColor: '#FB9AD1', width: 40, height: 40 }}
+                    children={<i className="fa-solid fa-ranking-star"></i>}
+                  />
+                  <p>Rating List</p>
+                </MenuItem>
+              </div>
+            </a>
 
-            <div className='hover:text-yellow-300'>
-              <MenuItem onClick={() => navigate('/rating')}>
-                <Avatar
-                  sx={{
-                    backgroundColor: '#FB9AD1', width: 40, height: 40
-                  }}
-                  children={
-                    <i className="fa-solid fa-ranking-star"></i>
-                  }
-                />
-                <p>Rating List</p>
-              </MenuItem>
-            </div>
-            <div className='hover:text-yellow-300'>
-              <MenuItem onClick={() => navigate('/activity')}>
-                <Avatar
-                  sx={{
-                    backgroundColor: 'purple', width: 40, height: 40
-                  }}
-                  children={
-                    <i className="fa-solid fa-street-view"></i>
-                  }
+            <a href='/activity' className='hover:text-yellow-300'>
+              <MenuItem>
+                <Avatar sx={{ backgroundColor: 'purple', width: 40, height: 40 }}
+                  children={<i className="fa-solid fa-street-view"></i>}
                 />
                 <p>Your Activity</p>
               </MenuItem>
-            </div>
+            </a>
 
-            <div className='hover:text-yellow-300'>
+            <a className='hover:text-yellow-300'>
               <MenuItem onClick={handleLogout}>
                 <Avatar
                   sx={{
@@ -792,22 +781,16 @@ export default function TopBar() {
                 />
                 <p>Logout</p>
               </MenuItem>
-            </div>
-
-
+            </a>
           </Menu>
-          <button
-            onClick={() => window.open('https://apps.apple.com/us/app/imdb-movies-tv-shows/id342792525?_branch_match_id=1303228076714752528&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXL86pTNJLLCjQy8nMy9YP9k6pDDRzNDGxBABVqlN1IAAAAA%3D%3D&utm_campaign=mdot+sitewide+footer+Branch+update&utm_medium=marketing&utm_source=IMDb+Mdot', '_blank')}
-
-            className=" bg-yellow-400 text-black text-center border-none font-bold text-sm  rounded-lg
-            whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2 mr-2"
-          >
-            Use App
-          </button>
+          {/*user end */}
+          <button onClick={() => window.open('https://apps.apple.com/us/app/imdb-movies-tv-shows/id342792525?_branch_match_id=1303228076714752528&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXL86pTNJLLCjQy8nMy9YP9k6pDDRzNDGxBABVqlN1IAAAAA%3D%3D&utm_campaign=mdot+sitewide+footer+Branch+update&utm_medium=marketing&utm_source=IMDb+Mdot', '_blank')}
+            className=" bg-yellow-400 text-black text-center border-none font-bold text-sm  rounded-lg whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2 mr-2"
+          >  Use App</button>
         </div >
       )}
 
-      {/* drawer */}
+      {/* drawer màn hình nhỏ */}
       <div
         className={`fixed overflow-auto  top-0 left-0 h-screen w-fit bg-black shadow z-40 justify-start  rounded-md  ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
@@ -850,17 +833,14 @@ export default function TopBar() {
               <Typography sx={{ fontSize: "large", fontWeight: 'bold' }}>IMDbPro</Typography>
               <Typography>For industry Professionals</Typography>
             </Box>
-            <Box sx={{ flexGrow: 1 }}>
-
-            </Box>
+            <Box sx={{ flexGrow: 1 }}></Box>
             <LaunchIcon sx={{ padding: '10px', fontSize: '40px' }} />
           </Fragment>
-
         </List>
 
       </div>
 
-      {/* drawer */}
+      {/* drawer end*/}
 
 
     </section >

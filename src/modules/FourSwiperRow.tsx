@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { favoriteMongoApi, getFavoriteMongoApi } from "../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setFavorite, setListFavorite } from "../redux/reducers/login.reducer";
-import { AppDispatch } from "../redux/store";
+import { fetchFavorite, fetchGetFavorites } from "../redux/reducers/login.reducer";
+import { handleImageError } from "./BaseModule";
 import RatingModule from "./RatingModule";
 
 export interface FourSwiperRowProps {
@@ -28,34 +25,21 @@ export default function FourSwiperRow({
     const [activeSlider, setActiveSlider] = useState(6);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 500) {
-                setActiveSlider(2);
-            } else if (window.innerWidth < 600) {
-                setActiveSlider(3);
-            } else if (window.innerWidth < 768) {
-                setActiveSlider(4);
-            } else if (window.innerWidth < 1024) {
-                setActiveSlider(5);
-            } else {
-                setActiveSlider(menuItems[mediaMenuItem]?.activeSlider);
-            }
+            if (window.innerWidth < 500) { setActiveSlider(2) }
+            else if (window.innerWidth < 600) { setActiveSlider(3) }
+            else if (window.innerWidth < 768) { setActiveSlider(4) }
+            else if (window.innerWidth < 1024) { setActiveSlider(5) }
+            else { setActiveSlider(menuItems[mediaMenuItem]?.activeSlider) }
         };
-
         window.addEventListener('resize', handleResize);
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
-    const handleClickImg = (id: any) => {
+    const handleClickImg = () => {
         window.scrollTo(0, 0)
-        navigate(`/${mediaType}/${id}`)
     };
 
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-    const [checkLog, setCheckLog] = useState(false)
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
@@ -70,91 +54,29 @@ export default function FourSwiperRow({
         setUserInfoList(Object.values(storedData));
     }, []);
 
-    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getFavoriteMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListFavorite(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
-
-
     useEffect(() => {
         if (userInfoList?.length > 0) {
-            dispatch(fetchGetFavorites());
+            dispatch(fetchGetFavorites(userInfoList[0]));
         }
     }, [userInfoList]);
 
-    let navigate = useNavigate();
-
-    const fetchFavorite = (
-        movieId: string,
-        movieName: string,
-        movieImg: string,
-        movieReleaseDay: Date,
-        movieGenre: number[],
-        movieReview: string,
-        moviePopularity: string,
-        movieVoteAverage: string,
-        movieVoteCount: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await favoriteMongoApi(
-                email, movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
-            );
-            dispatch(setFavorite(response));
-            if (response) {
-                await dispatch(fetchGetFavorites());
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
-
-    const handleWatchList = async (
-        index: number,
-        movieId: any,
-        movieName: any,
-        movieImg: string,
-        movieReleaseDay: Date,
-        movieGenre: number[],
-        movieReview: string,
-        moviePopularity: string,
-        movieVoteAverage: string,
-        movieVoteCount: string
-    ) => {
+    const handleWatchList = async (index: number, movieId: any, movieName: any, movieImg: string, movieReleaseDay: Date, movieGenre: number[], movieReview: string, moviePopularity: string, movieVoteAverage: string, movieVoteCount: string) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
-        await dispatch(fetchFavorite(
-            movieId, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
-        ));
-        setCheckLog(!checkLog);
+        await dispatch(fetchFavorite(userInfoList[0], movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount));
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
-    const renderRating = (mediaType: any, ratingList: any, userInfoList: any, starIndex: any, rateHidden: any) => {
-        return <RatingModule mediaType={mediaType} ratingList={ratingList} userInfoList={userInfoList} starIndex={starIndex} rateHidden={rateHidden}></RatingModule>
-
-    }
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handleNext = () => {
-        if (currentIndex + menuItems[mediaMenuItem]?.activeSlider < fourSwiperRowList?.length) {
-            setCurrentIndex(currentIndex + menuItems[mediaMenuItem]?.activeSlider);
+        if (currentIndex +activeSlider < fourSwiperRowList?.length) {
+            setCurrentIndex(currentIndex + activeSlider);
         }
     };
 
     const handleBack = () => {
-        if (currentIndex - menuItems[mediaMenuItem]?.activeSlider >= 0) {
-            setCurrentIndex(currentIndex - menuItems[mediaMenuItem]?.activeSlider);
+        if (currentIndex -activeSlider >= 0) {
+            setCurrentIndex(currentIndex - activeSlider);
         }
     };
 
@@ -164,7 +86,7 @@ export default function FourSwiperRow({
                 <i className="fa-solid fa-chevron-left"></i>
             </button>
             <button
-                className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 px-4 py-4 bg-black bg-opacity-50 hover:bg-gray-800 text-white border border-white ${currentIndex + menuItems[mediaMenuItem]?.activeSlider*2 >= fourSwiperRowList?.length ? 'hidden' : ''}`}
+                className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 px-4 py-4 bg-black bg-opacity-50 hover:bg-gray-800 text-white border border-white ${currentIndex + activeSlider>= fourSwiperRowList?.length ? 'hidden' : ''}`}
                 onClick={handleNext}
             >
                 <i className="fa-solid fa-chevron-right"></i>
@@ -174,12 +96,14 @@ export default function FourSwiperRow({
                     const existingIndex = favoriteList?.findIndex(fav => fav?.itemId == item?.id);
                     return (
                         <div key={index} className={` h-full max-w-1/${activeSlider} w-full mx-2`}>
-                            <div className="object-cover shadow-sm shadow-current w-full h-auto rounded-tr-xl rounded-tl-xl">
-                                <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className=" hover:opacity-80 h-60 rounded-tl-xl rounded-tr-xl"
-                                    onError={handleImageError}
-                                    onClick={() => handleClickImg(`${item?.id}`)} />
+                            <div className="object-cover  w-full rounded-tr-xl rounded-tl-xl">
+                                <a href={`/${mediaType}/${item?.id}`}>
+                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className=" hover:opacity-80 object-cover h-60 w-full rounded-tl-xl rounded-tr-xl"
+                                        onError={handleImageError}
+                                        onClick={() => handleClickImg()} />
+                                </a>
                             </div>
-                            <div className={`${menuItems[mediaMenuItem]?.label} shadow-sm shadow-current  rounded-bl-xl rounded-br-xl mb-4 py-2 h-fit w-full`}>
+                            <div className={`${menuItems[mediaMenuItem]?.label} shadow-sm shadow-black  rounded-bl-xl rounded-br-xl mb-4 py-2 h-fit w-full`}>
                                 <div className="mx-3">
                                     <div className="flex gap-x-4 items-center">
                                         <div className="flex items-center space-x-2">
@@ -187,7 +111,7 @@ export default function FourSwiperRow({
                                             <p className="leading-relaxed text-gray-500">{item?.vote_average?.toFixed(1)}</p>
                                         </div>
                                         <div className="grow ml-auto">
-                                            {renderRating(mediaType, item, userInfoList, index, 'true')}
+                                            <RatingModule mediaType={mediaType} ratingList={item} userInfoList={userInfoList} starIndex={index} rateHidden={'true'}></RatingModule>
                                         </div>
                                     </div>
                                     <div className="h-12 mt-2">
@@ -221,20 +145,12 @@ export default function FourSwiperRow({
                                             </div>
                                         }
                                     </div>
-                                    <button className="flex items-center px-2 py-2 hover:opacity-50 rounded-lg w-full justify-center border-none"
-                                        onClick={() => {
-                                            if (item?.media_type === 'person') {
-                                                navigate(`/person/${item?.id}`);
-                                            } else if (item?.media_type === "movie") {
-                                                navigate(`/movie/${item?.id}`);
-                                            }
-                                            else {
-                                                navigate(`/tv/${item?.id}`);
-                                            }
-                                        }}>
-                                        <i className="fa-solid fa-play mr-2"></i>
-                                        <p>Trailer</p>
-                                    </button>
+                                    <a href={`${mediaType}/${item?.id}`}>
+                                        <button className="flex items-center px-2 py-2 hover:opacity-50 rounded-lg w-full justify-center border-none">
+                                            <i className="fa-solid fa-play mr-2"></i>
+                                            <p>Trailer</p>
+                                        </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

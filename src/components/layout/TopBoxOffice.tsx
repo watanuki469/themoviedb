@@ -2,7 +2,6 @@ import AppsIcon from '@mui/icons-material/Apps';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Charts from "../../modules/Charts";
 import ListRow from "../../modules/ListRow";
 import RatingModule from '../../modules/RatingModule';
@@ -14,25 +13,20 @@ import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { handleImageError, monthNames, shortenNumber } from '../../modules/BaseModule';
 
 export default function TopBoxOffice() {
-    const dispatch = useAppDispatch();
-    let navigate = useNavigate()
+    const dispatch = useAppDispatch()
     const topRatedMovies = useAppSelector((state) => state.movies.discoverMovies)
     const topRatedTV = useAppSelector((state) => state.movies.discoverTv)
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
+        dispatch(setGlobalLoading(false))
     }, [])
 
     const currentDate = new Date();
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ];
 
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
@@ -50,27 +44,9 @@ export default function TopBoxOffice() {
     const switchView = (view: any) => {
         setCurrentView(view);
     };
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
-
-    function shortenNumber(number: any) {
-        if (number >= 1000000000) {
-            return (number / 1000000000).toFixed(1) + 'b';
-        }
-        if (number >= 1000000) {
-            return (number / 1000000).toFixed(1) + 'm';
-        }
-        if (number >= 1000) {
-            return (number / 1000).toFixed(1) + 'k';
-        }
-        return number;
-    }
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-   
+
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
         let storedData = [];
@@ -80,23 +56,25 @@ export default function TopBoxOffice() {
         }
         setUserInfoList(Object.values(storedData));
     }, []);
-   
-    
-    const renderMovieItem = (movie: any, movieIndex: number, currentView: any, sortOrder: any) => {
+
+    const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
+                    <section className="px-2 w-full" key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/movie/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError}
-                                            className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl"
-                                        />
+                                        <a href={`/movie/${movie?.id}`}>
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                onError={handleImageError}
+                                                className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl"
+                                            />
+                                        </a>
+
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <p>{translations[language]?.weekend}: <span className="font-semibold">${(movie?.vote_average * 2.9).toFixed(1)}M </span></p>
@@ -106,12 +84,12 @@ export default function TopBoxOffice() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
+                                                <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
                                                     <div className="grow ml-auto" >
                                                         <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
 
                                                     </div>
-                                                </button>
+                                                </div>
 
                                             </div>
                                         </div>
@@ -121,8 +99,11 @@ export default function TopBoxOffice() {
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/movie/${movie.id}`)} >
-                                    <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+
+                                <div className="ml-auto">
+                                    <a href={`/movie/${movie?.id}`}>
+                                        <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                    </a>
                                 </div>
                             </div>
 
@@ -132,16 +113,18 @@ export default function TopBoxOffice() {
                 )
             case 'Grid':
                 return (
-                    <section className=" w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
                     >
                         <div className="text-black font-sans  shadow-sm shadow-black rounded-tr-xl " >
                             <div className=" items-center ">
                                 <div className="mt-2">
                                     <div className="items-center gap-2 ">
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
-                                            <img onClick={() => navigate(`/movie/${movie?.id}`)}
-                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
+                                            <a href={`/movie/${movie?.id}`}>
+                                                <img
+                                                    src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                    onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
+                                            </a>
                                         </div>
                                         <div className="">
                                             <div className="justify-start text-left px-2 py-2">
@@ -154,12 +137,12 @@ export default function TopBoxOffice() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
                                                     <div className="grow ml-auto py-2" >
                                                         <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
 
                                                     </div>
-                                                </button>
+                                                </div>
                                                 <div className="h-12 w-full ">
                                                     <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title}</p>
                                                 </div>
@@ -171,13 +154,13 @@ export default function TopBoxOffice() {
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="px-2 py-2" onClick={() => navigate(`/movie/${movie?.id}`)}   >
-                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        {translations[language]?.details}
-                                    </button>
-
-                                </div>
+                                <a href={`/movie/${movie?.id}`}>
+                                    <div className="px-2 py-2">
+                                        <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
+                                            {translations[language]?.details}
+                                        </button>
+                                    </div>
+                                </a>
                             </div>
 
                         </div>
@@ -186,15 +169,17 @@ export default function TopBoxOffice() {
                 )
             case 'Compact':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500 w-full " key={movieIndex}
+                    <section className="px-2  w-full " key={movieIndex}
                     >
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/movie/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
+                                        <a href={`/movie/${movie?.id}`}>
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
+                                        </a>
                                         <div>
                                             <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title}</p>
                                             <div>
@@ -207,21 +192,23 @@ export default function TopBoxOffice() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <button className=" hover:text-black text-blue-500" >
+                                                <div className=" hover:text-black text-blue-500" >
                                                     <div className="">
                                                         <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                     </div>
-                                                </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/movie/${movie.id}`)} >
-                                    <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                <div className="ml-auto">
+                                    <a href={`/movie/${movie?.id}`}>
+                                        <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                    </a>
+
                                 </div>
                             </div>
-
                         </div>
                     </section>
                 )
@@ -242,8 +229,8 @@ export default function TopBoxOffice() {
                     <TopBar />
                 </div>
             </div>
-            <div className="bg-white">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
+            <div className="bg-black">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center px-2 bg-white py-2">
                     <div className="lg:max-w-full w-full ">
                         <div className="flex items-center  ">
                             <h2 className="lg:text-2xl text-lg font-bold text-black  capitalize">IMDb {translations[language]?.chart}</h2>
@@ -264,55 +251,39 @@ export default function TopBoxOffice() {
                     <div className="grid grid-cols-12 gap-2 w-full items-center">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex items-center">
-                                <h2 className="lg:text-2xl text-lg text-black ">
-                                    {topRatedMovies
-                                        .slice(0, 10)
-                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))?.length}
-                                    /10 Office</h2>
+                                <h2 className="lg:text-2xl text-lg text-black ">{topRatedMovies?.slice(0, 10)?.map((m, index) => renderMovieItem(m, index, currentView))?.length}/10 Office</h2>
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
-                                    <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
-                                        <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
-                                    </Tooltip>
-                                    <Tooltip title="Grid View" className={`${currentView === "Grid" ? "text-blue-500" : ""}`}>
-                                        <AppsIcon onClick={() => switchView('Grid')} />
-                                    </Tooltip>
-                                    <Tooltip title="Compact View" className={`${currentView === "Compact" ? "text-blue-500" : ""}`}>
-                                        <MenuIcon onClick={() => switchView('Compact')} />
-                                    </Tooltip>
+                                    <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}><i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i></Tooltip>
+                                    <Tooltip title="Grid View" className={`${currentView === "Grid" ? "text-blue-500" : ""}`}><AppsIcon onClick={() => switchView('Grid')} /></Tooltip>
+                                    <Tooltip title="Compact View" className={`${currentView === "Compact" ? "text-blue-500" : ""}`}><MenuIcon onClick={() => switchView('Compact')} /></Tooltip>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full w-full lg:px-2 lg:py-2 ">
-                                <div
-                                    style={{
-                                        position: "relative", backgroundSize: "cover", backgroundPosition: "center",
-                                        display: 'flex', flexWrap: 'wrap'
-                                    }}>
+                            <div className="lg:max-w-full w-full px-2 py-2">
+                                <div className={`${currentView === 'Detail' || currentView === 'Compact' ? 'divide-y divide-gray-500 border border-gray-500' : ''}`}
+                                    style={{ position: "relative", backgroundSize: "cover", backgroundPosition: "center", display: 'flex', flexWrap: 'wrap' }}>
                                     {topRatedMovies?.length === 0 && (
-                                        <div style={{
-                                            backgroundImage: `url(https://filmfair.in/website/images/error_screens/no-result.png')`,
-                                            position: "absolute", width: "100%", height: "100%", opacity: "0.5",
-                                            backgroundSize: "cover", backgroundPosition: "center", backgroundColor: 'black'
-                                        }}>
-                                        </div>
+                                        <div style={{ backgroundImage: `url(https://filmfair.in/website/images/error_screens/no-result.png')`, position: "absolute", width: "100%", height: "100%", opacity: "0.5", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: 'black' }}></div>
                                     )}
-                                    {topRatedMovies
-                                        .slice(0, 10)
-                                        .map((m, index) => renderMovieItem(m, index, currentView, sortOrder))}
+                                    {topRatedMovies?.slice(0, 10)?.map((m, index) => renderMovieItem(m, index, currentView))}
                                 </div>
                             </div>
 
                         </div>
-                        <div className="hidden lg:block col-span-4  h-full px-2 text-xl">
+                        <div className="lg:col-span-4  col-span-12  h-full px-2 text-xl">
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-3xl font-bold text-black capitalize ">{translations[language]?.moreExplore}</h2>
                                 </div>
-                                <div className="lg:max-w-full w-full" onClick={() => navigate(`/top250TV`)}>
-                                    <ListRow listRowList={topRatedTV} />
-                                </div>
+                                <a href={`/top250TV`}>
+                                    <div className="lg:max-w-full w-full">
+                                        <ListRow listRowList={topRatedTV} />
+                                    </div>
+                                </a>
                                 <p className="text-red w-full text-black"> {translations[language]?.staffPick}</p>
-                                <p className="text-red w-full text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
+                                <a href={`/top250TV`}>
+                                    <p className="text-red w-full text-blue-500 hover:underline"> {translations[language]?.seeOurPick}</p>
+                                </a>
                             </div>
                             <div>
                                 <div className="flex items-center py-2">
@@ -335,7 +306,7 @@ export default function TopBoxOffice() {
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <Footer />
                 </div>
             </div>

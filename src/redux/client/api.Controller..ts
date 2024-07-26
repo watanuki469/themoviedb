@@ -45,8 +45,8 @@ const apiPerson = {
     },
 }
 const apiSearch = {
-    search(mediaType: any, query: any) {
-        const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=false&language=${language}&page=1`;
+    search(mediaType: any, query: any,page=1) {
+        const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=false&language=${language}&page=${page}`;
         return axiosClient.get(url)
     },
 }
@@ -80,18 +80,18 @@ const getTodayDate = () => {
 }
 
 const apiUpComing = {
-    upComing(mediaType: any) {
+    upComing(mediaType: any,page=1) {
         const todayDate = getTodayDate();
         const url = mediaType === 'movie'
-            ? `/discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=1&primary_release_date.gte=${todayDate}&release_date.gte=${todayDate}&sort_by=primary_release_date.asc`
-            : `/discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=1&first_air_date.gte=${todayDate}&include_null_first_air_dates=false&sort_by=first_air_date.asc`;
+            ? `/discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=${page}&primary_release_date.gte=${todayDate}&release_date.gte=${todayDate}&sort_by=primary_release_date.asc`
+            : `/discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=${page}&first_air_date.gte=${todayDate}&include_null_first_air_dates=false&sort_by=first_air_date.asc`;
         return axiosClient.get(url);
     }
 };
 
 const apiPeoplePopular = {
-    peoplePopular() {
-        const url = `person/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`;
+    peoplePopular(page=1) {
+        const url = `person/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=${page}`;
         return axiosClient.get(url)
     },
 }

@@ -5,13 +5,14 @@ import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
 import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListGenre } from '../../redux/reducers/genre.reducer';
+import { fetchGenre, setListGenre } from '../../redux/reducers/genre.reducer';
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { fetchTrending } from '../../redux/reducers/trending.reducer';
 import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { monthNames } from "../../modules/BaseModule";
 
 export default function TrendingLayout() {
     const { type } = useParams()
@@ -25,9 +26,8 @@ export default function TrendingLayout() {
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
 
     const context = useContext(LanguageContext);
-
     if (!context) {
-        return null;
+        return null
     }
 
     const { language, translations, handleLanguageChange } = context;
@@ -36,10 +36,8 @@ export default function TrendingLayout() {
         dispatch(setGlobalLoading(true));
         dispatch(fetchTrending());
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
-    }, []);
+        dispatch(setGlobalLoading(false))
+    }, [dispatch]);
 
     const [presentList, setPresentList] = useState<any[]>([])
     const [mediatype, setMediaType] = useState('');
@@ -52,7 +50,7 @@ export default function TrendingLayout() {
                 break;
             case 'disney':
                 setPresentList(listNewDisney);
-                setMediaType('person')
+                setMediaType('movie')
                 break;
             case 'hulu':
                 setPresentList(listNewHulu);
@@ -79,34 +77,18 @@ export default function TrendingLayout() {
     }, [type, listNewNetflix, listNewDisney, listNewHulu, listNewPrime, listNewStream, listNewMax]);
 
     const currentDate = new Date();
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ];
-
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
     const currentMonthName = monthNames[currentMonth];
 
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
-    const fetchGenre = () => (dispatch: AppDispatch) => {
-        apiController.apiGenre.genre(`${mediatype}`)
-            .then((data: any) => {
-                if (data && data?.genres) {
-                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
+
     useEffect(() => {
-        dispatch(fetchGenre());
+        dispatch(fetchGenre(mediatype));
     }, [dispatch]);
    
     return (
-        <div className=" min-h-screen cursor-pointer"> 
+        <div className=" min-h-screen cursor-pointer">
             <div className="bg-black pb-1">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <TopBar />
@@ -120,13 +102,13 @@ export default function TrendingLayout() {
                                     <div className='flex items-center gap-2 font-semibold capitalize'>
                                         <i className="fa-regular fa-eye text-xl text-white"></i>
                                         <div>
-                                            <div> <span className='text-lg text-white'>77K</span> {translations[language]?.views}</div>
+                                            <div> <span className='text-lg text-white'>87K</span> {translations[language]?.views}</div>
                                             <div>28K {translations[language]?.thisWeek}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <Share bgColor={'white'} />
-                                
+
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
@@ -141,16 +123,17 @@ export default function TrendingLayout() {
                     </div>
                 </div>
             </div>
-            <div className="bg-white px-2">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <ViewTable viewList={presentList}  mediaType={mediatype} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTable>
+            <div className="bg-black ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center bg-white px-2 py-2">
+                    <ViewTable viewList={presentList} mediaType={mediatype} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTable>
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <Footer />
                 </div>
             </div>
+
         </div >
     )
 }

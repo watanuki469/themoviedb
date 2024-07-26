@@ -3,14 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import axiosBornToday from "../../redux/axios/axiosBornToday";
-import { useAppDispatch } from "../../redux/hooks";
-import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 
 export default function BornToday() {
     const [movieNews, setMovieNews] = useState<any[]>([]);
     const [err, setErr] = useState(false);
     let navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const currentDate = new Date();
     const currentMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng hiện tại, thêm 0 ở trước nếu cần
     const currentDay = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày hiện tại, thêm 0 ở trước nếu cần 
@@ -65,7 +62,6 @@ export default function BornToday() {
                         <i className="fa-solid fa-angle-right text-white text-xl ml-4"></i>
                     </div>
                     <div className="py-6">
-
                         <Swiper
                             spaceBetween={10}
                             slidesPerView={activeSlider}
@@ -82,22 +78,16 @@ export default function BornToday() {
                                     <SwiperSlide key={index}>
                                         <div className="w-full h-auto">
                                             <div className="items-center justify-center text-center">
-                                                <div className="w-36 h-36 mx-auto rounded-full bg-cover items-center justify-center hover:opacity-80"
-                                                    style={{
-                                                        backgroundImage: `url(${item?.primaryImage?.imageUrl})`
-                                                    }}
-                                                    onClick={() => navigate(`/search?mediaType=person&title=${encodeURIComponent(item?.nameText?.text)}`)}
-                                                    >
-                                                </div>
-
+                                                <a href={`/search?mediaType=person&title=${encodeURIComponent(item?.nameText?.text)}`} className="w-36 h-36 mx-auto rounded-full bg-cover items-center justify-center hover:opacity-80"
+                                                    style={{ backgroundImage: `url(${item?.primaryImage?.imageUrl})` }}>
+                                                </a>
                                                 <div className="">
                                                     <p className="text-white">{item?.nameText?.text}</p>
                                                     {item?.birthDateComponents?.dateComponents?.year ? (
                                                         <p className="">Age: {currentYear - item?.birthDateComponents?.dateComponents?.year}</p>
 
                                                     ) : (
-                                                        <div>
-                                                        </div>
+                                                        <div>  </div>
                                                     )
                                                     }
                                                 </div>

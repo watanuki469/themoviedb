@@ -4,32 +4,32 @@ import axiosClient from '../axios/axiosClient';
 import { AppDispatch } from "../store";
 const language = localStorage.getItem('language')
 const apiRequests = {
-    netflixOriginal(page=1) {
+    netflixOriginal(page = 1) {
         const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_watch_monetization_types=flatrate`
         return axiosClient.get(url)
     },
-    discoverMovies(page=1) {
+    discoverMovies(page = 1) {
         const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_watch_monetization_types=flatrate`
         return axiosClient.get(url)
     },
-    discoverTv(page=1) {
+    discoverTv(page = 1) {
         const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&page=${page}&timezone=America%2FNew_York&include_null_first_air_dates=false&with_watch_monetization_types=flatrate&with_status=0&with_type=0`
         return axiosClient.get(url)
     },
 
-    mostPopularMoviesReq(page=1) {
+    mostPopularMoviesReq(page = 1) {
         const url = `movie/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=${page}`
         return axiosClient.get(url)
     },
-    topRatedMoviesReq(page=1) {
+    topRatedMoviesReq(page = 1) {
         const url = `movie/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=${page}`
         return axiosClient.get(url)
     },
-    mostPopularTvReq(page=1) {
+    mostPopularTvReq(page = 1) {
         const url = `tv/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=${page}`
         return axiosClient.get(url)
     },
-    topRatedTvReq(page=1) {
+    topRatedTvReq(page = 1) {
         const url = `tv/top_rated?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=${page}`
         return axiosClient.get(url)
     },
@@ -162,7 +162,7 @@ export const {
     appendTopRatedTv,
 } = moviesSlice.actions;
 
-export const fetchMovies = (page=1) => (dispatch: AppDispatch) => {
+export const fetchMovies = (page = 1) => (dispatch: AppDispatch) => {
     Promise.all([
         apiRequests.netflixOriginal(page),
         apiRequests.discoverMovies(page),
@@ -195,11 +195,6 @@ export const fetchMovies = (page=1) => (dispatch: AppDispatch) => {
                 console.error("API response structure is not as expected.", data);
             }
         })
-        // .then(() => {
-        //     setTimeout(() => {
-        //         dispatch(setIsFetched(true))
-        //     }, 2000);
-        // })
         .catch((e) => {
             console.log(e);
         })

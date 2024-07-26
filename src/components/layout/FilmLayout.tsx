@@ -21,7 +21,7 @@ export default function FilmLayout() {
     const fetchSingleMovies = (name: any) => async (dispatch: AppDispatch) => {
         // Reset trạng thái để ngăn dữ liệu cũ hiển thị
         dispatch(setSingleFilm(null));
-    
+
         try {
             const data = await apiFilm.fetchSingleFilm.singleFilm(name);
             if (data) {
@@ -34,7 +34,7 @@ export default function FilmLayout() {
             console.error(e);
         }
     }
-    
+
 
     useEffect(() => {
         dispatch(fetchSingleMovies(name));
@@ -73,26 +73,35 @@ export default function FilmLayout() {
                                             src={`${singleMovieList?.episodes?.[0]?.server_data[numberIndex]?.link_embed}`}
                                             width="100%"
                                             height={"100%"}
-                                            style={{ border: '2px',borderColor:'white', minHeight: '350px' }}
+                                            style={{ border: '2px', borderColor: 'white', minHeight: '350px' }}
                                         >
-                                        </iframe>                                        
+                                        </iframe>
                                     </div>
 
                                 </div>
-                                <div className="col-span-12 h-full ml-2 overflow-hidden">
+                                <div className="col-span-12 h-full ml-2 overflow-hidden cursor-pointer">
+                                    <div>Đang xem: Tập {numberIndex + 1}
+                                        {singleMovieList?.episodes?.[0]?.server_data[numberIndex]?.filename ? `:` + singleMovieList?.episodes?.[0]?.server_data[numberIndex]?.filename : ''}
+                                       : {singleMovieList?.movie?.time}
+                                    </div>
                                     <div className=" h-1/2 flex px-2 py-2 gap-2 max-h-40">
-                                        <img onClick={() => navigate(`/${mediaType}/${id}`)}
-                                            src={`${singleMovieList?.movie?.thumb_url ? singleMovieList?.movie?.thumb_url : singleMovieList?.movie?.poster_url}`} alt="product images"
-                                            className="max-w-32 h-full" />
+                                        <a href={`/${mediaType}/${id}`}>
+                                            <img src={`${singleMovieList?.movie?.thumb_url ? singleMovieList?.movie?.thumb_url : singleMovieList?.movie?.poster_url}`} alt="product images"
+                                                className="max-w-32 h-full" />
+                                        </a>
                                         <div className='' >
-                                            <div className='justify-between flex items-center hover:text-yellow-300' onClick={() => navigate(`/${mediaType}/${id}`)}>
-                                                <p className='text-lg'>{singleMovieList?.movie?.name}</p>
-                                                <i className="fa-solid fa-chevron-right"></i>
-                                            </div>
+                                            <a href={`/${mediaType}/${id}`}>
+                                                <div className='justify-between flex items-center hover:text-yellow-300' >
+                                                    <p className='text-lg'>{singleMovieList?.movie?.name}</p>
+                                                    <i className="fa-solid fa-chevron-right"></i>
+                                                </div>
+                                            </a>
                                             <div className='flex gap-2 flex-wrap text-gray-500  text-sm'>
                                                 {singleMovieList?.movie?.category?.map((item: any, index: any) => (
                                                     <div key={index} className="flex gap-2 flex-wrap ">
-                                                        <p className="hover:text-yellow-300 hover:underline " onClick={() => navigate(`/search?mediaType=${mediaType}&genres=${item?.name}`)}>{item?.name}</p>
+                                                        <a href={`/search?mediaType=${mediaType}&genres=${item?.name}`}>
+                                                            <p className="hover:text-yellow-300 hover:underline ">{item?.name}</p>
+                                                        </a>
                                                         <p className=''>{index < Math.min(singleMovieList?.movie?.category?.length) - 1 ? '•' : ''}</p>
 
                                                     </div>
@@ -107,7 +116,6 @@ export default function FilmLayout() {
                                     </div>
                                 </div>
                             </div>
-                            <div>Đang xem: Tập {numberIndex + 1} {singleMovieList?.episodes?.[0]?.server_data[numberIndex]?.filename ? `:` + singleMovieList?.episodes?.[0]?.server_data[numberIndex]?.filename : ''}</div>
 
                             <div className="flex items-center py-3 mt-3 px-2">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
@@ -119,7 +127,7 @@ export default function FilmLayout() {
                                     <div key={index} className="relative">
                                         <div className={`w-full  ${numberIndex === index ? 'bg-black text-white ' : 'bg-gray-300 text-black'} border-2 border-white hover:opacity-90 px-2 py-2`}
                                             onClick={() => { setNumberIndex(index) }}>
-                                          {index + 1}
+                                            {index + 1}
                                         </div>
                                     </div>
                                 ))}
@@ -135,7 +143,7 @@ export default function FilmLayout() {
                                         <div>View connections to industry professionals</div>
                                         <div>See who's working on titles in development</div>
                                     </div>
-                                    <div className="py-4" onClick={()=>navigate(`/IMDbPro`)}> 
+                                    <div className="py-4" onClick={() => navigate(`/IMDbPro`)}>
                                         <div className="px-2 py-2 bg-yellow-300 hover:opacity-80 text-black justify-center text-center items-center w-fit ml-auto mr-auto rounded-md">Become Pro Member</div>
                                     </div>
                                 </div>

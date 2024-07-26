@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { MovieCredit } from '../../components/models/MovieCredit';
+import { AppDispatch } from '../store';
+import apiController from '../client/api.Controller.';
 
 interface IMovieCredittate {
     listMovieCredit: MovieCredit[],
@@ -23,7 +25,23 @@ export const movieCreditSlice = createSlice({
 
 export const {
     setListMovieCredit,
-   } = movieCreditSlice.actions;
+} = movieCreditSlice.actions;
+
+export const fetchMovieCredit = (id:any) => (dispatch: AppDispatch) => {
+    Promise.all([
+        apiController.apiMovieCredits.movieCredit(id),
+    ])
+        .then((data: any) => {
+            if (data[0] && data[0]?.cast) {
+                dispatch(setListMovieCredit(data[0]?.cast));
+            } else {
+                console.error("API response structure is not as expected.", data);
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+}
 
 export default movieCreditSlice.reducer
 

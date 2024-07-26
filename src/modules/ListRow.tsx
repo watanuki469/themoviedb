@@ -24,7 +24,6 @@ export default function ListRow({
             <Swiper
                 spaceBetween={2}
                 slidesPerView={3}
-                // direction="horizontal"
                 className="mySwiper text-white w-full h-auto flex rounded-br-xl rounded-bl-xl rounded-tr-xl"
             >
                 {listRowList?.slice(3).map((item: any, index: any) => (

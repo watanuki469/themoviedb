@@ -36,10 +36,10 @@ export default function TopRatedMovieByGenre() {
             <div>
                 <div className="flex flex-wrap gap-2 ">
                     {
-                        Object.values(genreMapping).map((genre: any,index:any) => (
-                            <div
-                                onClick={() => navigate(`/search?genres=${genre}`)}
-                                className="px-2 py-2 border-2 border-gray-500 bg-white text-sm rounded-full hover:opacity-90 hover:bg-gray-300" key={index}>{genre}</div>
+                        Object.values(genreMapping).map((genre: any, index: any) => (
+                            <a  key={index} href={`/search?genres=${genre}`}>
+                                <div className="px-2 py-2 border-2 border-gray-500 bg-white text-sm rounded-full hover:opacity-90 hover:bg-gray-300">{genre}</div>
+                            </a>
                         ))
                     }
                 </div>

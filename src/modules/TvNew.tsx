@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axiosTvNew from "../redux/axios/axiosTVNew";
-import { useNavigate } from "react-router-dom";
 
 export default function TvNew() {
 
@@ -19,8 +18,6 @@ export default function TvNew() {
                 console.error('Error fetching Tv news:', error);
             });
     }, []);
-    let navigate = useNavigate()
-
 
     return (
         <div className="relative">
@@ -29,7 +26,7 @@ export default function TvNew() {
                     <p className="hover:text-black">TV New</p>
                     <i className="fa-solid fa-chevron-right "></i>
                 </div>
-                <div onClick={() => navigate('/news/movie')}>
+                <a href="/news/movie">
                     {tvNew?.slice(0, 5).map((item, index) => (
                         <div key={index} className="py-2">
                             <div className="flex items-center border-2 border-gray-200 py-1 px-1">
@@ -61,12 +58,8 @@ export default function TvNew() {
                             </div>
                         </div>
                     ))}
-                </div>
-
+                </a>
             </div>
-        </div>
-
-
-
+        </div >
     );
 }

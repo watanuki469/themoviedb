@@ -12,14 +12,13 @@ import { fetchTrending } from "../../redux/reducers/trending.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 import { fetchAward } from "../../redux/reducers/award.reducer";
+import { monthNames } from "../../modules/BaseModule";
 
 export default function WatchToWWatch() {
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
     const [currentView, setCurrentView] = useState('WatchGuide');
     const switchView = (view: any) => {
@@ -67,9 +66,6 @@ export default function WatchToWWatch() {
         // }, 1000);
     }, []);
     const currentDate = new Date();
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ];
 
     // Lấy số tháng từ ngày hiện tại (chú ý rằng tháng trong JavaScript bắt đầu từ 0)
     const currentMonth = currentDate.getMonth();
@@ -88,90 +84,90 @@ export default function WatchToWWatch() {
             case 'WatchGuide':
                 return (
                     <div>
-                    <div className="flex items-center py-3">
-                        <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                        <h2 className="lg:text-2xl text-lg font-bold"> {translations[language]?.streaming}</h2>
+                        <div className="flex items-center py-3">
+                            <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                            <h2 className="lg:text-2xl text-lg font-bold"> {translations[language]?.streaming}</h2>
+                        </div>
+                        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
+
+                            <a href={`/trending/netflix`}>
+                                <ListRow listRowList={listNewNetflix} />
+                                <p className="mt-2 hover:underline">{translations[language]?.whatNewToStreamOn} Netflix </p>
+                                <p className="mt-2 text-blue-500 hover:underline">{translations[language]?.seeOurPick}</p>
+                            </a>
+                            <div onClick={() => navigate(`/trending/disney`)}>
+                                <ListRow listRowList={listNewDisney} />
+                                <p className="mt-2 hover:underline">{translations[language]?.whatNewToStreamOn} Disney </p>
+                                <p className="mt-2 text-blue-500 hover:underline" >{translations[language]?.checkStatus}</p>
+                            </div>
+                            <div onClick={() => navigate(`/trending/hulu`)}>
+                                <ListRow listRowList={listNewHulu} />
+                                <p className="mt-2 hover:underline">{translations[language]?.whatNewToStreamOn} Hulu </p>
+                                <p className="mt-2 text-blue-500 hover:underline" >{translations[language]?.checkStatus}</p>
+                            </div>
+                            <div onClick={() => navigate(`/trending/prime`)}>
+                                <ListRow listRowList={listNewPrime} />
+                                <p className="mt-2 hover:underline">{translations[language]?.whatNewToStreamOn} Prime Video </p>
+                                <p className="mt-2 text-blue-500 hover:underline">{translations[language]?.seeOurPick}</p>
+                            </div>
+                            <div onClick={() => navigate(`/trending/stream`)}>
+                                <ListRow listRowList={listNewStream} />
+                                <p className="mt-2 hover:underline">{translations[language]?.whatNewToStreamOn} Stream Premiere </p>
+                                <p className="mt-2 text-blue-500 hover:underline" >{translations[language]?.checkStatus}</p>
+                            </div>
+                            <div onClick={() => navigate(`/trending/max`)}>
+
+                                <ListRow listRowList={listNewMax} />
+                                <p className="mt-2 hover:underline">{translations[language]?.whatNewToStreamOn} Max </p>
+                                <p className="mt-2 text-blue-500 hover:underline" >{translations[language]?.checkStatus}</p>
+                            </div>
+                        </div>
+                        <div className="w-full py-4" >
+                            {translations[language]?.browseCollection}
+                            <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
+                                <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[0]?.name}`)}>{remainingButtons[0].view}</button>
+                                <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[1]?.name}`)} >{remainingButtons[1].view}</button>
+                                <button></button>
+                            </div>
+                            <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4">
+                                <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[2]?.name}`)}>{remainingButtons[2].view}</button>
+                                <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[3]?.name}`)}>{remainingButtons[3].view}</button>
+                                <button></button>
+                            </div>
+                        </div>
+                        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
+                            <div onClick={() => navigate(`/award/spotlight`)}>
+                                <OneRow listRowList={topRatedTv} />
+                                <p className="mt-2 hover:underline">5 Top Rated Will Ferrell Movies</p>
+                                <p className="mt-2 text-blue-500 hover:underline">See what made the list</p>
+                            </div>
+                            <div onClick={() => navigate(`/award/oscars`)}>
+                                <OneRow listRowList={popularMovie} />
+                                <p className="mt-2 hover:underline">5 Must-See Sequels and Prequels in {currentMonthName}</p>
+                                <p className="mt-2 text-blue-500 hover:underline" >See out picks</p>
+                            </div>
+                            <div onClick={() => navigate(`/award/starmeter`)}>
+                                <OneRow listRowList={mostPopularTv} />
+                                <p className="mt-2 hover:underline">5 Award-Winning Sci-Fi Picks</p>
+                                <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
+                            </div>
+                            <div onClick={() => navigate(`/award/spotlight`)}>
+                                <OneRow listRowList={topRatedMovies} />
+                                <p className="mt-2 hover:underline">5 Anime Top Rated on Netflix</p>
+                                <p className="mt-2 text-blue-500 hover:underline">Stream these now</p>
+                            </div>
+                            <div onClick={() => navigate(`/award/ABFF`)}>
+                                <OneRow listRowList={discoverTv} />
+                                <p className="mt-2 hover:underline">5 Top-Rated Pixar Movies to Watch</p>
+                                <p className="mt-2 text-blue-500 hover:underline" >What the video</p>
+                            </div>
+                            <div onClick={() => navigate(`/popularCeleb`)}>
+                                <OneRow listRowList={discoverMovie} />
+                                <p className="mt-2 hover:underline">5 Most Unhinged Villains</p>
+                                <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
+                            </div>
+                        </div>
                     </div>
-                    {/* <p className="text-gray-400">Everything coming to Prime Video, Netflix, Disney Plus, and more</p> */}
-                    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
-                        <div onClick={() => navigate(`/trending/netflix`)}>
-                            <ListRow listRowList={listNewNetflix} />
-                            <p className="mt-2 hover:underline">Everything New On Netflix In {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
-                        </div>
-                        <div onClick={() => navigate(`/trending/disney`)}>
-                            <ListRow listRowList={listNewDisney} />
-                            <p className="mt-2 hover:underline">Everything New On Disney In {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
-                        </div>
-                        <div onClick={() => navigate(`/trending/hulu`)}>
-                            <ListRow listRowList={listNewHulu} />
-                            <p className="mt-2 hover:underline">Everything New On Hulu In {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
-                        </div>
-                        <div onClick={() => navigate(`/trending/prime`)}>
-                            <ListRow listRowList={listNewPrime} />
-                            <p className="mt-2 hover:underline">Everything New On Prime Video In {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline">See our picks</p>
-                        </div>
-                        <div onClick={() => navigate(`/trending/stream`)}>
-                            <ListRow listRowList={listNewStream} />
-                            <p className="mt-2 hover:underline">Everything New On Stream Premiere In {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
-                        </div>
-                        <div onClick={() => navigate(`/trending/hulu`)}>
-    
-                            <ListRow listRowList={listNewMax} />
-                            <p className="mt-2 hover:underline">Everything New On Max In {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >Check the status</p>
-                        </div>
-                    </div>
-                    <div className="w-full py-4" >
-                        {translations[language]?.browseCollection}
-                        <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[0]?.name}`)}>{remainingButtons[0].view}</button>
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[1]?.name}`)} >{remainingButtons[1].view}</button>
-                            <button></button>
-                        </div>
-                        <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4">
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[2]?.name}`)}>{remainingButtons[2].view}</button>
-                            <button className="px-2 py-2 border-white border-2 text-white bg-black hover:opacity-80 overflow-ellipsis" onClick={() => switchView(`${remainingButtons[3]?.name}`)}>{remainingButtons[3].view}</button>
-                            <button></button>
-                        </div>
-                    </div>
-                    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2  py-2 text-white ">
-                        <div onClick={() => navigate(`/award/spotlight`)}>
-                            <OneRow listRowList={topRatedTv} />
-                            <p className="mt-2 hover:underline">5 Top Rated Will Ferrell Movies</p>
-                            <p className="mt-2 text-blue-500 hover:underline">See what made the list</p>
-                        </div>
-                        <div onClick={() => navigate(`/award/oscars`)}>
-                            <OneRow listRowList={popularMovie} />
-                            <p className="mt-2 hover:underline">5 Must-See Sequels and Prequels in {currentMonthName}</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >See out picks</p>
-                        </div>
-                        <div onClick={() => navigate(`/award/starmeter`)}>
-                            <OneRow listRowList={mostPopularTv} />
-                            <p className="mt-2 hover:underline">5 Award-Winning Sci-Fi Picks</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
-                        </div>
-                        <div onClick={() => navigate(`/award/spotlight`)}>
-                            <OneRow listRowList={topRatedMovies} />
-                            <p className="mt-2 hover:underline">5 Anime Top Rated on Netflix</p>
-                            <p className="mt-2 text-blue-500 hover:underline">Stream these now</p>
-                        </div>
-                        <div onClick={() => navigate(`/award/ABFF`)}>
-                            <OneRow listRowList={discoverTv} />
-                            <p className="mt-2 hover:underline">5 Top-Rated Pixar Movies to Watch</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >What the video</p>
-                        </div>
-                        <div onClick={() => navigate(`/popularCeleb`)}>
-                            <OneRow listRowList={discoverMovie} />
-                            <p className="mt-2 hover:underline">5 Most Unhinged Villains</p>
-                            <p className="mt-2 text-blue-500 hover:underline" >Stream these now</p>
-                        </div>
-                    </div>
-                </div>
                 )
             case 'FanFavorite':
                 return (
@@ -230,13 +226,13 @@ export default function WatchToWWatch() {
                                 <button></button>
                             </div>
                         </div>
-                        <Fullitem searchItemList={discoverTv.slice(10, 21)}  />
+                        <Fullitem searchItemList={discoverTv.slice(10, 21)} />
                     </div>
                 )
             case 'MostPopular':
                 return (
                     <div>
-                        <Fullitem searchItemList={mostPopularTv.slice(0, 10)}  />
+                        <Fullitem searchItemList={mostPopularTv.slice(0, 10)} />
                         <div className="w-full py-4" >
                             {translations[language]?.browseCollection}
                             <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 mt-4 ">
@@ -250,7 +246,7 @@ export default function WatchToWWatch() {
                                 <button></button>
                             </div>
                         </div>
-                        <Fullitem searchItemList={mostPopularTv.slice(10, 21)}  />
+                        <Fullitem searchItemList={mostPopularTv.slice(10, 21)} />
                     </div>
                 )
         }

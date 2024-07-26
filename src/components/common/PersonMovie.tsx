@@ -24,7 +24,6 @@ export default function PersonMovie({
         handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    let navigate=useNavigate()
 
     return (
         <div className=" ">
@@ -42,38 +41,40 @@ export default function PersonMovie({
                 {personMovieList?.map((item: any, index: any) => {
                     return (
                         <SwiperSlide key={index} >
-                            <div className="w-full rounded-xl" onClick={()=>navigate(`/video/${item?.id}`)}>
-                                <div className='min-h-60 hover:opacity-80 rounded-xl'
-                                    style={{
-                                        backgroundImage: `url('https://image.tmdb.org/t/p/w300/${item?.poster_path}')`,
-                                        width: "100%",
-                                        height: "100%",
-                                        backgroundSize: "cover",
-                                        backgroundPosition: "center",
-                                        backgroundColor: 'black'
-                                    }}
-                                >
-                                </div>
-                                <div className="absolute bottom-0 left-0 flex justify-start items-center">
-                                    <div className='flex gap-2 px-2 py-2'>
-                                        <i className="fa-solid fa-circle-play text-white text-5xl"></i>
-                                        <div>
-                                            <div className='flex items-center text-center gap-2'>
-                                                <div className='text-xl '>Play Clip</div>
-                                                <div className='text-lg line-clamp-1'>
-                                                    {item?.vote_count &&
-                                                        <>
-                                                            {item?.vote_count.toString().slice(0, 1)}:
-                                                            {item?.vote_count.toString().slice(1, 3)}
-                                                        </>
-                                                    }
+                            <a href={`/video/${item?.media_type}/${item?.id}`}>
+                                <div className="w-full rounded-xl">
+                                    <div className='min-h-60 hover:opacity-80 rounded-xl'
+                                        style={{
+                                            backgroundImage: `url('https://image.tmdb.org/t/p/w300/${item?.poster_path}')`,
+                                            width: "100%",
+                                            height: "100%",
+                                            backgroundSize: "cover",
+                                            backgroundPosition: "center",
+                                            backgroundColor: 'black'
+                                        }}
+                                    >
+                                    </div>
+                                    <div className="absolute bottom-0 left-0 flex justify-start items-center">
+                                        <div className='flex gap-2 px-2 py-2'>
+                                            <i className="fa-solid fa-circle-play text-white text-5xl"></i>
+                                            <div>
+                                                <div className='flex items-center text-center gap-2'>
+                                                    <div className='text-xl '>Play Clip</div>
+                                                    <div className='text-lg line-clamp-1'>
+                                                        {item?.vote_count &&
+                                                            <>
+                                                                {item?.vote_count.toString().slice(0, 1)}:
+                                                                {item?.vote_count.toString().slice(1, 3)}
+                                                            </>
+                                                        }
+                                                    </div>
                                                 </div>
+                                                <div className="line-clamp-1">{item?.title}</div>
                                             </div>
-                                            <div className="line-clamp-1">{item?.title}</div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </SwiperSlide>
                     )
                 })}

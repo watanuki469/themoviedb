@@ -1,6 +1,4 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { LanguageContext } from "../../pages/LanguageContext";
 
 export interface TwoMovieRowProps {
@@ -10,36 +8,20 @@ export interface TwoMovieRowProps {
 export default function SingleMovieStoryLine({
     singleMovieList,
 }: TwoMovieRowProps) {
-    let navigate = useNavigate()
-
     const languageString = localStorage.getItem('language');
     const usRelease = singleMovieList[0]?.release_dates?.results.find((release: any) => release?.iso_3166_1 === `${languageString?.slice(3)}`);
-    const certification =
-        usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
+    const certification = usRelease?.release_dates?.find((release: any) => release.type === 3)?.certification || usRelease?.release_dates?.find((release: any) => release?.type !== 3)?.certification;
 
     const mpaaRate = () => {
         let mpaaRating;
         switch (certification) {
-            case "G":
-                mpaaRating = "General Audiences";
-                break;
-            case "PG":
-                mpaaRating = "Parental Guidance Suggested";
-                break;
-            case "PG-13":
-                mpaaRating = "For creature violence and action";
-                break;
-            case "R":
-                mpaaRating = "Restricted";
-                break;
-            case "NC-17":
-                mpaaRating = "Adults Only";
-                break;
-            default:
-                mpaaRating = "All Allowed";
-                break;
+            case "G": mpaaRating = "General Audiences"; break;
+            case "PG": mpaaRating = "Parental Guidance Suggested"; break;
+            case "PG-13": mpaaRating = "For creature violence and action"; break;
+            case "R": mpaaRating = "Restricted"; break;
+            case "NC-17": mpaaRating = "Adults Only"; break;
+            default: mpaaRating = "All Allowed"; break;
         }
-
         return mpaaRating
     }
     const context = useContext(LanguageContext);
@@ -59,16 +41,16 @@ export default function SingleMovieStoryLine({
                         </div>
                         <div className="flex gap-2 mb-1 flex-wrap">
                             {singleMovieList[0]?.keywords?.keywords?.map((item: any) => (
-                                <button key={item?.id}
-                                    onClick={() => navigate(`/keyword/movies/${item?.id}/${item?.name}`)}
-                                    className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
-                                    {item?.name}
-                                </button>
+                                <a key={item?.id} href={`/keyword/movies/${item?.id}/${item?.name}`}>
+                                    <button
+                                        className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
+                                        {item?.name}
+                                    </button>
+                                </a>
                             ))}
                         </div>
 
                         <div className="text-black">
-
                             <div className=" border-b border-gray-300 flex gap-2 py-2 items-center aligns-center">
                                 <div className="font-bold">Tag:
                                     <span className="font-normal ml-2">{singleMovieList[0]?.tagline}</span>
@@ -77,13 +59,14 @@ export default function SingleMovieStoryLine({
                             <div className=" border-b border-gray-300 flex flex-wrap gap-3 py-2 items-center aligns-center">
                                 <div className="font-bold">{translations[language]?.genre}</div>
                                 <div className="flex gap-3 flex-wrap">
-                                    {singleMovieList[0]?.genres.slice(0, 4).map((item: any, index: number) => (
-                                        <p key={index}
-                                            onClick={() => navigate(`/search?mediaType=movie&genres=${item?.name}`)}
-                                            className=" flex gap-2">
-                                            <span className="text-blue-600 hover:underline">{item?.name}</span>
-                                            <span>{index < Math.min(singleMovieList[0]?.genres.slice(0, 4)?.length) - 1 ? '•' : ''}</span>
-                                        </p>
+                                    {singleMovieList[0]?.genres?.slice(0, 4)?.map((item: any, index: number) => (
+                                        <a key={index} href={`/search?mediaType=movie&genres=${item?.name}`}>
+                                            <p
+                                                className=" flex gap-2">
+                                                <span className="text-blue-600 hover:underline">{item?.name}</span>
+                                                <span>{index < Math.min(singleMovieList[0]?.genres.slice(0, 4)?.length) - 1 ? '•' : ''}</span>
+                                            </p>
+                                        </a>
                                     ))}
                                 </div>
                             </div>

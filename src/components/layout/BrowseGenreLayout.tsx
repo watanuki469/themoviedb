@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { Button, Menu, MenuItem } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { LanguageContext } from "../../pages/LanguageContext";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchGenre, fetchGenre2, genreMapping, genreMapping2 } from "../../redux/reducers/genre.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
-import { Button, Menu, MenuItem } from "@mui/material";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { AppDispatch } from "../../redux/store";
-import apiController from "../../redux/client/api.Controller.";
-import { setListGenre, setListGenre2 } from "../../redux/reducers/genre.reducer";
-import { LanguageContext } from "../../pages/LanguageContext";
+import { scrollToElement } from "../../modules/BaseModule";
 
 export default function BrowseGenreLayout() {
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
@@ -16,63 +14,18 @@ export default function BrowseGenreLayout() {
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorRankingEl(event.currentTarget);
     };
-    let navigate = useNavigate()
     const handleRankingClose = () => {
         setAnchorRankingEl(null);
     };
     const dispatch = useAppDispatch();
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre);
     const listGenreFromApi2 = useAppSelector((state) => state.genre.listGenre2);
-    const fetchGenre = () => (dispatch: AppDispatch) => {
-        apiController.apiGenre.genre('movie')
-            .then((data: any) => {
-                if (data && data?.genres) {
-                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-    const fetchGenre2 = () => (dispatch: AppDispatch) => {
-        apiController.apiGenre.genre('tv')
-            .then((data: any) => {
-                if (data && data?.genres) {
-                    dispatch(setListGenre2(data?.genres)); // Adjust the dispatch based on actual response structure
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
+
     useEffect(() => {
-        dispatch(fetchGenre());
-        dispatch(fetchGenre2());
+        dispatch(fetchGenre('movie'));
+        dispatch(fetchGenre2('tv'));
     }, [dispatch]);
 
-    const genreMapping: Record<number, string> = listGenreFromApi?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
-        acc[genre?.id] = genre?.name;
-        return acc;
-    }, {});
-    const genreMapping2: Record<number, string> = listGenreFromApi2?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
-        acc[genre?.id] = genre?.name;
-        return acc;
-    }, {});
-
-    const scrollToElement = (elementId: any) => {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.scrollIntoView({
-                behavior: "smooth",
-                block: "start", // Cuộn trang để phần tử hiển thị ở đầu trang
-                inline: "nearest" // Cuộn trang để phần tử hiển thị ở phía trên cửa sổ trình duyệt
-            });
-        }
-    };
     const context = useContext(LanguageContext);
 
     if (!context) {
@@ -102,15 +55,10 @@ export default function BrowseGenreLayout() {
                                     endIcon={<i className="fa-solid fa-caret-down"></i>}
                                     sx={{
                                         // bgcolor: anchorRankingEl ? 'blue' : 'white',
-                                        textTransform:'uppercase',
+                                        textTransform: 'uppercase',
                                         bgcolor: anchorRankingEl ? 'blue' : 'white',
                                         color: anchorRankingEl ? 'white' : 'blue',
-                                        border: anchorRankingEl ? ' dashed' : '',
-                                        ":hover": {
-                                            border: 'dashed',
-                                            backgroundColor: 'blue'
-                                            , color: 'white'
-                                        },
+                                        ":hover": { backgroundColor: 'blue', color: 'white' },
                                     }}
                                 >
                                     {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
@@ -121,7 +69,7 @@ export default function BrowseGenreLayout() {
                                     open={Boolean(anchorRankingEl)}
                                     onClose={handleRankingClose}
                                     onClick={() => setAnchorRankingEl(null)}
-                                    sx={{textTransform:'capitalize'}}
+                                    sx={{ textTransform: 'capitalize' }}
                                 >
                                     <MenuItem onClick={() => scrollToElement('pupularTVShowAndMovieGenreRef')} disableRipple>
                                         {translations[language]?.mostPopularTv} & {translations[language]?.genre}
@@ -152,11 +100,13 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping).map((genre: any) => (
-                                            <div
-                                                onClick={() => navigate(`/search?mediaType=movie&genres=${genre}`)}
-                                                className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
-                                            </div>
+                                        Object.values(genreMapping(listGenreFromApi))?.map((genre: any) => (
+                                            <a href={`/search?mediaType=movie&genres=${genre}`}>
+                                                <div
+                                                    className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
+                                                </div>
+                                            </a>
+
                                         ))
                                     }
                                 </div>
@@ -169,11 +119,12 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping2).map(genre => (
-                                            <div
-                                                onClick={() => navigate(`/search?mediaType=tv&genres=${genre}`)}
-                                                className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
-                                            </div>
+                                        Object.values(genreMapping2(listGenreFromApi2))?.map(genre => (
+                                            <a href={`/search?mediaType=tv&genres=${genre}`}>
+                                                <div
+                                                    className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
+                                                </div>
+                                            </a>
                                         ))
                                     }
                                 </div>
@@ -186,11 +137,12 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping).map(genre => (
-                                            <div
-                                                onClick={() => navigate(`/search?mediaType=movie&genres=${genre}`)}
-                                                className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
-                                            </div>
+                                        Object.values(genreMapping(listGenreFromApi))?.map(genre => (
+                                            <a href={`/search?mediaType=movie&genres=${genre}`}>
+                                                <div
+                                                    className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
+                                                </div>
+                                            </a>
                                         ))
                                     }
                                 </div>
@@ -203,11 +155,12 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping2)?.map(genre => (
-                                            <div
-                                                onClick={() => navigate(`/search?mediaType=tv&genres=${genre}`)}
-                                                className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
-                                            </div>
+                                        Object.values(genreMapping2(listGenreFromApi2))?.map(genre => (
+                                            <a href={`/search?mediaType=tv&genres=${genre}`}>
+                                                <div
+                                                    className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
+                                                </div>
+                                            </a>
                                         ))
                                     }
                                 </div>
@@ -220,11 +173,12 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping).map(genre => (
-                                            <div
-                                                onClick={() => navigate(`/search?mediaType=movie&genres=${genre}`)}
-                                                className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
-                                            </div>
+                                        Object.values(genreMapping(listGenreFromApi))?.map(genre => (
+                                            <a href={`/search?mediaType=movie&genres=${genre}`}>
+                                                <div
+                                                    className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
+                                                </div>
+                                            </a>
                                         ))
                                     }
                                 </div>
@@ -237,65 +191,47 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-blue-500 ">
                                     {
-                                        Object.values(genreMapping2).map(genre => (
-                                            <div
-                                                onClick={() => navigate(`/search?mediaType=tv&genres=${genre}`)}
-                                                className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
-                                            </div>
+                                        Object.values(genreMapping2(listGenreFromApi2))?.map(genre => (
+                                            <a href={`/search?mediaType=tv&genres=${genre}`}>
+                                                <div
+                                                    className="px-2 py-1 border-2 border-blue-500 bg-white rounded-full hover:opacity-90 hover:bg-gray-300" key={genre}>{genre}
+                                                </div>
+                                            </a>
                                         ))
                                     }
                                 </div>
                             </div>
 
                         </div>
-                        <div className="col-span-4  h-full px-2 py-2 ">
+                        <div className="col-span-4 h-full px-2 py-2">
                             <div className="flex items-center py-3">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.moreExplore}</h2>
+                                <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                             </div>
                             <div className="py-2 mt-2">
                                 <p className="font-bold text-xl">Movie & TV {translations[language]?.genre}</p>
                             </div>
                             <div>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-blue-500">
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/210024/anime`)}>Anime</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/308818/Avant Garde`)}>Avant Garde</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/11034/B Movie`)}>B Movie</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/288601/chick`)}>Chick Flick</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/10683/Coming of Age`)}>Coming of Age</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/328003/Cult Film`)}>Cult Film</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/4565/Dystopia`)}>Dystopia</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/6917/Epic`)}>Epic</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/5265/Espionage`)}>Espionage</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/9016/Femme Fatale`)}>Femme Fatale</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/6270/High School`)}>High School</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/780/Kung Fu`)}>Kung Fu</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/11800/Mockumentary`)}>Mockumentary</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/272793/Post Apocalypse`)}>Post Apocalypse</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/11931/Spoof`)}>Spoof</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/9715/Superhero`)}>Superhero</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/4379/Time Travel`)}>Time Travel</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/3133/Vampire`)}>Vampire</li> •
-                                    <li className="hover:underline"
-                                        onClick={() => navigate(`/keyword/movies/12377/zombie`)}>Zombie</li>
+                                    <li className="hover:underline"><a href="/keyword/movies/210024/anime">Anime</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/308818/Avant Garde">Avant Garde</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/11034/B Movie">B Movie</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/288601/chick">Chick Flick</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/10683/Coming of Age">Coming of Age</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/328003/Cult Film">Cult Film</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/4565/Dystopia">Dystopia</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/6917/Epic">Epic</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/5265/Espionage">Espionage</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/9016/Femme Fatale">Femme Fatale</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/6270/High School">High School</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/780/Kung Fu">Kung Fu</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/11800/Mockumentary">Mockumentary</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/272793/Post Apocalypse">Post Apocalypse</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/11931/Spoof">Spoof</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/9715/Superhero">Superhero</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/4379/Time Travel">Time Travel</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/3133/Vampire">Vampire</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movies/12377/zombie">Zombie</a></li>
                                 </ul>
                             </div>
                             <div className="py-2 mt-2">
@@ -303,9 +239,9 @@ export default function BrowseGenreLayout() {
                             </div>
                             <div>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-blue-500">
-                                    <li onClick={() => navigate('/top250Movie')} className="hover:underline">{translations[language]?.top250Movie}</li> •
-                                    <li onClick={() => navigate('/topPopularTv')} className="hover:underline">{translations[language]?.mostPopularTv}</li> •
-                                    <li onClick={() => navigate('/topBoxOffice')} className="hover:underline">{translations[language]?.topBoxOffice}</li>
+                                    <li className="hover:underline"><a href="/top250Movie">{translations[language]?.top250Movie}</a></li> •
+                                    <li className="hover:underline"><a href="/topPopularTv">{translations[language]?.mostPopularTv}</a></li> •
+                                    <li className="hover:underline"><a href="/topBoxOffice">{translations[language]?.topBoxOffice}</a></li>
                                 </ul>
                             </div>
                             <div className="sticky top-0 right-0 left-0">
@@ -314,19 +250,25 @@ export default function BrowseGenreLayout() {
                                 </div>
                                 <div>
                                     <ul className="flex flex-wrap gap-x-2 gap-y-1 text-black items-center text-center mt-2">
-                                        <li onClick={() => navigate('/search?mediaType=movie')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Movie</li>
-                                        <li onClick={() => navigate('/search?mediaType=tv')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">TV</li>
-                                        <li onClick={() => navigate('/search?mediaType=person')} className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1  border-2 border-gray-300 rounded-full">Person</li>
+                                        <li className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1 border-2 border-gray-300 rounded-full">
+                                            <a href="/search?mediaType=movie">Movie</a>
+                                        </li>
+                                        <li className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1 border-2 border-gray-300 rounded-full">
+                                            <a href="/search?mediaType=tv">TV</a>
+                                        </li>
+                                        <li className="hover:bg-gray-300 min-w-20 px-2 py-2 mt-1 border-2 border-gray-300 rounded-full">
+                                            <a href="/search?mediaType=person">Person</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
                     <Footer />
                 </div>
             </div>

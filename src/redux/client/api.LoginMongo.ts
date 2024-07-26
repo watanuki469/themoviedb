@@ -126,25 +126,16 @@ const getListRatingMongoApi = (mediaType: any, itemEmail: any) => {
     return axiosMongo.get(`/api/${mediaType}/getFullRating?itemEmail=${itemEmail}`);
 }
 
-const removeRatingMongoApi = (mediaType:any,itemId:any,ratingId:any) => {
+const removeRatingMongoApi = (mediaType: any, itemId: any, ratingId: any) => {
     return axiosMongo.post(`/api/${mediaType}/removeRating`, {
-       itemId,
-       ratingId,
+        itemId,
+        ratingId,
     });
 }
 
 const reviewMongoMovieApi = (mediaType: any, itemId: any, itemName: string, itemTMDbRating: string, itemTMDbRatingCount: string, itemTMDbReleaseDay: string, itemTMDbRunTime: string, itemImg: string, itemEmail: string, itemDisplayName: string, itemContent: string) => {
     return axiosMongo.post(`/api/${mediaType}/addReview`, {
-        itemId,
-        itemName,
-        itemTMDbRating,
-        itemTMDbRatingCount,
-        itemTMDbReleaseDay,
-        itemTMDbRunTime,
-        itemImg,
-        itemEmail,
-        itemDisplayName,
-        itemContent,
+        itemId, itemName, itemTMDbRating, itemTMDbRatingCount, itemTMDbReleaseDay, itemTMDbRunTime, itemImg, itemEmail, itemDisplayName, itemContent,
     });
 };
 

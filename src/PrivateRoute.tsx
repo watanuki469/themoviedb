@@ -9,5 +9,5 @@ export function PrivateRoute(props: RouteProps) {
     // if (!isLoggedIn) {
     //     return <Navigate to="login" />
     // }
-    return isLoggedIn ? <Outlet /> : <Navigate to="/login2" />;
+    return isLoggedIn ? <Outlet /> : <Navigate to="/login" />;
 }   

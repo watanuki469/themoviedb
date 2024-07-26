@@ -3,13 +3,11 @@ import { useParams } from "react-router-dom";
 import Share from '../../modules/Share';
 import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
-import apiController from '../../redux/client/api.Controller.';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListGenre } from '../../redux/reducers/genre.reducer';
+import { fetchGenre } from '../../redux/reducers/genre.reducer';
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
-import { setlistKeyWord } from '../../redux/reducers/keyword.reducer';
+import { fetchKeyword } from '../../redux/reducers/keyword.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { AppDispatch } from '../../redux/store';
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
 
@@ -26,21 +24,6 @@ export default function KeywordLayout() {
     }
     const { language, translations, handleLanguageChange } = context;
 
-    const fetchKeyword = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiKeyword.keyword(id, mediaType)
-        ])
-            .then((data: any) => {
-                if (data[0] && data[0].results) {
-                    dispatch(setlistKeyWord(data[0].results));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
     const [mediaKeywordType, setMediaKeyWordType] = useState('');
 
     useEffect(() => {
@@ -64,30 +47,16 @@ export default function KeywordLayout() {
     }, [id, mediaType]);
     useEffect(() => {
         dispatch(setGlobalLoading(true));
-        dispatch(fetchKeyword());
+        dispatch(fetchKeyword(id,mediaType));
         dispatch(fetchMovies());
-        setTimeout(() => {
-            dispatch(setGlobalLoading(false));
-        }, 1000);
-    }, []);
+        dispatch(setGlobalLoading(false));
+    }, [keyword,id]);
 
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
-    const fetchGenre = () => (dispatch: AppDispatch) => {
-        apiController.apiGenre.genre('movie')
-            .then((data: any) => {
-                if (data && data?.genres) {
-                    dispatch(setListGenre(data?.genres)); // Adjust the dispatch based on actual response structure
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
+
     useEffect(() => {
-        dispatch(fetchGenre());
-    }, [dispatch]); 
+        dispatch(fetchGenre(mediaKeywordType));
+    }, [dispatch]);
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -113,10 +82,9 @@ export default function KeywordLayout() {
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
-                            <div>by</div>
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories'
                                 className='text-blue-500 hover:underline'>
-                                Vasiliev-Editors
+                                Vasiliev-{translations[language]?.editor}
                             </a>
                             <div>•</div>
                             <div> {translations[language]?.createdModified}</div>
@@ -124,14 +92,14 @@ export default function KeywordLayout() {
                     </div>
                 </div>
             </div>
-            <div className="bg-white px-2">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center ">
-                    <ViewTable viewList={listKeywordMovie}  mediaType={mediaKeywordType} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTable>
+            <div className="bg-black">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center py-2 px-2 bg-white ">
+                    <ViewTable viewList={listKeywordMovie} mediaType={mediaKeywordType} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTable>
                 </div>
             </div>
 
             <div className="bg-black">
-                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center mt-10 ">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <Footer />
                 </div>
             </div>

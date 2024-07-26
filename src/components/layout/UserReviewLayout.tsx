@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Share from "../../modules/Share";
 import { LanguageContext } from "../../pages/LanguageContext";
-import apiController from "../../redux/client/api.Controller.";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListSingleMovie } from "../../redux/reducers/singleMovie.reducer";
-import { setListTv } from "../../redux/reducers/tv.reducer";
-import { AppDispatch } from "../../redux/store";
+import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { fetchSingleMovies } from "../../redux/reducers/singleMovie.reducer";
+import { fetchTv } from "../../redux/reducers/tv.reducer";
 import TopBar from "../common/TopBar";
 
 export default function UserReviewLayout() {
@@ -15,60 +15,27 @@ export default function UserReviewLayout() {
     let navigate = useNavigate()
     const tvList = useAppSelector((state) => state.tv.listTv)
     const singleMovieList = useAppSelector((state) => state.singleMovies.listSingleMovie)
-    const singleUserReviewListFromApi = useAppSelector((state) => state.login.singleUserReview);
-
-    const fetchTv = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiTv.tv(id),
-        ])
-            .then((data: any) => {
-                if (data) {
-                    dispatch(setListTv(data));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-    const fetchSingleMovies = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiSingleMovieRequests.singleMovie(id),
-        ])
-            .then((data: any) => {
-                if (data) {                    
-                    dispatch(setListSingleMovie(data));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-   
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
+        dispatch(setGlobalLoading(true));
         if (mediaType === 'tv') {
-            dispatch(fetchTv());
+            dispatch(fetchTv(id));
         }
         else if (mediaType === 'person') {
-
+            navigate('/')
+            toast.error('Not exist type person')
         }
         else if (mediaType === 'movie') {
-            dispatch(fetchSingleMovies())
+            dispatch(fetchSingleMovies(id))
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 1000);
+        dispatch(setGlobalLoading(false));
     }, [id]);
 
     let mediaList = [];
 
     // Xác định danh sách dựa trên mediaType
     if (mediaType === 'person') {
-
+        navigate('/')
+        toast.error('Not exist type person')
     } else if (mediaType === 'movie') {
         mediaList = singleMovieList;
     } else if (mediaType === 'tv') {
@@ -89,11 +56,9 @@ export default function UserReviewLayout() {
     }, [mediaList]);
 
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
 
     return (
@@ -108,22 +73,20 @@ export default function UserReviewLayout() {
                         <div className="w-full ">
                             <div>
                                 <div className="relative flex items-center justify-left min-h-screen bg-cover bg-center lg:p-16 p-5"
-                                    style={{
-                                        backgroundImage: `url('https://image.tmdb.org/t/p/w500${mediaList[0]?.backdrop_path}')`,
-                                        backgroundSize: "cover",
-                                        backgroundPosition: "center",
-                                    }}>
+                                    style={{ backgroundImage: `url('https://image.tmdb.org/t/p/w500${mediaList[0]?.backdrop_path}')`, backgroundSize: "cover", backgroundPosition: "center", }}>
                                     <div className="absolute inset-0 bg-black opacity-50 blur-sm"></div>
                                     <div className="relative text-left text-white lg:max-w-4xl px-4 py-4 bg-opacity-50 rounded-lg">
                                         <h1 className="text-4xl font-bold">{mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title}</h1>
                                         <div className="text-xl mt-2 flex gap-2 flex-wrap">{mediaList[0]?.genres?.map((item: any, index: any) => (
-                                            <div key={index * 2} onClick={() => navigate(`/search?mediaType=${mediaType}&genres=${item?.name}`)}
+                                            <a key={index * 2} href={`/search?mediaType=${mediaType}&genres=${item?.name}`}
                                                 className="bg-blue-500 hover:opacity-80 px-2 py-2 bg-opacity-80 rounded-xl">
                                                 {item?.name}
-                                            </div>
+                                            </a>
                                         ))}</div>
                                         <p className="mt-4 line-clamp-4">{mediaList[0]?.overview}</p>
-                                        <button onClick={() => navigate(`/${mediaType}/${mediaList[0]?.id}`)} className="mt-6 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl">{translations[language]?.views}</button>
+                                        <a href={`/${mediaType}/${mediaList[0]?.id}`}>
+                                            <button className="mt-6 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl">{translations[language]?.views}</button>
+                                        </a>
                                     </div>
                                 </div>
 

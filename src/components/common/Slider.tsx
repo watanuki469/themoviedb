@@ -9,10 +9,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { setGlobalLoading } from '../../redux/reducers/globalLoading.reducer';
 import { LanguageContext } from '../../pages/LanguageContext';
+import { handleImageError } from '../../modules/BaseModule';
 
 export default function Slider() {
     const dispatch = useAppDispatch();
-    let navigate = useNavigate()
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
 
     useEffect(() => {
@@ -28,14 +28,10 @@ export default function Slider() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
     const handleBackgroundImageError = (e: any) => {
         e.target.style.backgroundImage = 'url(https://via.placeholder.com/500x750)';
         const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
+        imgElement.src = 'https://via.placeholder.com/500x750'; 
     };
     useEffect(() => {
         const boxElement = document.getElementById('1234567');
@@ -119,181 +115,180 @@ export default function Slider() {
                                                 <KeyboardArrowRightIcon sx={{ width: "50px", height: "50px", color: 'white', ':hover': { color: 'yellow' } }} />
                                             </IconButton>
                                         )}
-
                                     </div>
-
-
                                 </div>
-                                <div className="flex items-end justify-start w-full h-96 "
-                                    onClick={() => navigate(`/movie/${popularMovies[activeStep]?.id}`)}
-                                >
-                                    <div className=' object-contain items-end justify-end '>
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep]?.poster_path}`}
-                                            onError={handleImageError}
-                                            alt="movie-img"
-                                            className="h-full w-52 top-0 left-0 rounded-br-xl rounded-tr-xl "
-                                        />
-                                    </div>
-                                    <div className='flex-col w-full'>
-                                        <div className='flex md:hidden items-center'>
-                                            <PlayCircleOutlineIcon sx={{
-                                                height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
-                                                , ':hover': {
-                                                    color: 'yellow', borderColor: 'red'
-                                                },
-                                            }} />
-
-                                            <div className="p-2 text-white">
-                                                {popularMovies[activeStep]?.vote_count} min
-                                            </div>
+                                <a href={`/movie/${popularMovies[activeStep]?.id}`}>
+                                    <div className="flex items-end justify-start w-full h-96 ">
+                                        <div className=' object-contain items-end justify-end '>
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep]?.poster_path}`}
+                                                onError={handleImageError}
+                                                alt="movie-img"
+                                                className="h-full w-52 top-0 left-0 rounded-br-xl rounded-tr-xl "
+                                            />
                                         </div>
-                                        <div className='flex bg-black bg-opacity-60 w-full ' >
-                                            <div className='hidden md:block'>
+                                        <div className='flex-col w-full'>
+                                            <div className='flex md:hidden items-center'>
                                                 <PlayCircleOutlineIcon sx={{
-                                                    height: '80px', color: 'white', width: '80px', margin: '6px', alignSelf: 'center'
+                                                    height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
                                                     , ':hover': {
                                                         color: 'yellow', borderColor: 'red'
                                                     },
                                                 }} />
-                                            </div>
 
-                                            <div className="p-4 text-xl text-white text-left  mb-3  transition duration-300 ease-in-out lg:col-span-6">
-                                                {popularMovies[activeStep]?.title}
-                                                <p className="text-gray-400 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                    {translations[language]?.watchTrailer}
-                                                </p>
-
+                                                <div className="p-2 text-white">
+                                                    {popularMovies[activeStep]?.vote_count} min
+                                                </div>
                                             </div>
-                                            <div className="hidden md:block mt-auto mb-auto ml-auto text-center p-2 text-white">
-                                                {cutNum(`${popularMovies[activeStep]?.id}`)}
+                                            <div className='flex bg-black bg-opacity-60 w-full ' >
+                                                <div className='hidden md:block'>
+                                                    <PlayCircleOutlineIcon sx={{
+                                                        height: '80px', color: 'white', width: '80px', margin: '6px', alignSelf: 'center'
+                                                        , ':hover': {
+                                                            color: 'yellow', borderColor: 'red'
+                                                        },
+                                                    }} />
+                                                </div>
+
+                                                <div className="p-4 text-xl text-white text-left  mb-3  transition duration-300 ease-in-out lg:col-span-6">
+                                                    {popularMovies[activeStep]?.title}
+                                                    <p className="text-gray-400 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
+                                                        {translations[language]?.watchTrailer}
+                                                    </p>
+
+                                                </div>
+                                                <div className="hidden md:block mt-auto mb-auto ml-auto text-center p-2 text-white">
+                                                    {cutNum(`${popularMovies[activeStep]?.id}`)}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div className="lg:col-span-4 col-span-12 w-screen flex">
+                    <div className="lg:col-span-4 col-span-12 h-full w-screen flex">
                         <div className='hidden lg:block relative h-96 w-screen'>
-                            <div id='6' className="h-8 text-red-500 hover:opacity-90">
-                                <div className="text-xl text-white text-left  duration-300 ease-in-out ">
-                                    <p className="text-yellow-400 font-bold text-left  whitespace-nowrap  ">
+                            <div id='6' className=" text-red-500 hover:opacity-90">
+                                <div className=" text-white text-left  duration-300 ease-in-out ">
+                                    <p className="text-yellow-400 font-bold text-left  whitespace-nowrap  capitalize">
                                         {translations[language]?.upNext}
                                     </p>
                                 </div>
                             </div>
-                            <div id='2' className="h-24 mb-3 hover:opacity-90"
-                                onClick={() => navigate(`/movie/${popularMovies[activeStep + 1]?.id}`)}
-                            >
-                                <div className='flex flex-row w-full'>
-                                    <div >
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 1]?.poster_path}`}
-                                            onError={handleImageError}
-                                            alt="movie-img"
-                                            className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
-                                        />
-                                    </div>
-                                    <div className='flex flex-col w-full '>
-                                        <div className='flex flex-row md-flex items-center'>
-                                            <PlayCircleOutlineIcon sx={{
-                                                height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
-                                                , ':hover': {
-                                                    color: 'yellow', borderColor: 'red'
-                                                },
-                                            }} />
-
-                                            <div className="text-red ">
-                                                {cutNum(`${popularMovies[activeStep + 1]?.id}`)}
-
-                                            </div>
+                            <a href={`/movie/${popularMovies[activeStep + 1]?.id}`}>
+                                <div id='2' className="h-24 mb-3 hover:opacity-90">
+                                    <div className='flex flex-row w-full'>
+                                        <div >
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 1]?.poster_path}`}
+                                                onError={handleImageError}
+                                                alt="movie-img"
+                                                className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
+                                            />
                                         </div>
-                                        <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
-                                            <p >
-                                                {popularMovies[activeStep + 1]?.title}
-                                            </p>
-                                            <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                {translations[language]?.watchTrailer}
-                                            </p>
+                                        <div className='flex flex-col w-full '>
+                                            <div className='flex flex-row md-flex items-center'>
+                                                <PlayCircleOutlineIcon sx={{
+                                                    height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
+                                                    , ':hover': {
+                                                        color: 'yellow', borderColor: 'red'
+                                                    },
+                                                }} />
+
+                                                <div className="text-red ">
+                                                    {cutNum(`${popularMovies[activeStep + 1]?.id}`)}
+
+                                                </div>
+                                            </div>
+                                            <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
+                                                <p >
+                                                    {popularMovies[activeStep + 1]?.title}
+                                                </p>
+                                                <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
+                                                    {translations[language]?.watchTrailer}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-                            </div>
-                            <div id='3' className="h-24 mb-4 hover:opacity-90"
-                                onClick={() => navigate(`/movie/${popularMovies[activeStep + 2]?.id}`)}>
-                                <div className='flex flex-row w-full'>
-                                    <div >
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 2]?.poster_path}`}
-                                            onError={handleImageError}
-                                            alt="movie-img"
-                                            className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
-                                        />
-                                    </div>
-                                    <div className='flex flex-col w-full '>
-                                        <div className='flex flex-row md-flex items-center'>
-                                            <PlayCircleOutlineIcon sx={{
-                                                height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
-                                                , ':hover': {
-                                                    color: 'yellow', borderColor: 'red'
-                                                },
-                                            }} />
-
-                                            <div className="text-red ">
-                                                {cutNum(`${popularMovies[activeStep + 2]?.id}`)}
-                                            </div>
+                            </a>
+                            <a href={`/movie/${popularMovies[activeStep + 2]?.id}`}>
+                                <div id='3' className="h-24 mb-4 hover:opacity-90">
+                                    <div className='flex flex-row w-full'>
+                                        <div >
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 2]?.poster_path}`}
+                                                onError={handleImageError}
+                                                alt="movie-img"
+                                                className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
+                                            />
                                         </div>
-                                        <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
-                                            <p>
-                                                {popularMovies[activeStep + 2]?.title}
-                                            </p>
-                                            <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                {translations[language]?.watchTrailer}
-                                            </p>
+                                        <div className='flex flex-col w-full '>
+                                            <div className='flex flex-row md-flex items-center'>
+                                                <PlayCircleOutlineIcon sx={{
+                                                    height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
+                                                    , ':hover': {
+                                                        color: 'yellow', borderColor: 'red'
+                                                    },
+                                                }} />
+
+                                                <div className="text-red ">
+                                                    {cutNum(`${popularMovies[activeStep + 2]?.id}`)}
+                                                </div>
+                                            </div>
+                                            <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
+                                                <p>
+                                                    {popularMovies[activeStep + 2]?.title}
+                                                </p>
+                                                <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
+                                                    {translations[language]?.watchTrailer}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id='4' className="h-24 mb-4 hover:opacity-90 "
-                                onClick={() => navigate(`/movie/${popularMovies[activeStep + 3]?.id}`)}>
-                                <div className='flex flex-row w-full'>
-                                    <div >
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 3]?.poster_path}`}
-                                            onError={handleImageError}
-                                            alt="movie-img"
-                                            className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
-                                        />
-                                    </div>
-                                    <div className='flex flex-col w-full '>
-                                        <div className='flex flex-row md-flex items-center'>
-                                            <PlayCircleOutlineIcon sx={{
-                                                height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
-                                                , ':hover': {
-                                                    color: 'yellow', borderColor: 'red'
-                                                },
-                                            }} />
-
-                                            <div className="text-red ">
-                                                {cutNum(`${popularMovies[activeStep + 3]?.id}`)}
-                                            </div>
+                            </a>
+                            <a href={`/movie/${popularMovies[activeStep + 3]?.id}`}>
+                                <div id='4' className="h-24 mb-4 hover:opacity-90 ">
+                                    <div className='flex flex-row w-full'>
+                                        <div >
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w500/${popularMovies[activeStep + 3]?.poster_path}`}
+                                                onError={handleImageError}
+                                                alt="movie-img"
+                                                className='w-20 object-cover self-start h-24 rounded-br-xl rounded-bl-xl rounded-tr-xl'
+                                            />
                                         </div>
-                                        <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
-                                            <p>
-                                                {popularMovies[activeStep + 3]?.title}
-                                            </p>
-                                            <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
-                                                {translations[language]?.watchTrailer}
-                                            </p>
+                                        <div className='flex flex-col w-full '>
+                                            <div className='flex flex-row md-flex items-center'>
+                                                <PlayCircleOutlineIcon sx={{
+                                                    height: '40px', color: 'white', width: '40px', margin: '6px', alignSelf: 'center'
+                                                    , ':hover': {
+                                                        color: 'yellow', borderColor: 'red'
+                                                    },
+                                                }} />
+
+                                                <div className="text-red ">
+                                                    {cutNum(`${popularMovies[activeStep + 3]?.id}`)}
+                                                </div>
+                                            </div>
+                                            <div className="m-1 ml-2 text-sm text-white text-left overflow-ellipsis duration-300 ease-in-out lg:col-span-6 whitespace-normal">
+                                                <p>
+                                                    {popularMovies[activeStep + 3]?.title}
+                                                </p>
+                                                <p className="text-gray-300 text-sm text-left  whitespace-nowrap  overflow-ellipsis mt-auto">
+                                                    {translations[language]?.watchTrailer}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className='flex flex-row md-flex items-center'
-                                    onClick={() => navigate(`/Popular`)}
+                            </a>
+                            <a href={`/top250Movie`}> 
+                                <div className='flex flex-row md-flex items-center hover:text-yellow-300 '
                                 >
-                                    <div className="text-white font-semibold text-lg text-left  whitespace-nowrap  overflow-ellipsis ">
+                                    <div className="font-semibold text-lg text-left  whitespace-nowrap  overflow-ellipsis capitalize">
                                         {translations[language]?.moreRecommendation}
                                     </div>
                                     <ArrowForwardIosIcon sx={{
@@ -303,13 +298,12 @@ export default function Slider() {
                                         },
                                     }} />
                                 </div>
-
-                            </div>
+                            </a>
 
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     )
 }

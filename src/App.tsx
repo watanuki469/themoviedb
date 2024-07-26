@@ -50,29 +50,7 @@ function App() {
     const circles = document.querySelectorAll<CircleElement>("#circle");
 
     const colors = [
-      "#a3d5ff",
-      "#99cfff",
-      "#8fc9ff",
-      "#85c3ff",
-      "#7bbdff",
-      "#71b7ff",
-      "#67b1ff",
-      "#5dabff",
-      "#53a5ff",
-      "#499fff",
-      "#3f99ff",
-      "#3593ff",
-      "#2b8dff",
-      "#2187ff",
-      "#1781ff",
-      "#0d7bff",
-      "#0375ff",
-      "#006fff",
-      "#0069e6",
-      "#0063cc",
-      "#005db3",
-      "#005799",
-      "#005180"
+      "#a3d5ff", "#99cfff", "#8fc9ff", "#85c3ff", "#7bbdff", "#71b7ff", "#67b1ff", "#5dabff", "#53a5ff", "#499fff", "#3f99ff", "#3593ff", "#2b8dff", "#2187ff", "#1781ff", "#0d7bff", "#0375ff", "#006fff", "#0069e6", "#0063cc", "#005db3", "#005799", "#005180"
     ];
 
     circles.forEach(function (circle: any, index: any) {
@@ -114,16 +92,16 @@ function App() {
   return (
     <div>
       {/* <div className="cursor"></div> */}
-            
-        {[...Array(20)].map((_, i) => (
-            <i  key={i} id="circle" className="fa-brands fa-bluesky"></i>
-        ))}
+
+      {[...Array(20)].map((_, i) => (
+        <i key={i} id="circle" className="fa-brands fa-bluesky"></i>
+      ))}
       <GlobalLoading />
       <Routes>
-        <Route path="/login" element={<LoginLayout />}></Route>
+        {/* <Route path="/login" element={<LoginLayout />}></Route> */}
         {/* <Route path="/register1" element={<RegisterLayoutTest />}></Route> */}
         <Route path="/register" element={<RegisterLayout />}></Route>
-        <Route path="/login2" element={<LoginLayoutTest />}></Route>
+        <Route path="/login" element={<LoginLayoutTest />}></Route>
         <Route path="/" element={<PrivateRoute />} >
           <Route path="/" element={<HomePage />} />
           {routes.map((route, index) => (

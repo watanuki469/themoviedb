@@ -1,19 +1,15 @@
 import AppsIcon from '@mui/icons-material/Apps';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Button, Dialog, DialogContent, DialogTitle, Divider, Menu, MenuItem, Rating, Tooltip } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { LanguageContext } from '../pages/LanguageContext';
-import { getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from '../redux/client/api.LoginMongo';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setDeleteRating, setListRating, setRating } from '../redux/reducers/login.reducer';
-import { AppDispatch } from '../redux/store';
+import { genreMapping } from '../redux/reducers/genre.reducer';
+import { handleImageError, shortenNumber } from './BaseModule';
 import Charts from './Charts';
 import ListRow from './ListRow';
-import TopRatedMovieByGenre from './TopRatedMovieByGenre';
 import RatingModule from './RatingModule';
+import TopRatedMovieByGenre from './TopRatedMovieByGenre';
 
 export interface ViewsProps {
     viewList: any,
@@ -28,9 +24,6 @@ export default function ViewTable({
     genreList,
     mediaType
 }: ViewsProps) {
-    const dispatch = useAppDispatch();
-    let navigate = useNavigate()
-
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorRankingEl(event.currentTarget);
@@ -45,14 +38,8 @@ export default function ViewTable({
     type GenreID = number;
     type GenreName = string;
 
-    const genreMapping: Record<number, string> = genreList?.reduce((acc: Record<number, string>, genre: { id: number, name: string }) => {
-        acc[genre?.id] = genre?.name;
-        return acc;
-    }, {});
-
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
-    const [numberGen, setNumberGen] = useState(0);
     const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
     function countGenres(viewList: any): Record<GenreName, number> {
@@ -60,7 +47,7 @@ export default function ViewTable({
         viewList?.forEach((movie: any) => {
             movie?.genre_ids?.forEach((id: GenreID) => {
                 // Lấy tên thể loại từ đối tượng ánh xạ
-                const genreName: GenreName = genreMapping[id];
+                const genreName: GenreName = genreMapping(genreList)[id];
                 // Nếu thể loại đã tồn tại, tăng giá trị đếm lên 1; ngược lại, tạo mới với giá trị 1.
                 genreCounting[genreName] = (genreCounting[genreName] || 0) + 1;
             });
@@ -70,15 +57,8 @@ export default function ViewTable({
     useEffect(() => {
         const genreCount = countGenres(viewList);
         setGenreCount(genreCount);
-        const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
-        setNumberGen(totalGenreCount);
-
     }, [viewList, genreList]);
 
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
     const [openGenDialog, setOpenGenDialog] = useState(false);
     const handleDiaGenlogOpen = () => {
         setOpenGenDialog(true);
@@ -99,36 +79,8 @@ export default function ViewTable({
 
     const handleRemoveGenreFilter = (removedGenre: any) => {
         setSelectedGenres(selectedGenres.filter((genre) => genre !== removedGenre));
-
     };
-    function shortenNumber(number: any) {
-        if (number >= 1000000000) {
-            return (number / 1000000000).toFixed(1) + 'b';
-        }
-        if (number >= 1000000) {
-            return (number / 1000000).toFixed(1) + 'm';
-        }
-        if (number >= 1000) {
-            return (number / 1000).toFixed(1) + 'k';
-        }
-        return number;
-    }
-    const [value, setValue] = useState<number | null>(0);
-    const [isRating, setIsRating] = useState(false);
-    const [numberIndex, setNumberIndex] = useState(0);
-    const [checkLog, setCheckLog] = useState(false)
-    const [selectedStudent, setSelectedStudent] = useState<any>();
-
-    const handleClick = (movie: any, value: any) => {
-        setIsRating(true)
-        setSelectedStudent(movie);
-        setValue(value)
-    };
-
-    const ratingList = useAppSelector((state) => state.login.listRating);
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
-    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
-    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
 
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
@@ -140,48 +92,51 @@ export default function ViewTable({
         setUserInfoList(Object.values(storedData));
     }, []);
 
-    const [mediaKeywordType, setMediaKeyWordType] = useState('');
-
-    useEffect(() => {
-        if (mediaType === 'movies' || mediaType === 'movie') {
-            setMediaKeyWordType('Movie');
-        } else if (mediaType === 'tvs' || mediaType === 'tv') {
-            setMediaKeyWordType('TV');
-        } else {
-            setMediaKeyWordType('Movie');
-        }
-    }, [mediaType]);
-
     const renderMovieItem = (movie: any, movieIndex: number, currentView: any) => {
-        const existingRating = ratingList.find(rating => rating?.itemId == movie?.id); // Find the rating object for the item
-
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500  w-full" key={movieIndex}
-                    >
+                    <section className="px-2 w-full" key={movieIndex}>
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/${mediaType}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
+                                        <a href={`/${mediaType}/${movie?.id}`}>
+                                            <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
+                                        </a>
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
-                                            <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
-                                                <button className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto py-2">
-                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-
+                                            {mediaType != 'person' ?
+                                                (
+                                                    <div>
+                                                        <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                                        <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
+                                                        <div className="flex flex-wrap items-center gap-2">
+                                                            <div className="flex items-center gap-2">
+                                                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                                                <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                            </div>
+                                                            <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
+                                                                <div className="grow ml-auto py-2">
+                                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </button>
-                                            </div>
+                                                ) : (
+                                                    <div>
+                                                        <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
+                                                        <div >
+                                                            {movie?.known_for_department}
+                                                        </div>
+                                                        <a href={`/${movie?.known_for?.[0]?.media_type}/${movie?.known_for?.[0]?.id}`}>
+                                                            <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'>
+                                                                <p> {movie?.known_for?.[0]?.name ? movie?.known_for?.[0]?.name : movie?.known_for?.[0]?.title} ({movie?.known_for?.[0]?.first_air_date ? movie?.known_for?.[0]?.first_air_date : movie?.known_for?.[0]?.release_date})</p>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                     </div>
                                     <div className="mt-1 lg:line-clamp-none line-clamp-4">
@@ -189,13 +144,14 @@ export default function ViewTable({
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/${mediaType}/${movie?.id}`)} >
-                                    <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                <div className="ml-auto" >
+                                    <a href={`/${mediaType}/${movie?.id}`}>
+                                        <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                    </a>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-
+                        </div >
+                    </section >
                 )
             case 'Grid':
                 return (
@@ -206,78 +162,119 @@ export default function ViewTable({
                                     <div className="items-center gap-2 ">
                                         <div className="px-2"></div>
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
-                                            <img onClick={() => navigate(`/${mediaType}/${movie?.id}`)}
-                                                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                                onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl
-" />
+                                            <a href={`/${mediaType}/${movie?.id}`}>
+                                                <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
+                                                    onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
+                                            </a>
                                         </div>
                                         <div className="">
-                                            <div className="justify-start text-left px-2 py-2">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
-                                                <button className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" >
-                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+                                            {mediaType != 'person' ? (
+                                                <div>
+                                                    <div className="justify-start text-left px-2 py-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <i className="fa-solid fa-star text-yellow-300"></i>
+                                                            <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                            <div className="grow ml-auto py-2" >
+                                                                <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+                                                            </div>
+                                                        </div>
+                                                        <div className="h-12 w-full ">
+                                                            <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
+                                                        </div>
+                                                        <div className="flex flex-wrap">
+                                                            {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
+                                                        </div>
                                                     </div>
-                                                </button>
-                                                <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
                                                 </div>
-                                                <div className="flex flex-wrap">
-                                                    {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
-                                                </div>
+                                            ) : (
+                                                <div>
 
-                                            </div>
+                                                    <div className="px-2 py-2 w-full">
+                                                        <div className="flex flex-wrap items-center gap-2 justify-start text-left">
+                                                            <div className="h-12 w-full"
+                                                            >
+                                                                <p className="hover:opacity-50 line-clamp-2">{movieIndex}.  {movie?.name ? movie?.name : movie?.title}</p>
+                                                            </div>
+                                                            <a className='text-blue-500' href={`/${movie?.known_for?.[0]?.media_type}/${movie?.known_for?.[0]?.id}`}>
+                                                                <p className='h-12 hover:underline line-clamp-2'> {movie?.known_for?.[0]?.name ? movie?.known_for?.[0]?.name : movie?.known_for?.[0]?.title} ({movie?.known_for?.[0]?.first_air_date ? movie?.known_for?.[0]?.first_air_date : movie?.known_for?.[0]?.release_date})</p>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    </div>
+                                    </div >
+                                </div >
+
+                                <div className="px-2 py-2">
+                                    <a href={`/${mediaType}/${movie?.id}`}>
+                                        <button className="px-2 py-1 bg-gray-200 hover:bg-blue-300 text-blue-500 w-full rounded-xl font-medium text-center items-center">
+                                            {translations[language]?.details}
+                                        </button>
+                                    </a>
                                 </div>
+                            </div >
 
-                                <div className="px-2 py-2" onClick={() => navigate(`/${mediaType}/${movie?.id}`)}   >
-                                    <button className="px-2 py-1 bg-gray-200 hover:bg-blue-300 text-blue-500 w-full rounded-xl font-medium text-center items-center">
-                                        {translations[language]?.details}
-                                    </button>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </section>
+                        </div >
+                    </section >
 
                 )
             case 'Compact':
                 return (
-                    <section className="px-2 border-t border-r border-l border-gray-500 w-full " key={movieIndex}
+                    <section className="px-2  w-full " key={movieIndex}
                     >
                         <div className="text-black font-sans w-full" >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <img onClick={() => navigate(`/${mediaType}/${movie?.id}`)}
-                                            src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
-                                            onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
-                                        <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
-                                            <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
-                                            <div className="flex item-center gap-2">
-                                                <div className="flex items-center gap-2">
-                                                    <i className="fa-solid fa-star text-yellow-300"></i>
-                                                    <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
-                                                </div>
-                                                <button className=" hover:text-black text-blue-500" >
-                                                    <div className="" onClick={() => handleClick(movie, existingRating?.itemRating)}>
-                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                    </div>
-                                                </button>
+                                        <a href={`/${mediaType}/${movie?.id}`}>
+                                            <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
+                                                onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
+                                        </a>
 
-                                            </div>
+                                        <div>
+                                            {mediaType != 'person' ?
+                                                (
+                                                    <div>
+                                                        <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                                        <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
+                                                        <div className="flex flex-wrap items-center gap-2">
+                                                            <div className="flex items-center gap-2">
+                                                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                                                <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
+                                                            </div>
+                                                            <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
+                                                                <div className="grow ml-auto py-2">
+                                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
+                                                        <div >
+                                                            {movie?.known_for_department}
+                                                        </div>
+                                                        <a href={`/${movie?.known_for?.[0]?.media_type}/${movie?.known_for?.[0]?.id}`}>
+                                                            <div className='flex items-center flex-wrap gap-2 text-blue-500 hover:underline'>
+                                                                <p> {movie?.known_for?.[0]?.name ? movie?.known_for?.[0]?.name : movie?.known_for?.[0]?.title} ({movie?.known_for?.[0]?.first_air_date ? movie?.known_for?.[0]?.first_air_date : movie?.known_for?.[0]?.release_date})</p>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="ml-auto" onClick={() => navigate(`/${mediaType}/${movie?.id}`)} >
-                                    <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                <div className="ml-auto">
+                                    <a href={`/${mediaType}/${movie?.id}`}>
+                                        <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
+                                    </a>
                                 </div>
                             </div>
 
@@ -287,7 +284,6 @@ export default function ViewTable({
         }
     }
     const [applyFilter, setApplyFilter] = useState(true);
-    const [filterRatedMovie, setFilterRatedMovie] = useState(false);
     const [filterType, setFilterType] = useState('none');
 
     const [selectedOption, setSelectedOption] = useState<string | null>('none');
@@ -302,7 +298,7 @@ export default function ViewTable({
     };
     const [selectedRankingOption, setSelectedRankingOption] = useState(null);
 
-    const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
+    const [menuItemNum, setMenuItemNum] = useState('');
 
     function compareReleaseDates(a: any, b: any) {
         const releaseDateA = new Date(a?.release_date ? a?.release_date : a?.first_air_date);
@@ -313,58 +309,37 @@ export default function ViewTable({
         setSelectedRankingOption(option);
         let menuItemNum = '';
         switch (option) {
-            case `${translations[language]?.ranking}`:
-                menuItemNum = '1';
-                break;
-            case `IMDb ${translations[language]?.rating}`:
-                menuItemNum = '2';
-                break;
-            case `${translations[language]?.releaseDay}`:
-                menuItemNum = '3';
-                break;
-            case `${translations[language]?.numberRating}`:
-                menuItemNum = '4';
-                break;
-            case `${translations[language]?.alphabet}`:
-                menuItemNum = '5';
-                break;
-            case `${translations[language]?.popularity}`:
-                menuItemNum = '6';
-                break;
-            case `${translations[language]?.runTime}`:
-                menuItemNum = '7';
-                break;
-            default:
-                break;
+            case `${translations[language]?.ranking}`: menuItemNum = '1'; break;
+            case `IMDb ${translations[language]?.rating}`: menuItemNum = '2'; break;
+            case `${translations[language]?.releaseDay}`: menuItemNum = '3'; break;
+            case `${translations[language]?.numberRating}`: menuItemNum = '4'; break;
+            case `${translations[language]?.alphabet}`: menuItemNum = '5'; break;
+            case `${translations[language]?.popularity}`: menuItemNum = '6'; break;
+            case `${translations[language]?.runTime}`: menuItemNum = '7'; break;
+            default: break;
         }
         setMenuItemNum(menuItemNum);
         handleRankingClose();
     };
 
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
 
     return (
         <div className='cursor-pointer'>
             <Dialog open={openGenDialog} onClose={handleDiaGenlogClose} maxWidth={'sm'}
                 keepMounted={true}
-                PaperProps={{
-                    style: {
-                        background: 'black', color: 'white'
-                    },
-                }}
+                PaperProps={{ style: { background: 'black', color: 'white' }, }}
             >
                 <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>{translations[language]?.genre} && {translations[language]?.count}</DialogTitle>
                 <DialogContent>
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(genreCount).map(([genre, count], index) => (
                             <button key={`genre-${genre}-${index}`}
-                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-200 hover:opacity-90'}`}
+                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:opacity-90'}`}
                                 onClick={() => handleGenreClick(genre as Genre)}
                             >
                                 <p>{`${genre}: (${count})`}</p>
@@ -372,9 +347,7 @@ export default function ViewTable({
                         ))}
 
                     </div>
-                    <Divider sx={{
-                        marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper',
-                    }} />
+                    <Divider sx={{ marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper', }} />
                 </DialogContent>
                 <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold', marginTop: '-20px' }}>{translations[language]?.inTheater}</DialogTitle>
                 <DialogContent>
@@ -395,70 +368,59 @@ export default function ViewTable({
                 </DialogContent>
             </Dialog>
             <div className="grid grid-cols-12 gap-2 w-full">
-                <div className="lg:col-span-12 col-span-12  w-full ">
+                <div className="lg:col-span-8 col-span-12  w-full ">
                     <div className="flex ">
-                        <div className="items-center ">
-                            <h2 className="lg:text-2xl text-lg text-black ">
-                                {viewList
-                                    .filter((movie: any) => {
-                                        if (selectedGenres?.length === 0) return true; // No genre filter
-                                        const hasAllGenres = selectedGenres.every((genre: any) =>
-                                            movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
-                                        );
-                                        return hasAllGenres;
-                                    })
-                                    .filter((movie: any) => {
-                                        const existingRating = ratingList?.find(rating => movie?.id == rating?.itemId);
-                                        if (filterRatedMovie === false) return true
-                                        return existingRating == undefined;
-                                    })
-                                    .filter((movie: any) => {
-                                        if (!applyFilter) return true; // No filter
-                                        if (filterType === 'none') return true; // No filter
-                                        if (filterType === 'inTheaters') {
-                                            return null;
-                                        }
-                                        if (filterType === 'In theaters with online ticketing') {
-                                            return null;
-                                        }
-                                        return true;
-                                    })
-                                    .map((m: any, index: any) => renderMovieItem(m, index, currentView))?.length}
-                                /{viewList?.length} {mediaKeywordType}</h2>
+                        <h2 className="lg:text-2xl text-lg text-black capitalize ">
+                            {viewList
+                                .filter((movie: any) => {
+                                    if (selectedGenres?.length === 0) return true; // No genre filter
+                                    const hasAllGenres = selectedGenres.every((genre: any) =>
+                                        movie?.genre_ids?.some((mGenre: any) => genreMapping(genreList)[mGenre] === genre)
+                                    );
+                                    return hasAllGenres;
+                                })
+                                .filter((movie: any) => {
+                                    if (!applyFilter) return true; // No filter
+                                    if (filterType === 'none') return true; // No filter
+                                    if (filterType === 'inTheaters') { return null; }
+                                    if (filterType === 'In theaters with online ticketing') { return null; }
+                                    return true;
+                                })
+                                .map((m: any, index: any) => renderMovieItem(m, index, currentView))?.length}
+                            /{viewList?.length} {mediaType}</h2>
 
-                        </div>
-
-                        <div className="flex items-center ml-auto gap-4 px-2 py-2 " >
-                            <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}>
-                                <i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i>
-                            </Tooltip>
-                            <Tooltip title="Grid View" className={`${currentView === "Grid" ? "text-blue-500" : ""}`}>
-                                <AppsIcon onClick={() => switchView('Grid')} />
-                            </Tooltip>
-                            <Tooltip title="Compact View" className={`${currentView === "Compact" ? "text-blue-500" : ""}`}>
-                                <MenuIcon onClick={() => switchView('Compact')} />
-                            </Tooltip>
+                        <div className="flex items-center ml-auto gap-4 " >
+                            <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}><i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i></Tooltip>
+                            <Tooltip title="Grid View" className={`${currentView === "Grid" ? "text-blue-500" : ""}`}><AppsIcon onClick={() => switchView('Grid')} /></Tooltip>
+                            <Tooltip title="Compact View" className={`${currentView === "Compact" ? "text-blue-500" : ""}`}><MenuIcon onClick={() => switchView('Compact')} /></Tooltip>
                         </div>
                     </div>
                     {/* filter icon */}
-                    <div className=" flex flex-wrap items-center gap-2">
-                        <div className=" flex flex-wrap items-center gap-2">
-                            <button className="hover:opacity-90 bg-blue-500 px-2 py-1 rounded-full min-w-14"
-                                onClick={handleDiaGenlogOpen}>
-                                <FilterListIcon />
-                            </button>
+                    <div className=" flex w-full items-center gap-2">
+                        <div>
+                            {mediaType != 'person' ? (
+                                <div className=" flex flex-wrap items-center gap-2">
+                                    <button className="hover:opacity-80 bg-blue-500 px-2 py-1 rounded-full min-w-14"
+                                        onClick={handleDiaGenlogOpen}>
+                                        <FilterListIcon />
+                                    </button>
 
-                            {selectedGenres?.map((genre, index) => (
-                                <div key={index} className="flex items-center gap-2 border-2 border-black px-2 py-2 rounded-xl hover:bg-gray-300">
-                                    <p className="">
-                                        {genre}
-                                    </p>
-                                    <i className="fa-solid fa-xmark text-xl" onClick={() => handleRemoveGenreFilter(genre)}></i>
+                                    {selectedGenres?.map((genre, index) => (
+                                        <div key={index} className="flex items-center gap-2 border-2 border-black px-2 py-2 rounded-xl hover:bg-gray-300">
+                                            <p className="">
+                                                {genre}
+                                            </p>
+                                            <i className="fa-solid fa-xmark text-xl" onClick={() => handleRemoveGenreFilter(genre)}></i>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            ) : (
+                                <div></div>
+                            )}
                         </div>
-                        <div className="ml-auto flex items-center gap-4">
-                            <p className="text-gray-500">{translations[language]?.sortBy}</p>
+
+                        <div className="mr-auto flex items-center gap-2 py-2 w-full justify-end">
+                            <p className="text-gray-500 capitalize">{translations[language]?.sortBy}</p>
                             <Button
                                 id="demo-customized-button"
                                 aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -468,13 +430,7 @@ export default function ViewTable({
                                 onClick={handleRankingClick}
                                 endIcon={<i className="fa-solid fa-caret-down"></i>}
                                 sx={{
-                                    bgcolor: anchorRankingEl ? 'blue' : 'white',
-                                    color: anchorRankingEl ? 'white' : 'blue',
-                                    border: anchorRankingEl ? '2px dashed' : '',
-                                    ":hover": {
-                                        backgroundColor: 'blue'
-                                        , color: 'white'
-                                    },
+                                    bgcolor: anchorRankingEl ? 'blue' : 'white', color: anchorRankingEl ? 'white' : 'blue', ":hover": { backgroundColor: 'blue', color: 'white' },
                                 }}
                             >
                                 {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
@@ -485,64 +441,33 @@ export default function ViewTable({
                                 open={Boolean(anchorRankingEl)}
                                 onClose={handleRankingClose}
                             >
-                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>
-                                    {translations[language]?.ranking}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>
-                                    IMDb {translations[language]?.rating}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>
-                                    {translations[language]?.releaseDay}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>
-                                    {translations[language]?.numberRating}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>
-                                    {translations[language]?.alphabet}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>
-                                    {translations[language]?.popularity}
-                                </MenuItem>
-                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>
-                                    {translations[language]?.runTime}
-                                </MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.ranking}`)} disableRipple>{translations[language]?.ranking}</MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`IMDb ${translations[language]?.rating}`)} disableRipple>IMDb {translations[language]?.rating}</MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.releaseDay}`)} disableRipple>{translations[language]?.releaseDay}</MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.numberRating}`)} disableRipple>{translations[language]?.numberRating}</MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.alphabet}`)} disableRipple>{translations[language]?.alphabet}</MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.popularity}`)} disableRipple>{translations[language]?.popularity}</MenuItem>
+                                <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>{translations[language]?.runTime}</MenuItem>
                             </Menu>
                         </div>
                     </div>
-                </div>
-
-                <div className="lg:col-span-8 col-span-12  w-full ">
-                    <div className="lg:max-w-full w-full py-4 px-2 ">
-                        <div
+                    <div className="lg:max-w-full w-full">
+                        <div className={`${currentView === 'Detail' || currentView === 'Compact' ? 'border-2 border-gray-500 divide-y divide-gray-500' : ''}  px-2`}
                             style={{
-                                position: "relative", backgroundSize: "cover", backgroundPosition: "center",
-                                display: 'flex', flexWrap: 'wrap'
+                                position: "relative", backgroundSize: "cover", backgroundPosition: "center", display: 'flex', flexWrap: 'wrap'
                             }}>
-                            {viewList?.length === 0 && (
-                                <div style={{
-                                    backgroundImage: `url(https://filmfair.in/website/images/error_screens/no-result.png')`,
-                                    position: "absolute", width: "100%", height: "100%", opacity: "0.5",
-                                    backgroundSize: "cover", backgroundPosition: "center", backgroundColor: 'black'
-                                }}>
-                                </div>
-                            )}
                             {viewList
                                 .filter((movie: any) => {
                                     if (selectedGenres?.length === 0) return true; // No genre filter
                                     // Check if every selected genre is present in the movie's genres
                                     const hasAllGenres = selectedGenres?.every((genre: any) =>
-                                        movie?.genre_ids?.some((mGenre: any) => genreMapping[mGenre] === genre)
+                                        movie?.genre_ids?.some((mGenre: any) => genreMapping(genreList)[mGenre] === genre)
                                     );
                                     return hasAllGenres;
                                 })
                                 .filter(() => {
                                     if (applyFilter === true) return true; // No filter
                                     return null
-                                })
-                                .filter((movie: any) => {
-                                    const existingRating = ratingList?.find((rating: any) => movie?.id == rating?.itemId);
-                                    if (filterRatedMovie === false) return true
-                                    return existingRating == undefined;
                                 })
                                 .sort((a: any, b: any) => {
                                     if (menuItemNum === '5') {
@@ -586,14 +511,17 @@ export default function ViewTable({
                     </div>
                 </div>
                 <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 ">
-                    <div>
-                        <div className="flex items-center py-3">
+                    <div className=''>
+                        <div className="flex items-center">
                             <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                             <h2 className="text-2xl font-bold text-black ">  {translations[language]?.featuredToday}</h2>
                         </div>
-                        <div className="lg:max-w-full w-full" onClick={() => navigate(`/${moreToExploreList}`)}>
-                            <ListRow listRowList={moreToExploreList} />
-                        </div>
+                        <a href={`/top250Movie`}>
+                            <div className="lg:max-w-full w-full py-2">
+                                <ListRow listRowList={moreToExploreList} />
+                            </div>
+                        </a>
+
                         <p className="text-red w-full text-black">   {translations[language]?.staffPick}</p>
                         <p className="text-red w-full text-blue-500 hover:underline">   {translations[language]?.checkStatus}</p>
                     </div>
@@ -605,9 +533,6 @@ export default function ViewTable({
                             <Charts />
                         </div>
                     </div>
-                    {/* <div className='py-3'>
-                    <TopNew />
-                </div> */}
                     <div className='sticky top-0 right-0 left-0'>
                         <div className="flex items-center py-3">
                             <h2 className="text-xl font-bold text-black capitalize"> {translations[language]?.moreExplore} {translations[language]?.genre}</h2>
@@ -618,7 +543,7 @@ export default function ViewTable({
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
 
     );
 }

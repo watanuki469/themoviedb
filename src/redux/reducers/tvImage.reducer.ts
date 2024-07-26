@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { AppDispatch } from '../store';
+import apiController from '../client/api.Controller.';
 
 interface ITvImagetate {
     listTvImage: any[],
@@ -22,7 +24,23 @@ export const tvsImageslice = createSlice({
 
 export const {
     setListTvImage,
-   } = tvsImageslice.actions;
+} = tvsImageslice.actions;
+
+export const fetchTvImages = (id:any) => (dispatch: AppDispatch) => {
+    Promise.all([
+        apiController.apiTvImages.tvImage(id),
+    ])
+        .then((data: any) => {
+            if (data) {
+                dispatch(setListTvImage(data));
+            } else {
+                console.error("API response structure is not as expected.", data);
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+}
 
 export default tvsImageslice.reducer
 

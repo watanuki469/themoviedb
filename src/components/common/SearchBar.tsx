@@ -3,10 +3,9 @@ import { Box, Button, Divider, Fade, MenuItem, Popper } from "@mui/material";
 import Menu from '@mui/material/Menu';
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiController from "../../redux/client/api.Controller.";
+import { handleImageError } from '../../modules/BaseModule';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setListSearch } from "../../redux/reducers/search.reducer";
-import { AppDispatch } from "../../redux/store";
+import { fetchSearch } from "../../redux/reducers/search.reducer";
 
 interface MenuItem {
     id: number;
@@ -39,22 +38,7 @@ export default function SearchBar() {
         setAnchorUserEl(null);
         setMediaType(index)
     };
-
-    const fetchSearch = () => (dispatch: AppDispatch) => {
-        Promise.all([
-            apiController.apiSearch.search(mediatype, query),
-        ])
-            .then((data: any) => {
-                if (data) {
-                    dispatch(setListSearch(data));
-                } else {
-                    console.error("API response structure is not as expected.", data);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
+  
     const searchList = useAppSelector((state) => state.search.listSearch)
 
     useEffect(() => {
@@ -63,7 +47,7 @@ export default function SearchBar() {
         }
         else {
             timerId = setTimeout(() => {
-                dispatch(fetchSearch());
+                dispatch(fetchSearch(mediatype,query));
             }, 1000);
         }
         function handleResize() {
@@ -88,11 +72,7 @@ export default function SearchBar() {
         setOpen(!!newQuery);
         setQuery(newQuery);
     };
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750'; // Set the fallback image source here
-    };
-
+   
     return (
         <div className="relative flex text-left w-full h-full">
             <div className='border-gray-300 border-l-2 border-t-2 border-b-2'> 
@@ -126,7 +106,7 @@ export default function SearchBar() {
                 open={openUser}
                 onClose={() => setAnchorUserEl(null)}
             >
-                {menuItems.map((item: any, index: any) => (
+                {menuItems?.map((item: any, index: any) => (
                     <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
                         <div className='items-start'>
                             <a key={item.id} href="#" className=" text-gray-700 capitalize hover:opacity-80 flex items-center" role="menuitem">
@@ -178,8 +158,8 @@ export default function SearchBar() {
                                 border: 1, p: 1, bgcolor: "#263238", color: "#999", width: "100%", height: '100%', maxHeight: '24rem', overflow: 'auto'
                             }}>
 
-                            {searchList[0]?.results?.length > 0 ?
-                                searchList[0]?.results?.map((item: any, index: any) => (
+                            {searchList?.length > 0 ?
+                                searchList?.map((item: any, index: any) => (
                                     <div className="mt-1 max-h-92 overflow-auto" key={index}
                                     >
                                         <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
