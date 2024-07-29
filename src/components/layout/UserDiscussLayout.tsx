@@ -136,8 +136,8 @@ export default function UserDiscussLayout() {
 
     return (
         <div className=" min-h-screen cursor-pointer bg-white text-black  ">
-            <div className="text-xl">
-                <div className="h-20 bg-black px-4">
+            <div className="text-xl bg-black text-white">
+                <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <TopBar />
                 </div>
                 {showModal &&

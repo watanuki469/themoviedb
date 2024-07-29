@@ -92,10 +92,10 @@ export default function FourSwiperRow({
                 <i className="fa-solid fa-chevron-right"></i>
             </button>
             <div className="flex py-2 w-full">
-                {fourSwiperRowList?.slice(currentIndex, currentIndex + activeSlider).map((item: any, index: any) => {
+                {fourSwiperRowList?.slice(currentIndex, currentIndex + activeSlider)?.map((item: any, index: any) => {
                     const existingIndex = favoriteList?.findIndex(fav => fav?.itemId == item?.id);
                     return (
-                        <div key={index} className={` h-full max-w-1/${activeSlider} w-full mx-2`}>
+                        <div key={index} className={` h-full w-full mx-2`}>
                             <div className="object-cover  w-full rounded-tr-xl rounded-tl-xl">
                                 <a href={`/${mediaType}/${item?.id}`}>
                                     <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className=" hover:opacity-80 object-cover h-60 w-full rounded-tl-xl rounded-tr-xl"

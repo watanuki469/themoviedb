@@ -15,6 +15,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LanguageContext } from '../../pages/LanguageContext';
 import SearchBar from "./SearchBar";
+import { stringToColor } from '../../modules/BaseModule';
 
 export default function TopBar() {
   let navigate = useNavigate();
@@ -91,13 +92,13 @@ export default function TopBar() {
   const getMenuContent = (menu: any) => {
     switch (menu) {
       case 'Movies':
-        return [`${translations[language]?.releaseCalendar}`, `${translations[language]?.top250Movie}`, `${translations[language]?.topBoxOffice}`, `Movie ${translations[language]?.news}`, `${translations[language]?.browseMovieByGenre}`];
+        return [`${translations[language]?.releaseCalendar}`, `${translations[language]?.top250Movie}`, `${translations[language]?.topBoxOffice}`, `Movie ${translations[language]?.news}`, `${translations[language]?.browseMovieByGenre}`, `${translations[language]?.india} Movie ${translations[language]?.spotlight}`];
       case 'TV Shows':
         return [`${translations[language]?.whatOnTvStream}`, `${translations[language]?.top250Tv}`, `${translations[language]?.topRatedTV}`, `${translations[language]?.browseTVByGenre}`, `TV ${translations[language]?.news}`];
       case 'Watch':
         return [`${translations[language]?.whatToWatch}`, `${translations[language]?.latest} Trailers`, `IMDb ${translations[language]?.originals}`, `IMDb ${translations[language]?.editorPick}`, 'IMDb Podcasts'];
       case 'Awards & Events':
-        return ['Oscars', 'ABFF', 'Best Of 2024', `${translations[language]?.holidayPicks}`, 'Starmeter Awards', `${translations[language]?.total} Event`];
+        return ['Oscars', 'ABFF', 'Best Of 2024', `${translations[language]?.holidayPicks}`, 'Starmeter Awards', `${translations[language]?.total} ${translations[language]?.event}`];
       case 'Celebs':
         return [`${translations[language]?.popularCeleb}`, `${translations[language]?.popularCeleb} ${translations[language]?.news}`];
       case 'Community':
@@ -121,6 +122,8 @@ export default function TopBar() {
           navigate('/news/movie');
         } else if (item === `${translations[language]?.browseMovieByGenre}`) {
           navigate('/features/genre');
+        } else if (item === `${translations[language]?.india} Movie ${translations[language]?.spotlight}`) {
+          navigate(`/keyword/movies/14636/india`);
         } else {
           navigate('/NotFound');
         }
@@ -169,8 +172,8 @@ export default function TopBar() {
           navigate('/award/holidayPick');
         } else if (item === 'Starmeter Awards') {
           navigate('/award/starmeter');
-        } else if (item === `${translations[language]?.total} Event`) {
-          navigate('/award/IMDbPro');
+        } else if (item === `${translations[language]?.total} ${translations[language]?.event}`) {
+          navigate('/IMDbPro');
         } else {
           navigate('/');
         }
@@ -246,23 +249,6 @@ export default function TopBar() {
     navigate('/login')
   };
 
-  const stringToColor = (str: any) => {
-    let hash = 0;
-    let i;
-
-    for (i = 0; i < str?.length; i += 1) {
-      hash = str?.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value?.toString(16)}`?.slice(-2);
-    }
-
-    return color;
-  };
   const menuItems = [
     { id: 1, label: 'en-US', name: 'English' },
     { id: 2, label: 'vi-VI', name: 'Vietnamese' },
@@ -392,6 +378,9 @@ export default function TopBar() {
                           <a href='/features/genre'>
                             <p className="mt-2 hover:underline">{translations[language]?.browseMovieByGenre}</p>
                           </a>
+                          <a href={`/keyword/movies/14636/india`}>
+                            <p className="mt-2 hover:underline">{translations[language]?.india} Movie {translations[language]?.spotlight}</p>
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -433,7 +422,7 @@ export default function TopBar() {
                           <StarsIcon />
                         </div>
                         <div>
-                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">Award & Event</p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">{translations[language]?.award} & {translations[language]?.event} </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -448,16 +437,16 @@ export default function TopBar() {
                             <p className="mt-2 hover:underline">ABFF</p>
                           </a>
                           <a href='/award/spotlight'>
-                            <p className="mt-2 hover:underline">Best Of 2024</p>
+                            <p className="mt-2 hover:underline">Best Of 2024 </p>
                           </a>
                           <a href='/award/holidayPick'>
                             <p className="mt-2 hover:underline">{translations[language]?.holidayPicks}</p>
                           </a>
                           <a href='/award/starmeter'>
-                            <p className="mt-2 hover:underline">Starmeter Awards</p>
+                            <p className="mt-2 hover:underline">Starmeter {translations[language]?.award} </p>
                           </a>
                           <a href='/IMDbPro'>
-                            <p className="mt-2 hover:underline">{translations[language]?.total} Event</p>
+                            <p className="mt-2 hover:underline">{translations[language]?.total} {translations[language]?.event}</p>
                           </a>
                         </div>
                       </div>
@@ -491,7 +480,7 @@ export default function TopBar() {
                           <VideoLibraryIcon />
                         </div>
                         <div>
-                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">Watch</p>
+                          <p className="font-extrabold text-xl font-sans whitespace-nowrap">{translations[language]?.whatToWatch}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -511,7 +500,7 @@ export default function TopBar() {
                           <a href='/trending/prime'>
                             <p className="mt-2 hover:underline">IMDb {translations[language]?.editorPick}</p>
                           </a>
-                          <a href='/search?mediaType=tv&title=podcast'>
+                          <a href='/keyword/movies/281205/podcast'>
                             <p className="mt-2 hover:underline">IMDb Podcasts</p>
                           </a>
                         </div>
@@ -611,7 +600,7 @@ export default function TopBar() {
             id="demo-customized-menu" MenuListProps={{ 'aria-labelledby': 'demo-customized-button', }}
             anchorEl={anchorUserEl} open={openUser} onClose={() => setAnchorUserEl(null)}
           >
-            <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>Fully Supported <span className='ml-2'> (No film)</span> </MenuItem>
+            <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>{translations[language]?.fully} {translations[language]?.supported} <span className='ml-2'> ({translations[language]?.none} film)</span> </MenuItem>
             {menuItems?.map((item: any, index: any) => (
               <div key={index} className=''>
                 {item?.name === 'English' ? (
@@ -639,7 +628,7 @@ export default function TopBar() {
                       </div>
                     </MenuItem>
                     <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>
-                      Film Episodes Supported
+                      Film {translations[language]?.episodes} {translations[language]?.supported}
                     </MenuItem>
                   </div>
                 ) : item?.name === 'Vietnamese' ? (
@@ -667,7 +656,7 @@ export default function TopBar() {
                       </div>
                     </MenuItem>
                     <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>
-                      Partially Supported
+                      {translations[language]?.partially}  {translations[language]?.supported}
                     </MenuItem>
                   </div>
                 ) : (
@@ -745,7 +734,7 @@ export default function TopBar() {
                   <Avatar sx={{ backgroundColor: 'green', width: 40, height: 40 }}
                     children={<i className="fa-solid fa-user-astronaut"></i>}
                   />
-                  <p>Favorite Actor List</p>
+                  <p>{translations[language]?.favoriteActorList} </p>
                 </MenuItem>
               </a>
             </div>
@@ -755,7 +744,7 @@ export default function TopBar() {
                   <Avatar sx={{ backgroundColor: '#FB9AD1', width: 40, height: 40 }}
                     children={<i className="fa-solid fa-ranking-star"></i>}
                   />
-                  <p>Rating List</p>
+                  <p>{translations[language]?.rating}</p>
                 </MenuItem>
               </div>
             </a>
@@ -765,7 +754,7 @@ export default function TopBar() {
                 <Avatar sx={{ backgroundColor: 'purple', width: 40, height: 40 }}
                   children={<i className="fa-solid fa-street-view"></i>}
                 />
-                <p>Your Activity</p>
+                <p>{translations[language]?.listActivity} </p>
               </MenuItem>
             </a>
 
@@ -779,14 +768,14 @@ export default function TopBar() {
                     <i className="fa-solid fa-cat"></i>
                   }
                 />
-                <p>Logout</p>
+                <p>{translations[language]?.logOut} </p>
               </MenuItem>
             </a>
           </Menu>
           {/*user end */}
           <button onClick={() => window.open('https://apps.apple.com/us/app/imdb-movies-tv-shows/id342792525?_branch_match_id=1303228076714752528&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXL86pTNJLLCjQy8nMy9YP9k6pDDRzNDGxBABVqlN1IAAAAA%3D%3D&utm_campaign=mdot+sitewide+footer+Branch+update&utm_medium=marketing&utm_source=IMDb+Mdot', '_blank')}
             className=" bg-yellow-400 text-black text-center border-none font-bold text-sm  rounded-lg whitespace-nowrap hover:bg-black hover:text-blue-500 lg:hidden hover:border-red-500 px-2 py-2 mr-2"
-          >  Use App</button>
+          > {translations[language]?.getApp}</button>
         </div >
       )}
 
@@ -831,7 +820,7 @@ export default function TopBar() {
           <Fragment>
             <Box sx={{ ml: 5 }}>
               <Typography sx={{ fontSize: "large", fontWeight: 'bold' }}>IMDbPro</Typography>
-              <Typography>For industry Professionals</Typography>
+              <Typography>{translations[language]?.seePro}</Typography>
             </Box>
             <Box sx={{ flexGrow: 1 }}></Box>
             <LaunchIcon sx={{ padding: '10px', fontSize: '40px' }} />

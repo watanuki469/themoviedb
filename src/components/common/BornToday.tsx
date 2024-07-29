@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import axiosBornToday from "../../redux/axios/axiosBornToday";
@@ -7,7 +6,6 @@ import axiosBornToday from "../../redux/axios/axiosBornToday";
 export default function BornToday() {
     const [movieNews, setMovieNews] = useState<any[]>([]);
     const [err, setErr] = useState(false);
-    let navigate = useNavigate();
     const currentDate = new Date();
     const currentMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng hiện tại, thêm 0 ở trước nếu cần
     const currentDay = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày hiện tại, thêm 0 ở trước nếu cần 

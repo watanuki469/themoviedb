@@ -21,7 +21,7 @@ export default function PersonLayout() {
     const { id } = useParams()
     const dispatch = useAppDispatch();
 
- 
+
     const personList = useAppSelector((state) => state.person.listPerson)
     const topRatedMovies = useAppSelector((state) => state.movies.listMoviesTopRated)
 
@@ -78,10 +78,10 @@ export default function PersonLayout() {
 
                                     <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
                                 </div>
-                                <div className="lg:max-w-full w-full">
-                                    <FourPhotos fourPhotosList={personList[0]?.images?.profiles}></FourPhotos>
-                                </div>
                             </a>
+                            <div className="lg:max-w-full w-full">
+                                <FourPhotos fourPhotosList={personList[0]?.images?.profiles}></FourPhotos>
+                            </div>
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 id="personKnowFor" className="text-2xl font-bold text-black ">{translations[language]?.knowFor}</h2>
@@ -91,7 +91,7 @@ export default function PersonLayout() {
                             </div>
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                <h2 id="personKnowFor" className="text-2xl font-bold text-black ">Credits</h2>
+                                <h2 id="personKnowFor" className="text-2xl font-bold text-black ">{translations[language]?.credits}</h2>
                             </div>
                             <div className="lg:max-w-full w-full ">
                                 <PersonFullCredit personCreditList={personList[0]?.combined_credits} />

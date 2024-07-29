@@ -6,7 +6,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { favoriteMongoApi, getFavoriteMongoApi, getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from "../redux/reducers/login.reducer";
+import { fetchFavorite, fetchGetFavorites, setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from "../redux/reducers/login.reducer";
 import { AppDispatch } from "../redux/store";
 import { setGlobalLoading } from "../redux/reducers/globalLoading.reducer";
 import RatingModule from "./RatingModule";
@@ -37,23 +37,10 @@ export default function Fullitem({
         setUserInfoList(Object.values(storedData));
     }, []);
 
-    const fetchGetFavorites = () => async (dispatch: AppDispatch) => {
-        try {
-            const response = await getFavoriteMongoApi(userInfoList[0]);
-            if (response) {
-                dispatch(setListFavorite(response));
-            } else {
-                throw new Error('Failed to fetch favorites');
-            }
-        } catch (e) {
-            console.log("Fetching favorites failed: " + e);
-        }
-    }
-
     useEffect(() => {
         // dispatch(setGlobalLoading(true));
         if (userInfoList.length > 0) {
-            dispatch(fetchGetFavorites());
+            dispatch(fetchGetFavorites(userInfoList[0]));
         }
         // setTimeout(() => {
         //     dispatch(setGlobalLoading(false));
@@ -82,37 +69,37 @@ export default function Fullitem({
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const fetchFavorite = (
-        movieId: string,
-        movieType: string,
-        movieName: string,
-        movieImg: string,
-        movieReleaseDay: Date,
-        movieGenre: number[],
-        movieReview: string,
-        moviePopularity: string,
-        movieVoteAverage: string,
-        movieVoteCount: string
-    ) => async (dispatch: AppDispatch) => {
-        const email = userInfoList[0];
-        try {
-            const response = await favoriteMongoApi(
-                email, movieId, movieType === 'movie' ? "Movie" : 'TV', movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
-            );
-            dispatch(setFavorite(response));
-            console.log(response);
+    // const fetchFavorite = (
+    //     movieId: string,
+    //     movieType: string,
+    //     movieName: string,
+    //     movieImg: string,
+    //     movieReleaseDay: Date,
+    //     movieGenre: number[],
+    //     movieReview: string,
+    //     moviePopularity: string,
+    //     movieVoteAverage: string,
+    //     movieVoteCount: string
+    // ) => async (dispatch: AppDispatch) => {
+    //     const email = userInfoList[0];
+    //     try {
+    //         const response = await favoriteMongoApi(
+    //             email, movieId, movieType === 'movie' ? "Movie" : 'TV', movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
+    //         );
+    //         dispatch(setFavorite(response));
+    //         console.log(response);
 
-            if (response) {
-                await dispatch(fetchGetFavorites());
+    //         if (response) {
+    //             await dispatch(fetchGetFavorites(userInfoList[0]));
 
-            } else {
-                toast.error('Something went wrong');
-            }
-        } catch (e) {
-            console.log("Updating watch list failed: " + e);
-            toast.error("Updating watch list failed");
-        }
-    };
+    //         } else {
+    //             toast.error('Something went wrong');
+    //         }
+    //     } catch (e) {
+    //         console.log("Updating watch list failed: " + e);
+    //         toast.error("Updating watch list failed");
+    //     }
+    // };
 
     const handleWatchList = async (
         index: number,
@@ -129,7 +116,7 @@ export default function Fullitem({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            movieId, movieType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
+            userInfoList[0],movieId, movieType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));

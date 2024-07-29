@@ -2,13 +2,13 @@ import { useContext, useState } from "react";
 import { LanguageContext } from "../../pages/LanguageContext";
 import { handleImageError } from "../../modules/BaseModule";
 
-export interface FourSwiperRowProps {
+export interface PersonFullCreditProps {
     personCreditList: any
 }
 
 export default function PersonFullCredit({
     personCreditList,
-}: FourSwiperRowProps) {
+}: PersonFullCreditProps) {
     const context = useContext(LanguageContext)
     if (!context) {
         return null;

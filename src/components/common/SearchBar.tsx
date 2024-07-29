@@ -1,11 +1,12 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box, Button, Divider, Fade, MenuItem, Popper } from "@mui/material";
 import Menu from '@mui/material/Menu';
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleImageError } from '../../modules/BaseModule';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchSearch } from "../../redux/reducers/search.reducer";
+import { LanguageContext } from '../../pages/LanguageContext';
 
 interface MenuItem {
     id: number;
@@ -14,15 +15,20 @@ interface MenuItem {
 }
 
 export default function SearchBar() {
+    const context = useContext(LanguageContext);
+    if (!context) {
+        return null;
+    }
+    const { language, translations, handleLanguageChange } = context;
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
-    const [mediatype, setMediaType] = useState('multi');
+    const [mediatype, setMediaType] = useState(`${translations[language]?.multi}`);
     const [query, setQuery] = useState('');
     const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
     const openUser = Boolean(anchorUserEl);
 
     const menuItems = [
-        { id: 1, label: 'multi', icon: 'fa-magnifying-glass' },
+        { id: 1, label: `${translations[language]?.multi}`, icon: 'fa-magnifying-glass' },
         { id: 2, label: 'movie', icon: 'fa-sharp fa-solid fa-film' },
         { id: 3, label: 'tv', icon: 'fa-tv' },
         { id: 4, label: 'person', icon: 'fa-user-group' },
@@ -73,6 +79,7 @@ export default function SearchBar() {
         setQuery(newQuery);
     };
    
+   
     return (
         <div className="relative flex text-left w-full h-full">
             <div className='border-gray-300 border-l-2 border-t-2 border-b-2'> 
@@ -107,21 +114,21 @@ export default function SearchBar() {
                 onClose={() => setAnchorUserEl(null)}
             >
                 {menuItems?.map((item: any, index: any) => (
-                    <MenuItem disableRipple key={index} onClick={() => handleClose(item.label)}>
+                    <MenuItem disableRipple key={index} onClick={() => handleClose(item?.label)}>
                         <div className='items-start'>
-                            <a key={item.id} href="#" className=" text-gray-700 capitalize hover:opacity-80 flex items-center" role="menuitem">
+                            <a key={item?.id} href="#" className=" text-gray-700 capitalize hover:opacity-80 flex items-center" role="menuitem">
                                 <i className={`mr-2 fas ${item.icon}`}></i>
-                                {item.label}
+                                {item?.label}
                             </a>
                         </div>
                     </MenuItem>
                 ))}
                 <Divider />
-                <MenuItem onClick={() => navigate(`/search`)}>
-                    <div className='flex items-center gap-2'>
+                <MenuItem>
+                    <a href='/search' className='flex items-center gap-2'>
                         <i className="fa-solid fa-file-circle-question"></i>
-                        <p>  Advanced Search</p>
-                    </div>
+                        <p>  {translations[language]?.advancedSearch}</p>
+                    </a>
                 </MenuItem>
             </Menu>
 
@@ -130,7 +137,7 @@ export default function SearchBar() {
                     value={query}
                     onChange={onQueryChange}
                     className="w-full h-full border-0 pl-3 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="Search IMDb..."
+                    placeholder={`${translations[language]?.searchFilter}....`}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center">
                     <div className="flex items-center mr-3">
@@ -160,11 +167,10 @@ export default function SearchBar() {
 
                             {searchList?.length > 0 ?
                                 searchList?.map((item: any, index: any) => (
-                                    <div className="mt-1 max-h-92 overflow-auto" key={index}
-                                    >
+                                    <div className="mt-1 max-h-92 overflow-auto" key={index}>
                                         <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
                                             onClick={() => {
-                                                if (mediatype === 'multi') {
+                                                if (mediatype === `${translations[language]?.multi}`) {
                                                     if (item?.media_type === 'person') {
                                                         navigate(`/person/${item.id}`);
                                                         setOpen(false)

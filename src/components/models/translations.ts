@@ -22,7 +22,9 @@ export interface Translations {
   officialSites: string, alternativeName: string, height: string, discussion: string, user: string, remove: string,
   rate: string, countriesOfOrigin: string, language: string, productionCompany: string, favoriteActorList: string,
   editor: string, whatNewToStreamOn: string, takeALookAtTheBest: string, theFinalSeasonOfEvil: string, renewCancelEnding: string,
-  checkOutOurList: string, freshenUpYour: string, animedKidShow: string, weRoundedUpTheKid: string, submit: string
+  checkOutOurList: string, freshenUpYour: string, animedKidShow: string, weRoundedUpTheKid: string, submit: string,
+  credits: string, noResultAvailable: string, multi: string, event: string, fully: string, supported: string,
+  partially: string, logOut: string,india:string
 }
 
 const currentDate = new Date();
@@ -161,7 +163,15 @@ export const translations: Record<LanguageCode, Translations> = {
     animedKidShow: `Animated Kids' Shows That Adults Love`,
     weRoundedUpTheKid: `We rounded up the kids' animated shows that transcend all age targets thanks to their brilliant writing and amazing visuals, from "Avatar: The Last Airbender" to "Adventure Time."`,
     submit: 'Submit',
-
+    credits: 'Credits',
+    noResultAvailable: 'No results available',
+    multi: 'Multi',
+    event: 'Event',
+    fully: 'Fully',
+    supported: 'Supported',
+    partially: 'Partially',
+    logOut: 'Logout',
+    india:'India',
 
   },
   'vi-VI': {
@@ -291,7 +301,16 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: `Làm mới danh sách theo dõi của bạn với danh sách phim và chương trình truyền hình mới nhất sắp có trên Disney+, bao gồm các phim được yêu thích cũ và những phim mới nổi bật.`,
     animedKidShow: `Chương trình hoạt hình dành cho trẻ em mà người lớn yêu thích`,
     weRoundedUpTheKid: `Chúng tôi đã tổng hợp những chương trình hoạt hình dành cho trẻ em vượt qua mọi lứa tuổi nhờ kịch bản tuyệt vời và hình ảnh tuyệt đẹp, từ "Avatar: The Last Airbender" đến "Adventure Time".`,
-    submit: 'Gửi'
+    submit: 'Gửi',
+    credits: 'Danh sách nhân sự',
+    noResultAvailable: 'Không có kết quả phù hợp',
+    multi: 'Tổng hợp',
+    event: 'Sự kiện',
+    fully: 'Đầy đủ',
+    supported: 'Hỗ trợ',
+    partially: 'Một phần',
+    logOut: 'Đăng xuất',
+    india:'Ấn Độ',
 
   },
   'ja-JP': {
@@ -422,6 +441,15 @@ export const translations: Record<LanguageCode, Translations> = {
     animedKidShow: `大人も楽しめる子供向けアニメ`,
     weRoundedUpTheKid: `私たちは、「アバター 伝説の少年アン」から「アドベンチャー・タイム」まで、優れた脚本と素晴らしいビジュアルのおかげであらゆる年齢層に受け入れられる子供向けアニメ番組をまとめました`,
     submit: '提出する',
+    credits: 'クレジット',
+    noResultAvailable: '結果がありません',
+    multi: 'マルチ',
+    event: 'イベント',
+    fully: '完全に',
+    supported: 'サポートされている',
+    partially: '部分的に',
+    logOut: 'ログアウト',
+     india: 'インド',
 
   },
   'fr-FR': {
@@ -551,8 +579,16 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: ` Rafraîchissez votre liste de visionnage avec la dernière sélection de films et séries en streaming arrivant sur Disney+, comprenant des classiques et des nouveautés de premier ordre.`,
     animedKidShow: `Dessins animés pour enfants que les adultes adorent`,
     weRoundedUpTheKid: ` Nous avons rassemblé les émissions animées pour enfants qui transcendent tous les groupes d'âge grâce à leur écriture brillante et leurs visuels incroyables, de "Avatar : Le Dernier Maître de l'air" à "Adventure Time".`,
-    submit: 'Soumettre'
-
+    submit: 'Soumettre',
+    credits: 'Crédits',
+    noResultAvailable: 'Aucun résultat disponible',
+    multi: 'multi',
+    event: 'événement',
+    fully: 'complètement',
+    supported: 'soutenu',
+    partially: 'partiellement',
+    logOut: 'se déconnecter',
+    india:'Inde',
   },
 
   'de-DE': {
@@ -682,7 +718,17 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: `Frischen Sie Ihre Watchlist mit der neuesten Auswahl an Streaming-Filmen und TV-Shows auf Disney+ auf, darunter alte Favoriten und erstklassige Neuankömmlinge.`,
     animedKidShow: `Animierte Kindersendungen, die Erwachsene lieben`,
     weRoundedUpTheKid: `Wir haben die animierten Kindersendungen zusammengestellt, die dank ihres brillanten Schreibens und erstaunlichen visuellen Effekten alle Altersgruppen ansprechen, von "Avatar: Der Herr der Elemente" bis "Adventure Time".`,
-    submit: 'Einreichen'
+    submit: 'Einreichen',
+    credits: 'Abspann',
+    noResultAvailable: 'Keine Ergebnisse verfügbar',
+    multi: 'Mehrfarbig',
+    event: 'Ereignis',
+    fully: 'vollständig',
+    supported: 'unterstützt',
+    partially: 'teilweise',
+    logOut: 'abmelden',
+    india: 'Indien',
+
   },
   'hi-IN': {
     featuredToday: 'आज का प्रमुख',
@@ -811,9 +857,16 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: ` अपने वॉचलिस्ट को नवीनतम स्ट्रीमिंग मूवी और टीवी शो के साथ ताज़ा करें जो Disney+ पर आ रहे हैं, जिसमें पुराने पसंदीदा और शीर्ष श्रेणी के नवागंतुक शामिल हैं।`,
     animedKidShow: `एनिमेटेड बच्चों के शो जो वयस्कों को भी पसंद हैं`,
     weRoundedUpTheKid: `हमने बच्चों के एनिमेटेड शो को एकत्रित किया है जो अपनी शानदार लेखनी और अद्भुत दृश्यों की वजह से सभी आयु वर्गों को भाते हैं, "अवतार: द लास्ट एयरबेंडर" से "एडवेंचर टाइम" तक।`,
-    submit: 'जमा करें'
-
-
+    submit: 'जमा करें',
+    credits: 'श्रेय',
+    noResultAvailable: 'कोई परिणाम उपलब्ध नहीं है',
+    multi: 'मल्टी',
+    event: 'घटना',
+    fully: 'पूरी तरह से',
+    supported: 'समर्थित',
+    partially: 'आंशिक रूप से',
+    logOut: 'लॉग आउट',
+    india:'भारत',
   },
   'id-ID': {
     featuredToday: 'Unggulan hari ini',
@@ -942,8 +995,16 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: `Segarkan Daftar Tontonan Anda dengan daftar terbaru film dan acara TV yang akan tayang di Disney+, menampilkan favorit lama dan pendatang baru yang berkualitas.`,
     animedKidShow: `Acara Anak-Anak Animasi yang Disukai Orang Dewasa`,
     weRoundedUpTheKid: `Kami telah mengumpulkan acara animasi anak-anak yang melampaui semua kelompok usia berkat penulisan yang brilian dan visual yang menakjubkan, dari "Avatar: The Last Airbender" hingga "Adventure Time."`,
-    submit: 'Kirim'
-
+    submit: 'Kirim',
+    credits: "Kredit",
+    noResultAvailable: 'Tidak ada hasil yang tersedia',
+    multi: 'multi',
+    event: 'acara',
+    fully: 'sepenuhnya',
+    supported: 'didukung',
+    partially: 'sebagian',
+    logOut: 'keluar',
+    india:'India'
   },
   'it-IT': {
     featuredToday: 'In primo piano oggi',
@@ -1072,7 +1133,16 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: `Rinnova la tua lista di visualizzazione con l'ultima lista di film e serie TV in streaming in arrivo su Disney+, con vecchi favoriti e nuovi arrivati di alta qualità.`,
     animedKidShow: `Cartoni animati per bambini che piacciono agli adulti`,
     weRoundedUpTheKid: ` Abbiamo raccolto gli spettacoli animati per bambini che trascendono tutti i target di età grazie alla loro scrittura brillante e ai visuali straordinari, da "Avatar: La leggenda di Aang" a "Adventure Time".`,
-    submit: 'Inviare'
+    submit: 'Inviare',
+    credits: 'Crediti',
+    noResultAvailable: 'Nessun risultato disponibile',
+    multi: 'Multi',
+    event: 'Evento',
+    fully: 'Completamente',
+    supported: 'Supportato',
+    partially: 'Parzialmente',
+    logOut: 'Disconnettersi',
+    india:'India'
   },
   'ko-KR': {
     featuredToday: '오늘의 추천',
@@ -1201,7 +1271,15 @@ export const translations: Record<LanguageCode, Translations> = {
     freshenUpYour: ` Disney+에서 곧 출시될 최신 스트리밍 영화 및 TV 프로그램으로 시청 목록을 새롭게 업데이트하세요. 여기에는 오래된 인기 작품과 최고 수준의 신작이 포함됩니다.`,
     animedKidShow: `어른들도 좋아하는 애니메이션 어린이 프로그램`,
     weRoundedUpTheKid: `: 우리는 '아바타: 아앙의 전설'에서 '어드벤처 타임'까지 뛰어난 작문과 놀라운 비주얼 덕분에 모든 연령층을 초월하는 어린이 애니메이션 쇼를 모았습니다`,
-    submit: '제출하다'
-
+    submit: '제출하다',
+    credits: "크레딧",
+    noResultAvailable: '결과를 찾을 수 없습니다',
+    multi: '멀티',
+    event: '이벤트',
+    fully: '완전히',
+    supported: '지원되는',
+    partially: '부분적으로',
+    logOut: '로그아웃',
+    india:'인도'
   },
 };

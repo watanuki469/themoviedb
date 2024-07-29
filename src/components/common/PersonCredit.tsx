@@ -6,13 +6,13 @@ import { LanguageContext } from "../../pages/LanguageContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchFavorite, fetchGetFavorites } from "../../redux/reducers/login.reducer";
 
-export interface FourSwiperRowProps {
+export interface PersonCreditProps {
     personCreditList: any
 }
 
 export default function PersonCredit({
     personCreditList,
-}: FourSwiperRowProps) {
+}: PersonCreditProps) {
     const [activeSlider, setActiveSlider] = useState(3);
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
@@ -211,7 +211,6 @@ export default function PersonCredit({
                             delay: 3500,
                             disableOnInteraction: false,
                         }}
-                        navigation={true}
                         modules={[Pagination, Navigation]}
                         className="mySwiper text-white w-full h-full"
                     >

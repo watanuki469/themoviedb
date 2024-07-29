@@ -1,10 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { handleImageError } from "../../modules/BaseModule";
 import { LanguageContext } from "../../pages/LanguageContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchGetRecentlyView, fetchRemoveRecentlyView } from "../../redux/reducers/login.reducer";
+import { Swiper as SwiperType } from 'swiper';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 
 export default function RecentlyViewed() {
     const dispatch = useAppDispatch()
@@ -69,6 +73,19 @@ export default function RecentlyViewed() {
         return null;
     }
     const { language, translations, handleLanguageChange } = context;
+
+    const swiperRef = useRef<SwiperType | null>(null);
+    const handlePrev = () => {
+        if (swiperRef.current) {
+            swiperRef.current.slidePrev();
+        }
+    };
+
+    const handleNext = () => {
+        if (swiperRef.current) {
+            swiperRef.current.slideNext();
+        }
+    };
     return (
         <div>
             <div className="text-white flex">
@@ -89,9 +106,9 @@ export default function RecentlyViewed() {
             {recentList?.length > 0 ? (
                 <div className="relative">
                     <Swiper
+                        onSwiper={(swiper) => (swiperRef.current = swiper)}
                         spaceBetween={10}
                         slidesPerView={activeSlider}
-                        navigation={true}
                         modules={[Pagination, Navigation]}
                         direction="horizontal"
                         className="mySwiper w-full text-white h-auto flex "
@@ -118,6 +135,18 @@ export default function RecentlyViewed() {
                                 </div>
                             </SwiperSlide >
                         ))}
+                        <button
+                            onClick={handlePrev}
+                            className="absolute hidden lg:block top-1/2 transform -translate-y-1/2 left-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white"
+                        >
+                            <ChevronLeftIcon className="text-white" />
+                        </button>
+                        <button
+                            onClick={handleNext}
+                            className="absolute hidden lg:block top-1/2 transform -translate-y-1/2 right-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white"
+                        >
+                            <ChevronRightIcon className="text-white" />
+                        </button>
                     </Swiper>
                 </div>
             ) : (

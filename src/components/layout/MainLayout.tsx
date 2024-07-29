@@ -8,9 +8,9 @@ import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import { fetPopularCeleb } from "../../redux/reducers/peoplePopular.reducer";
 import { fetchTrending } from "../../redux/reducers/trending.reducer";
+import BannerCarosel from "../common/BannerCarosel";
 import Footer from "../common/Footer";
 import RecentlyViewed from "../common/RecentlyView";
-import Slider from "../common/Slider";
 import TopBar from "../common/TopBar";
 
 export default function MainLayout() {
@@ -46,7 +46,7 @@ export default function MainLayout() {
                     <TopBar />
 
                     <div className="mt-2">
-                        <Slider />
+                        <BannerCarosel/>
                     </div>
                     <div className="text-white mt-10">
                         <p className="text-yellow-300 text-xl lg:text-3xl font-bold capitalize">
@@ -91,7 +91,7 @@ export default function MainLayout() {
                     </div>
 
                     <div className="mt-5 overflow-hidden">
-                        <FourSwiperRow fourSwiperRowList={discoverTv} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
+                        <FourSwiperRow fourSwiperRowList={discoverTv?.slice(0,18)} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
                     </div>
 
                     <div className="flex items-center mt-5 capitalize">
@@ -101,7 +101,7 @@ export default function MainLayout() {
                     </div>
 
                     <div className="mt-8 overflow-hidden">
-                        <FourSwiperRow fourSwiperRowList={mostPopularTv} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
+                        <FourSwiperRow fourSwiperRowList={mostPopularTv?.slice(0,18)} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
                     </div>
 
                     <div className="flex items-center mt-8">
@@ -114,7 +114,7 @@ export default function MainLayout() {
                         <h3 className="text-sm font-semibold capitalize">  {translations[language]?.topRatedTV}  {translations[language]?.justForYou}</h3>
                     </div>
                     <div className="mt-5 overflow-hidden " >
-                        <FourSwiperRow fourSwiperRowList={topRatedTv} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
+                        <FourSwiperRow fourSwiperRowList={topRatedTv?.slice(0,18)} mediaType={'tv'} mediaMenuItem={0}></FourSwiperRow>
                     </div>
                     <a href={`/watchToWatch`}>
                         <div className="flex items-center mt-8 hover:text-yellow-300 text-white capitalize">

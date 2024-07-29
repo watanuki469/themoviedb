@@ -94,7 +94,7 @@ export function ActivityLayout() {
                         <div className="text-black font-sans w-full">
                             <div className="flex w-full items-center py-2 px-2">
                                 <div className="mt-2 flex items-center gap-2">
-                                    <a className="hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" href={`/${movie?.itemType}/${movie?.itemId}`}>
+                                    <a className="hover:opacity-80" href={`/${movie?.itemType}/${movie?.itemId}`}>
                                         <div className="w-28 h-40 overflow-hidden rounded-br-xl rounded-bl-xl rounded-tr-xl">
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images" className="rounded-br-xl rounded-bl-xl rounded-tr-xl w-full h-full object-cover" onError={handleImageError} />
                                         </div>
@@ -135,11 +135,9 @@ export function ActivityLayout() {
                                 <div className="mt-2">
                                     <div className="items-center gap-2">
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
-                                            <a href={`/${movie?.itemType}/${movie?.movieId}`}>
-                                                <div>
-                                                    <img src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`} alt="product images"
-                                                        onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
-                                                </div>
+                                            <a className="hover:opacity-80" href={`/${movie?.itemType}/${movie?.itemId}`}>
+                                                <img src={`https://image.tmdb.org/t/p/w500/${movie?.itemImg}`}
+                                                    onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-xl" />
                                             </a>
                                         </div>
                                         <div className="px-2 py-2 w-full">

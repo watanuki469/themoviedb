@@ -170,7 +170,7 @@ export default function MovieLayout() {
                                     <i className="fa-solid fa-angle-right  text-2xl" ></i>
                                 </div>
                             </a>
-                            <a href={`/image/movie/${id}`} className="lg:max-w-full w-full">
+                            <a className="lg:max-w-full w-full">
                                 <FourPhotos fourPhotosList={movieImageList[0]?.backdrops} />
                             </a>
                             <a href={`/fullcredits/movie/${id}`}>
@@ -192,7 +192,7 @@ export default function MovieLayout() {
                                     <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreExplore}</h2>
                                 </div>
                             </div>
-                            <div className="">
+                            <div className="relative" >
                                 <FourSwiperRow fourSwiperRowList={movieSimilarList} mediaType={'movie'} mediaMenuItem={1} />
                             </div>
                             <div className="text-white flex py-4 w-full">

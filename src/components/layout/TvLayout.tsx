@@ -103,7 +103,7 @@ export default function TvLayout() {
                     <TvDetail singleTvList={tvList} singleTvImageList={tvImageList} />
                 </div>
             </div>
-            <div className="bg-white max-w-full ">
+            <div className="bg-white ">
                 <div className="w-full lg:max-w-5xl xl:max-w-6xl mx-auto aligns-center  ">
                     <div className="grid grid-cols-12 gap-2 ">
                         <div className="lg:col-span-8 col-span-12  max-w-full ">
@@ -145,7 +145,7 @@ export default function TvLayout() {
                                 </div>
                             </a>
 
-                            <div className="lg:max-w-full w-full" onClick={() => navigate(`/image/tv/${id}`)}>
+                            <div className="lg:max-w-full w-full">
                                 <FourPhotos fourPhotosList={tvImageList[0]?.backdrops}></FourPhotos>
                             </div>
                             <a href={`/fullcredits/tv/${id}`}>
@@ -168,7 +168,7 @@ export default function TvLayout() {
                                     <h2 className="text-2xl font-bold text-black capitalize">{translations[language]?.moreRecommendation}</h2>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full w-full">
+                            <div className="">
                                 <FourSwiperRow fourSwiperRowList={tvList[0]?.similar?.results} mediaType={'tv'} mediaMenuItem={1} />
                             </div>
                             <div id="tvTrvia" className="text-white flex py-2 w-full px-2">
