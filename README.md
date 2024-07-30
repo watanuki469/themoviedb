@@ -1,4 +1,15 @@
 # This project uses the TMDB API but is not endorsed or certified by TMDB.
+# Features:
++ user
+   - authenticate
+   - add movie,tv,person to list favorite
+   - rating movie,tv
+   - add discuss to movie,tv
+   - have activity list to see what your history seen
+   -change language
++ movie
++ tv
++ person
 
 # 1.api:
 + [The Movie Database (TMDb) API](https://developer.themoviedb.org/)
