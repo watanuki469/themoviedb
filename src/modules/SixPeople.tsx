@@ -1,19 +1,22 @@
-import { Box } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Swiper as SwiperType } from 'swiper';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useEffect, useState } from "react";
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperClass } from 'swiper/types';
 
-export interface FourSwiperRowProps {
+export interface SixPeopleProps {
     sixPeopleList: any
 }
 
 export default function SixPeople({
     sixPeopleList,
-}: FourSwiperRowProps) {
+}: SixPeopleProps) {
     const [activeSlider, setActiveSlider] = useState(6);
+    const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
+    const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+    const [isNextDisabled, setIsNextDisabled] = useState(false);
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 500) {
@@ -29,23 +32,32 @@ export default function SixPeople({
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const swiperRef = useRef<SwiperType | null>(null);
     const handlePrev = () => {
-        if (swiperRef.current) {
-            swiperRef.current.slidePrev();
+        if (swiperInstance) {
+            const newIndex = Math.max(swiperInstance.activeIndex - activeSlider, 0);
+            swiperInstance.slideTo(newIndex);
         }
     };
 
     const handleNext = () => {
-        if (swiperRef.current) {
-            swiperRef.current.slideNext();
+        if (swiperInstance) {
+            const newIndex = Math.min(swiperInstance.activeIndex + activeSlider, swiperInstance.slides.length - 1);
+            swiperInstance.slideTo(newIndex);
+        }
+    };
+
+    const handleSlideChange = () => {
+        if (swiperInstance) {
+            setIsPrevDisabled(swiperInstance.isBeginning);
+            setIsNextDisabled(swiperInstance.isEnd);
         }
     };
 
     return (
         <div>
             <Swiper
-                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                onSwiper={setSwiperInstance}
+                onSlideChange={handleSlideChange}
                 spaceBetween={10}
                 slidesPerView={activeSlider}
                 autoplay={{
@@ -77,15 +89,18 @@ export default function SixPeople({
                         </SwiperSlide>
                     )
                 })}
+
                 <button
                     onClick={handlePrev}
-                    className="absolute hidden lg:block top-1/2 transform -translate-y-1/2 left-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white"
+                    disabled={isPrevDisabled}
+                    className={`absolute hidden lg:block top-1/2 transform -translate-y-1/2 left-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white ${isPrevDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                     <ChevronLeftIcon className="text-white" />
                 </button>
                 <button
                     onClick={handleNext}
-                    className="absolute hidden lg:block top-1/2 transform -translate-y-1/2 right-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white"
+                    disabled={isNextDisabled}
+                    className={`absolute hidden lg:block top-1/2 transform -translate-y-1/2 right-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white ${isNextDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                     <ChevronRightIcon className="text-white" />
                 </button>

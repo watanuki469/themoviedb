@@ -39,7 +39,7 @@ export default function ImageLayout() {
         setTimeout(() => {
             dispatch(setGlobalLoading(false));
         }, 1000);
-    }, [id,mediaType]);
+    }, [id, mediaType]);
 
     let mediaList = [];
 
@@ -170,14 +170,8 @@ export default function ImageLayout() {
                                                         <div className=''>
                                                             {mediaType != 'person' ? (
                                                                 <div >
-                                                                    <span className='hover:underline'>
-                                                                        <a href={`/person/${mediaList[0]?.credits?.cast[activeStep]?.id}`}>
-                                                                            {mediaList[0]?.credits?.cast[activeStep]?.name}
-                                                                        </a>
-                                                                    </span>
-                                                                    < span className='text-white'>{translations[language]?.knowFor}</span>
+                                                                    < span className='text-white'>{translations[language]?.character}</span>
                                                                     <span className=''>  {mediaList[0]?.credits?.cast[activeStep]?.character}</span>
-
                                                                 </div>
                                                             ) : (
                                                                 <div >

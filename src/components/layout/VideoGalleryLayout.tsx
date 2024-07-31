@@ -83,7 +83,7 @@ export default function VideoGalleryLayout() {
                             <div>by</div>
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories'
                                 className='text-blue-500 hover:underline'>
-                                Vasiliev-Editors
+                                Vasiliev-{translations[language]?.editor}
                             </a>
                             <div>•</div>
                             <div> {translations[language]?.createdModified}</div>

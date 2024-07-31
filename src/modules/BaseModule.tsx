@@ -1,6 +1,13 @@
 export const handleImageError = (e: any) => {
     const imgElement = e.currentTarget as HTMLImageElement;
     imgElement.src = 'https://via.placeholder.com/500x750';
+    //the movie db: imgElement.src='https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'
+};
+
+export const handleBackgroundImageError = (e: any) => {
+    e.target.style.backgroundImage = 'url(https://via.placeholder.com/500x750)';
+    const imgElement = e.currentTarget as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/500x750';
 };
 
 export function shortenNumber(number: any) {
@@ -19,6 +26,10 @@ export function shortenNumber(number: any) {
 export const monthNames = [
     "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 ];
+export const currentDate = new Date();
+export const currentMonth = currentDate.getMonth();
+export const currentMonthName = monthNames[currentMonth]; 
+export const currentYear = new Date().getFullYear();
 
 export const formatDate = (isoString: string) => {
     const date = new Date(isoString);
@@ -64,3 +75,4 @@ export const formatTime = (timeString: any) => {
     return `${formattedHour}:${minute < 10 ? '0' + minute : minute} ${ampm}`;
 };
 
+export const bgGrayColor='#272b37'

@@ -1,5 +1,5 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CelebrityNew from "../../modules/CelebrityNew";
 import TopNew from "../../modules/TopNew";
@@ -8,6 +8,8 @@ import axiosTvNew from "../../redux/axios/axiosTVNew";
 import { useAppDispatch } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import TopBar from "../common/TopBar";
+import { LanguageContext } from "../../pages/LanguageContext";
+import { handleImageError } from "../../modules/BaseModule";
 
 export default function CelebNewLayout() {
     const [movieNews, setMovieNews] = useState<any[]>([]);
@@ -52,6 +54,12 @@ export default function CelebNewLayout() {
     const handleShareClose = () => {
         setAnchorShareEl(null);
     };
+    const context = useContext(LanguageContext)
+    if (!context) {
+        return null;
+    }
+    const { language, translations, handleLanguageChange } = context;
+
     return (
         <div className="min-h-screen cursor-pointer bg-white text-black">
             <div className="bg-black pb-1">
@@ -67,7 +75,7 @@ export default function CelebNewLayout() {
                                 <div className="">
                                     <div className="flex items-center ">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                        <h2 className="text-2xl font-bold text-black py-4">Movies News</h2>
+                                        <h2 className="text-2xl font-bold text-black py-4">Movies {translations[language]?.news}</h2>
                                     </div>
                                 </div>
                                 <div className="border-2 border-gray-500 px-4 py-4">
@@ -83,10 +91,7 @@ export default function CelebNewLayout() {
                                                     <img
                                                         onClick={() => window.location.href = article?.node?.source?.homepage?.url}
                                                         className="py-2 col-span-3" src={`${article?.node?.image.url}`}
-                                                        onError={(e) => {
-                                                            e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
-                                                            e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
-                                                        }}
+                                                        onError={(e) => {handleImageError}}
                                                     ></img>
                                                     <div className="py-2 col-span-9">
                                                         {splitTextIntoParagraphs(article?.node?.text?.plainText)}

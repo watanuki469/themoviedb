@@ -7,6 +7,7 @@ import { handleImageError } from '../../modules/BaseModule';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchSearch } from "../../redux/reducers/search.reducer";
 import { LanguageContext } from '../../pages/LanguageContext';
+import { toast } from 'react-toastify';
 
 interface MenuItem {
     id: number;
@@ -22,16 +23,16 @@ export default function SearchBar() {
     const { language, translations, handleLanguageChange } = context;
     const dispatch = useAppDispatch();
     let navigate = useNavigate()
-    const [mediatype, setMediaType] = useState(`${translations[language]?.multi}`);
+    const [mediatype, setMediaType] = useState('multi');
     const [query, setQuery] = useState('');
     const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
     const openUser = Boolean(anchorUserEl);
 
     const menuItems = [
-        { id: 1, label: `${translations[language]?.multi}`, icon: 'fa-magnifying-glass' },
-        { id: 2, label: 'movie', icon: 'fa-sharp fa-solid fa-film' },
-        { id: 3, label: 'tv', icon: 'fa-tv' },
-        { id: 4, label: 'person', icon: 'fa-user-group' },
+        { id: 1, label: `multi`, display: `${translations[language]?.multi}`, icon: 'fa-magnifying-glass' },
+        { id: 2, label: 'movie', display: `movie`, icon: 'fa-sharp fa-solid fa-film' },
+        { id: 3, label: 'tv', display: `tv`, icon: 'fa-tv' },
+        { id: 4, label: 'person', display: `person`, icon: 'fa-user-group' },
     ];
 
     const anchorRef = useRef(null);
@@ -44,7 +45,7 @@ export default function SearchBar() {
         setAnchorUserEl(null);
         setMediaType(index)
     };
-  
+
     const searchList = useAppSelector((state) => state.search.listSearch)
 
     useEffect(() => {
@@ -53,7 +54,7 @@ export default function SearchBar() {
         }
         else {
             timerId = setTimeout(() => {
-                dispatch(fetchSearch(mediatype,query));
+                dispatch(fetchSearch(mediatype, query));
             }, 1000);
         }
         function handleResize() {
@@ -78,11 +79,11 @@ export default function SearchBar() {
         setOpen(!!newQuery);
         setQuery(newQuery);
     };
-   
-   
+
+
     return (
         <div className="relative flex text-left w-full h-full">
-            <div className='border-gray-300 border-l-2 border-t-2 border-b-2'> 
+            <div className='border-gray-300 border-l-2 border-t-2 border-b-2'>
                 <Button
                     id="demo-customized-button"
                     aria-controls={openUser ? 'demo-customized-menu' : undefined}
@@ -92,7 +93,7 @@ export default function SearchBar() {
                     onClick={handleClick}
                     endIcon={<KeyboardArrowDownIcon />}
                 >
-                    {mediatype.toString()}
+                    {mediatype.toString() === 'multi' ? `${translations[language]?.multi}` : mediatype.toString()}
                 </Button>
             </div>
             <Menu
@@ -118,7 +119,7 @@ export default function SearchBar() {
                         <div className='items-start'>
                             <a key={item?.id} href="#" className=" text-gray-700 capitalize hover:opacity-80 flex items-center" role="menuitem">
                                 <i className={`mr-2 fas ${item.icon}`}></i>
-                                {item?.label}
+                                {item?.display}
                             </a>
                         </div>
                     </MenuItem>
@@ -170,9 +171,10 @@ export default function SearchBar() {
                                     <div className="mt-1 max-h-92 overflow-auto" key={index}>
                                         <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
                                             onClick={() => {
-                                                if (mediatype === `${translations[language]?.multi}`) {
+                                                if (mediatype === `multi`) {
                                                     if (item?.media_type === 'person') {
                                                         navigate(`/person/${item.id}`);
+                                                        
                                                         setOpen(false)
                                                     } else if (item?.media_type === "movie") {
                                                         navigate(`/movie/${item.id}`);

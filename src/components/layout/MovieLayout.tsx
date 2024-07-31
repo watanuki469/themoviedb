@@ -137,20 +137,23 @@ export default function MovieLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <div className="grid grid-cols-12 gap-2 w-full px-2 h-full">
                         <div className="lg:col-span-8 col-span-12 w-full">
-                            {languageString === 'vi-VI' ? (
-                                <div className="text-white py-2 w-full cursor-pointer ">
-                                    <a className="flex items-center" href={`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`}>
-                                        <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
-                                        <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.episodes}</h2>
-                                        <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
-                                    </a>
-                                    <div className="px-2 py-2">
-                                        <a href={`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`} className="px-4 py-2 bg-yellow-300 rounded-xl hover:opacity-90 w-fit mt-2">{translations[language]?.moreExplore}</a>
+                            <div className="">
+                                {languageString === 'vi-VI' ? (
+                                    <div className="text-white py-2 w-full cursor-pointer ">
+                                        <a className="flex items-center" href={`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`}>
+                                            <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
+                                            <h2 className="text-2xl font-bold text-black capitalize ">{translations[language]?.episodes}</h2>
+                                            <i className="fa-solid fa-angle-right text-black text-2xl ml-2 hover:text-yellow-300"></i>
+                                        </a>
+                                        
+                                        <div className="py-2 mt-4">
+                                            <a href={`/film/movie/${id}/${normalizeText(singleMovieList[0]?.title)}`} className="px-4 py-2 bg-yellow-300 rounded-xl hover:opacity-90 w-fit mt-2">{translations[language]?.moreExplore}</a>
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <div></div>
-                            )}
+                                ) : (
+                                    <div></div>
+                                )}
+                            </div>
                             <a href={`/video/${id}`}>
                                 <div className="flex gap-2 items-center py-4 hover:text-yellow-300" >
                                     <div className="h-8 w-1 bg-yellow-300 rounded-full"></div>

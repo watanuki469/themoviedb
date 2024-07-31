@@ -1,31 +1,24 @@
-import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { favoriteMongoApi, getFavoriteMongoApi, getListRatingMongoApi, ratingMongoApi, removeRatingMongoApi } from "../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { fetchFavorite, fetchGetFavorites, setDeleteRating, setFavorite, setListFavorite, setListRating, setRating } from "../redux/reducers/login.reducer";
-import { AppDispatch } from "../redux/store";
-import { setGlobalLoading } from "../redux/reducers/globalLoading.reducer";
+import { fetchFavorite, fetchGetFavorites } from "../redux/reducers/login.reducer";
 import RatingModule from "./RatingModule";
+import { handleImageError } from "./BaseModule";
 
 export interface SwiperRowProps {
-    searchItemList: any
+    searchItemList: any,
+    mediaType: any
 }
 
 export default function Fullitem({
     searchItemList,
+    mediaType
 }: SwiperRowProps) {
     const [userInfoList, setUserInfoList] = useState<any[]>([]);
     const [checkLog, setCheckLog] = useState(false)
-    const [loading2, setLoading2] = useState<{ [key: number]: boolean }>({});
-    const [loading3, setLoading3] = useState<{ [key: number]: boolean }>({});
     const [loading, setLoading] = useState<{ [key: number]: boolean }>({});
     const dispatch = useAppDispatch()
     const favoriteList = useAppSelector((state) => state.login.listFavorite);
-    const ratingList = useAppSelector((state) => state.login.listRating);
 
     useEffect(() => {
         const storedDataString = localStorage.getItem('user');
@@ -38,13 +31,9 @@ export default function Fullitem({
     }, []);
 
     useEffect(() => {
-        // dispatch(setGlobalLoading(true));
-        if (userInfoList.length > 0) {
+        if (userInfoList?.length > 0) {
             dispatch(fetchGetFavorites(userInfoList[0]));
         }
-        // setTimeout(() => {
-        //     dispatch(setGlobalLoading(false));
-        // }, 3000);
     }, [userInfoList]);
 
     let navigate = useNavigate();
@@ -69,37 +58,6 @@ export default function Fullitem({
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // const fetchFavorite = (
-    //     movieId: string,
-    //     movieType: string,
-    //     movieName: string,
-    //     movieImg: string,
-    //     movieReleaseDay: Date,
-    //     movieGenre: number[],
-    //     movieReview: string,
-    //     moviePopularity: string,
-    //     movieVoteAverage: string,
-    //     movieVoteCount: string
-    // ) => async (dispatch: AppDispatch) => {
-    //     const email = userInfoList[0];
-    //     try {
-    //         const response = await favoriteMongoApi(
-    //             email, movieId, movieType === 'movie' ? "Movie" : 'TV', movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
-    //         );
-    //         dispatch(setFavorite(response));
-    //         console.log(response);
-
-    //         if (response) {
-    //             await dispatch(fetchGetFavorites(userInfoList[0]));
-
-    //         } else {
-    //             toast.error('Something went wrong');
-    //         }
-    //     } catch (e) {
-    //         console.log("Updating watch list failed: " + e);
-    //         toast.error("Updating watch list failed");
-    //     }
-    // };
 
     const handleWatchList = async (
         index: number,
@@ -116,7 +74,7 @@ export default function Fullitem({
     ) => {
         setLoading((prevLoading) => ({ ...prevLoading, [index]: true }));
         await dispatch(fetchFavorite(
-            userInfoList[0],movieId, movieType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
+            userInfoList[0], movieId, movieType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount
         ));
         setCheckLog(!checkLog);
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
@@ -125,7 +83,7 @@ export default function Fullitem({
     return (
         <div className="lg:max-w-full w-full py-8 mt-2 px-2 ">
             <div className="h-full  flex flex-wrap relative  ">
-                {searchItemList?.map((item: any, index: any) => {
+                {searchItemList?.filter((movie: any) => movie?.media_type === mediaType)?.map((item: any, index: any) => {
                     const existingIndex = favoriteList.findIndex(fav => fav?.itemId == item?.id);
                     return (
                         <div key={index} className="w-1/2 md:w-1/5 px-2 sm:w-1/3 lg:w-1/5 py-2 ">
@@ -133,10 +91,7 @@ export default function Fullitem({
                                 <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`}
                                     alt="product images"
                                     className="absolute top-0 left-0 w-full h-full object-cover rounded-tr-2xl "
-                                    onError={(e) => {
-                                        e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
-                                        e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
-                                    }}
+                                    onError={(e) => {handleImageError}}
                                 />
                             </div>
                             <div className="bg-gray-900 rounded-br-2xl rounded-bl-2xl">
@@ -146,7 +101,7 @@ export default function Fullitem({
                                             <i className="fas fa-star text-yellow-300"></i>
                                             <p className="leading-relaxed text-gray-500">{item?.vote_average?.toFixed(1)}</p>
                                         </div>
-                                        <div className="grow ml-auto py-2" >
+                                        <div className="px-2 py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black" >
                                             <RatingModule mediaType={item?.media_type} ratingList={item} userInfoList={userInfoList} starIndex={index} rateHidden={'true'}></RatingModule>
                                         </div>
                                     </div>

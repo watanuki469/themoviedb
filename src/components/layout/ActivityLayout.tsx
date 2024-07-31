@@ -90,7 +90,7 @@ export function ActivityLayout() {
         switch (currentView) {
             case 'Detail':
                 return (
-                    <section className="px-2 w-full" key={movieIndex}>
+                    <section className="px-2 w-full capitalize" key={movieIndex}>
                         <div className="text-black font-sans w-full">
                             <div className="flex w-full items-center py-2 px-2">
                                 <div className="mt-2 flex items-center gap-2">
@@ -108,7 +108,7 @@ export function ActivityLayout() {
                                             <p>{movie?.itemReview}</p>
                                         </div>
                                         <div className="lg:line-clamp-none line-clamp-4">
-                                            <p>Added to list at {formatDate(movie?.createdTime)}</p>
+                                            <p>{translations[language]?.add} {translations[language]?.to} {translations[language]?.listActivity} {translations[language]?.from} {formatDate(movie?.createdTime)}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -156,14 +156,12 @@ export function ActivityLayout() {
                                     </div>
                                 </div>
 
-                                <div className="px-2 py-2"
-                                    onClick={() => handleRecentlyViewList(movieIndex, movie?.itemId, movie?.itemType, 'none')}
-                                >
+                                <div className="px-2 py-2" onClick={() => handleRecentlyViewList(movieIndex, movie?.itemId, movie?.itemType, 'none')}>
                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
                                         {loading[movieIndex] ? (
                                             <i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i>
                                         ) :
-                                            (<div>   Remove</div>)}
+                                            (<div>{translations[language]?.remove}</div>)}
                                     </button>
 
                                 </div>
@@ -187,12 +185,11 @@ export function ActivityLayout() {
                     <TopBar />
                     <div className="w-full bg-black text-white ">
                         <div className="flex items-center  ">
-                            <h2 className="lg:text-2xl text-lg font-bold  capitalize"> {userInfoList[1]} Activity List </h2>
+                            <h2 className="lg:text-2xl text-lg font-bold  capitalize"> {userInfoList[1]} {translations[language]?.listActivity} </h2>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm py-2" >
-                            <div>by</div>
+                        <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm py-2 capitalize" >
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories' className='text-blue-500 hover:underline'>
-                                {userInfoList[1]}-Editor
+                                {userInfoList[1]}-{translations[language]?.editor}
                             </a>
                             <div>•</div>
                             <div> {translations[language]?.createdModified}</div>
@@ -215,10 +212,10 @@ export function ActivityLayout() {
                                                     movie?.itemType === genre
                                                 );
                                                 return hasAllGenres
-                                            })?.length} Title</h2>
+                                            })?.length} {translations[language]?.title}</h2>
                                 </div>
                                 <div className=" items-center ml-auto gap-2 flex" >
-                                    <p className="items-center text-gray-400 hidden lg:flex ">Sort by </p>
+                                    <p className="items-center text-gray-400 hidden lg:flex ">{translations[language]?.sortBy} </p>
                                     <div className='hidden lg:block'>
                                         <Button
                                             id="demo-customized-button"
@@ -228,7 +225,7 @@ export function ActivityLayout() {
                                             endIcon={<i className="fa-solid fa-caret-down"></i>}
                                             sx={{ bgcolor: anchorRankingEl ? 'blue' : 'white', color: anchorRankingEl ? 'white' : 'blue', ":hover": { backgroundColor: 'blue', color: 'white' }, }}
                                         >
-                                            {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                            {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                         </Button>
                                     </div>
 
@@ -276,9 +273,9 @@ export function ActivityLayout() {
                                                         <i className="fa-solid fa-times text-xl"></i>
                                                     </button>
                                                 </div>
-                                                <div className="divide-y divide-gray-500 px-4 py-2 overflow-auto" style={{ maxHeight: '80vh' }}>
+                                                <div className="divide-y divide-gray-500 px-6 py-6 overflow-auto capitalize" style={{ maxHeight: '80vh' }}>
                                                     <div className="w-full text-left py-2">
-                                                        <div className="py-2 text-yellow-300 font-semibold mt-2">TITLE TYPE</div>
+                                                        <div className="py-2 text-yellow-300 font-semibold mt-2">{translations[language]?.title} {translations[language]?.total}</div>
                                                         <div className="flex gap-2 items-center flex-wrap">
                                                             {Object.entries(characterCount)?.map(([genre, count], index) => (
                                                                 <button key={`genre-${genre}-${index}`} className={`uppercase text-sm rounded-full px-2 py-1 border-2 border-white ${selectedGenres?.includes(genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:opacity-90'}`} onClick={() => handleGenreClick(genre)}>
@@ -297,7 +294,7 @@ export function ActivityLayout() {
                             </div>
                             <div className="flex border-b-2 border-gray py-2 items-center lg:hidden">
                                 <div className="flex items-center ml-auto gap-2" >
-                                    <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
+                                    <p className="flex items-center text-lg text-gray-400 ">{translations[language]?.sortBy} </p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -311,7 +308,7 @@ export function ActivityLayout() {
                                             ":hover": { backgroundColor: 'blue', color: 'white' },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `{${translations[language]?.options}}`}
                                     </Button>
                                     <Menu
                                         id="demo-customized-menu"
@@ -364,7 +361,7 @@ export function ActivityLayout() {
                                 </div>
                             </div>
                         </div>
-                        <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 ">
+                        <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 capitalize ">
                             <div>
                                 <div className="flex items-center py-3">
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

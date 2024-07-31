@@ -76,7 +76,7 @@ export default function TvDetailExternal({
                             <div className=" border-b border-gray-300 flex gap-2 py-2 items-center aligns-center">
                                 <div className="">IMDb<span className="text-blue-500">Pro</span></div>
                                 <div className="flex gap-3 items-center">
-                                    <p onClick={() => navigate(`/`)} className="hover:underline flex gap-2">
+                                    <p onClick={() => navigate(`/IMDbPro`)} className="hover:underline flex gap-2">
                                         <span className="text-blue-600">{translations[language]?.seePro}</span>
                                     </p>
                                     <i className="fa-solid fa-arrow-up-right-from-square"></i>

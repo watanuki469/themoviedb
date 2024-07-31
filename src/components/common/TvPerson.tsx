@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { LanguageContext } from "../../pages/LanguageContext";
 
@@ -11,7 +10,6 @@ export interface TwoMovieRowProps {
 export default function TvPerson({
     singleMovieList,
 }: TwoMovieRowProps) {
-    let navigate = useNavigate()
     const [activeSlider, setActiveSlider] = useState(5);
     useEffect(() => {
         const handleResize = () => {
@@ -59,7 +57,7 @@ export default function TvPerson({
                                 <p className="text-black font-bold hover:opacity-50">{item?.name}</p>
                                 <p className="text-gray-500 hover:underline">{item?.roles[0]?.character}</p>
                                 <p className="text-gray-500 hover:bg-gray-200 py-1">
-                                    {item?.roles[0]?.episode_count} episodes •
+                                    {item?.roles[0]?.episode_count} {translations[language]?.episodes} •
                                     {firstYear ? (lastYear && firstYear !== lastYear ? `${firstYear}-${lastYear}` : firstYear) : ''}
                                 </p>
                             </a>
@@ -91,7 +89,7 @@ export default function TvPerson({
                                         <a href={`/person/${item?.id}`}>
                                             <p className="text-black font-bold">{item?.name}</p>
                                             <p className="text-gray-500">{item?.roles[0]?.character}</p>
-                                            <p className="text-gray-500">{item?.roles[0]?.episode_count} episodes • {firstYear}-{lastYear}</p>
+                                            <p className="text-gray-500">{item?.roles[0]?.episode_count} {translations[language]?.episodes} • {firstYear}-{lastYear}</p>
                                         </a>
                                     </div>
                                 </div>

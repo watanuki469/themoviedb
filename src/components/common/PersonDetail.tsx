@@ -23,7 +23,7 @@ export default function PersonDetail({
         <section className="" style={{ position: "relative", backgroundSize: "cover", backgroundPosition: "center", overflow: 'hidden' }}>
             <div className="text-white font-sans font-medium cursor-pointer" >
                 <div style={{
-                    backgroundImage: `url('https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}')`,
+                    backgroundImage: `url('${singleMovieList[0]?.profile_path?`https://image.tmdb.org/t/p/w500${singleMovieList[0]?.profile_path}`:`https://via.placeholder.com/500x750`}}')`,
                     position: "absolute", width: "100%", height: "100%", opacity: "0.5",
                     backgroundSize: "cover", backgroundPosition: "center",
                     backgroundColor: 'black', filter: 'blur(100px)',

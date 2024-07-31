@@ -9,6 +9,7 @@ import TopBar from "../common/TopBar";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
 import { useAppDispatch } from "../../redux/hooks";
 import Share from "../../modules/Share";
+import { handleImageError } from "../../modules/BaseModule";
 
 export default function MovieNewLayout() {
     const [movieNews, setMovieNews] = useState<any[]>([]);
@@ -67,16 +68,8 @@ export default function MovieNewLayout() {
                                                     <i className="fa-solid fa-arrow-up-right-from-square ml-2"></i>
 
                                                 </a>
-                                                <img className="py-2" src={`${article?.node?.image.url}`}
-                                                    onError={(e) => {
-                                                        e.currentTarget.src = 'https://via.placeholder.com/500x750';
-                                                        e.currentTarget.onerror = null; 
-                                                    }}>
-
-                                                </img>
-                                                <div className="py-2">
-                                                    {splitTextIntoParagraphs(article?.node?.text?.plainText)}
-                                                </div>
+                                                <img className="py-2" src={`${article?.node?.image.url}`} onError={(e) => {handleImageError}}></img>
+                                                <div className="py-2">{splitTextIntoParagraphs(article?.node?.text?.plainText)}</div>
                                                 <a className="py-2 text-blue-500 hover:underline" href={`${article?.node?.source?.homepage?.url}`}>
                                                     See full article at {article?.node?.source?.homepage?.label}
                                                     <i className="fa-solid fa-arrow-up-right-from-square ml-2"></i>

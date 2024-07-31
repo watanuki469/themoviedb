@@ -80,6 +80,7 @@ export default function Top250MovieLayout() {
                         </div>
                     </div>
                     <ViewTable viewList={topRatedMovies} mediaType={'movie'} genreList={listGenreFromApi} moreToExploreList={mostPopularTv}></ViewTable>
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
                 </div>
             </div>
             <div className="bg-black">
@@ -87,7 +88,6 @@ export default function Top250MovieLayout() {
                     <Footer />
                 </div>
             </div>
-            <div id="load-more" style={{ height: '20px' }}></div>
         </div >
     )
 }

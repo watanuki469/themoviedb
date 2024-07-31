@@ -2,15 +2,11 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setGlobalLoading } from '../redux/reducers/globalLoading.reducer';
-import { AppDispatch } from '../redux/store';
-import { favoriteMongoApi, getFavoriteMongoApi } from '../redux/client/api.LoginMongo';
-import { fetchFavorite, fetchFavoriteActor, fetchGetFavorites, fetchGetFavoritesActor, setFavorite, setListFavorite } from '../redux/reducers/login.reducer';
 import { LanguageContext } from '../pages/LanguageContext';
-import RatingModule from './RatingModule';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { fetchFavorite, fetchFavoriteActor, fetchGetFavorites, fetchGetFavoritesActor } from '../redux/reducers/login.reducer';
 import { handleImageError } from './BaseModule';
+import RatingModule from './RatingModule';
 
 export interface TwoMovieRowProps {
     detailList: any
@@ -99,7 +95,7 @@ export default function Detail({
             <div className="grid grid-cols-12 py-2 gap-y-4 h-full">
                 <div className="hidden lg:block col-span-3 bg-gray-200  h-full hover:opacity-80 rounded-xl">
                     <a href={`/image/${mediaType}/${detailList?.id}`}>
-                        <img className='rounded-xl' src={`https://image.tmdb.org/t/p/w500${detailList?.poster_path ? detailList?.poster_path : detailList?.profile_path}`} alt="product images" />
+                        <img onError={handleImageError} className='rounded-xl' src={`https://image.tmdb.org/t/p/w500${detailList?.poster_path ? detailList?.poster_path : detailList?.profile_path}`} alt="product  meomeo images" />
                     </a>
                 </div>
                 <div className="lg:col-span-7 col-span-12 lg:ml-2 bg-black h-full min-h-56 relative hover:opacity-80 rounded-xl">
@@ -128,8 +124,8 @@ export default function Detail({
                                     <div className='flex items-end gap-2 px-2 py-2'>
                                         <i className="fa-solid fa-circle-play text-white text-5xl"></i>
                                         <div>
-                                            <div className='flex items-end text-center text-2xl' >
-                                                Play Clip
+                                            <div className='flex items-end text-center text-2xl' >                                                
+                                                {translations[language]?.play}
                                             </div>
                                             <div className='line-clamp-1'>{detailList?.combined_credits?.cast[0]?.title}</div>
                                         </div>
@@ -137,9 +133,7 @@ export default function Detail({
                                 </div>
                             </div>
                         </a>
-
-                    )
-                    }
+                    )}
 
                 </div>
                 <div className="hidden lg:block col-span-2 h-full ml-2 overflow-hidden rounded-xl">

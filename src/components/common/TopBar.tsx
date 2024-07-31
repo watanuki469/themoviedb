@@ -334,7 +334,7 @@ export default function TopBar() {
                 <div className="max-w-4xl ml-auto mr-auto capitalize">
                   <div className="flex items-center">
                     <button
-                      onClick={() => navigate("/")}
+                      onClick={() => navigate("/IMDbPro")}
                       className="bg-yellow-400 px-2 py-1 text-black text-center border-none font-extrabold text-2xl font-sans whitespace-nowrap hover:opacity-80 rounded-md"
                     >
                       IMDb

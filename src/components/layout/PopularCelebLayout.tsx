@@ -58,7 +58,7 @@ export default function PopularCelebLayout() {
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center bg-white px-2">
                     <ViewTable viewList={popularCeleb2} mediaType={'person'} moreToExploreList={topRatedMovies} genreList={''}></ViewTable>
-                    <div id="load-more" style={{ height: '20px' }}></div>
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
                 </div>
             </div>
            

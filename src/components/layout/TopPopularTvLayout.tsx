@@ -81,7 +81,7 @@ export default function TopPopularTvLayout() {
 
                     </div>
                     <ViewTable viewList={mostPopularTv} mediaType={'tv'} genreList={listGenreFromApi} moreToExploreList={popularMovies}></ViewTable>
-                    <div id="load-more" style={{ height: '20px' }}></div>
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
 
                 </div>
             </div>

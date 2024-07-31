@@ -24,7 +24,8 @@ export interface Translations {
   editor: string, whatNewToStreamOn: string, takeALookAtTheBest: string, theFinalSeasonOfEvil: string, renewCancelEnding: string,
   checkOutOurList: string, freshenUpYour: string, animedKidShow: string, weRoundedUpTheKid: string, submit: string,
   credits: string, noResultAvailable: string, multi: string, event: string, fully: string, supported: string,
-  partially: string, logOut: string,india:string
+  partially: string, logOut: string, india: string, character: string, bestOf: string, genderIdentity: string,
+  male: string, female: string, other: string, play: string
 }
 
 const currentDate = new Date();
@@ -171,7 +172,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'Supported',
     partially: 'Partially',
     logOut: 'Logout',
-    india:'India',
+    india: 'India',
+    character: 'Character',
+    bestOf: 'Best of',
+    genderIdentity: 'Gender identity',
+    male: 'Male',
+    female: 'Female',
+    other: 'Other',
+    play: 'Play'
 
   },
   'vi-VI': {
@@ -251,7 +259,7 @@ export const translations: Record<LanguageCode, Translations> = {
     developer: 'Nhà phát triển',
     pressRoom: 'Phòng báo chí',
     advertise: 'Quảng cáo',
-    job: 'Việc làm',
+    job: 'Nghề nghiệp',
     condition: 'Điều khoản sử dụng',
     privacy: 'Chính sách bảo mật',
     yourAd: 'Bảo mật quảng cáo của bạn',
@@ -272,7 +280,7 @@ export const translations: Record<LanguageCode, Translations> = {
     keyword: 'Từ khóa',
     advanced: 'Nâng cao',
     imdbSearch: `Khám phá tính năng tìm kiếm tiêu đề mạnh mẽ của IMDb. Trộn và kết hợp thông tin để tinh chỉnh tìm kiếm của bạn. Bạn đang tìm phim kinh dị Canada những năm 1970 được ít nhất 100 người dùng xếp hạng trên 6? Tìm chúng ở đây. Tất cả các trường bên dưới là tùy chọn, nhưng cần có ít nhất một trường tiêu đề để tìm kiếm. Đối với phạm vi (ngày phát hành, phiếu bầu), hãy sử dụng 'min' cho mức lớn hơn/sau và 'max' cho mức nhỏ hơn/trước. Để tìm hiểu thêm, vui lòng truy cập trang trợ giúp và Câu hỏi thường gặp của chúng tôi.`,
-    title: 'Tên',
+    title: 'Tiêu đề',
     expandAll: 'Mở hết',
     collapseAll: 'Đóng hết',
     searchFilter: 'Bộ lọc tìm kiếm',
@@ -310,7 +318,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'Hỗ trợ',
     partially: 'Một phần',
     logOut: 'Đăng xuất',
-    india:'Ấn Độ',
+    india: 'Ấn Độ',
+    character: 'Nhân vật',
+    bestOf: 'Tốt nhất',
+    genderIdentity: 'Nhận dạng giới tính',
+    male: 'Nam',
+    female: 'Nữ',
+    other: 'Khác',
+    play: 'Phát',
 
   },
   'ja-JP': {
@@ -449,8 +464,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'サポートされている',
     partially: '部分的に',
     logOut: 'ログアウト',
-     india: 'インド',
-
+    india: 'インド',
+    character: 'キャラクター',
+    bestOf: 'ベスト・オブ',
+    genderIdentity: 'ジェンダー・アイデンティティ',
+    male: '男性',
+    female: '女性',
+    other: 'その他',
+    play: '再生',
   },
   'fr-FR': {
     featuredToday: `À la une aujourd\'hui`,
@@ -588,7 +609,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'soutenu',
     partially: 'partiellement',
     logOut: 'se déconnecter',
-    india:'Inde',
+    india: 'Inde',
+    character: 'personnage',
+    bestOf: 'meilleur de',
+    genderIdentity: 'identité de genre',
+    male: 'homme',
+    female: 'femme',
+    other: 'autre',
+    play: 'jouer',
   },
 
   'de-DE': {
@@ -728,7 +756,13 @@ export const translations: Record<LanguageCode, Translations> = {
     partially: 'teilweise',
     logOut: 'abmelden',
     india: 'Indien',
-
+    character: 'Charakter',
+    bestOf: 'das Beste von',
+    genderIdentity: 'Geschlechtsidentität',
+    male: 'männlich',
+    female: 'weiblich',
+    other: 'andere',
+    play: 'spielen',
   },
   'hi-IN': {
     featuredToday: 'आज का प्रमुख',
@@ -866,7 +900,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'समर्थित',
     partially: 'आंशिक रूप से',
     logOut: 'लॉग आउट',
-    india:'भारत',
+    india: 'भारत',
+    character: 'चरित्र',
+    bestOf: 'सर्वश्रेष्ठ',
+    genderIdentity: 'लिंग पहचान',
+    male: 'पुरुष',
+    female: 'महिला',
+    other: 'अन्य',
+    play: 'चलाएँ',
   },
   'id-ID': {
     featuredToday: 'Unggulan hari ini',
@@ -1004,7 +1045,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'didukung',
     partially: 'sebagian',
     logOut: 'keluar',
-    india:'India'
+    india: 'India',
+    character: 'karakter',
+    bestOf: 'terbaik dari',
+    genderIdentity: 'identitas gender',
+    male: 'pria',
+    female: 'wanita',
+    other: 'lainnya',
+    play: 'main',
   },
   'it-IT': {
     featuredToday: 'In primo piano oggi',
@@ -1142,7 +1190,14 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: 'Supportato',
     partially: 'Parzialmente',
     logOut: 'Disconnettersi',
-    india:'India'
+    india: 'India',
+    character: 'personaggio',
+    bestOf: 'il meglio di',
+    genderIdentity: 'identità di genere',
+    male: 'maschio',
+    female: 'femmina',
+    other: 'altro',
+    play: 'giocare',
   },
   'ko-KR': {
     featuredToday: '오늘의 추천',
@@ -1280,6 +1335,13 @@ export const translations: Record<LanguageCode, Translations> = {
     supported: '지원되는',
     partially: '부분적으로',
     logOut: '로그아웃',
-    india:'인도'
+    india: '인도',
+    character: '캐릭터',
+    bestOf: '베스트 오브',
+    genderIdentity: '성 정체성',
+    male: '남성',
+    female: '여성',
+    other: '기타',
+    play: '재생',
   },
 };

@@ -94,8 +94,7 @@ export default function TrendingLayout() {
                     <TopBar />
                     <div className="w-full bg-black mt-5 text-white ">
                         <div className="flex mt-3 items-center  ">
-                            <h2 className="lg:text-2xl text-lg font-bold  capitalize">What New On {type} in  {currentMonthName}
-                            </h2>
+                            <h2 className="lg:text-2xl text-lg font-bold  capitalize">{translations[language]?.whatNewToStreamOn} {type} </h2>
                             <div className="flex items-center ml-auto gap-2 text-gray-400" >
                                 <div className="text-md justify-center  text-right">
                                     <p className='font-bold uppercase'> {translations[language]?.listActivity}</p>
@@ -114,7 +113,7 @@ export default function TrendingLayout() {
                         <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories'
                                 className='text-blue-500 hover:underline'>
-                                Vasiliev-Editors
+                                Vasiliev-{translations[language]?.editor}
                             </a>
                             <div>•</div>
                             <div>{translations[language]?.createdModified} </div>

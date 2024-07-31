@@ -88,7 +88,7 @@ export default function TvDetail({
                             </div>
                             <div className="items-center text-center justify-center m-auto mr-4 aligns-center">
                                 <div className="text-stone-400">{translations[language]?.rating}</div>
-                                <div className='hover:bg-gray-300 rounded-xl px-2 py-2'>
+                                <div className='hover:bg-gray-300 rounded-xl px-2 py-2 text-blue-500 hover:text-black'>
                                     <RatingModule mediaType={'tv'} ratingList={singleTvList[0]} userInfoList={userInfoList} rateHidden={'false'} starIndex={0} />
                                 </div>
                             </div>

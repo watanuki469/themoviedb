@@ -113,15 +113,6 @@ export default function UpComingMovieLayout() {
         setMediaType(mediaType)
         setPage(1);
     };
-    const [loading4, setLoading4] = useState(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading4(false);
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [page]);
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
@@ -204,16 +195,7 @@ export default function UpComingMovieLayout() {
                             </div>
                         ))}
                     </div>
-
-                    {
-                        loading4 ? (
-                            <i className="fa-solid fa-spinner fa-spin-pulse"></i>
-                        ) : (
-                            <div id="load-more">
-                                <div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
-                        )
-                    }
-
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
                 </div>
             </div>
             <div className="bg-black">

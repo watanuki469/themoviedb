@@ -1,4 +1,39 @@
 # This project uses the TMDB API but is not endorsed or certified by TMDB.
+# Features:
++ user
+   - authenticate
+   - search with filter
+   - add movie,tv,person to list favorite
+   - rating movie,tv
+   - add discuss to movie,tv
+   - have activity list to see what your history seen
+   - change language
++ movie
+   - movie descriptions
+   - movie trailer
+   - movie image gallery
+   - movie genre
+   - movie list actor
+   - movie keyword
+   - movie review
+   - movie discuss
+   - movie film (only vietnam language)
++ tv
+   - tv descriptions
+   - tv trailer
+   - tv image gallery
+   - tv genre
+   - tv list actor
+   - tv keyword
+   - tv review
+   - tv discuss
+   - tv film (only vietnam language)
++ person
+   - person descriptions
+   - person trailer (the movie/tv belong to this person)
+   - person image gallery
+   - person history
+   - person review
 
 # 1.api:
 + [The Movie Database (TMDb) API](https://developer.themoviedb.org/)

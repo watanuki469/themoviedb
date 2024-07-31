@@ -59,7 +59,7 @@ export default function AdvancedSearchLayout() {
     }, [query, mediatype, page, dispatch]);
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
-    const handleRankingClick   = (event: React.MouseEvent<HTMLElement>) => {
+    const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorRankingEl(event.currentTarget);
     };
 
@@ -131,11 +131,8 @@ export default function AdvancedSearchLayout() {
                                                         <i className="fa-solid fa-star text-yellow-300"></i>
                                                         <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                     </div>
-                                                    <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                        <div className="grow ml-auto py-2">
-                                                            <RatingModule mediaType={mediatype} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-
-                                                        </div>
+                                                    <div className="flex items-center gap-2  px-2 py-2 hover:bg-gray-300 hover:text-black text-blue-500">
+                                                        <RatingModule mediaType={mediatype} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                     </div>
                                                 </div>
                                             ) : (
@@ -184,10 +181,8 @@ export default function AdvancedSearchLayout() {
                                                         <i className="fa-solid fa-star text-yellow-300"></i>
                                                         <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                     </div>
-                                                    <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                        <div className="grow ml-auto " >
-                                                            <RatingModule mediaType={mediatype} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                        </div>
+                                                    <div className="w-fit hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                        <RatingModule mediaType={mediatype} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                     </div>
                                                     <div className="h-12 w-full ">
                                                         <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.name ? movie?.name : movie?.title}</p>
@@ -207,7 +202,7 @@ export default function AdvancedSearchLayout() {
                                 </div>
 
                                 <div className="px-2 py-2" onClick={() => navigate(`/${mediatype}/${movie?.id}`)}   >
-                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">Details</button>
+                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">{translations[language]?.details}</button>
                                 </div>
                             </div>
                         </div>
@@ -232,8 +227,8 @@ export default function AdvancedSearchLayout() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" ><RatingModule mediaType={mediatype} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule></div>
+                                                <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 px-2 py-2 ">
+                                                    <RatingModule mediaType={mediatype} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
                                             </div>)
                                             : (
@@ -434,15 +429,6 @@ export default function AdvancedSearchLayout() {
             }
         };
     }, []);
-    const [loading4, setLoading4] = useState(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading4(false);
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [page]);
 
     return (
         <div className=" min-h-screen cursor-pointer w-full">
@@ -453,9 +439,9 @@ export default function AdvancedSearchLayout() {
             </div>
             <div className="bg-black w-full px-2">
                 <div className="w-full lg:max-w-5xl mx-auto aligns-center bg-white  px-2 py-2 ">
-                    <div className="lg:max-w-full w-screen ">
+                    <div className="w-full ">
                         <h2 className="lg:text-5xl text-xl font-semibold text-black capitalize">{translations[language]?.advancedSearch}: {mediatype} </h2>
-                        <h2 className="text-lg text-black ">{translations[language]?.imdbSearch}</h2>
+                        <span className="text-lg text-black ">{translations[language]?.imdbSearch}</span>
                         <div className="mt-3">
                             <div className="flex items-center gap-2 flex-wrap" >
                                 <button onClick={() => handleClickMedia('movie')} className={`flex items-center px-2 py-2 min-w-28 justify-center gap-1 hover:bg-gray-300 ${mediatype === 'movie' ? "border-b-4 border-blue-500" : "border-b-4 border-white"}`}>
@@ -684,7 +670,7 @@ export default function AdvancedSearchLayout() {
                                 ) : (
                                     <div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <p className="font-bold">Gender Identity </p>
+                                            <p className="font-bold">{translations[language]?.genderIdentity} </p>
                                             <i onClick={() => setGenderExpanded(!genderExpanded)} className={`fa-solid ${genderExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} ml-auto`}></i>
                                         </div>
                                         <div className="border-b-2 px-1 py-1">
@@ -692,19 +678,19 @@ export default function AdvancedSearchLayout() {
                                                 <div className="relative mt-2 mb-1 flex flex-wrap gap-2">
                                                     <div onClick={() => handleOptionGenderClick('none')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${genderOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p>None</p>
+                                                        <p>{translations[language]?.none}</p>
                                                     </div>
                                                     <div onClick={() => handleOptionGenderClick('Male')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${genderOption === 'Male' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p> Male</p>
+                                                        <p>{translations[language]?.male}</p>
                                                     </div>
                                                     <div onClick={() => handleOptionGenderClick('Female')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${genderOption === 'Female' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p>Female</p>
+                                                        <p>{translations[language]?.female}</p>
                                                     </div>
                                                     <div onClick={() => handleOptionGenderClick('Non-Binary')} className="flex gap-2 items-center">
                                                         <i className={`fa-regular ${genderOption === 'Non-Binary' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                                                        <p>Non Binary</p>
+                                                        <p>{translations[language]?.other}</p>
                                                     </div>
                                                 </div>
                                             ) : (<div></div>)}
@@ -714,9 +700,9 @@ export default function AdvancedSearchLayout() {
                             </div>
                         </div>
                         <div className="lg:col-span-8 col-span-12 ">
-                            <div className="flex items-center ">
-                                <h2 className=" text-black ">
-                                    1-20 / {topRatedMovies
+                            <div className="flex flex-wrap items-center px-2 ">
+                                <p className=" text-black ">
+                                    {translations[language]?.total}: {topRatedMovies
                                         .filter((movie: any) => {
                                             if (selectedGenres?.length === 0) return true; // No genre filter
                                             // Check if every selected genre is present in the movie's genres
@@ -756,8 +742,8 @@ export default function AdvancedSearchLayout() {
                                             // If no filter, include all movies
                                             return true;
                                         })?.length}
-                                </h2>
-                                <div className="ml-auto flex gap-4">
+                                </p>
+                                <div className="ml-auto flex gap-2">
                                     <div className="ml-auto flex items-center gap-2">
                                         <p className="text-gray-500">{translations[language]?.sortBy}</p>
                                         <Button
@@ -789,14 +775,14 @@ export default function AdvancedSearchLayout() {
                                             <MenuItem onClick={() => handleMenuItemClick(`${translations[language]?.runTime}`)} disableRipple>{translations[language]?.runTime}</MenuItem>
                                         </Menu>
                                     </div>
-                                    <div className="flex items-center gap-4 flex-wrap " >
+                                    <div className="flex items-center gap-2 " >
                                         <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}><i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i></Tooltip>
                                         <Tooltip title="Grid View" className={`${currentView === "Grid" ? "text-blue-500" : ""}`}><AppsIcon onClick={() => switchView('Grid')} /></Tooltip>
                                         <Tooltip title="Compact View" className={`${currentView === "Compact" ? "text-blue-500" : ""}`}><MenuIcon onClick={() => switchView('Compact')} /></Tooltip>
                                     </div>
                                 </div>
                             </div>
-                            <div className="lg:max-w-full w-full  py-4 px-2 "
+                            <div className="lg:max-w-full w-full  py-2 px-2 "
                                 style={{
                                     position: "relative", backgroundSize: "cover", backgroundPosition: "center", display: 'flex', flexWrap: 'wrap',
                                 }}>
@@ -896,14 +882,8 @@ export default function AdvancedSearchLayout() {
                             </div>
                         </div>
                     </div>
-                    {
-                        loading4 ? (
-                            <i className="fa-solid fa-spinner fa-spin-pulse"></i>
-                        ) : (
-                            <div id="load-more">
-                                <div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
-                        )
-                    }
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
+
                 </div>
 
             </div>

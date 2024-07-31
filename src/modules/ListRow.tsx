@@ -2,6 +2,7 @@ import FilterIcon from '@mui/icons-material/Filter';
 import { useContext } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { LanguageContext } from '../pages/LanguageContext';
+import { handleImageError } from './BaseModule';
 
 export interface FourSwiperRowProps {
     listRowList: any
@@ -30,10 +31,7 @@ export default function ListRow({
                     <SwiperSlide key={index} className="w-full h-auto">
                         <div className="relative w-full pb-[150%] hover:opacity-80">
                             <img
-                                onError={(e) => {
-                                    e.currentTarget.src = 'https://via.placeholder.com/500x750'; // Replace with your fallback image URL
-                                    e.currentTarget.onerror = null; // Prevent infinite loop if the fallback image also fails to load
-                                }}
+                                onError={(e) => {handleImageError}}
                                 src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
                                 className="absolute top-0 left-0 w-full h-full object-cover hover:opacity-80" />
                             {index === 0 && (

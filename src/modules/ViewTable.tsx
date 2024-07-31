@@ -101,7 +101,7 @@ export default function ViewTable({
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${mediaType}/${movie?.id}`}>
+                                        <a href={`/${mediaType}/${movie?.id}`} className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         </a>
@@ -116,10 +116,8 @@ export default function ViewTable({
                                                                 <i className="fa-solid fa-star text-yellow-300"></i>
                                                                 <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                             </div>
-                                                            <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                                <div className="grow ml-auto py-2">
+                                                            <div className="lg:px-2 lg:py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black">
                                                                     <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -175,10 +173,8 @@ export default function ViewTable({
                                                             <i className="fa-solid fa-star text-yellow-300"></i>
                                                             <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                         </div>
-                                                        <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                            <div className="grow ml-auto py-2" >
+                                                        <div className="w-fit hover:bg-gray-300 text-blue-500 hover:text-black ">
                                                                 <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                            </div>
                                                         </div>
                                                         <div className="h-12 w-full ">
                                                             <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
@@ -190,7 +186,6 @@ export default function ViewTable({
                                                 </div>
                                             ) : (
                                                 <div>
-
                                                     <div className="px-2 py-2 w-full">
                                                         <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                             <div className="h-12 w-full"
@@ -216,20 +211,18 @@ export default function ViewTable({
                                     </a>
                                 </div>
                             </div >
-
                         </div >
                     </section >
 
                 )
             case 'Compact':
                 return (
-                    <section className="px-2  w-full " key={movieIndex}
-                    >
+                    <section className="px-2  w-full " key={movieIndex}>
                         <div className="text-black font-sans w-full" >
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${mediaType}/${movie?.id}`}>
+                                        <a href={`/${mediaType}/${movie?.id}`}  className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         </a>
@@ -245,11 +238,8 @@ export default function ViewTable({
                                                                 <i className="fa-solid fa-star text-yellow-300"></i>
                                                                 <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                             </div>
-                                                            <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                                <div className="grow ml-auto py-2">
+                                                            <div className="lg:px-2 lg:py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black">
                                                                     <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -277,7 +267,6 @@ export default function ViewTable({
                                     </a>
                                 </div>
                             </div>
-
                         </div>
                     </section>
                 )
@@ -510,7 +499,7 @@ export default function ViewTable({
                         </div>
                     </div>
                 </div>
-                <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 ">
+                <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 capitalize">
                     <div className=''>
                         <div className="flex items-center">
                             <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

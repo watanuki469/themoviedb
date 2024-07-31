@@ -258,7 +258,7 @@ export function WatchListLayout2() {
                         <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
                             <div>by</div>
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories' className='text-blue-500 hover:underline'>
-                                {userInfoList[1]}-Editor
+                                {userInfoList[1]}-{translations[language]?.editor}
                             </a>
                             <div>•</div>
                             <div> {translations[language]?.createdModified}</div>

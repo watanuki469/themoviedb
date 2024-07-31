@@ -16,36 +16,15 @@ export default function BannerCarosel() {
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
 
     useEffect(() => {
-        dispatch(fetchMovies());
+        dispatch(fetchMovies(8));
     }, []);
 
     const [activeStep, setActiveStep] = useState(0);
 
-    const handleBackgroundImageError = (e: any) => {
-        e.target.style.backgroundImage = 'url(https://via.placeholder.com/500x750)';
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x750';
-    };
-    useEffect(() => {
-        const boxElement = document.getElementById('1234567');
-        if (boxElement) {
-            boxElement.style.backgroundImage = `url(${popularMovies[activeStep]?.backdrop_path})`;
-            boxElement.addEventListener('error', handleBackgroundImageError);
-        }
-
-        return () => {
-            if (boxElement) {
-                boxElement.removeEventListener('error', handleBackgroundImageError);
-            }
-        };
-    }, [activeStep, popularMovies]);
-
     const context = useContext(LanguageContext);
-
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
 
     const swiperRef = useRef<SwiperType | null>(null);

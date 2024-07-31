@@ -3,6 +3,7 @@ import { Button, Dialog, DialogContent, DialogTitle, Menu, MenuItem } from "@mui
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LanguageContext } from '../pages/LanguageContext';
+import { handleImageError } from './BaseModule';
 
 export interface ViewsProps {
     galleryList: any,
@@ -33,10 +34,6 @@ export default function GalleryVideoTable({
         }
     };
 
-    const handleImageError = (e: any) => {
-        const imgElement = e.currentTarget as HTMLImageElement;
-        imgElement.src = 'https://via.placeholder.com/500x281'; // Set the fallback image source with the same aspect ratio
-    };
     const [openGenDialog, setOpenGenDialog] = useState(false);
     const handleDiaGenlogOpen = () => {
         setOpenGenDialog(true);

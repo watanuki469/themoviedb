@@ -26,7 +26,7 @@ export default function ViewTableNoType({
 
     useEffect(() => {
         dispatch(fetchGenre(mediaType));
-    }, [dispatch,mediaType]);
+    }, [dispatch, mediaType]);
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -107,25 +107,23 @@ export default function ViewTableNoType({
                     <section className="px-2 w-full " key={movieIndex}>
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
-                                <div className="mt-2">
+                                <div className="">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${movie?.media_type}/${movie?.id}`}>
+                                        <a href={`/${movie?.media_type}/${movie?.id}`} className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         </a>
 
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                            <p className="font-bold line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
-                                            <div className="flex item-center gap-2">
-                                                <div className="flex items-center gap-2">
+                                            <div className="flex flex-wrap item-center gap-2">
+                                                <div className="flex  items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className=" hover:text-black text-blue-500" >
-                                                    <div className="" >
-                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                    </div>
+                                                <div className="lg:px-2 lg:py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black" >
+                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
 
                                             </div>
@@ -150,77 +148,70 @@ export default function ViewTableNoType({
             case 'Grid':
                 return (
                     <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}>
-                        <div className="text-black font-sans  shadow-sm shadow-black  " >
-                            <div className=" items-center ">
-                                <div className="mt-2">
-                                    <div className="items-center gap-2 ">
-                                        <div className="px-2"></div>
-                                        <div className="relative w-full pb-[150%] hover:opacity-80">
+                        <div className="text-black font-sans w-full  shadow-sm shadow-black rounded-br-xl rounded-bl-xl rounded-tr-xl" >
+                            <div className="w-full">
+                                <div className="mt-2 w-full">
+                                    <div className="w-full">
+                                        <div className=""></div>
+                                        <div className="relative w-full pb-[150%] hover:opacity-80 rounded-tr-xl">
                                             <a href={`/${movie?.media_type}/${movie?.id}`}>
                                                 <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
-                                                    onError={handleImageError} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                                    onError={handleImageError} className="absolute top-0 left-0 rounded-tr-xl w-full h-full object-cover" />
                                             </a>
                                         </div>
-                                        <div className="">
-                                            <div className="justify-start text-left px-2 py-2">
+                                        <div className="rounded-br-xl rounded-bl-xl">
+                                            <div className="text-left px-2 py-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2">
-                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                    </div>
+                                                <div className="w-fit hover:bg-gray-300 text-blue-500 hover:text-black">
+                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
                                                 <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
+                                                    <p className="font-bold line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
                                                 </div>
                                                 <div className="flex flex-wrap">
                                                     {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
                                                 </div>
+                                                <a href={`/${movie?.media_type}/${movie?.id}`} className="">
+                                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 rounded-xl text-blue-500 w-full mt-2 font-medium text-center items-center">
+                                                        {translations[language]?.details}
+                                                    </button>
+                                                </a>
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <a href={`/${movie?.media_type}/${movie?.id}`} className="px-2 py-2">
-                                    <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 text-blue-500 w-full rounded-md font-medium text-center items-center">
-                                        {translations[language]?.details}
-                                    </button>
-                                </a>
                             </div>
-
                         </div>
                     </section>
 
                 )
             case 'Compact':
                 return (
-                    <section className="px-2 w-full " key={movieIndex}>
+                    <section className="w-full " key={movieIndex}>
                         <div className="text-black font-sans w-full " >
                             <div className="flex w-full  items-center py-2 px-2">
-                                <div className="mt-2">
+                                <div className="">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${movie?.media_type}/${movie?.id}`}>
+                                        <a href={`/${movie?.media_type}/${movie?.id}`}  className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         </a>
                                         <div>
-                                            <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                            <p className="font-bold line-clamp-2 ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                             <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
-                                            <div className="flex item-center gap-2">
+                                            <div className="flex flex-wrap item-center gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className=" hover:text-black text-blue-500" >
-                                                    <div className="">
-                                                        <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-
-                                                    </div>
+                                                <div className="lg:px-2 lg:py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black" >
+                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -356,8 +347,8 @@ export default function ViewTableNoType({
                                     .filter((movie: any) => {
                                         if (!applyFilter) return true; // No filter
                                         if (filterType === 'none') return true; // No filter
-                                        if (filterType === 'inTheaters') {return null;}
-                                        if (filterType === 'In theaters with online ticketing') {return null;}
+                                        if (filterType === 'inTheaters') { return null; }
+                                        if (filterType === 'In theaters with online ticketing') { return null; }
                                         return true;
                                     })
                                     .map((m: any, index: any) => renderMovieItem(m, index, currentView))?.length}
@@ -421,30 +412,11 @@ export default function ViewTableNoType({
                         </div>
                     </div>
                     <div className="lg:max-w-full w-full py-4 px-2 ">
-                        <div className={`${currentView === 'Detail' || currentView === 'Compact' ? 'border-2 border-gray-500 divide-y divide-gray-500 px-2' : ''}`} style={{ position: "relative", backgroundSize: "cover", backgroundPosition: "center", display: 'flex', flexWrap: 'wrap' }}>
-                            {viewList?.filter((movie: any) => {
-                                return movie?.media_type === mediaType
-                            })
-                                .filter((movie: any) => {
-                                    if (selectedGenres?.length === 0) return true; // No genre filter
-                                    // Check if every selected genre is present in the movie's genres
-                                    const hasAllGenres = selectedGenres?.every((genre: any) =>
-                                        movie?.genre_ids?.some((mGenre: any) => genreMapping(genreList)[mGenre] === genre)
-                                    );
-                                    return hasAllGenres;
-                                })?.length === 0 ?
-                                (
-                                    <div>
-                                        <img src='https://filmfair.in/website/images/error_screens/no-result.png' />
-                                    </div>
-                                ) : (
-                                    <div></div>
-                                )
-                            }
-
+                        <div className={`${currentView === 'Detail' || currentView === 'Compact' ? 'border-2 border-gray-500 divide-y divide-gray-500 px-2' : ''}`}
+                            style={{ position: "relative", backgroundSize: "cover", backgroundPosition: "center", display: 'flex', flexWrap: 'wrap' }}>
                             {viewList
-                                .filter((movie: any) => { return movie?.media_type === mediaType })
-                                .filter((movie: any) => {
+                                ?.filter((movie: any) => { return movie?.media_type === mediaType })
+                                ?.filter((movie: any) => {
                                     if (selectedGenres?.length === 0) return true; // No genre filter
                                     // Check if every selected genre is present in the movie's genres
                                     const hasAllGenres = selectedGenres?.every((genre: any) =>
@@ -452,11 +424,11 @@ export default function ViewTableNoType({
                                     );
                                     return hasAllGenres;
                                 })
-                                .filter(() => {
+                                ?.filter(() => {
                                     if (applyFilter === true) return true; // No filter
                                     return null
                                 })
-                                .sort((a: any, b: any) => {
+                                ?.sort((a: any, b: any) => {
                                     if (menuItemNum === '5') {
                                         // Sắp xếp theo thứ tự alphabet của title
                                         const titleA = a?.title ? a?.title : a?.name?.toUpperCase();
@@ -477,11 +449,11 @@ export default function ViewTableNoType({
                                     else if (menuItemNum === '6') { return b?.popularity - a?.popularity; }
                                     else { return 0 }
                                 })
-                                .map((m: any, index: any) => renderMovieItem(m, index, currentView))}
+                                ?.map((m: any, index: any) => renderMovieItem(m, index, currentView))}
                         </div>
                     </div>
                 </div>
-                <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 ">
+                <div className="lg:col-span-4 col-span-12  h-full px-2 py-2 capitalize">
                     <div>
                         <div className="flex items-center py-3">
                             <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>

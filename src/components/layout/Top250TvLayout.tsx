@@ -14,16 +14,6 @@ export default function Top250TvLayout() {
     const popularMovies = useAppSelector((state) => state.movies.listMoviesPopular)
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
     const [page, setPage] = useState(1);
-    const [loading4, setLoading4] = useState(true);
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading4(false);
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [page]);
-
-
     useEffect(() => {
         dispatch(fetchMovies(page));
     }, [page]);
@@ -91,15 +81,7 @@ export default function Top250TvLayout() {
 
                     </div>
                     <ViewTable viewList={mostPopularTv} mediaType={'tv'} genreList={listGenreFromApi} moreToExploreList={popularMovies}></ViewTable>
-                    {
-                        loading4?(
-                            <i className="fa-solid fa-spinner fa-spin-pulse"></i>
-                        ):(
-                            <div id="load-more"> 
-                             <div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
-                        )
-                    }
-
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
 
                 </div>
             </div>

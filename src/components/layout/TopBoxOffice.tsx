@@ -84,13 +84,9 @@ export default function TopBoxOffice() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className="flex items-center gap-2  px-2 hover:text-black text-blue-500">
-                                                    <div className="grow ml-auto" >
-                                                        <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-
-                                                    </div>
+                                                <div className="flex items-center gap-2  px-2 hover:bg-gray-300 hover:text-black text-blue-500">
+                                                    <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -99,25 +95,21 @@ export default function TopBoxOffice() {
                                     </div>
                                 </div>
 
-
                                 <div className="ml-auto">
                                     <a href={`/movie/${movie?.id}`}>
                                         <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                     </a>
                                 </div>
                             </div>
-
                         </div>
                     </section>
-
                 )
             case 'Grid':
                 return (
-                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}
-                    >
-                        <div className="text-black font-sans  shadow-sm shadow-black rounded-tr-xl " >
+                    <section className="w-1/2 md:w-1/4 px-2 sm:w-1/3 lg:1/4" key={movieIndex}>
+                        <div className="text-black font-sans  shadow-sm shadow-black rounded-tr-xl rounded-bl-xl rounded-br-xl " >
                             <div className=" items-center ">
-                                <div className="mt-2">
+                                <div className="mt-4">
                                     <div className="items-center gap-2 ">
                                         <div className="relative w-full pb-[150%] hover:opacity-80">
                                             <a href={`/movie/${movie?.id}`}>
@@ -137,19 +129,12 @@ export default function TopBoxOffice() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className="flex items-center gap-2 hover:bg-gray-300 hover:text-black text-blue-500 ">
-                                                    <div className="grow ml-auto py-2" >
-                                                        <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-
-                                                    </div>
-                                                </div>
-                                                <div className="h-12 w-full ">
-                                                    <p className="font-bold hover:opacity-50 line-clamp-2"> {movie?.title}</p>
+                                                <div className="flex items-center gap-2 w-fit hover:bg-gray-300 hover:text-black text-blue-500 ">
+                                                    <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
                                                 <div className="flex flex-wrap">
                                                     {movie?.release_date?.slice(0, 4)}
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -192,10 +177,8 @@ export default function TopBoxOffice() {
                                                     <i className="fa-solid fa-star text-yellow-300"></i>
                                                     <p>{movie?.vote_average} ({shortenNumber(movie?.vote_count)})</p>
                                                 </div>
-                                                <div className=" hover:text-black text-blue-500" >
-                                                    <div className="">
-                                                        <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
-                                                    </div>
+                                                <div className=" hover:text-black text-blue-500 hover:bg-gray-300 " >
+                                                    <RatingModule mediaType={'movie'} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                 </div>
                                             </div>
                                         </div>
@@ -251,7 +234,7 @@ export default function TopBoxOffice() {
                     <div className="grid grid-cols-12 gap-2 w-full items-center">
                         <div className="lg:col-span-8 col-span-12  w-full ">
                             <div className="flex items-center">
-                                <h2 className="lg:text-2xl text-lg text-black ">{topRatedMovies?.slice(0, 10)?.map((m, index) => renderMovieItem(m, index, currentView))?.length}/10 Office</h2>
+                                <h2 className="lg:text-2xl text-lg text-black ">{topRatedMovies?.slice(0, 10)?.map((m, index) => renderMovieItem(m, index, currentView))?.length}/10 {translations[language]?.count}</h2>
                                 <div className="flex items-center ml-auto gap-4 px-2 py-2" >
                                     <Tooltip title="Detail View" className={`${currentView === "Detail" ? "text-blue-500" : ""}`}><i className="fa-solid fa-list-ul " onClick={() => switchView('Detail')}></i></Tooltip>
                                     <Tooltip title="Grid View" className={`${currentView === "Grid" ? "text-blue-500" : ""}`}><AppsIcon onClick={() => switchView('Grid')} /></Tooltip>
