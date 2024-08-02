@@ -11,6 +11,7 @@ import Charts from './Charts';
 import ListRow from './ListRow';
 import RatingModule from './RatingModule';
 import TopRatedMovieByGenre from './TopRatedMovieByGenre';
+import { toast } from 'react-toastify';
 export interface ViewsProps {
     viewList: any,
     moreToExploreList: any,
@@ -44,7 +45,6 @@ export default function ViewTableNoType({
 
     type Genre = | ' ';
     const [genreCount, setGenreCount] = useState<Record<string, number>>({});
-    const [numberGen, setNumberGen] = useState(0);
     const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
 
     function countGenres(viewList: any): Record<GenreName, number> {
@@ -60,11 +60,8 @@ export default function ViewTableNoType({
         return genreCounting;
     }
     useEffect(() => {
-        const genreCount = countGenres(viewList);
+        const genreCount = countGenres(viewList.slice()?.filter((item:any)=>item?.media_type===mediaType));
         setGenreCount(genreCount);
-        const totalGenreCount = Object.values(genreCount).reduce((acc, count) => acc + count, 0);
-        setNumberGen(totalGenreCount);
-
     }, [viewList, genreList]);
 
     const [openGenDialog, setOpenGenDialog] = useState(false);
@@ -109,7 +106,7 @@ export default function ViewTableNoType({
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${movie?.media_type}/${movie?.id}`} className='min-w-20'>
+                                        <a href={`/${mediaType}/${movie?.id}`} className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         </a>
@@ -132,7 +129,7 @@ export default function ViewTableNoType({
                                 </div>
 
                                 <div className="ml-auto">
-                                    <a href={`/${movie?.media_type}/${movie?.id}`}>
+                                    <a href={`/${mediaType}/${movie?.id}`}>
                                         <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                     </a>
                                 </div>
@@ -154,7 +151,7 @@ export default function ViewTableNoType({
                                     <div className="w-full">
                                         <div className=""></div>
                                         <div className="relative w-full pb-[150%] hover:opacity-80 rounded-tr-xl">
-                                            <a href={`/${movie?.media_type}/${movie?.id}`}>
+                                            <a href={`/${mediaType}/${movie?.id}`}>
                                                 <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                                     onError={handleImageError} className="absolute top-0 left-0 rounded-tr-xl w-full h-full object-cover" />
                                             </a>
@@ -174,7 +171,7 @@ export default function ViewTableNoType({
                                                 <div className="flex flex-wrap">
                                                     {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
                                                 </div>
-                                                <a href={`/${movie?.media_type}/${movie?.id}`} className="">
+                                                <a href={`/${mediaType}/${movie?.id}`} className="">
                                                     <button className="px-2 py-1 bg-gray-300 hover:bg-blue-300 rounded-xl text-blue-500 w-full mt-2 font-medium text-center items-center">
                                                         {translations[language]?.details}
                                                     </button>
@@ -197,7 +194,7 @@ export default function ViewTableNoType({
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${movie?.media_type}/${movie?.id}`}  className='min-w-20'>
+                                        <a href={`/${mediaType}/${movie?.id}`} className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80" />
                                         </a>
@@ -217,7 +214,7 @@ export default function ViewTableNoType({
                                     </div>
                                 </div>
 
-                                <a className="ml-auto" href={`/${movie?.media_type}/${movie?.id}`}>
+                                <a className="ml-auto" href={`/${mediaType}/${movie?.id}`}>
                                     <i className="fa-solid fa-circle-info px-2 text-blue-500 text-xl"></i>
                                 </a>
                             </div>
@@ -241,7 +238,7 @@ export default function ViewTableNoType({
     };
     const [selectedRankingOption, setSelectedRankingOption] = useState(null);
 
-    const [menuItemNum, setMenuItemNum] = useState(''); // Default view is 'detail'
+    const [menuItemNum, setMenuItemNum] = useState(''); 
 
     function compareReleaseDates(a: any, b: any) {
         const releaseDateA = new Date(a?.release_date ? a?.release_date : a?.first_air_date);

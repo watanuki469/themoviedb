@@ -22,7 +22,6 @@ export default function SearchBar() {
     }
     const { language, translations, handleLanguageChange } = context;
     const dispatch = useAppDispatch();
-    let navigate = useNavigate()
     const [mediatype, setMediaType] = useState('multi');
     const [query, setQuery] = useState('');
     const [anchorUserEl, setAnchorUserEl] = useState<null | HTMLElement>(null);
@@ -49,16 +48,17 @@ export default function SearchBar() {
     const searchList = useAppSelector((state) => state.search.listSearch)
 
     useEffect(() => {
-        let timerId: ReturnType<typeof setTimeout>;
         if (query.trim().length === 0) {
         }
         else {
-            timerId = setTimeout(() => {
+            setTimeout(() => {
                 dispatch(fetchSearch(mediatype, query));
-            }, 1000);
+            }, 3000);
         }
         function handleResize() {
             const isLargeScreen = window.innerWidth > 768; // Điều kiện cho màn hình lớn
+            setOpen(false)
+            setMediaType('multi')
             if (isLargeScreen && anchorUserEl != null) {
                 setAnchorUserEl(null);
             }
@@ -78,12 +78,22 @@ export default function SearchBar() {
         const newQuery = e.target.value;
         setOpen(!!newQuery);
         setQuery(newQuery);
-    };
-
+    }
+    function getHref(mediatype: any, item: any) {
+        if (mediatype === 'multi') {
+            if (item?.media_type === 'person') return `/person/${item?.id}`;
+            if (item?.media_type === 'movie') return `/movie/${item?.id}`;
+            return `/tv/${item?.id}`;
+        } else {
+            if (mediatype === 'person') return `/person/${item?.id}`;
+            if (mediatype === 'movie') return `/movie/${item?.id}`;
+            return `/tv/${item?.id}`;
+        }
+    }
 
     return (
         <div className="relative flex text-left w-full h-full">
-            <div className='border-gray-300 border-l-2 border-t-2 border-b-2'>
+            <div className='border-gray-300 border-l-2 border-t-2 border-b-2 lg:block hidden'>
                 <Button
                     id="demo-customized-button"
                     aria-controls={openUser ? 'demo-customized-menu' : undefined}
@@ -118,7 +128,7 @@ export default function SearchBar() {
                     <MenuItem disableRipple key={index} onClick={() => handleClose(item?.label)}>
                         <div className='items-start'>
                             <a key={item?.id} href="#" className=" text-gray-700 capitalize hover:opacity-80 flex items-center" role="menuitem">
-                                <i className={`mr-2 fas ${item.icon}`}></i>
+                                <i className={`mr-2 fas ${item?.icon}`}></i>
                                 {item?.display}
                             </a>
                         </div>
@@ -146,13 +156,14 @@ export default function SearchBar() {
                     </div>
                 </div>
             </div>
+            
             <Popper
                 anchorEl={anchorRef?.current}
                 open={open}
                 transition
                 placement="bottom-start"
                 sx={{
-                    zIndex: 1,
+                    zIndex: 50,
                     width: anchorRef.current?.['offsetWidth'],
                     transition: "width 0s ease-in-out 1s",
                 }}
@@ -169,40 +180,14 @@ export default function SearchBar() {
                             {searchList?.length > 0 ?
                                 searchList?.map((item: any, index: any) => (
                                     <div className="mt-1 max-h-92 overflow-auto" key={index}>
-                                        <div className="flex gap-2 px-2 py-2 border-gray-500 border-b-2"
-                                            onClick={() => {
-                                                if (mediatype === `multi`) {
-                                                    if (item?.media_type === 'person') {
-                                                        navigate(`/person/${item.id}`);
-                                                        
-                                                        setOpen(false)
-                                                    } else if (item?.media_type === "movie") {
-                                                        navigate(`/movie/${item.id}`);
-                                                        setOpen(false)
-                                                    } else {
-                                                        navigate(`/tv/${item.id}`);
-                                                        setOpen(false)
-                                                    }
-                                                } else {
-                                                    if (mediatype === 'person') {
-                                                        navigate(`/person/${item.id}`);
-                                                        setOpen(false)
-                                                    } else if (mediatype === "movie") {
-                                                        navigate(`/movie/${item.id}`);
-                                                        setOpen(false)
-                                                    } else {
-                                                        navigate(`/tv/${item.id}`);
-                                                        setOpen(false)
-                                                    }
-                                                }
-                                            }}>
+                                        <a href={getHref(mediatype, item)} className="flex gap-2 px-2 py-2 border-gray-500 border-b-2">
                                             <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path ? item?.poster_path : item?.profile_path}`} alt="product images"
                                                 className="w-20 h-28"
                                                 onError={handleImageError} />
                                             <div>
                                                 <p className="text-white text-lg"> {item?.name ? item?.name : item?.title}</p>
                                                 {item?.media_type !== 'person' && (
-                                                    <p> {item?.first_air_date ? item.first_air_date?.slice(0, 4) : item.release_date?.slice(0, 4)}</p>
+                                                    <p> {item?.first_air_date ? item?.first_air_date?.slice(0, 4) : item?.release_date?.slice(0, 4)}</p>
                                                 )}
                                                 <div className="items-center flex flex-wrap  ">
                                                     <p>
@@ -210,12 +195,10 @@ export default function SearchBar() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 )) : (
-                                    <div>
-                                        No result available for "{query}"
-                                    </div>
+                                    <div>{translations[language]?.noResultAvailable} </div>
                                 )
                             }
                         </Box>

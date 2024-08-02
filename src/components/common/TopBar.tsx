@@ -123,7 +123,7 @@ export default function TopBar() {
         } else if (item === `${translations[language]?.browseMovieByGenre}`) {
           navigate('/features/genre');
         } else if (item === `${translations[language]?.india} Movie ${translations[language]?.spotlight}`) {
-          navigate(`/keyword/movies/14636/india`);
+          navigate(`/keyword/movie/14636/india`);
         } else {
           navigate('/NotFound');
         }
@@ -378,7 +378,7 @@ export default function TopBar() {
                           <a href='/features/genre'>
                             <p className="mt-2 hover:underline">{translations[language]?.browseMovieByGenre}</p>
                           </a>
-                          <a href={`/keyword/movies/14636/india`}>
+                          <a href={`/keyword/movie/14636/india`}>
                             <p className="mt-2 hover:underline">{translations[language]?.india} Movie {translations[language]?.spotlight}</p>
                           </a>
                         </div>
@@ -500,7 +500,7 @@ export default function TopBar() {
                           <a href='/trending/prime'>
                             <p className="mt-2 hover:underline">IMDb {translations[language]?.editorPick}</p>
                           </a>
-                          <a href='/keyword/movies/281205/podcast'>
+                          <a href='/keyword/movie/281205/podcast'>
                             <p className="mt-2 hover:underline">IMDb Podcasts</p>
                           </a>
                         </div>

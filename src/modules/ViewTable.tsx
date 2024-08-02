@@ -109,7 +109,7 @@ export default function ViewTable({
                                             {mediaType != 'person' ?
                                                 (
                                                     <div>
-                                                        <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                                        <p className="font-bold line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                                         <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
                                                         <div className="flex flex-wrap items-center gap-2">
                                                             <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default function ViewTable({
                                                     </div>
                                                 ) : (
                                                     <div>
-                                                        <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
+                                                        <p className="font-bold line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
                                                         <div >
                                                             {movie?.known_for_department}
                                                         </div>
@@ -177,7 +177,7 @@ export default function ViewTable({
                                                                 <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                         </div>
                                                         <div className="h-12 w-full ">
-                                                            <p className="font-bold hover:opacity-50 line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
+                                                            <p className="font-bold line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
                                                         </div>
                                                         <div className="flex flex-wrap">
                                                             {movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}
@@ -190,7 +190,7 @@ export default function ViewTable({
                                                         <div className="flex flex-wrap items-center gap-2 justify-start text-left">
                                                             <div className="h-12 w-full"
                                                             >
-                                                                <p className="hover:opacity-50 line-clamp-2">{movieIndex}.  {movie?.name ? movie?.name : movie?.title}</p>
+                                                                <p className="line-clamp-2">{movieIndex}.  {movie?.name ? movie?.name : movie?.title}</p>
                                                             </div>
                                                             <a className='text-blue-500' href={`/${movie?.known_for?.[0]?.media_type}/${movie?.known_for?.[0]?.id}`}>
                                                                 <p className='h-12 hover:underline line-clamp-2'> {movie?.known_for?.[0]?.name ? movie?.known_for?.[0]?.name : movie?.known_for?.[0]?.title} ({movie?.known_for?.[0]?.first_air_date ? movie?.known_for?.[0]?.first_air_date : movie?.known_for?.[0]?.release_date})</p>
@@ -231,7 +231,7 @@ export default function ViewTable({
                                             {mediaType != 'person' ?
                                                 (
                                                     <div>
-                                                        <p className="font-bold hover:opacity-50 line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
+                                                        <p className="font-bold line-clamp-2 text-xl ">{movieIndex}. {movie?.title ? movie?.title : movie?.name}</p>
                                                         <p>{movie?.release_date ? movie?.release_date?.slice(0, 4) : movie?.first_air_date?.slice(0, 4)}</p>
                                                         <div className="flex flex-wrap items-center gap-2">
                                                             <div className="flex items-center gap-2">
@@ -245,7 +245,7 @@ export default function ViewTable({
                                                     </div>
                                                 ) : (
                                                     <div>
-                                                        <p className="font-bold hover:opacity-50 line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
+                                                        <p className="font-bold line-clamp-2 ">{movieIndex}. {movie?.name ? movie?.name : movie?.title}</p>
                                                         <div >
                                                             {movie?.known_for_department}
                                                         </div>

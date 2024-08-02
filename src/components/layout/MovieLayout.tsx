@@ -23,6 +23,7 @@ import SingleMoviePerson from "../common/SingleMoviePerson";
 import SingleMovieReview from "../common/SingleMovieReview";
 import SingleMovieStoryLine from "../common/SingleMovieStoryLine";
 import TopBar from "../common/TopBar";
+import { normalizeText } from "../../modules/BaseModule";
 
 export default function MovieLayout() {
     const { id } = useParams()
@@ -89,35 +90,13 @@ export default function MovieLayout() {
             movieType: "Movie",
         }))
     }, [userInfoList, singleMovieList, dispatch])
-    const normalizeText = (text: string) => {
-        // Convert to lowercase first to handle both uppercase and lowercase consistently
-        let result = text?.toLowerCase();
-
-        // Replace 'đ' with 'd'
-        result = result?.replace(/đ/g, 'd');
-
-        // Normalize to 'NFD' and remove diacritical marks
-        result = result?.normalize('NFD')?.replace(/[\u0300-\u036f]/g, '');
-
-        // Remove special characters except hyphens
-        result = result?.replace(/[^a-z0-9\s-]/g, '');
-
-        // Replace whitespace or multiple hyphens with a single hyphen
-        result = result?.replace(/[\s-]+/g, '-');
-
-        // Trim leading and trailing hyphens
-        result = result?.trim();
-
-        return result;
-    };
+   
     const languageString = localStorage.getItem('language');
     const context = useContext(LanguageContext);
     if (!context) {
         return null;
     }
     const { language, translations, handleLanguageChange } = context;
-    console.log(movieImageList[0]?.backdrops);
-
 
     return (
         <div className="min-h-screen w-full">
@@ -154,7 +133,7 @@ export default function MovieLayout() {
                                     <div></div>
                                 )}
                             </div>
-                            <a href={`/video/${id}`}>
+                            <a href={`/video/movie/${id}`}>
                                 <div className="flex gap-2 items-center py-4 hover:text-yellow-300" >
                                     <div className="h-8 w-1 bg-yellow-300 rounded-full"></div>
                                     <h2 className="text-2xl text-black font-bold ">Videos</h2>
@@ -162,7 +141,7 @@ export default function MovieLayout() {
                                     <i className="fa-solid fa-angle-right text-2xl"></i>
                                 </div>
                             </a>
-                            <a href={`/video/${id}`} className="lg:max-w-full w-full">
+                            <a href={`/video/movie/${id}`} className="lg:max-w-full w-full">
                                 <TwoMovieRow twoMovieRowList={movieVideoList} />
                             </a>
                             <a href={`/image/movie/${id}`}>

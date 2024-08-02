@@ -10,6 +10,7 @@ import { fetchKeyword } from '../../redux/reducers/keyword.reducer';
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
 import Footer from "../common/Footer";
 import TopBar from "../common/TopBar";
+import { Button, Menu, MenuItem } from "@mui/material";
 
 export default function KeywordLayout() {
     const { mediaType } = useParams()
@@ -22,41 +23,35 @@ export default function KeywordLayout() {
     if (!context) {
         return null;
     }
+    const [mediaKeywordType, setMediaKeywordType] = useState(mediaType);
+ 
     const { language, translations, handleLanguageChange } = context;
 
-    const [mediaKeywordType, setMediaKeyWordType] = useState('');
-
-    useEffect(() => {
-        switch (mediaType) {
-            case 'movies':
-                setMediaKeyWordType('movie')
-                break;
-            case 'movie':
-                setMediaKeyWordType('movie')
-                break;
-            case 'tvs':
-                setMediaKeyWordType('tv')
-                break;
-            case 'tv':
-                setMediaKeyWordType('tv')
-                break;
-            default:
-                setMediaKeyWordType('movie')
-                break;
-        }
-    }, [id, mediaType]);
     useEffect(() => {
         dispatch(setGlobalLoading(true));
-        dispatch(fetchKeyword(id,mediaType));
+        dispatch(fetchKeyword(id, mediaKeywordType));
         dispatch(fetchMovies());
         dispatch(setGlobalLoading(false));
-    }, [keyword,id]);
+    }, [keyword, id, mediaKeywordType]);
 
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
 
     useEffect(() => {
         dispatch(fetchGenre(mediaKeywordType));
-    }, [dispatch]);
+    }, [dispatch, mediaKeywordType]);
+
+    const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
+    const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorRankingEl(event.currentTarget);
+    };
+    const handleRankingClose = () => {
+        setAnchorRankingEl(null);
+    };
+
+    const handleMenuItemClick = (option: any) => {
+        setMediaKeywordType(option)
+        handleRankingClose();
+    };
 
     return (
         <div className=" min-h-screen cursor-pointer">
@@ -67,16 +62,33 @@ export default function KeywordLayout() {
                         <div className="flex items-center  ">
                             <h2 className="lg:text-2xl text-lg font-bold  capitalize"> {translations[language]?.keyword}: {keyword}
                             </h2>
-                            <div className="flex items-center ml-auto gap-2 text-gray-400" >
-                                <div className="text-md justify-center  text-right">
-                                    <p className='font-bold uppercase'> {translations[language]?.listActivity}</p>
-                                    <div className='flex items-center gap-2 font-semibold capitalize'>
-                                        <i className="fa-regular fa-eye text-xl text-white"></i>
-                                        <div>
-                                            <div> <span className='text-lg text-white'>107K</span> {translations[language]?.views}</div>
-                                            <div>18K {translations[language]?.thisWeek}</div>
-                                        </div>
-                                    </div>
+                            <div className="flex items-center ml-auto gap-2 text-gray-400" >                               
+                                <div>
+                                    <Button
+                                        id="demo-customized-button"
+                                        aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
+                                        aria-haspopup="true"
+                                        variant="contained"
+                                        disableElevation
+                                        onClick={handleRankingClick}
+                                        endIcon={<i className="fa-solid fa-caret-down"></i>}
+                                        sx={{
+                                            bgcolor: anchorRankingEl ? 'blue' : 'white',
+                                            color: anchorRankingEl ? 'white' : 'blue',
+                                            ":hover": { backgroundColor: 'blue', color: 'white' },
+                                        }}
+                                    >
+                                        {mediaType}
+                                    </Button>
+                                    <Menu
+                                        id="demo-customized-menu"
+                                        anchorEl={anchorRankingEl}
+                                        open={Boolean(anchorRankingEl)}
+                                        onClose={handleRankingClose}
+                                    >
+                                        <MenuItem onClick={() => handleMenuItemClick(`movie`)} disableRipple>Movie</MenuItem>
+                                        <MenuItem onClick={() => handleMenuItemClick(`tv`)} disableRipple>Tv</MenuItem>
+                                    </Menu>
                                 </div>
                                 <Share bgColor={'white'} />
                             </div>

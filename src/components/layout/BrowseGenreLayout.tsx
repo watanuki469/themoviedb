@@ -213,25 +213,25 @@ export default function BrowseGenreLayout() {
                             </div>
                             <div>
                                 <ul className="flex flex-wrap gap-x-2 gap-y-1 text-blue-500">
-                                    <li className="hover:underline"><a href="/keyword/movies/210024/anime">Anime</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/308818/Avant Garde">Avant Garde</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/11034/B Movie">B Movie</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/288601/chick">Chick Flick</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/10683/Coming of Age">Coming of Age</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/328003/Cult Film">Cult Film</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/4565/Dystopia">Dystopia</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/6917/Epic">Epic</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/5265/Espionage">Espionage</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/9016/Femme Fatale">Femme Fatale</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/6270/High School">High School</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/780/Kung Fu">Kung Fu</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/11800/Mockumentary">Mockumentary</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/272793/Post Apocalypse">Post Apocalypse</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/11931/Spoof">Spoof</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/9715/Superhero">Superhero</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/4379/Time Travel">Time Travel</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/3133/Vampire">Vampire</a></li> •
-                                    <li className="hover:underline"><a href="/keyword/movies/12377/zombie">Zombie</a></li>
+                                    <li className="hover:underline"><a href="/keyword/movie/210024/anime">Anime</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/308818/Avant Garde">Avant Garde</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/11034/B Movie">B Movie</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/288601/chick">Chick Flick</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/10683/Coming of Age">Coming of Age</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/328003/Cult Film">Cult Film</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/4565/Dystopia">Dystopia</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/6917/Epic">Epic</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/5265/Espionage">Espionage</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/9016/Femme Fatale">Femme Fatale</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/6270/High School">High School</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/780/Kung Fu">Kung Fu</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/11800/Mockumentary">Mockumentary</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/272793/Post Apocalypse">Post Apocalypse</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/11931/Spoof">Spoof</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/9715/Superhero">Superhero</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/4379/Time Travel">Time Travel</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/3133/Vampire">Vampire</a></li> •
+                                    <li className="hover:underline"><a href="/keyword/movie/12377/zombie">Zombie</a></li>
                                 </ul>
                             </div>
                             <div className="py-2 mt-2">

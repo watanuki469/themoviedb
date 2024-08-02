@@ -106,7 +106,7 @@ export default function SingleMovieDetail({
                             </div>
                             <div className="items-center text-center justify-center  mr-4 aligns-center ">
                                 <div className="text-stone-400">{translations[language]?.rating}</div>
-                                <div className="flex items-center gap-2  px-2 py-2 hover:bg-gray-300 hover:text-black text-blue-500">
+                                <div className="flex items-center gap-2  px-2 py-2 hover:bg-gray-300 w-fit hover:text-black text-blue-500">
                                     <RatingModule mediaType={'movie'} ratingList={singleMovieList[0]} userInfoList={userInfoList} starIndex={0} rateHidden={'false'} />
                                 </div>
                             </div>

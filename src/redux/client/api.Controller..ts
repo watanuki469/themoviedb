@@ -96,9 +96,20 @@ const apiPeoplePopular = {
     },
 }
 const apiKeyword = {
-    keyword(query: any, mediaType: any) {
-        const url = `keyword/${query}/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&language=${language}&page=1`;
-        return axiosClient.get(url)
+    keyword(query: any, mediaType: any,page=1) {
+        // const url = `keyword/${query}/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&language=${language}&page=1`;
+        if(mediaType=='movie')
+        {
+            console.log(mediaType)
+            const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_keywords=${query}`
+            return axiosClient.get(url)
+        }
+        else{
+            console.log(mediaType)
+
+            const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_null_first_air_dates&include_adult=false&page=${page}&with_keywords=${query}`
+            return axiosClient.get(url)
+        }
     },
 }
 const apiGenre = {

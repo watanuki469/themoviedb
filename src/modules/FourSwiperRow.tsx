@@ -74,7 +74,7 @@ export default function FourSwiperRow({
         await dispatch(fetchFavorite(userInfoList[0], movieId, mediaType, movieName, movieImg, movieReleaseDay, movieGenre, movieReview, moviePopularity, movieVoteAverage, movieVoteCount));
         setLoading((prevLoading) => ({ ...prevLoading, [index]: false }));
     };
-  
+
     const handlePrev = () => {
         if (swiperInstance) {
             const newIndex = Math.max(swiperInstance.activeIndex - activeSlider, 0);
@@ -99,25 +99,54 @@ export default function FourSwiperRow({
     return (
         <div className="relative">
             <Swiper
-                spaceBetween={15}
+                spaceBetween={5}
                 onSlideChange={handleSlideChange}
                 onSwiper={setSwiperInstance}
                 slidesPerView={activeSlider}
                 grabCursor={true}
                 style={{ width: "100%", height: "max-content", maxWidth: '100%' }}
-                autoplay={{
-                    delay: 5000, disableOnInteraction: false,
-                }}
                 modules={[Autoplay]}
                 className="mySwiper text-white w-full h-full "
             >
                 {fourSwiperRowList?.map((item: any, index: any) => {
                     const existingIndex = favoriteList?.findIndex(fav => fav?.itemId == item?.id);
                     return (
-                        <SwiperSlide key={index} className={` h-full w-full`}>
+                        <SwiperSlide key={index} className={` h-full w-full relative px-1`}>
+                            <div className='absolute -top-1 left-0 px-1 '
+                                onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count)}>
+                                <div className='relative'>
+                                    {existingIndex !== -1 ? (
+                                        loading[index] ? (
+                                            <div className="">
+                                                <i className="fa-solid fa-bookmark text-yellow-300 text-5xl"></i>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse absolute text-black" style={{ top: '25%', left: '25%', transform: 'translate(-50%, -50%)', zIndex: 1 }}></i>
+                                            </div>
+                                        ) : (
+                                            <div className="">
+                                                <i className="fa-solid fa-bookmark text-yellow-300 text-5xl"></i>
+                                                <i className="fa-solid fa-check absolute text-black" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }}></i>
+                                            </div>
+                                        )
+                                    ) : (
+                                        loading[index] ? (
+                                            <div className="">
+                                                <i className="fa-solid fa-bookmark text-yellow-300 text-5xl"></i>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse absolute text-black" style={{ top: '25%', left: '25%', transform: 'translate(-50%, -50%)', zIndex: 1 }}></i>
+                                            </div>
+                                        ) : (
+                                            <div className="">
+                                                <i className="fa-solid fa-bookmark text-black opacity-50 text-5xl"></i>
+                                                <i className="fa-solid fa-plus absolute text-white" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }}></i>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            </div>
+
+
                             <div className="object-cover  w-full rounded-tr-xl rounded-tl-xl">
                                 <a href={`/${mediaType}/${item?.id}`}>
-                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className=" hover:opacity-80 object-cover h-60 w-full rounded-tl-xl rounded-tr-xl"
+                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="object-cover h-60 w-full rounded-tr-xl"
                                         onError={handleImageError}
                                         onClick={() => handleClickImg()} />
                                 </a>
@@ -140,25 +169,21 @@ export default function FourSwiperRow({
                                         onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count)}>
                                         {existingIndex !== -1 ? (
                                             loading[index] ? (
-                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse  py-2 px-3"></i>
                                             ) : (
                                                 <div className={`  py-2 px-3 flex justify-center items-center  gap-2 grow text-center h-full`}>
                                                     <i className="fas fa-check font-bold"></i>
-                                                    <div className="text-left">
-                                                        <p>WatchList</p>
-                                                    </div>
+                                                    <p>WatchList</p>
                                                 </div>
                                             )
                                         ) :
                                             <div>
                                                 {loading[index] ? (
-                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i>
+                                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse  py-2 px-3"></i>
                                                 ) : (
                                                     <div className={` py-2 px-3 flex justify-center  items-center gap-2 grow text-center h-full`}>
                                                         <i className="fas fa-plus font-bold"></i>
-                                                        <div className="text-left">
-                                                            <p>WatchList</p>
-                                                        </div>
+                                                        <p>WatchList</p>
                                                     </div>
                                                 )}
                                             </div>

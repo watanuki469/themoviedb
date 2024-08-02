@@ -5,15 +5,16 @@ import FourSwiperRow from "../../modules/FourSwiperRow";
 import ListRow from "../../modules/ListRow";
 import TopRatedMovieByGenre from "../../modules/TopRatedMovieByGenre";
 import TwoMovieRow from "../../modules/TwoMovieRow";
-import apiController from "../../redux/client/api.Controller.";
-import { addRecentlyViewed, getFullReviewMongoMovieApi } from "../../redux/client/api.LoginMongo";
+import { LanguageContext } from "../../pages/LanguageContext";
+import { addRecentlyViewed } from "../../redux/client/api.LoginMongo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setGlobalLoading } from "../../redux/reducers/globalLoading.reducer";
+import { fetchGetAllMovieReview } from "../../redux/reducers/login.reducer";
 import { fetchMovies } from "../../redux/reducers/movies.reducer";
-import { fetchTv, setListTv } from "../../redux/reducers/tv.reducer";
-import { fetchTvImages, setListTvImage } from "../../redux/reducers/tvImage.reducer";
-import { AppDispatch } from "../../redux/store";
+import { fetchTv } from "../../redux/reducers/tv.reducer";
+import { fetchTvImages } from "../../redux/reducers/tvImage.reducer";
 import Footer from "../common/Footer";
+import SingleMovieDiscuss from "../common/SingleMovieDiscuss";
 import TopBar from "../common/TopBar";
 import TvDetail from "../common/TvDetail";
 import TvDetailExternal from "../common/TvDetailExternal";
@@ -21,9 +22,7 @@ import TvEpisode from "../common/TvEpisode";
 import TvPerson from "../common/TvPerson";
 import TvReview from "../common/TvReview";
 import TvStoryLine from "../common/TvStoryLine";
-import { LanguageContext } from "../../pages/LanguageContext";
-import { fetchGetAllMovieReview, setListFullMovieReview } from "../../redux/reducers/login.reducer";
-import SingleMovieDiscuss from "../common/SingleMovieDiscuss";
+import { normalizeText } from "../../modules/BaseModule";
 
 export default function TvLayout() {
     const { id } = useParams()
@@ -65,35 +64,12 @@ export default function TvLayout() {
         }))
     }, [userInfoList, tvList, dispatch])
 
-    const normalizeText = (text: string) => {
-        // Convert to lowercase first to handle both uppercase and lowercase consistently
-        let result = text?.toLowerCase();
-
-        // Replace 'đ' with 'd'
-        result = result?.replace(/đ/g, 'd');
-
-        // Normalize to 'NFD' and remove diacritical marks
-        result = result?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-        // Remove special characters except hyphens
-        result = result?.replace(/[^a-z0-9\s-]/g, '');
-
-        // Replace whitespace or multiple hyphens with a single hyphen
-        result = result?.replace(/[\s-]+/g, '-');
-
-        // Trim leading and trailing hyphens
-        result = result?.trim();
-
-        return result;
-    };
     const languageString = localStorage.getItem('language');
     const context = useContext(LanguageContext);
     if (!context) {
         return null;
     }
     const { language, translations, handleLanguageChange } = context;
-    console.log(tvImageList);
-
 
     return (
         <div className=" min-h-screen cursor-pointer max-w-full ">
@@ -124,7 +100,7 @@ export default function TvLayout() {
                                 </div>
                             )}
                             <div className="lg:max-w-full w-full px-2">
-                                <a href={`/videoTv/${id}`}>
+                                <a href={`/video/tv/${id}`}>
                                     <div className="text-black py-4 flex items-center hover:text-yellow-300">
                                         <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                         <h2 id="tvVideo" className="text-2xl font-bold text-black ">Videos</h2>
@@ -132,9 +108,9 @@ export default function TvLayout() {
                                         <i className="fa-solid fa-angle-right text-2xl ml-2 "></i>
                                     </div>
                                 </a>
-                                <div onClick={() => navigate(`/videoTv/${id}`)}>
+                                <a href={`/video/tv/${id}`}>
                                     <TwoMovieRow twoMovieRowList={tvList[0]?.videos?.results} />
-                                </div>
+                                </a>
                             </div>
                             <a href={`/image/tv/${id}`}>
                                 <div className="text-black hover:text-yellow-300 flex gap-2 items-center py-4 px-2 w-full">

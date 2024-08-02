@@ -82,13 +82,9 @@ export default function RatingModule({
                     },
                 }}
             >
-                <div style={{
-                    position: 'absolute', top: '-69px', left: '50%', transform: 'translateX(-50%)', padding: '0 10px'
-                }}>
+                <div style={{ position: 'absolute', top: '-69px', left: '50%', transform: 'translateX(-50%)', padding: '0 10px' }}>
                     <StarIcon style={{ fontSize: '130px', color: 'blue' }} />
-                    <div style={{
-                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontWeight: 'bold', fontSize: '24px'
-                    }}>
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', fontWeight: 'bold', fontSize: '24px' }}>
                         {value ? value : '?'}
                     </div>
                 </div>
@@ -119,39 +115,38 @@ export default function RatingModule({
                             )}
                         </button>
                     </DialogContent>
-                    <DialogContent style={{ marginTop: '-20px' }}>
-                        <button
-                            className={`px-2 py-2 justify-center rounded-full capitalize  items-center w-full hover:bg-blue-900`}
-                            onClick={() => handleRemoveRating(`${ratingList?.id}`, existingRating2?._id)}
-                        >
-                            {loading3[starIndex] ? (
-                                <div>
-                                    <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                                </div>
-                            ) : (
-                                <div className="capitalize">
-                                    <div>{translations[language]?.remove} {translations[language]?.rate}</div>
-                                </div>
-                            )}
-                        </button>
-                    </DialogContent>
+                    {existingRating2 ? (
+                        <DialogContent style={{ marginTop: '-20px' }}>
+                            <button
+                                className={`px-2 py-2 justify-center rounded-full capitalize  items-center w-full hover:bg-blue-900`}
+                                onClick={() => handleRemoveRating(`${ratingList?.id}`, existingRating2?._id)}
+                            >
+                                {loading3[starIndex] ? (
+                                    <div>
+                                        <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
+                                    </div>
+                                ) : (
+                                    <div className="capitalize">
+                                        <div>{translations[language]?.remove} {translations[language]?.rate}</div>
+                                    </div>
+                                )}
+                            </button>
+                        </DialogContent>
+                    ) : (
+                        <div></div>
+                    )}
                 </div>
             </Dialog>
-
-
             <button className="items-center gap-2 text-center justify-center w-fit" onClick={() => handleClick(existingRating2?.itemRating)}>
                 {
                     existingRating2 ? (
                         loading2[starIndex] ? (
-                            <div>
-                                <i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i>
-                            </div>
+                            <div><i className="fa-solid fa-spinner fa-spin fa-spin-reverse "></i></div>
                         ) : (
                             <div className="flex items-center gap-2 ">
                                 <i className="fa-solid fa-star"></i>
                                 <div>{existingRating2?.itemRating}</div>
                             </div>
-
                         )
                     ) : (
                         <div className="font-bold">

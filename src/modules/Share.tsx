@@ -9,6 +9,7 @@ import Twitter from '../assets/lottie/AnimationTwitter.json'
 import Facebook from '../assets/lottie/AnimationFB.json'
 import Mail from '../assets/lottie/AnimationMail.json'
 import Copy from '../assets/lottie/AnimationCopy.json'
+import { bgGrayColor } from "./BaseModule";
 
 export interface SwiperRowProps {
     bgColor: any
@@ -17,7 +18,6 @@ export interface SwiperRowProps {
 export default function Share({
     bgColor,
 }: SwiperRowProps) {
-    let navigate = useNavigate()
     const context = useContext(LanguageContext);
     const [anchorShareEl, setAnchorShareEl] = useState<null | HTMLElement>(null);
     const openShare = Boolean(anchorShareEl);
@@ -47,7 +47,6 @@ export default function Share({
     if (!context) {
         return null;
     }
-
     const { language, translations, handleLanguageChange } = context;
     return (
         <div>
@@ -59,8 +58,8 @@ export default function Share({
                 aria-expanded={openShare ? 'true' : undefined}
             >
                 <Avatar sx={{
-                    width: 32, height: 32, bgcolor: 'transparent', color: `${bgColor}`, padding: '20px', ":hover": {
-                     opacity: '50%'
+                    width: 32, height: 32, bgcolor: 'transparent', color: `${bgColor}`, padding: '25px', ":hover": {
+                     background:`${bgGrayColor}`
                     }
                 }}>
                     <ShareIcon />

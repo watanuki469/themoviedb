@@ -101,8 +101,8 @@ export default function CastCrewLayout() {
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center">
                     <TopBar />
                     <div className="w-full bg-black py-2 text-white ">
-                        <div className="lg:flex md:flex sm:flex items-center  ">
-                            <div className='flex gap-2 py-2 mb-2 capitalize'>
+                        <div className="sm:flex items-center  ">
+                            <div className='flex gap-2 py-2 mb-2 capitalize'>                                
                                 <img
                                     src={`https://image.tmdb.org/t/p/w500/${mediaList[0]?.backdrop_path}`}
                                     onError={handleImageError}

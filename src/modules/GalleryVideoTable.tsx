@@ -151,11 +151,7 @@ export default function GalleryVideoTable({
                         sx={{
                             bgcolor: anchorRankingEl ? 'blue' : 'white',
                             color: anchorRankingEl ? 'white' : 'blue',
-                            border: anchorRankingEl ? '2px dashed' : '',
-                            ":hover": {
-                                backgroundColor: 'blue'
-                                , color: 'white'
-                            },
+                            ":hover": {backgroundColor: 'blue', color: 'white'},
                         }}
                     >
                         {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
@@ -231,13 +227,13 @@ export default function GalleryVideoTable({
                         }
                     })
                     .map((item: any, index: any) => (
-                        <div key={index} className="w-1/2 px-2 py-2 bg-white">
-                            <a href={`/${item?.media_type === 'movie' ? 'video' : 'videoTv'}/${item?.id}`}>
+                        <div key={index} className="w-1/2 px-2 py-2 bg-white capitalize">
+                            <a href={`/video/${item?.media_type}/${item?.id}`}>
                                 <div className="bg-white w-full relative rounded-3xl overflow-hidden">
-                                    <div className="relative w-full aspect-w-16 aspect-h-9">
+                                    <div className="relative w-full">
                                         <img src={`https://image.tmdb.org/t/p/w500/${item?.backdrop_path}`} alt="product images"
-                                            className="object-cover w-full h-full" onError={handleImageError} />
-                                        <div className={`absolute inset-0 bg-black bg-opacity-20 blur-sm`}></div>
+                                            className="object-cover h-40 w-full" onError={handleImageError} />
+                                        <div className={`absolute inset-0 bg-black hover:bg-opacity-10 bg-opacity-20 blur-sm`}></div>
                                         <div className="absolute bottom-0 left-0 bg-transparent text-xl bg-opacity-50 text-white hover:text-yellow-300 px-2 py-2 flex flex-wrap items-center gap-2">
                                             <i className="fa-regular fa-circle-play"></i>
                                             <div>Trailer</div>

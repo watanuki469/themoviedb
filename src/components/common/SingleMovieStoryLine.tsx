@@ -41,7 +41,7 @@ export default function SingleMovieStoryLine({
                         </div>
                         <div className="flex gap-2 mb-1 flex-wrap">
                             {singleMovieList[0]?.keywords?.keywords?.map((item: any) => (
-                                <a key={item?.id} href={`/keyword/movies/${item?.id}/${item?.name}`}>
+                                <a key={item?.id} href={`/keyword/movie/${item?.id}/${item?.name}`}>
                                     <button
                                         className="bg-none text-black py-2 px-4 hover:bg-gray-400 mt-2 rounded-2xl border-gray-200 border-2 text-sm">
                                         {item?.name}

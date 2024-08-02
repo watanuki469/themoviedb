@@ -46,7 +46,7 @@ export default function BannerCarosel() {
 
     return (
         <div>
-            <section className='overflow-hidden'>
+            <section className='overflow-hidden text-white'>
                 <div className="grid grid-cols-12 text-white gap-2 items-end cursor-pointer w-full">
                     <div className="lg:col-span-8 col-span-12 flex items-stretch relative">
                         <Swiper
@@ -92,18 +92,20 @@ export default function BannerCarosel() {
                                                                 {formatDate(movie?.release_date)}
                                                             </div>
                                                         </div>
-                                                        <div className='flex bg-black bg-opacity-80 w-full'>
-                                                            <div className='hidden md:block'>
+                                                        <div className='flex bg-black bg-opacity-90 w-full'>
+                                                            <div className='hidden md:flex justify-center'>
                                                                 <PlayCircleOutlineIcon sx={{
-                                                                    height: '80px', color: 'white', width: '80px', margin: '6px', alignSelf: 'center'
-                                                                    , ':hover': {color: 'yellow', borderColor: 'red'},
+                                                                    height: '80px', color: 'white', width: '80px', justifyItems: 'center', textAlign: 'center', alignSelf: 'center'
+                                                                    , ':hover': { color: 'yellow' },
                                                                 }} />
                                                             </div>
-                                                            <div className="p-4 text-xl text-white text-left mb-3 transition duration-300 ease-in-out lg:col-span-6">
-                                                                {movie.title}
-                                                                <p className="text-gray-400 text-sm text-left whitespace-nowrap overflow-ellipsis mt-auto">
-                                                                    {translations[language]?.watchTrailer}
-                                                                </p>
+                                                            <div className='flex justify-center text-center items-center'>
+                                                                <div className="text-xl text-white text-left transition duration-300 ease-in-out lg:col-span-6">
+                                                                    {movie.title}
+                                                                    <p className="text-gray-400 text-sm text-left whitespace-nowrap overflow-ellipsis">
+                                                                        {translations[language]?.watchTrailer}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                             <div className="hidden md:block mt-auto mb-auto ml-auto text-center p-2 text-white">
                                                                 {formatDate(movie?.release_date)}

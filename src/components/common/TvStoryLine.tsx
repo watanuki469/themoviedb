@@ -21,7 +21,7 @@ export default function TvStoryLine({
                     <div className="">{tvList[0]?.overview}</div>
                     <div className="flex gap-2 flex-wrap">
                         {tvList[0]?.keywords?.results?.map((item: any) => (
-                            <a href={`/keyword/movies/${item?.id}/${item?.name}`} key={item?.id}
+                            <a href={`/keyword/movie/${item?.id}/${item?.name}`} key={item?.id}
                                 className="bg-none text-black py-2 px-2 hover:bg-gray-200 rounded-2xl border-gray-200 border-2 text-sm">
                                 {item?.name}
                             </a>

@@ -2,7 +2,7 @@ import { Avatar, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { formatTime, stringToColor } from "../../modules/BaseModule";
+import { bgGrayColor, formatTime, stringToColor } from "../../modules/BaseModule";
 import Share from "../../modules/Share";
 import { LanguageContext } from "../../pages/LanguageContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -143,14 +143,14 @@ export default function UserDiscussLayout() {
                 {showModal &&
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-2 z-50 capitalize">
                         <div className="rounded-lg lg:w-1/3 md:w-1/2 w-full relative">
-                            <div className="bg-white p-2">
+                            <div className="bg-white text-black p-2">
                                 <div className="flex items-center ">
                                     <h2 className="text-xl">{translations[language]?.discussion}</h2>
-                                    <button className="ml-auto text-3xl px-2 py-2 rounded-lg" onClick={() => setShowModal(false)}>
+                                    <button className={`ml-auto text-3xl px-2 py-2 rounded-lg hover:text-red-500`} onClick={() => setShowModal(false)}>
                                         <i className="fa-regular fa-circle-xmark"></i>
                                     </button>
                                 </div>
-                                <textarea className="w-full border border-gray-300 p-2 rounded-lg"
+                                <textarea className="w-full border border-gray-300 p-2 rounded-lg text-black"
                                     rows={5}
                                     value={content}
                                     required
@@ -159,7 +159,7 @@ export default function UserDiscussLayout() {
 
                                 <div className="text-end mt-4 ">
                                     <button onClick={() => handleDiscuss(mediaList[0]?.id, mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title, mediaList[0]?.vote_average, mediaList[0]?.vote_count, mediaList[0]?.release_date ? mediaList[0]?.release_date : mediaList[0]?.first_air_date, mediaList[0]?.runtime, mediaList[0]?.poster_path, content)}
-                                        className="bg-yellow-300 text-white px-4 py-2 rounded-lg">
+                                        className="bg-yellow-300 hover:bg-yellow-400 text-white px-4 py-2 rounded-lg">
                                         {loading2[0] ? (
                                             <div>  <i className="fa-solid fa-spinner fa-spin fa-spin-reverse py-2 px-3"></i></div>
                                         ) : (
@@ -260,7 +260,7 @@ export default function UserDiscussLayout() {
                                                         const existingDislikeIndex = item?.peopleDislike.findIndex((fav: any) => fav?.itemEmail == userInfoList[0]);
                                                         return (
                                                             <div key={index} className={`cursor-pointer ${index > 0 ? 'py-2' : ''}`}>
-                                                                <div className="w-full bg-white shadow-sm rounded-xl shadow-black">
+                                                                <div className="w-full bg-white text-black shadow-sm rounded-xl shadow-black">
                                                                     <div className="flex items-center flex-wrap gap-2 bg-gray-200 w-full px-2 py-2 rounded-tl-xl rounded-tr-xl">
                                                                         <Tooltip title={`${item?.itemDisplayName}`}>
                                                                             <Avatar

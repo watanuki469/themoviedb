@@ -30,8 +30,8 @@ export const fetchKeyword = (id:any,mediaType:any) => (dispatch: AppDispatch) =>
         apiController.apiKeyword.keyword(id, mediaType)
     ])
         .then((data: any) => {
-            if (data[0] && data[0].results) {
-                dispatch(setlistKeyWord(data[0].results));
+            if (data[0] && data[0]?.results) {
+                dispatch(setlistKeyWord(data[0]?.results));
             } else {
                 console.error("API response structure is not as expected.", data);
             }

@@ -28,7 +28,7 @@ export const monthNames = [
 ];
 export const currentDate = new Date();
 export const currentMonth = currentDate.getMonth();
-export const currentMonthName = monthNames[currentMonth]; 
+export const currentMonthName = monthNames[currentMonth];
 export const currentYear = new Date().getFullYear();
 
 export const formatDate = (isoString: string) => {
@@ -75,4 +75,26 @@ export const formatTime = (timeString: any) => {
     return `${formattedHour}:${minute < 10 ? '0' + minute : minute} ${ampm}`;
 };
 
-export const bgGrayColor='#272b37'
+export const bgGrayColor = '#272b37'
+
+export const normalizeText = (text: string) => {
+    // Convert to lowercase first to handle both uppercase and lowercase consistently
+    let result = text?.toLowerCase();
+
+    // Replace 'đ' with 'd'
+    result = result?.replace(/đ/g, 'd');
+
+    // Normalize to 'NFD' and remove diacritical marks
+    result = result?.normalize('NFD')?.replace(/[\u0300-\u036f]/g, '');
+
+    // Remove special characters except hyphens
+    result = result?.replace(/[^a-z0-9\s-]/g, '');
+
+    // Replace whitespace or multiple hyphens with a single hyphen
+    result = result?.replace(/[\s-]+/g, '-');
+
+    // Trim leading and trailing hyphens
+    result = result?.trim();
+
+    return result;
+};
