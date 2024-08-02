@@ -4,8 +4,8 @@ const axiosClient = axios.create({
   method: 'GET',
   baseURL: 'https://api.themoviedb.org/3/',
   headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZmU1MjVmMWFkMjAxM2U1ZjJmN2M1MGY1Yjc1N2NiMyIsInN1YiI6IjY2MDBkMWQ4Mzc4MDYyMDE3YzNiNTBlYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hu94QtYWw7d8x0o3IAw0UauS-Lad_MaAQZAxBfWhzdk',
+    accept: 'application/json',  
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4OTNlMzg2NDFmMjEwMmI2MzE2YmY1MDdmYzEzMTEyNiIsIm5iZiI6MTcyMjU2MzIwNC42MDgwNzcsInN1YiI6IjY2YWMzOTIzYWEwZjBmM2FiNDQ0YzAzZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0f7O2qBQ20TzYKrDI0bFAjNm5ED_1kPEZ1sK7lWa02o'
   },
 });
 

@@ -27,6 +27,7 @@ const LoginLayoutTest = () => {
                     dispatch(setUser(response));
                     localStorage.setItem("token", response[0].token);
                     localStorage.setItem("user", JSON.stringify(response[0])); // Save user data as JSON string
+                    localStorage.setItem("language", "en-US"); // Save language setting
                     navigate('/'); // Navigate to the desired route
                     toast.success('Login successfully');
                 } else {
@@ -51,7 +52,6 @@ const LoginLayoutTest = () => {
             setEmail(registerUser)
         }
     }, [registerUser]);
-
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-transparent bg-cover cursor-pointer"
