@@ -20,6 +20,7 @@ import keywordReducer from './reducers/keyword.reducer'
 import genreReducer from './reducers/genre.reducer'
 import filmReducer from './reducers/film.reducer'
 import awardReducer from './reducers/award.reducer'
+import networkReducer from './reducers/network.reducer'
 
 export const store = configureStore({
     reducer: {
@@ -41,6 +42,7 @@ export const store = configureStore({
         fanFavorite:fanfavoriteReducer,
         login:loginReducer,
         keyword:keywordReducer,
+        network:networkReducer,
         genre:genreReducer,
         film:filmReducer,
         award:awardReducer

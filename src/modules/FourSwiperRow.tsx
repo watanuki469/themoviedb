@@ -97,7 +97,7 @@ export default function FourSwiperRow({
     };
 
     return (
-        <div className="relative">
+        <div className="relative min-h-20">
             <Swiper
                 spaceBetween={5}
                 onSlideChange={handleSlideChange}
@@ -111,7 +111,7 @@ export default function FourSwiperRow({
                 {fourSwiperRowList?.map((item: any, index: any) => {
                     const existingIndex = favoriteList?.findIndex(fav => fav?.itemId == item?.id);
                     return (
-                        <SwiperSlide key={index} className={` h-full w-full relative px-1`}>
+                        <SwiperSlide key={index} className={` h-full w-full relative px-1 `}>
                             <div className='absolute -top-1 left-0 px-1 '
                                 onClick={() => handleWatchList(index, item?.id, item?.title || item?.name, item?.poster_path, item?.first_air_date ? item?.first_air_date : item?.release_date, item?.genre_ids, item?.overview, item?.popularity, item?.vote_average, item?.vote_count)}>
                                 <div className='relative'>
@@ -144,9 +144,9 @@ export default function FourSwiperRow({
                             </div>
 
 
-                            <div className="object-cover  w-full rounded-tr-xl rounded-tl-xl">
+                            <div className="object-cover  w-full rounded-tr-xl  shadow-sm shadow-black">
                                 <a href={`/${mediaType}/${item?.id}`}>
-                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="object-cover h-60 w-full rounded-tr-xl"
+                                    <img src={`https://image.tmdb.org/t/p/w500/${item?.poster_path}`} alt="product images" className="object-cover h-60  w-full rounded-tr-xl"
                                         onError={handleImageError}
                                         onClick={() => handleClickImg()} />
                                 </a>

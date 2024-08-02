@@ -25,7 +25,7 @@ export interface Translations {
   checkOutOurList: string, freshenUpYour: string, animedKidShow: string, weRoundedUpTheKid: string, submit: string,
   credits: string, noResultAvailable: string, multi: string, event: string, fully: string, supported: string,
   partially: string, logOut: string, india: string, character: string, bestOf: string, genderIdentity: string,
-  male: string, female: string, other: string, play: string
+  male: string, female: string, other: string, play: string,network:string
 }
 
 const currentDate = new Date();
@@ -179,7 +179,8 @@ export const translations: Record<LanguageCode, Translations> = {
     male: 'Male',
     female: 'Female',
     other: 'Other',
-    play: 'Play'
+    play: 'Play',
+    network:'Network',
 
   },
   'vi-VI': {
@@ -326,6 +327,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: 'Nữ',
     other: 'Khác',
     play: 'Phát',
+    network:'Kênh truyền hình',
 
   },
   'ja-JP': {
@@ -472,6 +474,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: '女性',
     other: 'その他',
     play: '再生',
+    network:'ネットワーク'
   },
   'fr-FR': {
     featuredToday: `À la une aujourd\'hui`,
@@ -617,6 +620,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: 'femme',
     other: 'autre',
     play: 'jouer',
+    network:'réseau',
   },
 
   'de-DE': {
@@ -763,6 +767,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: 'weiblich',
     other: 'andere',
     play: 'spielen',
+    network:'Netzwerk'
   },
   'hi-IN': {
     featuredToday: 'आज का प्रमुख',
@@ -908,6 +913,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: 'महिला',
     other: 'अन्य',
     play: 'चलाएँ',
+    network:'नेटवर्क'
   },
   'id-ID': {
     featuredToday: 'Unggulan hari ini',
@@ -1053,6 +1059,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: 'wanita',
     other: 'lainnya',
     play: 'main',
+    network:'jaringan'
   },
   'it-IT': {
     featuredToday: 'In primo piano oggi',
@@ -1198,6 +1205,7 @@ export const translations: Record<LanguageCode, Translations> = {
     female: 'femmina',
     other: 'altro',
     play: 'giocare',
+    network:'rete'
   },
   'ko-KR': {
     featuredToday: '오늘의 추천',
@@ -1343,5 +1351,6 @@ export const translations: Record<LanguageCode, Translations> = {
     female: '여성',
     other: '기타',
     play: '재생',
+    network:'네트워크'
   },
 };

@@ -59,7 +59,7 @@ export default function Share({
             >
                 <Avatar sx={{
                     width: 32, height: 32, bgcolor: 'transparent', color: `${bgColor}`, padding: '25px', ":hover": {
-                     background:`${bgGrayColor}`
+                        background: `${bgColor === 'black' ? `white` : `${bgGrayColor}`}`
                     }
                 }}>
                     <ShareIcon />

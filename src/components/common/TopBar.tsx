@@ -191,11 +191,11 @@ export default function TopBar() {
 
       case 'Community':
         if (item === `${translations[language]?.helpCenter}`) {
-          window.location.href = 'https://help.imdb.com/imdb?ref_=cons_nb_hlp';
+          window.open('https://help.imdb.com/imdb?ref_=cons_nb_hlp', '_blank');
         } else if (item === `${translations[language]?.contributeZone}`) {
-          window.location.href = ' https://contribute.imdb.com/czone?ref_=nv_cm_cz';
+          window.open('https://contribute.imdb.com/czone?ref_=nv_cm_cz', '_blank');
         } else if (item === `${translations[language]?.polls}`) {
-          window.location.href = 'https://www.imdb.com/poll/?ref_=nv_cm_pl';
+          window.open('https://www.imdb.com/poll/?ref_=nv_cm_pl', '_blank');
         } else {
           navigate('/');
         }
@@ -520,13 +520,13 @@ export default function TopBar() {
                           <i className="fa-solid fa-film"></i>
                         </div>
                         <div>
-                          <a href='https://help.imdb.com/imdb?ref_=cons_nb_hlp'>
+                          <a target='_blank' href='https://help.imdb.com/imdb?ref_=cons_nb_hlp'>
                             <p className="mt-2 hover:underline">{translations[language]?.helpCenter}</p>
                           </a>
-                          <a href='https://contribute.imdb.com/czone?ref_=nv_cm_cz'>
+                          <a target='_blank' href='https://contribute.imdb.com/czone?ref_=nv_cm_cz'>
                             <p className="mt-2 hover:underline">{translations[language]?.contributeZone}</p>
                           </a>
-                          <a href='https://www.imdb.com/poll/?ref_=nv_cm_pl'>
+                          <a target='_blank' href='https://www.imdb.com/poll/?ref_=nv_cm_pl'>
                             <p className="mt-2 hover:underline">{translations[language]?.polls}</p>
                           </a>
                         </div>
@@ -596,6 +596,7 @@ export default function TopBar() {
             }}
             sx={{
               "& .MuiPaper-root": { backgroundColor: "black" }, color: "white",
+              textTransform: 'capitalize'
             }}
             id="demo-customized-menu" MenuListProps={{ 'aria-labelledby': 'demo-customized-button', }}
             anchorEl={anchorUserEl} open={openUser} onClose={() => setAnchorUserEl(null)}
@@ -628,7 +629,7 @@ export default function TopBar() {
                       </div>
                     </MenuItem>
                     <MenuItem sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '2px solid gray', padding: '1rem' }}>
-                      Film {translations[language]?.episodes} {translations[language]?.supported}
+                      {translations[language]?.episodes} {translations[language]?.supported}
                     </MenuItem>
                   </div>
                 ) : item?.name === 'Vietnamese' ? (

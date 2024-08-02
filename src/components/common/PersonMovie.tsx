@@ -45,7 +45,7 @@ export default function PersonMovie({
     };
 
     return (
-        <div className=" relative">
+        <div className=" relative min-h-20">
             <button
                 onClick={handlePrev}
                 className="absolute hidden lg:block top-1/2 transform -translate-y-1/2 left-0 z-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 p-2 h-16 w-12 border-2 border-white"

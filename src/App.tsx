@@ -89,14 +89,18 @@ function App() {
 
   }, [])
 
-  return (
-    <div>
-      {/* <div className="cursor"></div> */}
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
+  return (
+    <div className=''>
       {[...Array(20)].map((_, i) => (
         <i key={i} id="circle" className="fa-brands fa-bluesky"></i>
       ))}
       <GlobalLoading />
+      <button className="scroll-to-top" onClick={scrollToTop}>↑</button>
+
       <Routes>
         {/* <Route path="/login" element={<LoginLayout />}></Route> */}
         {/* <Route path="/register1" element={<RegisterLayoutTest />}></Route> */}

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Share from '../../modules/Share';
 import ViewTable from '../../modules/ViewTable';
 import { LanguageContext } from '../../pages/LanguageContext';
@@ -16,29 +16,32 @@ export default function KeywordLayout() {
     const { mediaType } = useParams()
     const { keyword } = useParams()
     const { id } = useParams<{ id: string }>();
+    const [page, setPage] = useState(1);
+    let navigate=useNavigate()
     const dispatch = useAppDispatch();
     const mostPopularTv = useAppSelector((state) => state.movies.listMostPopularTvReq)
     const listKeywordMovie = useAppSelector((state) => state.keyword.listKeyWord)
+    
     const context = useContext(LanguageContext);
     if (!context) {
         return null;
     }
-    const [mediaKeywordType, setMediaKeywordType] = useState(mediaType);
+    // const [mediaKeywordType, setMediaKeywordType] = useState(mediaType);
  
     const { language, translations, handleLanguageChange } = context;
 
     useEffect(() => {
         dispatch(setGlobalLoading(true));
-        dispatch(fetchKeyword(id, mediaKeywordType));
+        dispatch(fetchKeyword(id, mediaType,page));
         dispatch(fetchMovies());
         dispatch(setGlobalLoading(false));
-    }, [keyword, id, mediaKeywordType]);
+    }, [keyword, id,mediaType, page]);
 
     const listGenreFromApi = useAppSelector((state) => state.genre.listGenre)
 
     useEffect(() => {
-        dispatch(fetchGenre(mediaKeywordType));
-    }, [dispatch, mediaKeywordType]);
+        dispatch(fetchGenre(mediaType));
+    }, [dispatch, mediaType]);
 
     const [anchorRankingEl, setAnchorRankingEl] = useState<null | HTMLElement>(null);
     const handleRankingClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -49,10 +52,34 @@ export default function KeywordLayout() {
     };
 
     const handleMenuItemClick = (option: any) => {
-        setMediaKeywordType(option)
+        // set(option)
+        navigate(`/keyword/${option}/${id}/${keyword}`);
         handleRankingClose();
     };
 
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 1.0,
+        });
+
+        const loadMoreElement = document.querySelector('#load-more');
+        if (loadMoreElement) {
+            observer.observe(loadMoreElement);
+        }
+
+        return () => {
+            if (loadMoreElement) {
+                observer.unobserve(loadMoreElement);
+            }
+        };
+    }, []);
+    
     return (
         <div className=" min-h-screen cursor-pointer">
             <div className="bg-black pb-1">
@@ -106,7 +133,9 @@ export default function KeywordLayout() {
             </div>
             <div className="bg-black">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center py-2 px-2 bg-white ">
-                    <ViewTable viewList={listKeywordMovie} mediaType={mediaKeywordType} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTable>
+                    <ViewTable viewList={listKeywordMovie} mediaType={mediaType} moreToExploreList={mostPopularTv} genreList={listGenreFromApi}></ViewTable>
+                    <div id="load-more"><div className="bg-white text-black text-center py-2"><i className="fa-solid fa-spinner fa-spin fa-spin-reverse"></i></div></div>
+
                 </div>
             </div>
 

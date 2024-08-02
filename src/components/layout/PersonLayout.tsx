@@ -62,7 +62,7 @@ export default function PersonLayout() {
         <div className=" min-h-screen cursor-pointer">
             <div className="bg-black px-2">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center  ">
-                    <TopBar />
+                    <TopBar />                    
                     <PersonDetail singleMovieList={personList} />
                 </div>
             </div>
@@ -89,6 +89,7 @@ export default function PersonLayout() {
                             <div className="lg:max-w-full w-full ">
                                 <PersonCredit personCreditList={personList[0]?.combined_credits?.cast} />
                             </div>
+                            
                             <div className="flex items-center py-4">
                                 <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                 <h2 id="personKnowFor" className="text-2xl font-bold text-black ">{translations[language]?.credits}</h2>

@@ -143,19 +143,14 @@ export default function UserDiscussLayout() {
                 {showModal &&
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-2 z-50 capitalize">
                         <div className="rounded-lg lg:w-1/3 md:w-1/2 w-full relative">
-                            <div className="bg-white text-black p-2">
-                                <div className="flex items-center ">
+                            <div className="bg-white text-black px-4 py-2">
+                                <div className="flex items-center py-2 ">
                                     <h2 className="text-xl">{translations[language]?.discussion}</h2>
-                                    <button className={`ml-auto text-3xl px-2 py-2 rounded-lg hover:text-red-500`} onClick={() => setShowModal(false)}>
+                                    <button className={`ml-auto text-3xl rounded-lg hover:text-red-500`} onClick={() => setShowModal(false)}>
                                         <i className="fa-regular fa-circle-xmark"></i>
                                     </button>
                                 </div>
-                                <textarea className="w-full border border-gray-300 p-2 rounded-lg text-black"
-                                    rows={5}
-                                    value={content}
-                                    required
-                                    onChange={(e) => setContent(e.target.value)}
-                                ></textarea>
+                                <textarea className="w-full border border-gray-300 rounded-lg text-black"rows={5} value={content} required onChange={(e) => setContent(e.target.value)}></textarea>
 
                                 <div className="text-end mt-4 ">
                                     <button onClick={() => handleDiscuss(mediaList[0]?.id, mediaList[0]?.name ? mediaList[0]?.name : mediaList[0]?.title, mediaList[0]?.vote_average, mediaList[0]?.vote_count, mediaList[0]?.release_date ? mediaList[0]?.release_date : mediaList[0]?.first_air_date, mediaList[0]?.runtime, mediaList[0]?.poster_path, content)}

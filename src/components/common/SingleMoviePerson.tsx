@@ -23,9 +23,10 @@ export default function SingleMoviePerson({
             if (movie.credits && movie.credits.crew) {
                 const directors = movie.credits.crew.filter((item: any) => item.job === 'Director');
                 setDirector(directors);
-                const writers = movie?.credits?.crew?.filter((item: any) => item?.job === 'Story');
-                const screenplayWriters = movie?.credits?.crew?.filter((item: any) => item?.job === 'Screenplay');
-                const writerses = writers?.length > 0 ? writers : screenplayWriters;
+                // const writers = movie?.credits?.crew?.filter((item: any) => item?.job === 'Story');
+                // const screenplayWriters = movie?.credits?.crew?.filter((item: any) => item?.job === 'Screenplay');
+                // const writerses = writers?.length > 0 ? writers : screenplayWriters;
+                const writerses= movie?.credits?.crew?.filter((item: any) => item?.job === 'Novel'|| item?.job === 'Writer' ||item?.job==='Screenplay'||item?.job==='Story');
                 setWriter(writerses);
             }
         }

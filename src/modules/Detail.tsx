@@ -271,12 +271,12 @@ export default function Detail({
                                         <div className=" border-b flex flex-wrap  border-gray-300 gap-2 py-2 items-center aligns-center">
                                             <div className="">{translations[language]?.writer} </div>
                                             <div className="flex flex-wrap gap-1 justify-left text-center aligns-center items-center">
-                                                {detailList?.credits?.crew?.filter((item: any) => item?.job === 'Novel'|| item?.job === 'Writer')?.slice(0, 3)?.map((item: any, index: number) => (
+                                                {detailList?.credits?.crew?.filter((item: any) => item?.job === 'Novel' || item?.job === 'Writer' || item?.job === 'Screenplay' || item?.job === 'Story')?.slice(0, 3)?.map((item: any, index: number) => (
                                                     <p key={index} className="flex gap-2">
                                                         <a href={`/person/${item?.id}`}>
                                                             <span className="text-blue-600 hover:underline ">{item?.name}</span>
                                                         </a>
-                                                        <span>{index < Math.min(detailList?.credits?.crew?.filter((item: any) =>  item?.job === 'Novel'|| item?.job === 'Writer')?.slice(0, 3)?.length) - 1 ? '•' : ''}</span>
+                                                        <span>{index < Math.min(detailList?.credits?.crew?.filter((item: any) => item?.job === 'Novel' || item?.job === 'Writer' || item?.job === 'Screenplay' || item?.job === 'Story')?.slice(0, 3)?.length) - 1 ? '•' : ''}</span>
                                                     </p>
                                                 ))}
                                             </div>
@@ -284,12 +284,12 @@ export default function Detail({
                                         <div className=" border-b flex flex-wrap gap-2 border-gray-300 py-2 items-center aligns-center ">
                                             <div className="">{translations[language]?.star} </div>
                                             <div className="flex gap-1  items-center flex-wrap">
-                                                {detailList?.credits?.cast?.slice(0, 3).map((item: any, index: number) => (
+                                                {detailList?.credits?.cast?.slice(0, 3)?.map((item: any, index: number) => (
                                                     <p key={index} className="flex gap-2">
                                                         <a href={`/person/${item?.id}`}>
                                                             <span className="text-blue-600 hover:underline ">{item?.name}</span>
                                                         </a>
-                                                        <span>{index < Math.min(3) - 1 ? '•' : ''}</span>
+                                                        <span>{index < Math.min(detailList?.credits?.cast?.slice(0, 3)?.length) - 1 ? '•' : ''}</span>
                                                     </p>
                                                 ))}
                                             </div>
@@ -308,11 +308,14 @@ export default function Detail({
                                         <div>
                                             {detailList?.networks && detailList?.networks?.length > 0 && detailList?.networks[0]?.logo_path != null ? (
                                                 <div className="">
-                                                    <p className='text-yellow-300 text-left'>Streaming </p>
-                                                    <img
-                                                        src={`https://media.themoviedb.org/t/p/h60${detailList?.networks[0]?.logo_path}`}
-                                                        className='bg-white border-2 border-blue-500 rounded-lg px-2 py-2'
-                                                    />
+                                                    <p className='text-yellow-300 text-left'>Streaming {detailList?.networks[0]?.id} </p>
+                                                    <a href={`/network/${detailList?.networks[0]?.id}/${detailList?.networks[0]?.name}`}>
+                                                        <img
+                                                            src={`https://media.themoviedb.org/t/p/h60${detailList?.networks[0]?.logo_path}`}
+                                                            className='bg-white border-2 border-blue-500 rounded-lg px-2 py-2'
+                                                        />
+                                                    </a>
+
                                                 </div>
                                             ) : (
                                                 <div></div>
@@ -574,14 +577,14 @@ export default function Detail({
 
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div className=" border-b border-gray-300 gap-2 py-2 items-center aligns-center">
                                                     <div className="">{translations[language]?.writer} </div>
                                                     <div className="flex flex-wrap gap-1 justify-left text-center aligns-center items-center">
                                                         {detailList?.credits?.crew?.filter((item: any) => item?.job === 'Novel' || item?.job === 'Writer')?.slice(0, 3)?.map((item: any, index: number) => (
                                                             <p key={index} onClick={() => navigate(`/person/${item?.id}`)} className="hover:underline flex gap-2">
                                                                 <span className="text-blue-600">{item?.name}</span>
-                                                                <span>{index < Math.min(detailList?.credits?.crew?.filter((item: any) => item?.job === 'Novel'|| item?.job === 'Writer')?.slice(0, 3)?.length) - 1 ? '•' : ''}</span>
+                                                                <span>{index < Math.min(detailList?.credits?.crew?.filter((item: any) => item?.job === 'Novel' || item?.job === 'Writer')?.slice(0, 3)?.length) - 1 ? '•' : ''}</span>
                                                             </p>
                                                         ))}
                                                     </div>

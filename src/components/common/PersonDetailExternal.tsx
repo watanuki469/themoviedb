@@ -18,10 +18,8 @@ export default function PersonDetailExternal({
     const { language, translations, handleLanguageChange } = context;
 
     return (
-        <section className="" style={{
-            position: "relative",
-        }}>
-            <div className="text-black font-sans font-medium " >
+        <section className="min-h-20" style={{ position: "relative", }}>
+            <div className="text-black font-sans font-medium " >                
                 <div style={{ position: "relative", zIndex: "1" }}>
                     <div className="text-black relative px-2 py-2">
                         <div className="text-black">
@@ -69,19 +67,21 @@ export default function PersonDetailExternal({
                                 <div className="flex flex-wrap gap-2">
                                     <p className="font-bold">{translations[language]?.born}</p>
                                     <div className="flex flex-wrap text-blue-500 gap-2">
-                                        <p>{personDetailExList[0]?.birthday &&
-                                            new Date(personDetailExList[0]?.birthday).toLocaleDateString('en-US', {
-                                                month: 'long',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            })
-                                        }
-                                        </p>
-                                        <p>•</p>
+                                        <div>
+                                            {personDetailExList[0]?.birthday &&
+                                                <div className="flex flex-wrap gap-2">
+                                                    <div>
+                                                        {new Date(personDetailExList[0]?.birthday).toLocaleDateString('en-US', {
+                                                            month: 'long', day: 'numeric', year: 'numeric'
+                                                        })
+                                                        }
+                                                    </div>
+                                                    <div>•</div>
+                                                </div>}
+                                        </div>
                                         <p>{personDetailExList[0]?.place_of_birth}</p>
                                     </div>
                                 </div>
-
                             </div>
                             <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                                 <div className="flex flex-wrap gap-2">
@@ -91,15 +91,10 @@ export default function PersonDetailExternal({
                                             <span className="text-blue-600">{translations[language]?.seePro}</span>
                                         </p>
                                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>

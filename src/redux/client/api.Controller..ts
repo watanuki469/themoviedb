@@ -45,7 +45,7 @@ const apiPerson = {
     },
 }
 const apiSearch = {
-    search(mediaType: any, query: any,page=1) {
+    search(mediaType: any, query: any, page = 1) {
         const url = `search/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&query=${query}&include_adult=false&language=${language}&page=${page}`;
         return axiosClient.get(url)
     },
@@ -80,7 +80,7 @@ const getTodayDate = () => {
 }
 
 const apiUpComing = {
-    upComing(mediaType: any,page=1) {
+    upComing(mediaType: any, page = 1) {
         const todayDate = getTodayDate();
         const url = mediaType === 'movie'
             ? `/discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&include_video=false&language=${language}&page=${page}&primary_release_date.gte=${todayDate}&release_date.gte=${todayDate}&sort_by=primary_release_date.asc`
@@ -90,32 +90,38 @@ const apiUpComing = {
 };
 
 const apiPeoplePopular = {
-    peoplePopular(page=1) {
+    peoplePopular(page = 1) {
         const url = `person/popular?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&page=${page}`;
         return axiosClient.get(url)
     },
 }
 const apiKeyword = {
-    keyword(query: any, mediaType: any,page=1) {
-        // const url = `keyword/${query}/${mediaType}?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&include_adult=false&language=${language}&page=1`;
-        if(mediaType=='movie')
-        {
-            console.log(mediaType)
+    keyword(query: any, mediaType: any, page = 1) {
+        if (mediaType == 'movie') {
             const url = `discover/movie?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_keywords=${query}`
             return axiosClient.get(url)
         }
-        else{
-            console.log(mediaType)
-
+        else {
             const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_null_first_air_dates&include_adult=false&page=${page}&with_keywords=${query}`
             return axiosClient.get(url)
         }
     },
 }
+
+const apiNetwork = {
+    network(query: any, page = 1) {
+        const url = `discover/tv?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}&sort_by=popularity.desc&include_null_first_air_dates&include_adult=false&page=${page}&with_networks=${query}`
+        return axiosClient.get(url)
+    },
+}
+
 const apiGenre = {
     genre(mediaType: any) {
         const url = `genre/${mediaType}/list?api_key=${import.meta.env.VITE_REACT_APP_API_KEY}&language=${language}`;
         return axiosClient.get(url)
     },
 }
-export default { apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits, apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing, apiPeoplePopular, apiKeyword, apiGenre }
+export default {
+    apiSingleMovieRequests, apiMovieVideo, apiMovieImage, apiMovieCredits,
+    apiMovieSimilar, apiPerson, apiSearch, apiTv, apiTvImages, apiUpComing, apiPeoplePopular, apiKeyword, apiGenre, apiNetwork
+}

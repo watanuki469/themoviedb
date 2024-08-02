@@ -96,19 +96,26 @@
     background-color: black;
 }
 
-/* carosel */
-.carousel-container {
-    overflow: hidden;
-    position: relative;
-}
-
-.carousel-track {
+/* scrool to top */
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #FFDE4D;
+    color: white;
+    border: none;
     display: flex;
-    transition: transform 0.3s ease-in-out;
-}
-
-.carousel-item {
-    flex: 0 0 calc(100% / var(--active-slider));
-    box-sizing: border-box;
-    padding: 0 5px; /* Adjust padding as needed */
-}
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 1000;
+  }
+  
+  .scroll-to-top:hover {
+    background-color: #F9E400;
+  }
+  

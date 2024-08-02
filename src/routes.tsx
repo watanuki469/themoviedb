@@ -12,6 +12,7 @@ import KeywordLayout from "./components/layout/KeywordLayout";
 import MainLayout from "./components/layout/MainLayout";
 import MovieLayout from "./components/layout/MovieLayout";
 import MovieNewLayout from "./components/layout/MovieNewLayout";
+import NetWorkLayout from "./components/layout/NetworkLayout";
 import PersonLayout from "./components/layout/PersonLayout";
 import PopularCelebLayout from "./components/layout/PopularCelebLayout";
 import ProLayout from "./components/layout/ProLayout";
@@ -160,6 +161,11 @@ const routes = [
     path: "/keyword/:mediaType/:id/:keyword",
     element: <KeywordLayout />,
     state: "keyword"
+  },
+  {
+    path: "/network/:id/:keyword",
+    element: <NetWorkLayout />,
+    state: "network"
   },
 
   {

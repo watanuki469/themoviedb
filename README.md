@@ -2,7 +2,7 @@
 # Features:
 + user
    - authenticate
-   - search with filter
+   - search with filter(title,releaseDate,rating,number vote,genre,inTheater,gender)
    - add movie,tv,person to list favorite
    - rating movie,tv
    - add discuss to movie,tv
@@ -23,6 +23,7 @@
    - tv trailer
    - tv image gallery
    - tv genre
+   - tv network
    - tv list actor
    - tv keyword
    - tv review
@@ -34,6 +35,10 @@
    - person image gallery
    - person history
    - person review
++ list
+   - upComing(Filter movie and tv,add to watch list)
+   - top250 Movie,Top250Tv,Top Rated tv,india movie,award layout,(rating,filter by genre,theater,mediaType - sort by:ranking,rating,releaseDate,numberRating,alphabet,popularity,runTime)
+   - popularCeleb (sort by:ranking,rating,releaseDate,numberRating,alphabet,popularity,runTime)
 
 # 1.api:
 + [The Movie Database (TMDb) API](https://developer.themoviedb.org/)

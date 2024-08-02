@@ -117,7 +117,7 @@ export default function ViewTable({
                                                                 <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                             </div>
                                                             <div className="lg:px-2 lg:py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black">
-                                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+                                                                <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -174,7 +174,7 @@ export default function ViewTable({
                                                             <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                         </div>
                                                         <div className="w-fit hover:bg-gray-300 text-blue-500 hover:text-black ">
-                                                                <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+                                                            <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                         </div>
                                                         <div className="h-12 w-full ">
                                                             <p className="font-bold line-clamp-2">{movieIndex}.{movie?.title ? movie?.title : movie?.name}</p>
@@ -222,7 +222,7 @@ export default function ViewTable({
                             <div className="flex w-full  items-center py-2 px-2">
                                 <div className="mt-2">
                                     <div className="flex items-center gap-2">
-                                        <a href={`/${mediaType}/${movie?.id}`}  className='min-w-20'>
+                                        <a href={`/${mediaType}/${movie?.id}`} className='min-w-20'>
                                             <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path ? movie?.poster_path : movie?.profile_path}`} alt="product images"
                                                 onError={handleImageError} className="w-20 h-28 hover:opacity-80 rounded-br-xl rounded-bl-xl rounded-tr-xl" />
                                         </a>
@@ -239,7 +239,7 @@ export default function ViewTable({
                                                                 <p>{movie?.vote_average?.toFixed(1)} ({shortenNumber(movie?.vote_count)})</p>
                                                             </div>
                                                             <div className="lg:px-2 lg:py-2 w-fit hover:bg-gray-300 text-blue-500 hover:text-black">
-                                                                    <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
+                                                                <RatingModule mediaType={mediaType} ratingList={movie} userInfoList={userInfoList} starIndex={movieIndex} rateHidden={'false'}></RatingModule>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -318,44 +318,54 @@ export default function ViewTable({
     const { language, translations, handleLanguageChange } = context;
 
     return (
-        <div className='cursor-pointer'>
-            <Dialog open={openGenDialog} onClose={handleDiaGenlogClose} maxWidth={'sm'}
-                keepMounted={true}
-                PaperProps={{ style: { background: 'black', color: 'white' }, }}
-            >
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold' }}>{translations[language]?.genre} && {translations[language]?.count}</DialogTitle>
-                <DialogContent>
-                    <div className="flex flex-wrap gap-2">
-                        {Object.entries(genreCount).map(([genre, count], index) => (
-                            <button key={`genre-${genre}-${index}`}
-                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 hover:bg-yellow-400' : 'hover:bg-gray-500 hover:opacity-90'}`}
-                                onClick={() => handleGenreClick(genre as Genre)}
-                            >
-                                <p>{`${genre}: (${count})`}</p>
-                            </button>
-                        ))}
-
+        <div className='cursor-pointer'>    
+            {
+                openGenDialog ? (
+                    <div className="fixed top-0 left-0 w-full h-full  text-white bg-opacity-50 flex justify-center z-30 overflow-auto">
+                        <div className="min-w-xl lg:max-w-xl md:max-w-xl sm:max-w-xl w-full  ">
+                            <div className="flex items-center justify-end ">
+                                <div className="flex justify-end py-2">
+                                    <button onClick={() => handleDiaGenlogClose()} className="text-white bg-black border border-blue-500 h-12 w-12 hover:text-gray-300 px-2 py-2 rounded-full">
+                                        <i className="fa-solid fa-times text-xl"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="bg-black px-4 py-2 border-gray-300 border-2 divide-y-2 divide-gray-300 ">
+                                <div className="w-full">
+                                    <div className="text-yellow-300 font-bold uppercase text-xl">{translations[language]?.genre} && {translations[language]?.count}</div>
+                                    <div className="flex flex-wrap gap-2 py-2">
+                                        {Object.entries(genreCount).map(([genre, count], index) => (
+                                            <button key={`genre-${genre}-${index}`}
+                                                className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 text-black hover:bg-yellow-400' : 'hover:bg-yellow-300 hover:text-black hover:opacity-90'}`}
+                                                onClick={() => handleGenreClick(genre as Genre)}
+                                            >
+                                                <p>{`${genre}: (${count})`}</p>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="w-full">
+                                    <div className="text-yellow-300 font-bold uppercase text-xl">{translations[language]?.inTheater}</div>
+                                    <div className="flex gap-4 flex-wrap items-center py-2 ">
+                                        <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
+                                            <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                            <p>{translations[language]?.none}</p>
+                                        </div>
+                                        <div onClick={() => handleOptionClick('near')} className="flex gap-2 items-center">
+                                            <i className={`fa-regular ${selectedOption === 'near' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                            <p>{translations[language]?.inTheaterNearYou}</p>
+                                        </div>
+                                        <div onClick={() => handleOptionClick('online')} className="flex gap-2 items-center">
+                                            <i className={`fa-regular ${selectedOption === 'online' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
+                                            <p>{translations[language]?.inTheaterWithOnlineTicked}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <Divider sx={{ marginTop: '20px', width: '100%', maxWidth: '1100px', borderRadius: 2, border: '1px solid', borderColor: 'divider', backgroundColor: 'background.paper', }} />
-                </DialogContent>
-                <DialogTitle sx={{ color: 'yellow', textTransform: 'uppercase', fontWeight: 'bold', marginTop: '-20px' }}>{translations[language]?.inTheater}</DialogTitle>
-                <DialogContent>
-                    <div className="flex gap-4 flex-wrap items-center ">
-                        <div onClick={() => handleOptionClick('none')} className="flex gap-2 items-center">
-                            <i className={`fa-regular ${selectedOption === 'none' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>{translations[language]?.none}</p>
-                        </div>
-                        <div onClick={() => handleOptionClick('near')} className="flex gap-2 items-center">
-                            <i className={`fa-regular ${selectedOption === 'near' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>{translations[language]?.inTheaterNearYou}</p>
-                        </div>
-                        <div onClick={() => handleOptionClick('online')} className="flex gap-2 items-center">
-                            <i className={`fa-regular ${selectedOption === 'online' ? 'fa-circle-dot' : 'fa-circle'}`}></i>
-                            <p>{translations[language]?.inTheaterWithOnlineTicked}</p>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
+                ) : (<div></div>)
+            }
             <div className="grid grid-cols-12 gap-2 w-full">
                 <div className="lg:col-span-8 col-span-12  w-full ">
                     <div className="flex ">

@@ -21,7 +21,7 @@ export default function ListRow({
 
 
     return (
-        <div className="relative">
+        <div className="relative min-h-20">
             <Swiper
                 spaceBetween={2}
                 slidesPerView={3}

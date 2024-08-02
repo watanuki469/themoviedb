@@ -180,12 +180,12 @@ export default function TvLayout() {
                                 <TvDetailExternal tvDetailExList={tvList} />
                             </div>
                             <div className="text-white py-4 w-full">
-                                <div className="flex items-center hover:text-yellow-300" onClick={() => navigate(`/fullDiscuss/tv/${id}`)}>
+                                <a href={`/fullDiscuss/tv/${id}`} className="flex items-center hover:text-yellow-300 text-black" >
                                     <div className="h-8 w-1 bg-yellow-300 mr-2 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-black capitalize" id="movieReview">{translations[language]?.discussion}</h2>
                                     <p className="text-lg font-bold text-gray-500 ml-4">{fullMovieReviewListFromApi?.length}</p>
-                                    <i className="fa-solid fa-angle-right text-black text-2xl ml-2"></i>
-                                </div>
+                                    <i className="fa-solid fa-angle-right text-2xl ml-2"></i>
+                                </a>
                             </div>
                             <div className="lg:max-w-full w-full">
                                 <SingleMovieDiscuss singleMovieList={fullMovieReviewListFromApi} userInfoList={userInfoList} id={id} mediaType={'tv'} />
