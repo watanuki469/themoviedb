@@ -95,9 +95,9 @@ function App() {
 
   return (
     <div className=''>
-      {[...Array(20)].map((_, i) => (
+      {/* {[...Array(20)].map((_, i) => (
         <i key={i} id="circle" className="fa-brands fa-bluesky"></i>
-      ))}
+      ))} */}
       <GlobalLoading />
       <button className="scroll-to-top" onClick={scrollToTop}>↑</button>
 

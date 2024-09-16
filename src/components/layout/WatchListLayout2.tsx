@@ -166,8 +166,8 @@ export function WatchListLayout2() {
                                         <div className="line-clamp-4">
                                             <p>{movie?.itemReview}</p>
                                         </div>
-                                        <div className="lg:line-clamp-none line-clamp-4">
-                                            <p>Added to watchlist at {formatDate(movie?.createdTime)}</p>
+                                        <div className="lg:line-clamp-none line-clamp-4 capitalize">
+                                            <p>{translations[language]?.add} watchlist {translations[language]?.from} {formatDate(movie?.createdTime)}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -226,7 +226,7 @@ export function WatchListLayout2() {
                                         ) :
                                             (
                                                 <div>
-                                                    Remove
+                                                    {translations[language]?.remove}
                                                 </div>
 
                                             )}
@@ -256,7 +256,6 @@ export function WatchListLayout2() {
                             <h2 className="lg:text-2xl text-lg font-bold  capitalize"> {userInfoList[1]} Watchlist </h2>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 text-gray-400 text-sm" >
-                            <div>by</div>
                             <a target='_blank' href='https://github.com/watanuki469?tab=repositories' className='text-blue-500 hover:underline'>
                                 {userInfoList[1]}-{translations[language]?.editor}
                             </a>
@@ -267,7 +266,7 @@ export function WatchListLayout2() {
                 </div>
             </div>
 
-            <div className="bg-black text-black">
+            <div className="bg-black text-black py-2">
                 <div className="w-full lg:max-w-5xl xl:max-w-5xl mx-auto aligns-center bg-white ">
                     <div className="grid grid-cols-12 gap-2 w-full">
                         <div className="lg:col-span-8 col-span-12  w-full ">
@@ -320,10 +319,10 @@ export function WatchListLayout2() {
                                                     else {
                                                         return true;
                                                     }
-                                                })?.length} Title</h2>
+                                                })?.length} {translations[language]?.title}</h2>
                                 </div>
                                 <div className=" items-center ml-auto gap-2 flex" >
-                                    <p className="items-center text-gray-400 hidden lg:flex ">Sort by </p>
+                                    <p className="items-center text-gray-400 hidden lg:flex ">{translations[language]?.sortBy} </p>
                                     <div className='hidden lg:block'>
                                         <Button
                                             id="demo-customized-button"
@@ -336,12 +335,11 @@ export function WatchListLayout2() {
                                             sx={{
                                                 bgcolor: anchorRankingEl ? 'blue' : 'white', color: anchorRankingEl ? 'white' : 'blue',
                                                 ":hover": {
-                                                    backgroundColor: 'blue'
-                                                    , color: 'white'
+                                                    backgroundColor: 'blue', color: 'white'
                                                 },
                                             }}
                                         >
-                                            {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                            {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                         </Button>
                                     </div>
 
@@ -398,7 +396,7 @@ export function WatchListLayout2() {
                                                 </div>
                                                 <div className="divide-y divide-gray-500 px-4 py-2 overflow-auto" style={{ maxHeight: '80vh' }}>
                                                     <div className="w-full text-left py-2">
-                                                        <div className="py-2 text-yellow-300 font-semibold">TITLE TYPE</div>
+                                                        <div className="py-2 text-yellow-300 font-semibold">Media Type</div>
                                                         <div className="flex gap-2 items-center flex-wrap">
                                                             <div onClick={() => toggleFeature("Movie")} className={`border-2 border-yellow-300 px-2 py-2 rounded-full hover:bg-yellow-400 ${movieCheck ? 'bg-yellow-300' : ''}`}
                                                             >
@@ -411,7 +409,7 @@ export function WatchListLayout2() {
                                                         </div>
                                                     </div>
                                                     <div className="w-full text-left py-2">
-                                                        <div className="py-2 text-yellow-300 font-semibold">GENRES</div>
+                                                        <div className="py-2 text-yellow-300 font-semibold">{translations[language]?.genre}</div>
                                                         <div className="flex flex-wrap gap-2 items-center">
                                                             {Object.entries(genreCount)?.map(([genre, count], index) => (
                                                                 <div key={`genre-${genre}-${index}`} className={`flex flex-wrap items-center px-2 py-2 border-2 border-yellow-300 hover:bg-yellow-400 rounded-full ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300' : ''}`}
@@ -424,27 +422,27 @@ export function WatchListLayout2() {
                                                     </div>
                                                     <div className="w-full text-left py-2">
                                                         <div className="w-full items-center">
-                                                            <div className="py-2 text-yellow-300 font-semibold">RELEASE YEAR</div>
+                                                            <div className="py-2 text-yellow-300 font-semibold">{translations[language]?.releaseDay}</div>
                                                             <div className="flex items-center gap-2 text-black">
                                                                 <input id="startDate" name="startDate" className="border border-gray-300 px-2 py-1 w-full" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-                                                                <p className="px-1 text-white">To</p>
+                                                                <p className="px-1 text-white">{translations[language]?.to}</p>
                                                                 <input id="endDate" name="endDate" className="border border-gray-300 px-2 py-1 w-full" value={toDate} onChange={(e) => setToDate(e.target.value)} />
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="w-full text-left py-2">
                                                         <div className="w-full items-center">
-                                                            <div className="py-2 text-yellow-300 font-semibold uppercase">IMDb Rating</div>
-                                                            <div>User Rating</div>
+                                                            <div className="py-2 text-yellow-300 font-semibold uppercase">IMDb {translations[language]?.rating}</div>
+                                                            <div>{translations[language]?.user} {translations[language]?.rating}</div>
                                                             <div className="flex items-center gap-2 text-black">
                                                                 <input id="fromRating" name="fromRating" className="border border-gray-300 px-2 py-1 w-full" value={fromRating} onChange={(e) => setFromRating(e.target.value)} />
-                                                                <p className="px-1 text-white">To</p>
+                                                                <p className="px-1 text-white">{translations[language]?.to}</p>
                                                                 <input id="toRating" name="toRating" className="border border-gray-300 px-2 py-1 w-full" value={toRating} onChange={(e) => setToRating(e.target.value)} />
                                                             </div>
-                                                            <div className="py-1">Number Of Votes</div>
+                                                            <div className="py-1">{translations[language]?.numberRating}</div>
                                                             <div className="flex items-center gap-2 text-black">
                                                                 <input id="fromVotes" name="fromVotes" className="border border-gray-300 px-2 py-1 w-full" value={fromVotes} onChange={(e) => setFromVotes(e.target.value)} />
-                                                                <p className="px-1 text-white">To</p>
+                                                                <p className="px-1 text-white">{translations[language]?.to}</p>
                                                                 <input id="toVotes" name="toVotes" className="border border-gray-300 px-2 py-1 w-full" value={toVotes} onChange={(e) => setToVotes(e.target.value)} />
                                                             </div>
                                                         </div>
@@ -459,7 +457,7 @@ export function WatchListLayout2() {
                             </div>
                             <div className="flex border-b-2 border-gray py-2 items-center lg:hidden">
                                 <div className="flex items-center ml-auto gap-2" >
-                                    <p className="flex items-center text-lg text-gray-400 ">Sort by </p>
+                                    <p className="flex items-center text-lg text-gray-400 ">{translations[language]?.sortBy}2 </p>
                                     <Button
                                         id="demo-customized-button"
                                         aria-controls={anchorRankingEl ? 'demo-customized-menu' : undefined}
@@ -473,13 +471,11 @@ export function WatchListLayout2() {
                                             color: anchorRankingEl ? 'white' : 'blue',
                                             border: anchorRankingEl ? '2px dashed' : '',
                                             ":hover": {
-                                                // border: '2px dashed',
-                                                backgroundColor: 'blue'
-                                                , color: 'white'
+                                                backgroundColor: 'blue', color: 'white'
                                             },
                                         }}
                                     >
-                                        {selectedRankingOption ? selectedRankingOption : 'Options'}
+                                        {selectedRankingOption ? selectedRankingOption : `${translations[language]?.options}`}
                                     </Button>
                                     <Menu
                                         id="demo-customized-menu"

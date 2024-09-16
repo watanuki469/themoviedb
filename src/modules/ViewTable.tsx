@@ -334,7 +334,7 @@ export default function ViewTable({
                                 <div className="w-full">
                                     <div className="text-yellow-300 font-bold uppercase text-xl">{translations[language]?.genre} && {translations[language]?.count}</div>
                                     <div className="flex flex-wrap gap-2 py-2">
-                                        {Object.entries(genreCount).map(([genre, count], index) => (
+                                        {Object.entries(genreCount)?.map(([genre, count], index) => (
                                             <button key={`genre-${genre}-${index}`}
                                                 className={`uppercase text-sm rounded-full px-2 py-2 border-2 border-white ${selectedGenres.includes(genre as Genre) ? 'bg-yellow-300 text-black hover:bg-yellow-400' : 'hover:bg-yellow-300 hover:text-black hover:opacity-90'}`}
                                                 onClick={() => handleGenreClick(genre as Genre)}
@@ -395,7 +395,7 @@ export default function ViewTable({
                         </div>
                     </div>
                     {/* filter icon */}
-                    <div className=" flex w-full items-center gap-2">
+                    <div className=" flex w-full items-center gap-2 py-2">
                         <div>
                             {mediaType != 'person' ? (
                                 <div className=" flex flex-wrap items-center gap-2">

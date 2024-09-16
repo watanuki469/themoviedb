@@ -153,9 +153,10 @@ export default function UpComingMovieLayout() {
                                                         <p className="truncate">{translations[language]?.originals}: {item?.original_language}</p>
                                                         <p>
                                                             {translations[language]?.genre}: {item?.genre_ids?.map((genreId: any, genreIndex: any, array: any) => (
-                                                                <span key={`${item?.id}-${genreId}`} className="hover:underline hover:text-blue-500" onClick={() => navigate(`/search?genres=${genreMapping[genreId]}`)}>
+                                                                <a href={`/search?genres=${genreMapping[genreId]}`}>
+                                                                    <span key={`${item?.id}-${genreId}`} className="hover:underline hover:text-blue-500"></span>
                                                                     {genreMapping[genreId]} {genreIndex < array?.length - 1 && <span> • </span>}
-                                                                </span>
+                                                                </a>
                                                             ))}
                                                         </p>
                                                     </div>

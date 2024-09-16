@@ -33,9 +33,8 @@ export default function TvStoryLine({
                         <div className="flex gap-2">
                             {tvList[0]?.genres?.slice(0, 3)?.map((item: any, index: number) => (
                                 <a key={index} href={`/search?mediaType=tv&genres=${item?.name}`}>
-                                    <p className="">
-                                        <span className="text-blue-600 hover:underline">{item?.name} {index < Math.min(tvList[0]?.genres?.length) - 1 ? '•' : ''}</span>
-                                    </p>
+                                    <span className="text-blue-600 hover:underline">{item?.name}</span>
+                                    <span className="px-2">{index < Math.min(tvList[0]?.genres?.length) - 1 ?'•': ''}</span>
                                 </a>
                             ))}
                         </div>
@@ -44,7 +43,7 @@ export default function TvStoryLine({
                     <div className=" border-b border-gray-300 flex gap-3 py-2 items-center aligns-center">
                         <div className="font-bold">{translations[language]?.certificate}</div>
                         <div className="flex gap-2">
-                            {tvList[0]?.content_ratings?.results?.slice(0, 1).map((item: any, index: number) => (
+                            {tvList[0]?.content_ratings?.results?.slice(0, 1)?.map((item: any, index: number) => (
                                 <p key={index} className=" flex gap-2">
                                     <span className="hover:underline">{item?.rating}</span>
                                 </p>
